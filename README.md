@@ -594,3 +594,10 @@ The [interactive cascade comparison](docs/cascade-ensemble-report.html) shows
 pTD and failed-event accounting. See the [validation notes](docs/validation-cascade-ensemble.md)
 for reproduction and transactional collision retries and remaining discrepancies. This is a
 controlled parton-level study, not a passing full-generator comparison.
+
+## Compression boundary routine
+
+`compress_records` ports COMPRESSEVENT, including protected records, moved
+genealogy and physical-slot metadata. [Exact reference validation](docs/validation-compression.md)
+covers 222 cases and 1,531,146 values. Integration with the stable-ID cascade
+graph is still pending; compression is not yet enabled during shower evolution.

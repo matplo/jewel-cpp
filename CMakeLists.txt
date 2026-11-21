@@ -327,3 +327,28 @@ if(TARGET jewel-medium-reference)
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-collision-retry.json
   --generated --guarded --case 55 --seed-offset 1000500 --coherence off)
 endif()
+
+# Source-compatible compression at the generator-record boundary.
+target_sources(jewel_core PRIVATE src/compression.cpp)
+add_executable(jewel-compression-probe app/compression_probe.cpp)
+target_link_libraries(jewel-compression-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_compression.py
+  ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/compression-reference.f RESULT_VARIABLE extracted_compression)
+ if(NOT extracted_compression EQUAL 0)
+  message(FATAL_ERROR "Compression reference verification failed")
+ endif()
+ add_executable(jewel-compression-reference ${CMAKE_BINARY_DIR}/compression-reference.f reference/compression_probe.f90)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-compression-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME compression-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/compression_differential.py $<TARGET_FILE:jewel-compression-probe>
+  $<TARGET_FILE:jewel-compression-reference> ${CMAKE_BINARY_DIR}/compression-validation.json)
+endif()
+
+if(BUILD_TESTING)
+ add_executable(compression-test tests/compression.cpp)
+ target_link_libraries(compression-test PRIVATE jewel_core)
+ add_test(NAME compression-contracts COMMAND compression-test)
+endif()

@@ -1,0 +1,13 @@
+{
+  "scope": "COMPRESSEVENT boundary records, not scheduler integration",
+  "cases": 222,
+  "values": 1531146,
+  "removed_total": 18688,
+  "failures": [],
+  "input_sha256": "b4eee777be100f8edf579cbb6296e6b3a46b63f5ba1774c8aaa017ec04de7f95",
+  "source_sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+  "executables": {
+    "jewel-compression-probe": "f2db62bad80d125a108aa9003b21ca8ddb6386b7cc2289ee9c9c0ed71eb65fdc",
+    "jewel-compression-reference": "0066480905f18dc54e29454a0093c7e42de1fbf0e639dba5e1bea52af7b9380f"
+  }
+}

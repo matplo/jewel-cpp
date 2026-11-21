@@ -101,3 +101,12 @@ tolerances. The refreshed ensemble report improves C++ accepted counts to
 992 (off) and 988 (on), versus 994 and 993 reference events. Remaining
 nonfinite and discrete trajectory discrepancies are still tracked; this
 does not complete the generator milestone.
+
+### Compression boundary checkpoint
+
+The [compression routine](validation-compression.md) now matches the unchanged
+Fortran reference exactly across 222 cases, including inactive tail slots.
+This supplies the source-compatible record transformation and retained-slot
+mapping. Scheduler integration remains pending: moved genealogy is cleared
+while evolution times and medium-induced flags remain attached to physical
+slots, requiring an explicit boundary with the stable-ID ancestry graph.
