@@ -8,6 +8,7 @@ struct CascadeConfig {
  CollisionConfig collision;
  CollisionFinalizationConfig finalization;
  std::size_t maximum_branch_calls{1000000};
+ bool compress_records{false};
 };
 struct CascadeResult {std::size_t branch_calls{},passes{};};
 // MAKEBRANCH / MAKECASCADE. Models must share run settings and outlive this object.

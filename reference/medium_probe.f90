@@ -323,7 +323,7 @@ program mediumprobe
    do i=1,maxnscatcen
     write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
    enddo
-  case('COHERENT','ISTATE','BRANCH','CASCADE','GCASCADE')
+  case('COHERENT','ISTATE','BRANCH','CASCADE','GCASCADE','CCASCADE')
    read(*,*)cohselected,cohflag,nowtime,lefttime,split_angle,split_time,cohlengthfac,kinmode,colmax,evweight,nend
    cohscat=cohflag/=0
    if(trim(op)/='COHERENT')then
@@ -331,12 +331,17 @@ program mediumprobe
     seqretry=aflag/=0
    endif
    n=5;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.;starttime=0;medind=.false.
-   if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE')starttime=-1d6
+   if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE'.or.trim(op)=='CCASCADE')starttime=-1d6
    mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0;discard=.false.;nstart=1
    do i=1,5
     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
     qqbard(i)=qflag/=0;aoreq(i)=aflag/=0
    enddo
+   if(trim(op)=='CCASCADE')then
+    read(*,*)j
+    if(j<0.or.j>22995)stop 73
+    n=5+j;k(6:n,1)=13
+   endif
    read(*,*)ftfac,recsoftcut,rechardcut,hadflag,scatflag,recmode,writeflag,subflag,maxnscatcen
    allhad=hadflag/=0;scatrecoil=scatflag/=0;writescatcen=writeflag/=0;dosubtraction=subflag/=0
    nscatcen=0;scatflav=-99
@@ -354,13 +359,13 @@ program mediumprobe
    if(count>0)read(*,*)tape(1:count)
    if(count==-1)read(*,*)generated_seed
    cursor=0
-   compress=.false.;guard_reason=0;guard_calls=0
+   compress=trim(op)=='CCASCADE';guard_reason=0;guard_calls=0
    if(trim(op)=='BRANCH')then
     call makebranch(cohselected)
    else if(trim(op)=='GCASCADE')then
     call guarded_cascade(1000000,guard_reason,guard_calls)
     write(0,*) 'GUARD_STATS ',guard_reason,guard_calls
-   else if(trim(op)=='CASCADE')then
+   else if(trim(op)=='CASCADE'.or.trim(op)=='CCASCADE')then
     call makecascade
    else if(trim(op)=='ISTATE')then
     energyfraction=1;newmass=0;instype=k(cohselected,2);above_cutoff=.false.
@@ -379,7 +384,7 @@ program mediumprobe
     write(*,'(8I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend
    endif
    do i=1,n
-    if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE')then
+    if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE'.or.trim(op)=='CCASCADE')then
      write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3,I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
       merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i),merge(1,0,medind(i))
     else

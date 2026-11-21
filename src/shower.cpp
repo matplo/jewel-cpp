@@ -11,15 +11,14 @@ void rotate(ShowerParticle& p,double theta,double phi){
 }
 }
 void reject_splitting(ShowerState& state,ParticleId mother,const BranchingSampler& sampler,Random& random){
- auto& m=state.at(mother);auto first=m.daughters[0],second=m.daughters[1];
+ auto& m=state.at(mother);auto children=state.scheduling_daughters(mother);auto first=children[0],second=children[1];
  if(!first||!second)throw std::domain_error("rejected splitting requires two siblings");
  for(auto sibling:{first,second}){
   auto id=sibling;
   for(std::size_t visited=0;state.at(id).particle.status==12;++visited){
    if(visited>=state.particles().size())throw std::domain_error("cyclic rejected-scattering chain");
-   auto& p=state.at(id);
-   for(auto child:p.daughters)state.at(child).particle.status=-1;
-   id=p.parent;
+   for(auto child:state.scheduling_daughters(id))state.at(child).particle.status=-1;
+   id=state.scheduling_parent(id);
   }
   if(state.at(sibling).particle.status==12)state.at(sibling).particle.status=1;
  }
@@ -125,26 +124,24 @@ void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sam
   if(mode==5)parent.angle=std::asin(std::sqrt(pts/(z*z*p.energy*p.energy-mb*mb)))+
     std::asin(std::sqrt(pts/((1-z)*(1-z)*p.energy*p.energy-mc*mc)));
   if(mode==1||mode==5){
-   auto mother=parent.parent;
+   auto mother=state.scheduling_parent(id);
    if(!mother)throw std::domain_error("angular ordering requires a parent record");
-   bool scattered=false,first=state.at(mother).daughters[0]==id;
+   bool scattered=false,first=state.scheduling_daughters(mother)[0]==id;
    for(std::size_t count=0;state.at(mother).particle.status==12;++count){
     if(count>=state.particles().size())throw std::domain_error("cyclic scattering ancestry");
-    auto& m=state.at(mother);
-    if(state.at(m.daughters[0]).particle.status!=11)scattered=true;
-    first=state.at(m.parent).daughters[0]==mother;mother=m.parent;
+    if(state.at(state.scheduling_daughters(mother)[0]).particle.status!=11)scattered=true;
+    first=state.scheduling_daughters(state.scheduling_parent(mother))[0]==mother;mother=state.scheduling_parent(mother);
    }
    auto& m=state.at(mother);bool reject=false;
    if(!scattered&&parent.angular_required&&m.angle>=0){
-    auto daughter=m.daughters[first?1:0];scattered=false;
+    auto daughter=state.scheduling_daughters(mother)[first?1:0];scattered=false;
     for(std::size_t count=0;state.at(daughter).particle.status==12;++count){
      if(count>=state.particles().size())throw std::domain_error("cyclic sibling scattering history");
-     auto& d=state.at(daughter);
-     if(state.at(state.at(d.parent).daughters[0]).particle.status!=11)scattered=true;
-     daughter=d.daughters[1];
+     if(state.at(state.scheduling_daughters(state.scheduling_parent(daughter))[0]).particle.status!=11)scattered=true;
+     daughter=state.scheduling_daughters(daughter)[1];
     }
     if(!scattered&&state.at(daughter).particle.status!=11)
-     reject=state.at(m.daughters[0]).angle>m.angle||state.at(m.daughters[1]).angle>m.angle;
+     reject=state.at(state.scheduling_daughters(mother)[0]).angle>m.angle||state.at(state.scheduling_daughters(mother)[1]).angle>m.angle;
    }
    if(reject){restore();reject_splitting(state,mother,sampler,random);return;}
   }

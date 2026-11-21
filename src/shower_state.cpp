@@ -26,6 +26,7 @@ ParticleId ShowerState::append(ShowerParticle s,bool inherit_evolution_time,bool
  return append_impl(std::move(s),inherit_evolution_time,inherit_medium_induced,true);
 }
 ParticleId ShowerState::append_impl(ShowerParticle s,bool inherit_evolution_time,bool inherit_medium_induced,bool check_fields){
+ s.scheduling_slots.reset();
  if(inherit_evolution_time)s.evolution_time=particles_.size()<retired_evolution_.size()?retired_evolution_[particles_.size()]:unused_evolution_time_;
  if(inherit_medium_induced)s.medium_induced=particles_.size()<retired_medium_induced_.size()?retired_medium_induced_[particles_.size()]:false;
  if(check_fields)fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
@@ -38,21 +39,25 @@ ParticleId ShowerState::append_impl(ShowerParticle s,bool inherit_evolution_time
  ++next_;return id;
 }
 const ShowerParticle& ShowerState::at(ParticleId id) const {
- auto it=slots_.find(id);if(it==slots_.end())throw std::out_of_range("unknown shower particle ID");return particles_[it->second];
+ auto it=slots_.find(id);if(it!=slots_.end())return particles_[it->second];
+ auto old=archived_.find(id);if(old!=archived_.end())return old->second;
+ throw std::out_of_range("unknown shower particle ID");
 }
 ShowerParticle& ShowerState::at(ParticleId id){return const_cast<ShowerParticle&>(std::as_const(*this).at(id));}
-void ShowerState::connect(ParticleId parent,ParticleId first,ParticleId second){
+void ShowerState::connect(ParticleId parent,ParticleId first,ParticleId second,bool replace){
  require(parent!=first&&parent!=second&&first!=second,"invalid daughter IDs");
  auto& a=at(parent);auto& b=at(first);auto& c=at(second);
- require(a.daughters[0]==0&&a.daughters[1]==0,"parent already connected");
+ require(replace||(a.daughters[0]==0&&a.daughters[1]==0),"parent already connected");
  require(b.parent==parent&&c.parent==parent,"daughter parent mismatch");
  a.daughters={first,second};
+ if(a.scheduling_slots){(*a.scheduling_slots)[1]=slots_.at(first)+1;(*a.scheduling_slots)[2]=slots_.at(second)+1;}
 }
 void ShowerState::connect_collision(ParticleId incoming,ParticleId recoil,ParticleId outgoing){
  require(incoming!=recoil&&incoming!=outgoing&&recoil!=outgoing,"invalid collision IDs");
  auto& a=at(incoming);const auto& b=at(recoil);const auto& c=at(outgoing);
  require(b.parent==0&&b.collision_source==incoming&&c.parent==incoming&&c.collision_source==0,"collision ancestry mismatch");
  a.daughters={recoil,outgoing};
+ if(a.scheduling_slots){(*a.scheduling_slots)[1]=slots_.at(recoil)+1;(*a.scheduling_slots)[2]=slots_.at(outgoing)+1;}
 }
 void ShowerState::connect_coherent(ParticleId first,ParticleId second,ParticleId coherent){
  require(first!=second&&first!=coherent&&second!=coherent,"invalid coherent IDs");
@@ -61,6 +66,7 @@ void ShowerState::connect_coherent(ParticleId first,ParticleId second,ParticleId
  require(c.parent==first&&c.coherent_partner==second&&!c.collision_source,"coherent ancestry mismatch");
  a.particle.status=20;b.particle.status=20;
  a.daughters={coherent,coherent};b.daughters={coherent,coherent};
+ for(auto* node:{&a,&b})if(node->scheduling_slots){(*node->scheduling_slots)[1]=slots_.at(coherent)+1;(*node->scheduling_slots)[2]=slots_.at(coherent)+1;}
 }
 void ShowerState::validate() const {
  require(std::isfinite(weight),"nonfinite event weight");require(colour_max>=0,"negative maximum colour");
@@ -68,7 +74,14 @@ void ShowerState::validate() const {
  for(double value:retired_evolution_)require(std::isfinite(value),"nonfinite retired evolution time");
  // ISR can insert a new ancestor after its child; IDs do not encode genealogy order.
  std::unordered_map<ParticleId,int> visited;
- for(const auto& s:particles_){
+ std::vector<const ShowerParticle*> history;
+ for(const auto& s:particles_)history.push_back(&s);
+ for(const auto& entry:archived_){
+  require(entry.first!=0&&entry.first==entry.second.particle.id&&!slots_.count(entry.first),"invalid archived ID");
+  fields(entry.second);require(entry.second.particle.parents==origins(entry.second),"archived parent metadata mismatch");
+  history.push_back(&entry.second);
+ }
+ for(const auto* node:history){const auto& s=*node;
   // Iterative DFS visits BOTH merge inputs, including ancestors inserted by ISR.
   std::vector<std::pair<ParticleId,bool>> pending{{s.particle.id,false}};
   while(!pending.empty()){
@@ -101,23 +114,70 @@ void ShowerState::validate() const {
   }
  }
 }
-ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_};}
+ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_,archived_};}
 ShowerSnapshot ShowerState::snapshot_truncated(std::size_t count) const {
  return snapshot_truncated_impl(count,true);
 }
 ShowerSnapshot ShowerState::snapshot_truncated_impl(std::size_t count,bool check_fields) const {
  require(count<=particles_.size(),"invalid truncated shower size");
  if(check_fields)validate();
- ShowerSnapshot saved{particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_};saved.retired_evolution.resize(std::max(saved.retired_evolution.size(),particles_.size()));
+ ShowerSnapshot saved{particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_,archived_};saved.retired_evolution.resize(std::max(saved.retired_evolution.size(),particles_.size()));
  saved.retired_medium_induced.resize(std::max(saved.retired_medium_induced.size(),particles_.size()));
  for(std::size_t i=count;i<particles_.size();++i){saved.retired_evolution[i]=particles_[i].evolution_time;saved.retired_medium_induced[i]=particles_[i].medium_induced;}
  saved.particles.resize(count);return saved;
 }
 void ShowerState::restore(const ShowerSnapshot& snapshot){
- ShowerState candidate(snapshot.unused_evolution_time);candidate.particles_=snapshot.particles;candidate.colour_max=snapshot.colour_max;candidate.weight=snapshot.weight;candidate.discarded=snapshot.discarded;candidate.retired_evolution_=snapshot.retired_evolution;candidate.retired_medium_induced_=snapshot.retired_medium_induced;
+ ShowerState candidate(snapshot.unused_evolution_time);candidate.particles_=snapshot.particles;candidate.colour_max=snapshot.colour_max;candidate.weight=snapshot.weight;candidate.discarded=snapshot.discarded;candidate.retired_evolution_=snapshot.retired_evolution;candidate.retired_medium_induced_=snapshot.retired_medium_induced;candidate.archived_=snapshot.archived;
  ParticleId maximum=0;
  for(std::size_t i=0;i<candidate.particles_.size();++i){auto id=candidate.particles_[i].particle.id;require(id>0&&candidate.slots_.emplace(id,i).second,"invalid snapshot IDs");maximum=std::max(maximum,id);}
+ for(const auto& entry:candidate.archived_){require(entry.first==entry.second.particle.id&&!candidate.slots_.count(entry.first),"invalid archived ID");maximum=std::max(maximum,entry.first);}
  require(maximum<std::numeric_limits<ParticleId>::max(),"snapshot ID space exhausted");candidate.next_=std::max(next_,maximum+1);candidate.validate();
  *this=std::move(candidate);
+}
+}
+
+namespace jewel {
+ParticleId ShowerState::scheduling_parent(ParticleId id) const {
+ const auto& node=at(id);
+ if(!node.scheduling_slots)return node.parent;
+ auto slot=(*node.scheduling_slots)[0];
+ if(!slot)return 0;
+ if(slot>particles_.size())throw std::domain_error("source parent outside active compressed record");
+ return particles_[slot-1].particle.id;
+}
+std::array<ParticleId,2> ShowerState::scheduling_daughters(ParticleId id) const {
+ const auto& node=at(id);
+ if(!node.scheduling_slots)return node.daughters;
+ std::array<ParticleId,2> result{};
+ for(std::size_t i=0;i<2;++i){auto slot=(*node.scheduling_slots)[i+1];
+  if(slot>particles_.size())throw std::domain_error("source daughter outside active compressed record");
+  if(slot)result[i]=particles_[slot-1].particle.id;
+ }
+ return result;
+}
+CompressionResult ShowerState::compress(ParticleId protected_id){
+ validate();
+ auto candidate=*this;const auto count=particles_.size();
+ auto selected=protected_id?slots_.at(protected_id):count;
+ std::vector<CompressionRecord> records(count);
+ for(std::size_t i=0;i<count;++i){const auto& p=particles_[i];auto& r=records[i];
+  r.k[0]=p.particle.status;r.k[1]=p.particle.pdg;
+  if(p.scheduling_slots)for(std::size_t j=0;j<3;++j)r.k[j+2]=static_cast<int>((*p.scheduling_slots)[j]);
+  else{auto slot=[&](ParticleId id){return id?static_cast<int>(slots_.at(id)+1):0;};r.k[2]=slot(p.parent);r.k[3]=slot(p.daughters[0]);r.k[4]=slot(p.daughters[1]);}
+  r.evolution_time=p.evolution_time;r.medium_induced=p.medium_induced;
+ }
+ auto result=compress_records(records,selected);
+ if(!result.removed)return result;
+ candidate.retired_evolution_.resize(std::max(count,candidate.retired_evolution_.size()));
+ candidate.retired_medium_induced_.resize(std::max(count,candidate.retired_medium_induced_.size()));
+ for(std::size_t i=0;i<count;++i){candidate.retired_evolution_[i]=particles_[i].evolution_time;candidate.retired_medium_induced_[i]=particles_[i].medium_induced;}
+ candidate.particles_.clear();candidate.slots_.clear();
+ for(std::size_t i=0;i<result.active;++i){auto node=particles_[result.source_slots[i]];
+  node.evolution_time=records[i].evolution_time;node.medium_induced=records[i].medium_induced;
+  node.scheduling_slots=std::array<std::size_t,3>{static_cast<std::size_t>(records[i].k[2]),static_cast<std::size_t>(records[i].k[3]),static_cast<std::size_t>(records[i].k[4])};
+  candidate.slots_.emplace(node.particle.id,i);candidate.particles_.push_back(std::move(node));
+ }
+ for(const auto& node:particles_)if(!candidate.slots_.count(node.particle.id))candidate.archived_.emplace(node.particle.id,node);
+ candidate.validate();*this=std::move(candidate);return result;
 }
 }

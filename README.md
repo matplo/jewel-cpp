@@ -599,5 +599,8 @@ controlled parton-level study, not a passing full-generator comparison.
 
 `compress_records` ports COMPRESSEVENT, including protected records, moved
 genealogy and physical-slot metadata. [Exact reference validation](docs/validation-compression.md)
-covers 222 cases and 1,531,146 values. Integration with the stable-ID cascade
-graph is still pending; compression is not yet enabled during shower evolution.
+covers 222 cases and 1,531,146 values. `ShowerState::compress()` now preserves stable-ID ancestry in an archive while
+physics follows separate source scheduling links. Enable scheduler integration
+with `CascadeConfig::compress_records=true`. Vacuum, threshold and one medium
+cascade comparison pass; another medium fixture retains four stored-transfer
+discrepancies. Full compression-mode and generator validation remain open.

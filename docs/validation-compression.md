@@ -1,8 +1,9 @@
 # Event-record compression: boundary routine
 
 `compress_records` in `jewel/compression.hpp` ports stock COMPRESSEVENT at a
-transient generator-record boundary. It is not yet wired into Cascade or used
-as the persistent shower storage. Existing shower behavior remains unchanged.
+transient generator-record boundary. The native adapter is now available through
+`ShowerState::compress()` and the opt-in `CascadeConfig::compress_records` flag.
+The transient boundary array is not the persistent shower storage.
 
 The Release comparison against the unchanged, hash-verified JEWEL 2.6.0 routine
 passes **222 cases and 1,531,146 values exactly**, including inactive tail slots.
@@ -35,29 +36,75 @@ matching the probe's representation of source L1=0. On another call, pass the
 new active count as the no-selection sentinel. Contracts cover these rules
 and invalid bounds.
 
-## Scheduler integration still required
+## Native scheduler integration
 
-The stable-ID graph enforces reciprocal genealogy; raw source compression
-clears genealogy on moved records and leaves the earlier prefix untouched.
-Blindly restoring the compressed records would violate graph invariants or
-silently alter the genealogy used for coherent evolution. The adapter needs
-to separate source scheduling links from retained physical ancestry, map the
-protected stable ID, and preserve physical-slot evolution metadata. It must
-also keep historical ancestry available for jet association after compression.
+`ShowerState::compress(protected_id)` performs a transactional compaction. Active
+records retain stable IDs; removed records move into an ancestry archive.
+`particle.parents`, `parent`, `collision_source` and `coherent_partner` continue
+to describe physical history, and `at(id)` can retrieve archived ancestors.
+Snapshots preserve the archive and source scheduling links. New IDs are never
+recycled, and archived cycles are rejected during restoration.
 
-MAKEBRANCH calls compression after time initialization when N > 20000; its
-selected slot can change. Validation must cover that ordering, the surrounding
-MAKECASCADE slot visit order, repeated compression and the 22990-record guards.
-The existing reference scheduler still aborts if its disabled compression stub
-is unexpectedly reached. No claim of compression-enabled cascade parity is
-made by this isolated routine comparison.
+Scheduling uses a separate source-slot view through `scheduling_parent()` and
+`scheduling_daughters()`. Coherent evolution, initial scattering and angular
+ordering consult this view, so retaining ancestry does not restore a source
+link that COMPRESSEVENT cleared. Newly constructed daughters get fresh links;
+rollback restores the prior scheduling links. If a source link points outside
+the active record, C++ rejects the read explicitly rather than guessing an
+ancestor. Further pathological-prefix coverage remains necessary.
 
-Run the checks with:
+Set `CascadeConfig::compress_records=true` to compress when the active record
+exceeds 20,000 slots. As in MAKEBRANCH, time initialization precedes compaction;
+visit order continues using physical slots. The flag is opt-in while broader
+validation remains open. The source default is COMPRESS=true, which future
+run-card initialization must select explicitly.
+
+## Compression-enabled cascade comparisons
+
+| Fixture | Compared values | Maximum absolute difference | Result |
+|---|---:|---:|---|
+| Four vacuum cascades with 20,000 removable padding records | 10,608 | 3.28e-14 | Pass |
+| Exact initial 20,000-record threshold, then growth/compression | 2,679 | 3.28e-14 | Pass |
+| Medium cascade with coherence enabled and padding | 3,246 | 1.48e-13 | Pass |
+| Rotated medium cascade, seed 1260555, with padding | 3,192 | 2.74e-12 | Four stored-transfer mismatches |
+
+All comparisons use the existing 2e-12 relative / 2e-13 absolute scalar tolerance,
+with exact discrete fields and random-draw counts. No tolerance was widened.
+Reports: [vacuum](cascade-compression.json),
+[threshold](cascade-compression-boundary.json),
+[coherence-enabled medium](cascade-compression-coherent.json),
+[remaining transfer differences](cascade-compression-medium.json).
+Padding is a controlled capacity fixture, not a physical collision sample.
+Coherence enabled does not imply that a coherent merge occurs after compression:
+the source deliberately clears the moved records' scheduling ancestry.
+
+The threshold case exposed an important PEVREC side effect. Compression can
+leave an evolution time earlier than the moved record's production time.
+MAKEBRANCH prints a timing diagnostic and calls PEVREC, which copies every
+active MV production/decay record into V before listing the event. The C++
+scheduler now performs the same auxiliary-vertex synchronization. The reference
+extracts PEVREC unchanged; only its PYLIST textual output is replaced with an
+explicit stderr marker. The old STOP-72 diagnostic stub has been removed.
+The source diagnostic is retained in the threshold test's stderr artifact.
+
+Native contracts cover preserved ancestry, source-link clearing, physical-slot
+metadata, subsequent appends, repeated compaction and snapshot restoration.
+They do not yet establish compression parity for every angular-ordering mode,
+recoil/ISR topology or unusual prefix genealogy. The full-generator acceptance
+goal remains incomplete.
+
+Run the focused checks with:
 
 ```sh
-ctest --test-dir build -R '^compression-' --output-on-failure
+ctest --test-dir build -R 'compression' --output-on-failure
 ```
 
-Both tests pass. The broader 45-test regression result from the preceding
-collision-retry checkpoint remains separate; it was not rerun for this new,
-currently isolated boundary routine.
+Historical full-record boundary results above remain exact. The rotated medium
+fixture is kept as an explicit failing diagnostic outside the passing CTest
+set, alongside the pre-existing expanded cascade replay failures.
+
+Final checks: the broader regression run passed 48/48 tests in 162.64 seconds,
+excluding the pre-existing expanded cascade failure. After adding the permanent
+threshold and medium tests and strengthening archive contracts, the focused
+compression set passed 5/5 tests in 28.81 seconds. The four stored-transfer
+differences in the separate rotated-medium diagnostic remain unresolved.

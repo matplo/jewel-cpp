@@ -22,9 +22,19 @@ Cascade::Cascade(CascadeConfig config,const InitialScatteringEvolution& initial,
 void Cascade::branch(ShowerState& state,ParticleId selected,ParticleId scratch,TransferHistory& history,
  RecoilStorage& ledger,Random& random,CoherentHistograms* histograms) const {
  if(selected==scratch)throw std::domain_error("cascade selected scratch");
- state.at(scratch);auto line=selected;initialize_time(state.at(line));
+ state.at(scratch);auto line=selected;
+ const auto& start=state.at(line);
+ if(start.evolution_time> -1e5){
+  // Stock MAKEBRANCH calls PEVREC for each timing diagnostic. PEVREC is not
+  // read-only: it copies MV into auxiliary V for every active record.
+  auto sync_vertices=[&]{for(const auto& node:state.particles())state.at(node.particle.id).generator_vertex=node.particle.production;};
+  if(start.evolution_time<start.particle.production.t-1e-6)sync_vertices();
+  if(start.decay_time>0&&start.evolution_time>start.decay_time+1e-6)sync_vertices();
+ }
+ initialize_time(state.at(line));
  history.first=history.last=0;history.sum_squared=0;history.sum={};
  if(state.discarded)return;
+ if(config_.compress_records&&state.particles().size()>20000)state.compress(line);
  const auto& e=config_.evolution;
  auto leg=state.at(line);bool radiation=radiates(leg);
  double formation=radiation?(leg.medium_induced?leg.evolution_time:std::min(leg.decay_time,e.lifetime)):e.lifetime;
@@ -100,7 +110,7 @@ void Cascade::branch(ShowerState& state,ParticleId selected,ParticleId scratch,T
       history.last=history.first;const auto& q=history.records[history.last-1];history.sum_squared=q.invariant;history.sum=q.momentum;
       above=-q.invariant>e.cutoff*e.cutoff/(e.mass_scale*e.mass_scale);
       auto rollback=state.snapshot_truncated(size);
-      for(std::size_t i=0;i<size;++i)rollback.particles[i].daughters=baseline.particles[i].daughters;
+      for(std::size_t i=0;i<size;++i){rollback.particles[i].daughters=baseline.particles[i].daughters;rollback.particles[i].scheduling_slots=baseline.particles[i].scheduling_slots;}
       for(auto& p:rollback.particles)if(p.particle.id==original.particle.id){p.particle.status=original.particle.status;p.decay_time=original.decay_time;}
       state.restore(rollback);line=original.particle.id;fraction=1;ledger.used=stored;continue;
      }

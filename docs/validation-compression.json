@@ -8,6 +8,6 @@
   "source_sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
   "executables": {
     "jewel-compression-probe": "f2db62bad80d125a108aa9003b21ca8ddb6386b7cc2289ee9c9c0ed71eb65fdc",
-    "jewel-compression-reference": "0066480905f18dc54e29454a0093c7e42de1fbf0e639dba5e1bea52af7b9380f"
+    "jewel-compression-reference": "fa738c1e51c6b66e3a42038214018733435679285ce9c483c233bf30f0ef765d"
   }
 }

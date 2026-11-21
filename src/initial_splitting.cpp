@@ -93,6 +93,6 @@ InitialSplitResult make_initial_splitting(ShowerState& state,ParticleId id,const
  c.particle.production=position_at(mother.particle.momentum,mother.particle.production,c.particle.production.t);
  b.particle.production=position_at(mother.particle.momentum,mother.particle.production,b.particle.production.t);
  state.at(id)=mother;result.radiated=state.append(c,true,true);result.continuing=state.append(b,true,true);
- state.at(id).daughters={result.radiated,result.continuing};return result;
+ state.connect(id,result.radiated,result.continuing,true);return result;
 }
 }

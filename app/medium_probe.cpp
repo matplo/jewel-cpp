@@ -139,12 +139,12 @@ int main() {
     }
     for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
      <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
-   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE"||op=="GCASCADE") {
+   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE") {
     if(!rates||!transfers||!branching)throw std::runtime_error("coherent models required");
     jewel::CoherentConfig config;config.lifetime=evolution_config.lifetime;config.cross_section_scale=evolution_config.cross_section_scale;
     config.collision.cutoff=evolution_config.cutoff;config.collision.mass_scale=evolution_config.mass_scale;
     int enabled;std::size_t selected;double now,left,angle,split_time;
-    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE"||op=="GCASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
+    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
     std::cin>>selected>>enabled>>now>>left>>angle>>split_time>>config.length_factor>>config.collision.kinematic_mode>>state.colour_max>>state.weight>>history.last;
     config.enabled=enabled;history.first=1;int retry_initial=0;double coherence_rejection=1;
     if(op!="COHERENT")std::cin>>retry_initial>>coherence_rejection;
@@ -156,6 +156,11 @@ int main() {
      s.quark_pair=qp;s.angular_required=ao;state.append(s);
     }
     for(int i=0;i<5;++i)state.at(i+1).daughters=links[i];
+    if(op=="CCASCADE"){
+     std::size_t padding;std::cin>>padding;if(padding>22995)throw std::runtime_error("invalid compression padding");
+     jewel::ShowerParticle retired;retired.particle.status=13;
+     for(std::size_t i=0;i<padding;++i)state.append(retired,true,true);
+    }
     auto& finish=config.finalization;jewel::RecoilStorage ledger;int had,scat,write,subtract;
     std::cin>>finish.formation_factor>>finish.soft_recoil_cut>>finish.hard_recoil_cut>>had>>scat>>finish.storage.mode>>write>>subtract>>ledger.capacity;
     finish.hadronize_recoils=had;finish.scatter_recoils=scat;finish.storage.write_centres=write;finish.storage.subtract=subtract;
@@ -182,7 +187,7 @@ int main() {
        initial_result=evolution.sample(state,selected,1,history,ledger,now,left,retry_initial,random,&histograms);result.selected=initial_result.selected;
       }else{
        jewel::ScatteringEvolution final_evolution(evolution_config,*branching,*sudakov,*final_table,*rates,*transfers);
-       jewel::Cascade cascade({evolution_config,config.collision,config.finalization},evolution,final_evolution,*branching,*medium);
+       jewel::Cascade cascade({evolution_config,config.collision,config.finalization,1000000,op=="CCASCADE"},evolution,final_evolution,*branching,*medium);
        if(op=="BRANCH")cascade.branch(state,selected,1,history,ledger,random,&histograms);
        else cascade.evolve(state,1,history,ledger,random,&histograms);
       }
@@ -194,15 +199,15 @@ int main() {
     if(op=="ISTATE")std::cerr<<"INI_STATS "<<initial_result.trials<<' '<<initial_result.unresolved_rejections<<' '<<initial_result.coherence_reversions<<'\n';
     else std::cerr<<"COH_STATS "<<result.collision_calls<<' '<<result.kinematic_calls<<' '<<result.undone_kicks<<'\n';
     auto slot=[&](jewel::ParticleId id){if(!id)return std::size_t(0);for(std::size_t i=0;i<state.particles().size();++i)if(state.particles()[i].particle.id==id)return i+1;throw std::runtime_error("dangling coherent ID");};
-    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
+    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<(op=="CCASCADE"?selected:slot(result.selected))<<' '<<checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
     if(op=="ISTATE")std::cout<<' '<<initial_result.fraction<<' '<<initial_result.virtuality<<' '<<initial_result.elapsed<<' '<<initial_result.incoming_flavour<<' '<<initial_result.above_cutoff<<' '<<bool(initial_result.coherent);
     std::cout<<'\n';
-    for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(s.parent)<<' '<<slot(s.daughters[0])<<' '<<slot(s.daughters[1])<<' '
+    for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(state.scheduling_parent(p.id))<<' '<<slot(state.scheduling_daughters(p.id)[0])<<' '<<slot(state.scheduling_daughters(p.id)[1])<<' '
      <<p.momentum.px<<' '<<p.momentum.py<<' '<<p.momentum.pz<<' '<<p.momentum.energy<<' '<<s.record_mass<<' '
      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
      <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '<<s.fraction<<' '<<s.angle<<' '
      <<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time;
-     if(op=="BRANCH"||op=="CASCADE"||op=="GCASCADE")std::cout<<' '<<s.medium_induced;
+     if(op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE")std::cout<<' '<<s.medium_induced;
      std::cout<<'\n';}
     std::cout<<history.sum.px<<' '<<history.sum.py<<' '<<history.sum.pz<<' '<<history.sum.energy<<' '<<history.sum_squared<<'\n';
     for(const auto& r:history.records)std::cout<<r.invariant<<' '<<r.momentum.px<<' '<<r.momentum.py<<' '<<r.momentum.pz<<' '<<r.momentum.energy<<' '<<r.time<<' '

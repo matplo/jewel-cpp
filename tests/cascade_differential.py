@@ -7,12 +7,22 @@ parser.add_argument('--baseline',action='store_true')
 parser.add_argument('--generated',action='store_true',help='Use splitmix64-open52-v1 instead of a finite Python-random tape')
 parser.add_argument('--guarded',action='store_true',help='Use bounded diagnostic reference scheduling, not stock MAKECASCADE')
 parser.add_argument('--case',type=int,default=None,dest='case_index')
+parser.add_argument('--compression-padding',type=int,default=None)
 parser.add_argument('--seed-offset',type=int,default=0)
 parser.add_argument('--coherence',choices=['fixture','off','on'],default='fixture')
 args=parser.parse_args();cpp,reference,output=args.cpp,args.reference,args.output;baseline_only=args.baseline
 sys.path.insert(0,str(Path(__file__).parents[1]/'tools'))
 from cascade_cases import build_cases
 base,cases,labels,case_indices=build_cases(baseline_only=baseline_only,guarded=args.guarded,generated=args.generated,case_index=args.case_index,seed_offset=args.seed_offset,coherence=None if args.coherence=="fixture" else args.coherence=="on")
+if args.compression_padding is not None:
+ if not 0<=args.compression_padding<=22995:parser.error('invalid compression padding')
+ selected=[i for i,label in enumerate(labels) if label['operation'] in ['CASCADE','GCASCADE']]
+ transformed=[]
+ for i in selected:
+  lines=cases[i].splitlines();index=lines.index(labels[i]['operation']);lines[index]='CCASCADE'
+  lines.insert(index+8,str(args.compression_padding))
+  transformed.append('\n'.join(lines)+'\n');labels[i]['operation']='CCASCADE';labels[i]['padding']=args.compression_padding
+ cases=transformed;labels=[labels[i] for i in selected];case_indices=[case_indices[i] for i in selected]
 capacity=64
 payload=base+''.join(cases)
 def run(exe):

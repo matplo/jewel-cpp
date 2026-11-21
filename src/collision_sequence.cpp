@@ -60,7 +60,7 @@ static CollisionSequenceResult apply_candidates(ShowerState& state,ParticleId pr
   // Keep round-trip incoming/scratch arithmetic and the allocated recoil tail,
   // while removing rejected event nodes. Stable IDs are never reused.
   auto rollback=detail::CollisionWorkspace::truncate(state,size);rollback.colour_max=baseline.colour_max;
-  for(std::size_t i=0;i<size;++i)rollback.particles[i].daughters=baseline.particles[i].daughters;
+  for(std::size_t i=0;i<size;++i){rollback.particles[i].daughters=baseline.particles[i].daughters;rollback.particles[i].scheduling_slots=baseline.particles[i].scheduling_slots;}
   for(auto& p:rollback.particles)if(p.particle.id==projectile)p.particle.status=original_status;
   state.restore(rollback);ledger.used=stored;result.outgoing=projectile;
   auto& original=state.at(projectile);

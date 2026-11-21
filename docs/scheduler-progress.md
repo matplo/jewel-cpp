@@ -75,8 +75,8 @@ successful exclusions.
   replay. Do not widen tolerances on discrete fields.
 - Verify and expand initial-split retry, induced splitting and angular-order
   coverage using complete branches/cascades.
-- Port event compression (currently absent; reference compression is disabled
-  and its diagnostic stub aborts if reached), then test capacity behavior.
+- Broaden compression validation beyond the opt-in native integration described
+  below, including all angular-ordering modes and unusual prefix genealogy.
 - Add run initialization, Pythia8 hard-event import and hadronization, all custom
   JEWEL exports, and the requested final jet/substructure comparison and dynamic
   HTML report. The full thread goal remains incomplete.
@@ -110,3 +110,13 @@ This supplies the source-compatible record transformation and retained-slot
 mapping. Scheduler integration remains pending: moved genealogy is cleared
 while evolution times and medium-induced flags remain attached to physical
 slots, requiring an explicit boundary with the stable-ID ancestry graph.
+
+### Native compression integration
+
+Native compaction now archives removed ancestors and keeps source scheduling
+links separate from physical ancestry. The scheduler supports the stock
+20,000-record trigger through an opt-in flag. Four vacuum cascades, an exact
+threshold case and a coherence-enabled medium fixture pass existing replay
+tolerances. The threshold case required porting PEVREC's V=MV side effect.
+One additional medium fixture retains four stored-transfer discrepancies.
+See [compression validation](validation-compression.md) for evidence and limits.

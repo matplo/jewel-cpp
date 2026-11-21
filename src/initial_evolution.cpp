@@ -31,7 +31,7 @@ InitialScatteringResult InitialScatteringEvolution::sample(ShowerState& state,Pa
  InitialScatteringResult result;result.selected=selected;result.elapsed=duration;
  const auto& e=config_.evolution;double scale2=e.mass_scale*e.mass_scale,low=e.cutoff*e.cutoff/scale2;
  double split_angle=-1,split_time=0;
- if(auto mother=state.at(selected).parent){const auto& p=state.at(mother);if(p.particle.status==11){split_angle=p.angle;split_time=p.decay_time;}}
+ if(auto mother=state.scheduling_parent(selected)){const auto& p=state.at(mother);if(p.particle.status==11){split_angle=p.angle;split_time=p.decay_time;}}
  auto position=location(state.at(selected),start);
  double first_dt=-1,total=0,now=start,left=duration;
  auto collapse=[&]{require(history.first>0&&history.first<=history.records.size(),"missing fallback initial transfer");
@@ -52,7 +52,7 @@ InitialScatteringResult InitialScatteringEvolution::sample(ShowerState& state,Pa
   const auto saved=*result.coherent;auto snapshot=state.snapshot_truncated(saved.original_size);
   for(auto& p:snapshot.particles){const ShowerParticle* old=nullptr;
    if(p.particle.id==saved.first)old=&saved.first_before;if(p.particle.id==saved.second)old=&saved.second_before;
-   if(old){p.particle.status=old->particle.status;p.daughters={};p.decay_time=old->decay_time;}
+   if(old){p.particle.status=old->particle.status;p.daughters={};if(p.scheduling_slots){(*p.scheduling_slots)[1]=0;(*p.scheduling_slots)[2]=0;}p.decay_time=old->decay_time;}
   }
   state.restore(snapshot);result.selected=saved.selected;result.coherent.reset();++result.coherence_reversions;
  };

@@ -24,6 +24,11 @@ int main(){
  check(result.branch_calls==1&&result.passes==2&&state.at(second).particle.status==5);
  check(history.last==0&&ledger.used==0);state.validate();
  bool rejected=false;try{cascade.branch(state,temp,temp,history,ledger,random);}catch(const std::domain_error&){rejected=true;}check(rejected);
+ // Diagnostic listing has a physical auxiliary-record side effect (V=MV).
+ state.at(first).particle.status=4;state.at(first).evolution_time=.2;
+ state.at(first).particle.production={1,2,3,.4};state.at(second).particle.production={4,5,6,.7};
+ cascade.branch(state,first,temp,history,ledger,random);
+ check(state.at(first).generator_vertex.x==1&&state.at(second).generator_vertex.t==.7);
  // Infinite/no-progress source histories must fail explicitly, never report a
  // completed shower. Two active legs exceed an intentionally tiny call budget.
  auto active=parton;active.particle.status=1;active.evolution_time=0;state.append(active);state.append(active);

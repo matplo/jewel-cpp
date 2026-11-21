@@ -338,7 +338,7 @@ if(JEWEL_REFERENCE_SOURCE)
  if(NOT extracted_compression EQUAL 0)
   message(FATAL_ERROR "Compression reference verification failed")
  endif()
- add_executable(jewel-compression-reference ${CMAKE_BINARY_DIR}/compression-reference.f reference/compression_probe.f90)
+ add_executable(jewel-compression-reference ${CMAKE_BINARY_DIR}/compression-reference.f reference/compression_probe.f90 reference/record_listing_stub.f90)
  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(jewel-compression-reference PRIVATE -std=legacy -ffixed-line-length-none)
  endif()
@@ -351,4 +351,25 @@ if(BUILD_TESTING)
  add_executable(compression-test tests/compression.cpp)
  target_link_libraries(compression-test PRIVATE jewel_core)
  add_test(NAME compression-contracts COMMAND compression-test)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ foreach(target jewel-medium-reference jewel-coherence-reference jewel-coherent-start-reference)
+  target_sources(${target} PRIVATE ${CMAKE_BINARY_DIR}/compression-reference.f reference/record_listing_stub.f90)
+ endforeach()
+ add_test(NAME cascade-compression-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/cascade_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-compression.json
+  --baseline --generated --compression-padding 20000)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME cascade-compression-boundary COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/cascade_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-compression-boundary.json
+  --case 38 --generated --compression-padding 19995)
+ add_test(NAME cascade-compression-medium COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/cascade_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-compression-coherent.json
+  --case 44 --generated --compression-padding 20000)
 endif()
