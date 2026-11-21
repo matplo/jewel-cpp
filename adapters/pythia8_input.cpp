@@ -31,10 +31,44 @@ std::string number(double value){std::ostringstream out;out<<std::setprecision(1
 // Observe parton-level output immediately before BeamSetup::boostAndVertex.
 // This hook never vetoes, changes records, or consumes random numbers.
 class EnergyStageCapture final : public Pythia8::UserHooks {
+ struct Candidate {GeneratorIsrFractions fractions;Momentum sister;int pdg{};};
+ std::optional<Candidate> pending;
+ std::vector<Candidate> completed;
+ static bool matches(const Candidate& c,const Pythia8::Event& event){
+  auto i=static_cast<int>(c.fractions.emitted)-1;
+  return i>=0&&i<event.size()&&std::abs(event[i].status())==43&&event[i].id()==c.pdg
+   &&event[i].px()==c.sister.px&&event[i].py()==c.sister.py&&event[i].pz()==c.sister.pz;
+ }
+ void finish_pending(const Pythia8::Event& event){
+  if(pending){const auto system=pending->fractions.subsystem;
+   if(matches(*pending,event)&&system<beamAPtr->size()&&system<beamBPtr->size()){
+    pending->fractions.after={(*beamAPtr)[system].x(),(*beamBPtr)[system].x()};completed.push_back(*pending);
+   }pending.reset();
+  }
+ }
 public:
  std::vector<Momentum> momenta;
+ std::vector<GeneratorIsrFractions> fractions;
+ void reset(){momenta.clear();fractions.clear();pending.reset();completed.clear();}
+ bool canVetoISREmission() override{return true;}
+ bool doVetoISREmission(int sizeOld,const Pythia8::Event& event,int system) override{
+  // Before the next tentative branch commits, beam slots still contain the
+  // preceding accepted branch's updated fractions. Discard rolled-back roots.
+  finish_pending(event);
+  Candidate c;c.fractions.subsystem=system;c.fractions.collision_s=infoPtr->s();
+  require(system>=0&&system<beamAPtr->size()&&system<beamBPtr->size(),"missing ISR beam slots");
+  c.fractions.before={(*beamAPtr)[system].x(),(*beamBPtr)[system].x()};
+  for(int i=sizeOld;i<event.size();++i){int status=std::abs(event[i].status());
+   if(status==41){require(!c.fractions.mother,"multiple observed ISR mothers");c.fractions.mother=i+1;}
+   if(status==42){require(!c.fractions.recoiler,"multiple observed ISR recoilers");c.fractions.recoiler=i+1;}
+   if(status==43){require(!c.fractions.emitted,"multiple observed ISR emissions");c.fractions.emitted=i+1;c.pdg=event[i].id();c.sister={event[i].px(),event[i].py(),event[i].pz(),event[i].e()};}
+  }
+  require(c.fractions.mother&&c.fractions.recoiler&&c.fractions.emitted,"unsupported ISR observation topology");pending=c;return false;
+ }
  bool canVetoPartonLevel() override{return true;}
  bool doVetoPartonLevel(const Pythia8::Event& event) override{
+  finish_pending(event);fractions.clear();
+  for(const auto& c:completed)if(matches(c,event))fractions.push_back(c.fractions);
   momenta.clear();for(int i=0;i<event.size();++i){auto p=event[i].p();momenta.push_back({p.px(),p.py(),p.pz(),p.e()});}return false;
  }
 };
@@ -72,9 +106,9 @@ int Pythia8Input::version(){return PYTHIA_VERSION_INTEGER;}
 const std::vector<std::string>& Pythia8Input::settings() const{return impl_->settings;}
 std::optional<HardEventSnapshot> Pythia8Input::next(){
  auto& p=impl_->engine;++impl_->attempts;
- impl_->capture->momenta.clear();
+ impl_->capture->reset();
  if(!p.next())return std::nullopt;
- HardEventSnapshot result;result.attempt=impl_->attempts;result.initial_state_radiation=impl_->initial_state_radiation;result.multiple_parton_interactions=impl_->multiple_parton_interactions;
+ HardEventSnapshot result;result.isr_fractions=impl_->capture->fractions;result.attempt=impl_->attempts;result.initial_state_radiation=impl_->initial_state_radiation;result.multiple_parton_interactions=impl_->multiple_parton_interactions;
  const auto& info=p.info;result.process_code=info.code();result.weight=info.weight();result.pt_hat=info.pTHat();
  result.incoming_id1=info.id1();result.incoming_id2=info.id2();result.x1=info.x1();result.x2=info.x2();
  result.q_factorization=info.QFac();result.q_renormalization=info.QRen();
@@ -170,6 +204,19 @@ void validate_hard_snapshot(const HardEventSnapshot& event){
  require(expected_outputs==subsystem_outputs,"subsystem membership omits radiation or includes unrelated particles");
  require(event.hard_final[0]!=event.hard_final[1],"duplicate final hard leg");
  require(event.isr_emissions.size()==event.isr_final.size(),"incomplete ISR final-copy associations");
+ std::unordered_set<ParticleId> fraction_emissions;
+ for(const auto& f:event.isr_fractions){
+  require(std::isfinite(f.collision_s)&&f.collision_s>0,"invalid ISR collision energy squared");
+  require(f.subsystem>=0&&static_cast<std::size_t>(f.subsystem)<event.subsystems.size(),"invalid ISR fraction subsystem");
+  require(fraction_emissions.insert(f.emitted).second,"duplicate ISR fraction observation");
+  require(std::abs(at(f.emitted).status)==43&&std::abs(at(f.mother).status)==41&&std::abs(at(f.recoiler).status)==42,"invalid ISR fraction roles");
+  require(at(f.emitted).mothers==std::vector<ParticleId>{f.mother},"ISR fraction ancestry mismatch");
+  for(auto values:{f.before,f.after})for(double x:values)require(std::isfinite(x)&&x>0&&x<=1,"invalid ISR beam fraction");
+  require((f.after[0]>f.before[0]&&f.after[1]==f.before[1])||(f.after[1]>f.before[1]&&f.after[0]==f.before[0]),"ISR observation must advance exactly one beam fraction");
+  auto final=final_copy(event,f.emitted);const auto& system=event.subsystems[f.subsystem];
+  require(std::find(system.outgoing_final.begin(),system.outgoing_final.end(),final)!=system.outgoing_final.end(),"ISR fraction subsystem mismatch");
+ }
+ require(fraction_emissions==std::unordered_set<ParticleId>(event.isr_emissions.begin(),event.isr_emissions.end()),"missing ISR fraction observations");
  require(event.initial_state_radiation||event.isr_emissions.empty(),"ISR emissions in ISR-off snapshot");
  std::vector<ParticleId> emissions;
  for(const auto& p:event.particles)if(std::abs(p.status)==43)emissions.push_back(p.id);

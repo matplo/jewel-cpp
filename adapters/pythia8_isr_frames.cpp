@@ -19,7 +19,7 @@ bool collinear(const GeneratorParticle& p){return p.momentum.energy>0&&p.mass==0
 Momentum apply_isr_frame(const IsrRecoilFrame& frame,Momentum p){auto q=apply(frame,{p.energy,p.px,p.py,p.pz});return {q[1],q[2],q[3],q[0]};}
 SpaceTime apply_isr_frame_displacement(const IsrRecoilFrame& frame,SpaceTime v){auto q=apply(frame,{v.t,v.x,v.y,v.z});return {q[1],q[2],q[3],q[0]};}
 namespace {
-std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,const std::array<IsrIncomingChain,2>& chains){
+std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,const std::array<IsrIncomingChain,2>& chains,const std::vector<GeneratorIsrFractions>* fractions=nullptr){
  std::vector<IsrRecoilFrame> frames;
  auto at=[&](ParticleId id)->const GeneratorParticle&{require(id>0&&id<=input.particles.size(),"missing ISR recoil line");return input.particles[id-1];};
  const double pi=std::acos(-1.);
@@ -31,12 +31,26 @@ std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,co
   require(candidates.size()==1,"ambiguous or unsupported ISR recoil pair");const auto& recoiler=at(candidates[0]);
   require(recoiler.daughters.size()==1,"invalid ISR recoiler daughter");const auto& old=at(recoiler.daughters[0]);
   require(std::find(chains[1-side].backward_lines.begin(),chains[1-side].backward_lines.end(),recoiler.id)!=chains[1-side].backward_lines.end(),"ISR recoiler is not on opposite beam chain");
-  require(collinear(mother)&&collinear(daughter)&&collinear(recoiler)&&collinear(old),"ISR frame requires massless collinear II incoming records");
+  const GeneratorIsrFractions* captured=nullptr;
+  if(fractions){auto found=std::find_if(fractions->begin(),fractions->end(),[&](const auto& f){return f.emitted==sister.id;});
+   require(found!=fractions->end()&&found->mother==mother.id&&found->recoiler==recoiler.id,"missing or mismatched ISR source fractions");captured=&*found;
+   // Canonical beam kinematics come from source x values. Historical momenta
+   // can drift off their mass shell after highly boosted source operations.
+   for(const auto* p:{&mother,&daughter,&recoiler,&old})require(p->mass==0&&std::hypot(p->momentum.px,p->momentum.py)<=1e-10*std::abs(p->momentum.pz),"ISR source fractions require massless longitudinal incoming records");
+  }else require(collinear(mother)&&collinear(daughter)&&collinear(recoiler)&&collinear(old),"ISR frame requires massless collinear II incoming records");
   double beam_sign=side==0?1.:-1.;require(mother.momentum.pz*beam_sign>0&&daughter.momentum.pz*beam_sign>0&&recoiler.momentum.pz*beam_sign<0&&old.momentum.pz*beam_sign<0,"ISR frame beam directions disagree");
   double ea=side==0?daughter.momentum.energy:old.momentum.energy,eb=side==0?old.momentum.energy:daughter.momentum.energy;
   double ena=side==0?mother.momentum.energy:recoiler.momentum.energy,enb=side==0?recoiler.momentum.energy:mother.momentum.energy;
-  double m2=4*ea*eb,m=std::sqrt(m2),q2=branch.virtuality_squared,z=daughter.momentum.energy/mother.momentum.energy;
+  double m2=4*ea*eb,q2=branch.virtuality_squared,z=daughter.momentum.energy/mother.momentum.energy;
+  if(captured){ea=captured->before[0];eb=captured->before[1];ena=captured->after[0];enb=captured->after[1];
+   m2=ea*eb*captured->collision_s;z=captured->before[side]/captured->after[side];}
+  double m=std::sqrt(m2);
   require(z>0&&z<1,"invalid reconstructed ISR momentum fraction");double ms2=sister.mass*sister.mass;
+  // For light-flavour/massless sisters the source uses Q2=pT2/(1-z). Recover pT from
+  // the stored evolution scale instead of subtracting nearly equal squares.
+  // Massive threshold branches have a different prescription; retain their
+  // independently checked spacelike reconstruction until that mode is mapped.
+  if(captured&&(sister.mass==0||std::abs(sister.pdg)<=3)){require(std::isfinite(sister.scale)&&sister.scale>0,"missing ISR evolution scale");q2=sister.scale*sister.scale/(1-z);}
   double pt2=q2-z*(m2+q2)*(q2+ms2)/m2;require(pt2>0&&std::isfinite(pt2),"invalid reconstructed ISR transverse scale");
   double sign=side==0?1.:-1.,er=.5*(m2+q2)/m,pzr=-sign*er;
   double pt=std::sqrt(pt2)*m2/(z*(m2+q2)),pzm=sign*.5*m*((m2-q2)/(z*(m2+q2))+(q2+ms2)/m2);
@@ -47,6 +61,7 @@ std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,co
    matrix.rot(-theta,phi);matrix.bst(0,0,(ena-enb)/(ena+enb));return matrix;};
   auto base=ps;base.rotbst(from_rest(0));
   double phi=std::atan2(sister.momentum.py,sister.momentum.px)-base.phi();
+  if(captured){phi=std::fmod(phi,2*pi);if(phi<0)phi+=2*pi;} // Source samples phi in [0,2pi).
   Pythia8::RotBstMatrix matrix;matrix.bst(0,0,(eb-ea)/(ea+eb));matrix.rot(0,-phi);matrix.rotbst(from_rest(phi));
   IsrRecoilFrame frame;frame.emitted=sister.id;frame.mother=mother.id;frame.recoiler=recoiler.id;frame.old_recoiler=old.id;
   for(int i=0;i<4;++i)for(int j=0;j<4;++j){frame.matrix[4*i+j]=matrix.value(i,j);require(std::isfinite(frame.matrix[4*i+j]),"nonfinite reconstructed ISR matrix");}
@@ -74,7 +89,7 @@ std::vector<std::vector<IsrRecoilFrame>> reconstruct_subsystem_isr_frames(const 
  auto staged=input;
  for(auto& node:staged.particles){require(node.energy_before_beam_repair.has_value(),"missing source-stage ISR recoil energy");node.momentum.energy=*node.energy_before_beam_repair;}
  std::vector<std::vector<IsrRecoilFrame>> result;
- for(const auto& pair:chains)result.push_back(reconstruct_frames(staged,pair));
+ for(const auto& pair:chains)result.push_back(reconstruct_frames(staged,pair,&input.isr_fractions));
  return result;
 }
 

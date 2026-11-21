@@ -1,5 +1,9 @@
 # Subsystem ISR recoil: implemented, validation incomplete
 
+Latest update: [public-hook source fractions](validation-isr-fractions.md) reduce
+the failures below to 3 rejected events and 31 composed partons. The original
+results in this document are retained as the preceding baseline.
+
 Recorded 2026-11-21, Pythia8 8.317. The adapter now reconstructs chronological
 ISR recoil matrices per subsystem using the existing SimpleSpaceShower
 source-prescription formula and captured pre-beam-energy-repair momenta.

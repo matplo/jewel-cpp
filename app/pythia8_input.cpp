@@ -38,6 +38,9 @@ int main(int argc,char** argv){
    const auto& e=*event;
    out<<"{\"type\":\"event\",\"attempt\":"<<e.attempt<<",\"process_code\":"<<e.process_code<<",\"weight\":"<<e.weight<<",\"pt_hat\":"<<e.pt_hat<<",\"x1\":"<<e.x1<<",\"x2\":"<<e.x2<<",\"incoming_id1\":"<<e.incoming_id1<<",\"incoming_id2\":"<<e.incoming_id2<<",\"q_factorization\":"<<e.q_factorization<<",\"q_renormalization\":"<<e.q_renormalization<<",\"hard_incoming\":";list(out,e.hard_incoming);out<<",\"hard_outgoing\":";list(out,e.hard_outgoing);out<<",\"hard_final\":";list(out,e.hard_final);
    out<<",\"initial_state_radiation\":"<<e.initial_state_radiation<<",\"isr_emissions\":";list(out,e.isr_emissions);out<<",\"isr_final\":";list(out,e.isr_final);
+   out<<",\"isr_beam_fractions\":[";bool first_fraction=true;
+   for(const auto& f:e.isr_fractions){if(!first_fraction)out<<',';first_fraction=false;
+    out<<"{\"collision_s_gev2\":"<<f.collision_s<<",\"subsystem\":"<<f.subsystem<<",\"emitted\":"<<f.emitted<<",\"mother\":"<<f.mother<<",\"recoiler\":"<<f.recoiler<<",\"before\":";list(out,f.before);out<<",\"after\":";list(out,f.after);out<<'}';}out<<']';
    out<<",\"multiple_parton_interactions\":"<<e.multiple_parton_interactions<<",\"subsystems\":[";bool first_system=true;
    for(const auto& system:e.subsystems){if(!first_system)out<<',';first_system=false;
     out<<"{\"index\":"<<system.index<<",\"shat\":"<<system.shat<<",\"pt_hat\":"<<system.pt_hat<<",\"incoming\":";list(out,system.incoming);

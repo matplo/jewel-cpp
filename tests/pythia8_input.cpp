@@ -93,6 +93,14 @@ int main(){
   for(int i=0;i<20;++i){auto event=input.next();if(!event)continue;
    check(event->multiple_parton_interactions);
    secondary+=event->subsystems.size()-1;
+   if(!event->isr_fractions.empty()){
+    auto missing=*event;missing.isr_fractions.pop_back();bool rejected=false;
+    try{jewel::validate_hard_snapshot(missing);}catch(const std::domain_error&){rejected=true;}check(rejected);
+    auto duplicate=*event;duplicate.isr_fractions.push_back(duplicate.isr_fractions[0]);rejected=false;
+    try{jewel::validate_hard_snapshot(duplicate);}catch(const std::domain_error&){rejected=true;}check(rejected);
+    auto unchanged=*event;unchanged.isr_fractions[0].after=unchanged.isr_fractions[0].before;rejected=false;
+    try{jewel::validate_hard_snapshot(unchanged);}catch(const std::domain_error&){rejected=true;}check(rejected);
+   }
    auto chains=jewel::map_subsystem_isr_ancestry(*event);check(chains.size()==event->subsystems.size());
    std::size_t branches=0;for(std::size_t j=0;j<chains.size();++j)for(std::size_t side=0;side<2;++side){
     check(chains[j][side].backward_lines.back()==event->subsystems[j].incoming[side]);branches+=chains[j][side].branches.size();}

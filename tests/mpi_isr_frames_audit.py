@@ -20,7 +20,9 @@ for current,prior in zip(sys.argv[2::2],sys.argv[3::2]):
                 assert e==old
                 continue
             frames=e.pop('subsystem_isr_frames');error=e.pop('subsystem_isr_frame_error')
-            assert e==old, 'ISR frame mapping changed existing event data'
+            original=dict(e)
+            if 'isr_beam_fractions' not in old:original.pop('isr_beam_fractions',None)
+            assert original==old, 'ISR frame mapping changed existing event data'
             counts['events']+=1
             if error:
                 assert frames is None

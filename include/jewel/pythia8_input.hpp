@@ -36,7 +36,14 @@ struct GeneratorSubsystem {
  std::array<ParticleId,2> incoming{}; // Current Pythia subsystem incoming records.
  std::vector<ParticleId> outgoing,outgoing_final,process_outgoing;
 };
+struct GeneratorIsrFractions {
+ double collision_s{};
+ int subsystem{};
+ ParticleId emitted{},mother{},recoiler{};
+ std::array<double,2> before{},after{}; // Beam A/B fractions around accepted ISR.
+};
 struct HardEventSnapshot {
+ std::vector<GeneratorIsrFractions> isr_fractions;
  std::uint64_t attempt{};
  bool multiple_parton_interactions{false};
  std::vector<GeneratorSubsystem> subsystems;
