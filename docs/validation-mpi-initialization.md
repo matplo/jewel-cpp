@@ -84,3 +84,7 @@ that primary context through MPI calls. It must not derive sampling channels
 from each MPI pair. The [MPI-enabled parent trace](validation-mpi-scheduling.md)
 also resolves the distinction between stable native ancestry and source
 scheduling-parent zero. Pair sequencing and full-runner integration remain open.
+
+The [native subsystem initializer](validation-subsystem-initialization.md) now
+carries that primary context through an ordered sequence of explicit Pythia8
+pairs. Full event-runner integration and source-order equivalence remain open.

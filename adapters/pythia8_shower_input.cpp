@@ -170,4 +170,29 @@ void prepare_imported_partons(ImportedPythiaRecord& imported,
  working.validate();imported.state=std::move(working);
 }
 
+SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imported,
+ HardInitializationConfig config,const BranchingSampler& sampler,Random& random){
+ auto require=[](bool ok,const char* why){if(!ok)throw std::domain_error(why);};
+ imported.state.validate();require(!imported.subsystems.empty(),"initialization lacks primary subsystem");
+ std::set<ParticleId> seen;
+ for(std::size_t i=0;i<imported.subsystems.size();++i){const auto& pair=imported.subsystems[i];
+  require(pair.index==int(i),"subsystem initialization requires ordered contiguous indices");
+  for(auto id:pair.hard){
+   require(seen.insert(id).second&&imported.input_sources.count(id),"invalid or duplicated subsystem hard leg");
+   const auto& node=imported.state.at(id);int pdg=node.particle.pdg;
+   require(pdg==21||(std::abs(pdg)>=1&&std::abs(pdg)<=5),"subsystem initialization currently requires quark/gluon pairs");
+   require(node.particle.status==1||(i>0&&node.particle.status==4),"subsystem initialization requires prepared hard legs");
+   require(imported.roles.at(id)==(i==0?ImportedRole::primary_hard:ImportedRole::mpi_hard),"subsystem hard role mismatch");
+  }
+ }
+ const auto& primary=imported.subsystems.front();SubsystemInitialization result;
+ for(std::size_t side=0;side<2;++side)result.primary_sampling_channels[side]=imported.state.at(primary.hard[side]).particle.pdg==21?Channel::GC:Channel::QQ;
+ auto working=imported.state;config.pt_hat=primary.pt_hat;
+ config.mpi_sampling_channels=result.primary_sampling_channels;
+ for(std::size_t i=0;i<imported.subsystems.size();++i){const auto& pair=imported.subsystems[i];config.mpi_pair=i>0;
+  result.pairs.push_back(initialize_hard_dijet(working,pair.hard[0],pair.hard[1],config,sampler,random));
+ }
+ working.validate();imported.state=std::move(working);return result;
+}
+
 }

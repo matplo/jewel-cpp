@@ -849,3 +849,7 @@ JEWEL survivor-selection and ordered massless-conversion step. The generated
 record replay passes 640,920 values against the JEWEL 2.6.0 Fortran routines;
 see [native preparation validation](docs/validation-native-preparation.md).
 This adapter stage is not yet connected to full ISR/MPI cascade evolution.
+
+Prepared records also support [primary/MPI subsystem initialization](docs/validation-subsystem-initialization.md),
+with primary sampling channels inherited by MPI calls and whole-event rollback
+on failure. This sequence remains separate from full ISR/MPI cascade execution.

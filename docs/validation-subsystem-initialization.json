@@ -1,0 +1,23 @@
+{
+  "scope": "Native sequencing contracts, not independent Fortran full-event validation",
+  "seed": 2600417,
+  "events": 20,
+  "primary_pairs": 20,
+  "mpi_pairs": 111,
+  "mpi_legs_with_different_flavour_channel": 74,
+  "contracts_passed": [
+    "subsystem-initialization",
+    "pythia8-input",
+    "pythia8-boundary",
+    "hard-initialization"
+  ],
+  "fortran_suites_passed": [
+    "hard-initialization-differential",
+    "mpi-initialization-differential"
+  ],
+  "hashes": {
+    "tests/subsystem_initialization.cpp": "259052e5f696c7a2ebd2f318e56bfea3f4c7a90001dbecd512d057b1fcc1cddd",
+    "build-pythia8/subsystem-initialization-test": "a51293a95b7f6abb3dbd3682d7dc71e357a6868652c7aec8446ba031cd8b6ea3",
+    "/private/tmp/jewel-subsystem-contracts.log": "9becc5be93c3abc1e1fae2a6820eab526e1843204bc8de10743095ebaf86b8ee"
+  }
+}

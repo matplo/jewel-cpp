@@ -61,4 +61,15 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot&,
 void prepare_imported_partons(ImportedPythiaRecord&,
  const std::function<double(int)>& nominal_mass,double max_pseudorapidity);
 
+struct SubsystemInitialization {
+ std::array<Channel,2> primary_sampling_channels;
+ std::vector<HardInitializationResult> pairs;
+};
+// Initialize the prepared primary pair, then MPI pairs in subsystem order.
+// MPI calls inherit primary TYPE1/TYPE2, not their own outgoing flavours.
+// Currently all pairs must be quarks/gluons. Unsupported pairs fail before
+// drawing; later failures roll back the whole state but not the random stream.
+SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord&,
+ HardInitializationConfig,const BranchingSampler&,Random&);
+
 }
