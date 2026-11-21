@@ -101,6 +101,13 @@ struct Pythia8Input::Impl {
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
+  if(c.pthat_bias_power){
+   require(std::isfinite(*c.pthat_bias_power)&&*c.pthat_bias_power>=0&&*c.pthat_bias_power<=10,
+    "pThat bias power must be in [0,10]");
+   settings.push_back("PhaseSpace:bias2Selection = on");
+   settings.push_back("PhaseSpace:bias2SelectionPow = "+number(*c.pthat_bias_power));
+   settings.push_back("PhaseSpace:bias2SelectionRef = 1");
+  }
   if(c.hard_alpha_s){settings.push_back("SigmaProcess:alphaSvalue = "+number(*c.hard_alpha_s));settings.push_back("SigmaProcess:alphaSorder = "+std::to_string(*c.hard_alpha_s_order));}
   if(c.isr_alpha_s){settings.push_back("SpaceShower:alphaSvalue = "+number(*c.isr_alpha_s));settings.push_back("SpaceShower:alphaSorder = "+std::to_string(*c.isr_alpha_s_order));}
   if(c.alpha_s_nfmax)settings.push_back("StandardModel:alphaSnfmax = "+std::to_string(*c.alpha_s_nfmax));

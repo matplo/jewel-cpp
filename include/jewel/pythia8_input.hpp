@@ -9,6 +9,7 @@ namespace jewel {
 struct PythiaInputConfig {
  std::string xml_directory;
  double ecm{5020},pt_min{20},pt_max{100};
+ std::optional<double> pthat_bias_power;
  int seed{260000},pdf_set{13},pp_tune{14};
  bool multiple_parton_interactions{false};
  bool initial_state_radiation{false}; // Adapter-only until ISR transport is mapped.

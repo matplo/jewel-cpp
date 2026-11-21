@@ -61,7 +61,7 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--pthat-bias POWER] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"&&mode!="zero-interaction"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -88,6 +88,13 @@ int main(int argc,char** argv){
     native_mpi=true;experimental_isr_mpi=true;input_config.initial_state_radiation=true;continue;
    }
 #endif
+   if(option=="--pthat-bias"){
+    if(input_config.pthat_bias_power||i+1>=argc)throw std::invalid_argument("pThat bias requires one power");
+    std::string value=argv[++i];std::size_t parsed=0;
+    input_config.pthat_bias_power=std::stod(value,&parsed);
+    if(parsed!=value.size())throw std::invalid_argument("invalid pThat bias power");
+    continue;
+   }
    if(option=="--compact-hadrons"){compact_hadrons=true;continue;}
    if(option=="--isr-only"){
     if(experimental_isr_mpi)throw std::invalid_argument("choose one ISR/MPI mode");
@@ -303,7 +310,7 @@ int main(int argc,char** argv){
     }
     ++accepted;accepted_weight+=hard->weight;
     if(compact_hadrons){
-     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"weight\":"<<hard->weight<<",\"hadronized_particles\":[";
+     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"hadronized_particles\":[";
      bool first=true;
      for(const auto& p:hadrons->particles)if(p.final){
       if(!first)out<<',';first=false;

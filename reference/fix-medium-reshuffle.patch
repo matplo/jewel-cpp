@@ -1,0 +1,11 @@
+--- jewel-2.6.0.f
++++ jewel-2.6.0.f
+@@ -6061,7 +6061,7 @@
+ 	     endif
+ 	     E4new = sqrt(p42 + m42)
+ 	     E3new = sqrt(shat) - E4new
+-	     p32 = E4new**2 - m42
++	     p32 = p42
+ 	     m32 = E3new**2 - E4new**2 + m42
+ 	     if ((E3new.lt.0.d0).or.(E4new.lt.0.d0)) then
+ 	       if (splitrec) then

@@ -21,8 +21,8 @@ def identity(path):
 
 def discard_ledger(settings,log):
     """Require a complete, unit-weight PP ledger; never infer unknown failures."""
-    if settings.get('WEIGHTED')!='F' or settings.get('ISOCHANNEL')!='PP':
-        raise ValueError('attempt ledger requires unweighted PP generation')
+    if settings.get('WEIGHTED') not in ('F','T') or settings.get('ISOCHANNEL')!='PP':
+        raise ValueError('attempt ledger requires explicit PP weighting policy')
     text=log.read_text()
     def single(pattern):
         values=re.findall(pattern,text,re.M)
@@ -52,6 +52,8 @@ def import_events(source,cards,medium_cards,mode,output,run_log=None):
     count=int(settings['NEVENT'])
     if count<=0:raise ValueError('positive NEVENT required')
     discarded=discard_ledger(settings,run_log) if run_log is not None else set()
+    biased=settings.get('WEIGHTED')=='T'
+    discard_weight=0. if biased else 1.
     scope='attempted-events' if run_log is not None else 'written-events'
     if settings.get('KEEPRECOILS') not in ('T','F'):raise ValueError('explicit KEEPRECOILS T/F required')
     if settings.get('WRITEDUMMIES')!='F':raise ValueError('WRITEDUMMIES F required; dummy removal is not implemented')
@@ -73,7 +75,7 @@ def import_events(source,cards,medium_cards,mode,output,run_log=None):
         output_policy={key:settings.get(key) for key in ['DOSUBTRACTION','PUTONSHELL','RSUB','WRITESCATCEN','WRITEDUMMIES']},
         selection_input='HepMC status 1 only; neutrinos retained here and excluded by common analysis',
         normalization='per logged GENEVENT attempt with explicit discarded indices' if run_log is not None else 'per written event; internal retries/failures unavailable; not matched to native per-attempt normalization')
-    if run_log is not None:header['reference_ledger']={**identity(run_log),'discarded_attempts':sorted(discarded),'policy':'unweighted PP; conversion losses forbidden; each logged discard has unit weight'}
+    if run_log is not None:header['reference_ledger']={**identity(run_log),'discarded_attempts':sorted(discarded),'policy':('weighted PP; conversion losses forbidden; discards contribute zero to accepted-event weight' if biased else 'unweighted PP; conversion losses forbidden; each logged discard has unit weight')}
     reader=H.ReaderAsciiHepMC2(str(source));seen=set();weights=[];last_xsec=None
     temp=None
     try:
@@ -83,7 +85,7 @@ def import_events(source,cards,medium_cards,mode,output,run_log=None):
             emit(header)
             next_attempt=1
             def emit_discard(attempt):
-                emit(dict(type='reference_failure',attempt=attempt,weight=1.,stage='reference',reason='JEWEL logged discarded event'))
+                emit(dict(type='reference_failure',attempt=attempt,weight=discard_weight,stage='reference',reason='JEWEL logged discarded event'))
             while True:
                 event=H.GenEvent();reader.read_event(event)
                 if reader.failed():break
@@ -93,7 +95,8 @@ def import_events(source,cards,medium_cards,mode,output,run_log=None):
                 seen.add(number)
                 weight=list(event.weights())
                 if len(weight)!=1 or not math.isfinite(weight[0]):raise ValueError('expected one finite event weight')
-                if run_log is not None and weight[0]!=1.:raise ValueError('attempt ledger requires unit event weights')
+                if biased and weight[0]<=0:raise ValueError('expected positive compensating weight')
+                if run_log is not None and not biased and weight[0]!=1.:raise ValueError('attempt ledger requires unit event weights')
                 while next_attempt in discarded:
                     emit_discard(next_attempt);next_attempt+=1
                 weights.append(float(weight[0]));particles=[]
@@ -113,7 +116,8 @@ def import_events(source,cards,medium_cards,mode,output,run_log=None):
                 emit_discard(next_attempt);next_attempt+=1
             if next_attempt!=count+1 or len(weights)!=count-len(discarded):raise ValueError(f'expected {count} events, read {len(weights)}')
             emit(dict(type='summary',attempts=count,accepted=len(weights),evolution_failures=None,generation_failures=None,discarded_events=len(discarded) if run_log is not None else None,
-                      generator_weight_sum=math.fsum(weights)+len(discarded),generator_weight_sum2=math.fsum(w*w for w in weights)+len(discarded),
+                      accepted_weight=math.fsum(weights),generator_weight_sum=math.fsum(weights)+discard_weight*len(discarded),
+                      generator_weight_sum2=math.fsum(w*w for w in weights)+discard_weight*len(discarded),
                       last_cross_section=last_xsec,denominator_scope=scope,failed_attempts_known=run_log is not None))
         temp.replace(output)
     finally:
