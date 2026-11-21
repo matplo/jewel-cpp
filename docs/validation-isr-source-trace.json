@@ -1,0 +1,247 @@
+{
+  "scope": "actual source ISR matrices versus reconstructed matrices; fixed composition gate still fails",
+  "reports": [
+    {
+      "scope": "actual Pythia source matrices; composition uses validated primordial reconstruction",
+      "reports": [
+        {
+          "prior_sha256": "e56e2a48f565abe77fac460d847693a1c4b44e31c7d5431523495a25e6a1c8c1",
+          "counts": {
+            "events": 1000,
+            "mapped_events": 1000,
+            "frames": 13253,
+            "copies": 41229,
+            "composed_final_partons": 26787
+          },
+          "rejected_events": [],
+          "composition_failures": [
+            {
+              "attempt": 109,
+              "subsystem": 1,
+              "root": 36,
+              "final": 95,
+              "max_absolute_error_gev": 2.648309305186558e-08
+            },
+            {
+              "attempt": 364,
+              "subsystem": 2,
+              "root": 24,
+              "final": 97,
+              "max_absolute_error_gev": 4.044818524562288e-07
+            },
+            {
+              "attempt": 364,
+              "subsystem": 2,
+              "root": 25,
+              "final": 98,
+              "max_absolute_error_gev": 2.6018574317276943e-07
+            },
+            {
+              "attempt": 627,
+              "subsystem": 3,
+              "root": 56,
+              "final": 95,
+              "max_absolute_error_gev": 5.4643692237732466e-08
+            },
+            {
+              "attempt": 700,
+              "subsystem": 5,
+              "root": 86,
+              "final": 140,
+              "max_absolute_error_gev": 3.559765104910184e-08
+            },
+            {
+              "attempt": 749,
+              "subsystem": 3,
+              "root": 37,
+              "final": 275,
+              "max_absolute_error_gev": 5.8679518133430975e-08
+            },
+            {
+              "attempt": 785,
+              "subsystem": 3,
+              "root": 76,
+              "final": 106,
+              "max_absolute_error_gev": 2.0583433979481924e-07
+            },
+            {
+              "attempt": 791,
+              "subsystem": 8,
+              "root": 134,
+              "final": 200,
+              "max_absolute_error_gev": 5.106227263240726e-08
+            },
+            {
+              "attempt": 832,
+              "subsystem": 2,
+              "root": 20,
+              "final": 158,
+              "max_absolute_error_gev": 8.380041549571615e-08
+            },
+            {
+              "attempt": 845,
+              "subsystem": 6,
+              "root": 91,
+              "final": 192,
+              "max_absolute_error_gev": 6.7123608005204e-08
+            },
+            {
+              "attempt": 887,
+              "subsystem": 4,
+              "root": 116,
+              "final": 158,
+              "max_absolute_error_gev": 3.7162544685998e-07
+            }
+          ],
+          "max_copy_residual_gev": 3.099444256804418e-09,
+          "max_composed_residual_gev": 4.044818524562288e-07,
+          "max_metric_residual": 1.2057862477377057e-06
+        }
+      ],
+      "reconstructed_parameter_errors": {
+        "Q2": {
+          "max_absolute_error": 1.0707594810810406e-09,
+          "max_relative_error": 9.381196806615214e-10
+        },
+        "z": {
+          "max_absolute_error": 1.7044532452104022e-11,
+          "max_relative_error": 5.372727380089202e-11
+        },
+        "m2II": {
+          "max_absolute_error": 1.015618909150362e-05,
+          "max_relative_error": 2.165057625456714e-11
+        }
+      },
+      "events_with_identical_particles": 1000,
+      "accepted_source_branches": 13253,
+      "composition_audit_returncode": 1,
+      "trace_sha256": "48e8363ad0e90f628e5b6a62be324ac58022e882c72ca5f69616ca050684af3e",
+      "snapshots_sha256": "e56e2a48f565abe77fac460d847693a1c4b44e31c7d5431523495a25e6a1c8c1"
+    },
+    {
+      "scope": "actual Pythia source matrices; composition uses validated primordial reconstruction",
+      "reports": [
+        {
+          "prior_sha256": "1d9611ba5393b9111d8303d9050f8f59398bb6d1d3b806d89d9671d425aeb6f7",
+          "counts": {
+            "events": 1000,
+            "mapped_events": 1000,
+            "frames": 13709,
+            "copies": 42716,
+            "composed_final_partons": 27703
+          },
+          "rejected_events": [],
+          "composition_failures": [
+            {
+              "attempt": 23,
+              "subsystem": 1,
+              "root": 15,
+              "final": 70,
+              "max_absolute_error_gev": 2.301495101164619e-07
+            },
+            {
+              "attempt": 289,
+              "subsystem": 1,
+              "root": 21,
+              "final": 54,
+              "max_absolute_error_gev": 9.80994627752807e-08
+            },
+            {
+              "attempt": 289,
+              "subsystem": 1,
+              "root": 22,
+              "final": 55,
+              "max_absolute_error_gev": 2.534977738832822e-07
+            },
+            {
+              "attempt": 355,
+              "subsystem": 7,
+              "root": 56,
+              "final": 163,
+              "max_absolute_error_gev": 1.8807089219308182e-08
+            },
+            {
+              "attempt": 413,
+              "subsystem": 12,
+              "root": 109,
+              "final": 253,
+              "max_absolute_error_gev": 3.918515290024516e-08
+            },
+            {
+              "attempt": 413,
+              "subsystem": 12,
+              "root": 110,
+              "final": 254,
+              "max_absolute_error_gev": 6.813252184656449e-08
+            },
+            {
+              "attempt": 488,
+              "subsystem": 8,
+              "root": 133,
+              "final": 210,
+              "max_absolute_error_gev": 5.107386868985486e-08
+            },
+            {
+              "attempt": 488,
+              "subsystem": 8,
+              "root": 134,
+              "final": 211,
+              "max_absolute_error_gev": 8.523437600160833e-08
+            }
+          ],
+          "max_copy_residual_gev": 1.83541715159663e-09,
+          "max_composed_residual_gev": 2.534977738832822e-07,
+          "max_metric_residual": 1.1762972462747712e-06
+        }
+      ],
+      "reconstructed_parameter_errors": {
+        "Q2": {
+          "max_absolute_error": 1.1328040727676125e-09,
+          "max_relative_error": 8.590492225682363e-10
+        },
+        "z": {
+          "max_absolute_error": 1.8924639633155493e-11,
+          "max_relative_error": 2.486728709226268e-11
+        },
+        "m2II": {
+          "max_absolute_error": 5.372639861889184e-07,
+          "max_relative_error": 3.0876175752980524e-11
+        }
+      },
+      "events_with_identical_particles": 1000,
+      "accepted_source_branches": 13709,
+      "composition_audit_returncode": 1,
+      "trace_sha256": "5cff69c7de59e9883b18f69c19f27ed92d9976d319dd2dff48cdb354219cb3c0",
+      "snapshots_sha256": "1d9611ba5393b9111d8303d9050f8f59398bb6d1d3b806d89d9671d425aeb6f7"
+    }
+  ],
+  "build": {
+    "source_hashes": {
+      "src/SimpleSpaceShower.cc": "953dd8b8fee0a75b9a297f9c6e854586aed42ed66576e6a3ddb61b568b4d696f",
+      "include/Pythia8/SimpleSpaceShower.h": "b145926773ead27097376a45b4881dceb86f74e4f3104b978b583ce89822c5d7"
+    },
+    "command": [
+      "c++",
+      "-O3",
+      "-std=c++17",
+      "/private/tmp/jewel-isr-trace-repro/TraceSpaceShower.cc",
+      "/Users/ploskon/devel/jewel-cpp/reference/pythia_isr_trace.cpp",
+      "-I/private/tmp/jewel-isr-trace-repro",
+      "-I/Users/ploskon/devel/jewel-cpp/reference",
+      "-I/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/include",
+      "-L/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/lib",
+      "-Wl,-rpath,/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/lib",
+      "-lpythia8",
+      "-o",
+      "/private/tmp/jewel-isr-trace-repro/probe"
+    ],
+    "generated_source_sha256": "3c0a7f877fe1c12833046bc5ffcde57f0dcedd6e200a497ef80c8a0c375a70f3",
+    "executable_sha256": "135a34f7de7c6296e3d87834199ae554048f10b18781a04003c3d6f195be5e42"
+  },
+  "tool_hashes": {
+    "tools/build_pythia_isr_trace.py": "7f0348b8fc9a18f7aae2d0ad409e8464df9d4eba51d7844b913b923b73b79838",
+    "tools/audit_pythia_isr_trace.py": "fa95cb72c38e61839e1d3391fb359ab4b16bfd4302e06052b6a2aa7e8e7e0484",
+    "reference/pythia_isr_trace.cpp": "41d138b130afc63e562575b0093798b0c2e10147f3386d7d714c1061078a939a",
+    "reference/pythia_isr_trace.hpp": "b5fd8b8572889b6f44b91495e9fd737432288642279bda621eb09e7cf178022c"
+  }
+}
