@@ -33,6 +33,15 @@ with tempfile.TemporaryDirectory() as directory:
     assert all(e['primordial_subsystem_error'] is None for e in events)
     assert any(e['primordial_subsystem_frames'] for e in events)
     assert all((e['primordial_subsystem_frames'] is None)==(e['primordial_subsystem_error'] is not None) for e in events)
+    output=directory/'isr-frames-retained.jsonl'
+    run=subprocess.run([exe,str(output),'300','2600417','--mpi','on','--isr','on'],capture_output=True,text=True)
+    assert run.returncode==0,run.stderr
+    records=[json.loads(line) for line in output.read_text().splitlines()]
+    events=[e for e in records if e['type']=='event']
+    assert len(events)==records[-1]['returned']==300
+    assert any(e['subsystem_isr_frame_error'] for e in events)
+    assert any(e['subsystem_isr_frames'] for e in events)
+    assert all((e['subsystem_isr_frames'] is None)==(e['subsystem_isr_frame_error'] is not None) for e in events)
     for i,options in enumerate([['--mpi'],['--mpi','yes'],['--mpi','on','--mpi','off'],['--isr'],['--isr','yes'],['--isr','on','--isr','off']]):
         output=directory/f'bad{i}.jsonl'
         run=subprocess.run([exe,str(output),'1','2600317',*options],capture_output=True,text=True)

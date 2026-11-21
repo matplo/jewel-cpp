@@ -77,6 +77,19 @@ int main(int argc,char** argv){
      out<<"]}";
     }out<<']';
    }}out<<']';
+   std::vector<std::vector<jewel::IsrRecoilFrame>> subsystem_isr_frames;std::string isr_frame_error;
+   try{subsystem_isr_frames=jewel::reconstruct_subsystem_isr_frames(e);}catch(const std::domain_error& error){isr_frame_error=error.what();}
+   out<<",\"subsystem_isr_frame_error\":";if(isr_frame_error.empty())out<<"null";else out<<std::quoted(isr_frame_error);
+   out<<",\"subsystem_isr_frames\":";
+   if(!isr_frame_error.empty())out<<"null";else{out<<'[';bool first_system=true;
+    for(const auto& frames:subsystem_isr_frames){if(!first_system)out<<',';first_system=false;out<<'[';bool first_frame=true;
+     for(const auto& f:frames){if(!first_frame)out<<',';first_frame=false;
+      out<<"{\"momentum_stage\":\"before_beam_energy_repair\",\"emitted\":"<<f.emitted<<",\"mother\":"<<f.mother<<",\"recoiler\":"<<f.recoiler<<",\"old_recoiler\":"<<f.old_recoiler;
+      out<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);out<<",\"copies\":[";
+      bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";
+     }out<<']';
+    }out<<']';
+   }
    std::vector<jewel::PrimordialRecoilFrame> subsystem_frames;std::string subsystem_error;
    try{subsystem_frames=jewel::reconstruct_subsystem_primordial_frames(e);}catch(const std::domain_error& error){subsystem_error=error.what();}
    out<<",\"primordial_subsystem_error\":";if(subsystem_error.empty())out<<"null";else out<<std::quoted(subsystem_error);

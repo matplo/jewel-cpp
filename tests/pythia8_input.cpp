@@ -97,6 +97,11 @@ int main(){
    std::size_t branches=0;for(std::size_t j=0;j<chains.size();++j)for(std::size_t side=0;side<2;++side){
     check(chains[j][side].backward_lines.back()==event->subsystems[j].incoming[side]);branches+=chains[j][side].branches.size();}
    check(branches==event->isr_emissions.size());
+   auto recoil_frames=jewel::reconstruct_subsystem_isr_frames(*event);check(recoil_frames.size()==chains.size());
+   for(std::size_t j=0;j<chains.size();++j)check(recoil_frames[j].size()==chains[j][0].branches.size()+chains[j][1].branches.size());
+   for(const auto& fs:recoil_frames)if(!fs.empty()){
+    auto corrupt=*event;auto id=fs[0].copies[0][1];*corrupt.particles[id-1].energy_before_beam_repair+=1.;bool rejected=false;
+    try{jewel::reconstruct_subsystem_isr_frames(corrupt);}catch(const std::domain_error&){rejected=true;}check(rejected);break;}
    auto bad_chain=*event;bad_chain.particles[chains.back()[0].hard_incoming-1].mothers.clear();bool bad_ancestry=false;
    try{jewel::map_subsystem_isr_ancestry(bad_chain);}catch(const std::domain_error&){bad_ancestry=true;}check(bad_ancestry);
    if(event->subsystems.size()>1){auto wrong_system=*event;

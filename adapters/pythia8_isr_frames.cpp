@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
+#include <sstream>
+#include <iomanip>
 namespace jewel {
 namespace {
 void require(bool b,const char* message){if(!b)throw std::domain_error(message);}
@@ -16,8 +18,9 @@ bool collinear(const GeneratorParticle& p){return p.momentum.energy>0&&p.mass==0
 }
 Momentum apply_isr_frame(const IsrRecoilFrame& frame,Momentum p){auto q=apply(frame,{p.energy,p.px,p.py,p.pz});return {q[1],q[2],q[3],q[0]};}
 SpaceTime apply_isr_frame_displacement(const IsrRecoilFrame& frame,SpaceTime v){auto q=apply(frame,{v.t,v.x,v.y,v.z});return {q[1],q[2],q[3],q[0]};}
-std::vector<IsrRecoilFrame> reconstruct_isr_recoil_frames(const HardEventSnapshot& input){
- auto chains=map_pythia_isr_ancestry(input);std::vector<IsrRecoilFrame> frames;
+namespace {
+std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,const std::array<IsrIncomingChain,2>& chains){
+ std::vector<IsrRecoilFrame> frames;
  auto at=[&](ParticleId id)->const GeneratorParticle&{require(id>0&&id<=input.particles.size(),"missing ISR recoil line");return input.particles[id-1];};
  const double pi=std::acos(-1.);
  for(int side=0;side<2;++side)for(const auto& branch:chains[side].branches){
@@ -53,11 +56,26 @@ std::vector<IsrRecoilFrame> reconstruct_isr_recoil_frames(const HardEventSnapsho
    auto predicted=apply_isr_frame(frame,before.momentum);const auto& actual=after.momentum;
    for(auto pair:{std::array<double,2>{predicted.px,actual.px},{predicted.py,actual.py},{predicted.pz,actual.pz},{predicted.energy,actual.energy}}){
     double error=std::abs(pair[0]-pair[1]);frame.maximum_copy_error=std::max(frame.maximum_copy_error,error);
-    require(error<=2e-9+2e-11*std::abs(pair[1]),"reconstructed ISR frame disagrees with recorded recoil copy");}
+    if(error>2e-9+2e-11*std::abs(pair[1])){std::ostringstream message;message<<std::setprecision(17)
+     <<"reconstructed ISR frame disagrees with recorded recoil copy: emitted "<<sister.id<<" before "<<before.id<<" after "<<after.id<<" predicted "<<pair[0]<<" actual "<<pair[1]<<" error "<<error;throw std::domain_error(message.str());}}
    frame.copies.push_back({before.id,after.id});
   }
   require(frame.copies.size()>=2,"missing ISR final-state recoil copies");frames.push_back(frame);
  }
  std::sort(frames.begin(),frames.end(),[](const auto& a,const auto& b){return a.emitted<b.emitted;});return frames;
 }
+} // namespace
+std::vector<IsrRecoilFrame> reconstruct_isr_recoil_frames(const HardEventSnapshot& input){
+ return reconstruct_frames(input,map_pythia_isr_ancestry(input));
+}
+std::vector<std::vector<IsrRecoilFrame>> reconstruct_subsystem_isr_frames(const HardEventSnapshot& input){
+ auto chains=map_subsystem_isr_ancestry(input);
+ // Work with an owned source-stage view; retain the exported final record.
+ auto staged=input;
+ for(auto& node:staged.particles){require(node.energy_before_beam_repair.has_value(),"missing source-stage ISR recoil energy");node.momentum.energy=*node.energy_before_beam_repair;}
+ std::vector<std::vector<IsrRecoilFrame>> result;
+ for(const auto& pair:chains)result.push_back(reconstruct_frames(staged,pair));
+ return result;
+}
+
 }

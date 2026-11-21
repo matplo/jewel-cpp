@@ -34,6 +34,8 @@ struct IsrRecoilFrame {
 // Frames are chronological. Primordial kT and IF/secondary-scattering recoil
 // require separate mappings and are not silently represented by these matrices.
 std::vector<IsrRecoilFrame> reconstruct_isr_recoil_frames(const HardEventSnapshot&);
+// Per-subsystem chronological frames, applied to pre-beam-energy-repair momenta.
+std::vector<std::vector<IsrRecoilFrame>> reconstruct_subsystem_isr_frames(const HardEventSnapshot&);
 Momentum apply_isr_frame(const IsrRecoilFrame&,Momentum);
 // Apply to a displacement relative to an independently chosen event origin.
 // Does not choose that origin or assign a production time.
