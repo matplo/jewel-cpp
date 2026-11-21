@@ -19,6 +19,10 @@ struct IsrIncomingChain {
 // chain requires further recoil/frame mapping; do not feed the result directly
 // into assign_isr_times as if all momenta belonged to one shower frame.
 std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot&);
+// Indexed by Pythia subsystem. Uses pre-BeamSetup-energy-repair momenta for
+// spacelike reconstruction. ISR-off input yields complete chains, no branches.
+// No production times are assigned and frames remain stage-local.
+std::vector<std::array<IsrIncomingChain,2>> map_subsystem_isr_ancestry(const HardEventSnapshot&);
 struct IsrRecoilFrame {
  ParticleId emitted{},mother{},recoiler{},old_recoiler{};
  // Row-major Lorentz matrix ordered (energy,px,py,pz), or (dt,dx,dy,dz).

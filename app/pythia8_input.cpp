@@ -66,6 +66,17 @@ int main(int argc,char** argv){
     out<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);out<<",\"copies\":[";
     bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";}
    }
+   out<<",\"subsystem_isr_chains\":[";
+   {bool first_system=true;for(const auto& chains:jewel::map_subsystem_isr_ancestry(e)){
+    if(!first_system)out<<',';first_system=false;out<<'[';bool first_chain=true;
+    for(const auto& chain:chains){if(!first_chain)out<<',';first_chain=false;
+     out<<"{\"momentum_stage\":\"before_beam_energy_repair\",\"hard_incoming\":"<<chain.hard_incoming<<",\"beam\":"<<chain.beam<<",\"backward_lines\":";list(out,chain.backward_lines);out<<",\"branches\":[";bool first_branch=true;
+     for(const auto& b:chain.branches){if(!first_branch)out<<',';first_branch=false;
+      out<<"{\"mother\":"<<b.mother<<",\"daughter\":"<<b.daughter<<",\"emitted\":"<<b.emitted<<",\"emitted_final\":"<<b.emitted_final<<",\"virtuality_squared\":"<<b.virtuality_squared<<",\"spacelike_daughter\":";
+      list(out,std::array<double,4>{b.spacelike_daughter.px,b.spacelike_daughter.py,b.spacelike_daughter.pz,b.spacelike_daughter.energy});out<<'}';}
+     out<<"]}";
+    }out<<']';
+   }}out<<']';
    std::vector<jewel::PrimordialRecoilFrame> subsystem_frames;std::string subsystem_error;
    try{subsystem_frames=jewel::reconstruct_subsystem_primordial_frames(e);}catch(const std::domain_error& error){subsystem_error=error.what();}
    out<<",\"primordial_subsystem_error\":";if(subsystem_error.empty())out<<"null";else out<<std::quoted(subsystem_error);

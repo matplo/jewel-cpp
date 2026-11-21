@@ -93,6 +93,18 @@ int main(){
   for(int i=0;i<20;++i){auto event=input.next();if(!event)continue;
    check(event->multiple_parton_interactions);
    secondary+=event->subsystems.size()-1;
+   auto chains=jewel::map_subsystem_isr_ancestry(*event);check(chains.size()==event->subsystems.size());
+   std::size_t branches=0;for(std::size_t j=0;j<chains.size();++j)for(std::size_t side=0;side<2;++side){
+    check(chains[j][side].backward_lines.back()==event->subsystems[j].incoming[side]);branches+=chains[j][side].branches.size();}
+   check(branches==event->isr_emissions.size());
+   auto bad_chain=*event;bad_chain.particles[chains.back()[0].hard_incoming-1].mothers.clear();bool bad_ancestry=false;
+   try{jewel::map_subsystem_isr_ancestry(bad_chain);}catch(const std::domain_error&){bad_ancestry=true;}check(bad_ancestry);
+   if(event->subsystems.size()>1){auto wrong_system=*event;
+    std::swap(wrong_system.subsystems[0].incoming,wrong_system.subsystems[1].incoming);bool rejected=false;
+    try{jewel::map_subsystem_isr_ancestry(wrong_system);}catch(const std::domain_error&){rejected=true;}check(rejected);}
+   if(!event->isr_emissions.empty()){auto missing_energy=*event;
+    missing_energy.particles[event->isr_emissions[0]-1].energy_before_beam_repair.reset();bool rejected=false;
+    try{jewel::map_subsystem_isr_ancestry(missing_energy);}catch(const std::domain_error&){rejected=true;}check(rejected);}
    auto frames=jewel::reconstruct_subsystem_primordial_frames(*event);check(frames.size()==event->subsystems.size());
    for(std::size_t j=0;j<frames.size();++j){check(frames[j].incoming_after==event->subsystems[j].incoming);
     check(frames[j].copies.size()==event->subsystems[j].outgoing.size()+2);}

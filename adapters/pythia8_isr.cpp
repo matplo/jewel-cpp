@@ -6,13 +6,14 @@
 #include <unordered_set>
 namespace jewel {
 namespace {void require(bool b,const char* message){if(!b)throw std::domain_error(message);}}
-std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot& input){
- validate_hard_snapshot(input);require(!input.multiple_parton_interactions,"single-system recoil mapping does not support MPI snapshots");
- require(input.initial_state_radiation,"ISR ancestry mapping requires an ISR-enabled snapshot");
+namespace {
+std::array<IsrIncomingChain,2> map_chains(const HardEventSnapshot& input,
+ const std::array<ParticleId,2>& incoming,bool staged,
+ std::unordered_set<ParticleId>& used,std::unordered_set<ParticleId>& emissions){
  auto at=[&](ParticleId id)->const GeneratorParticle&{
   require(id>0&&id<=input.particles.size(),"missing ISR ancestry line");return input.particles[id-1];};
- std::array<IsrIncomingChain,2> result;std::unordered_set<ParticleId> used,emissions;
- for(std::size_t side=0;side<2;++side){auto& chain=result[side];chain.hard_incoming=input.hard_incoming[side];auto current=chain.hard_incoming;
+ std::array<IsrIncomingChain,2> result;
+ for(std::size_t side=0;side<2;++side){auto& chain=result[side];chain.hard_incoming=incoming[side];auto current=chain.hard_incoming;
   for(;;){
    require(used.insert(current).second,"cyclic or shared ISR incoming ancestry");
    const auto& child=at(current);chain.backward_lines.push_back(current);
@@ -29,7 +30,9 @@ std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot& 
     require(emissions.insert(id).second,"duplicated ISR emitted sibling");
     auto found=std::find(input.isr_emissions.begin(),input.isr_emissions.end(),id);
     require(found!=input.isr_emissions.end(),"ISR sibling absent from emission ledger");
-    const auto& p=parent.momentum;const auto& s=emitted.momentum;
+    auto p=parent.momentum;auto s=emitted.momentum;
+    if(staged){require(parent.energy_before_beam_repair.has_value()&&emitted.energy_before_beam_repair.has_value(),"missing source-stage ISR energy");
+     p.energy=*parent.energy_before_beam_repair;s.energy=*emitted.energy_before_beam_repair;}
     Momentum q{p.px-s.px,p.py-s.py,p.pz-s.pz,p.energy-s.energy};
     double q2=q.px*q.px+q.py*q.py+q.pz*q.pz-q.energy*q.energy;
     require(std::isfinite(q2)&&q2>0,"unsupported non-spacelike ISR branch reconstruction");
@@ -41,7 +44,34 @@ std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot& 
   }
  }
  require(result[0].beam!=result[1].beam,"ISR incoming chains share a beam");
- require(emissions.size()==input.isr_emissions.size(),"unmapped ISR emission outside incoming chains");
+
  return result;
 }
+} // namespace
+std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot& input){
+ validate_hard_snapshot(input);require(!input.multiple_parton_interactions,"single-system recoil mapping does not support MPI snapshots");
+ require(input.initial_state_radiation,"ISR ancestry mapping requires an ISR-enabled snapshot");
+ std::unordered_set<ParticleId> used,emissions;
+ auto result=map_chains(input,input.hard_incoming,false,used,emissions);
+ require(emissions.size()==input.isr_emissions.size(),"unmapped ISR emission outside incoming chains");return result;
+}
+std::vector<std::array<IsrIncomingChain,2>> map_subsystem_isr_ancestry(const HardEventSnapshot& input){
+ validate_hard_snapshot(input);
+ std::vector<std::array<IsrIncomingChain,2>> result;
+ std::unordered_set<ParticleId> used,emissions;
+ for(const auto& system:input.subsystems){
+  const auto& mothers=input.particles[system.process_outgoing[0]-1].mothers;
+  require(mothers.size()==2,"subsystem lacks two incoming process roots");
+  std::array<ParticleId,2> roots{mothers[0],mothers[1]};
+  auto chains=map_chains(input,roots,true,used,emissions);
+  for(std::size_t side=0;side<2;++side){const auto& chain=chains[side];
+   require(chain.backward_lines.back()==system.incoming[side],"ISR chain terminates in a different subsystem");
+   for(const auto& branch:chain.branches)require(std::find(system.outgoing_final.begin(),system.outgoing_final.end(),branch.emitted_final)!=system.outgoing_final.end(),"ISR emission belongs to a different subsystem");
+  }
+  result.push_back(std::move(chains));
+ }
+ require(emissions.size()==input.isr_emissions.size(),"unmapped ISR emission outside subsystem chains");
+ return result;
+}
+
 }
