@@ -653,3 +653,9 @@ Pythia8 hadronization history. This is development JSONL, not HepMC.
 comparisons and small native samples: 20/20 vacuum and 18/20 medium attempts
 produce hadronized output. HADROTYPE=1, junction mapping, ISR/MPI and the
 full-generator physics comparison remain incomplete.
+
+The [native sample browser](docs/native-hadron-report.html) now contains more
+than 1,000 selected jets per setting, analyzed with hepyy/cppyy: 1,081 vacuum
+and 1,295 medium jets. [Sample accounting and selection](docs/validation-native-ensemble.md)
+record 136 failed medium attempts out of 1,500. This native-only report does
+not evaluate the required Fortran/C++ ratios.

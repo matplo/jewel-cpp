@@ -24,8 +24,16 @@ def finite(value):
 
 
 def audit(path):
-    records = [json.loads(line) for line in path.read_text().splitlines()]
-    finite(records)
+    # Keep only run/accounting metadata in memory; event records can be large.
+    records = []
+    digest = hashlib.sha256()
+    with path.open('rb') as source:
+        for raw in source:
+            digest.update(raw)
+            record = json.loads(raw)
+            finite(record)
+            records.append(record if record['type'] in ('run', 'summary') else
+                           {key: record[key] for key in ('type', 'attempt', 'weight', 'stage', 'reason') if key in record})
     header, summary = records[0], records[-1]
     check(header['type'] == 'run' and summary['type'] == 'summary', 'incomplete run')
     check(header['schema'] in ('jewel-parton-development-v1', 'jewel-hadron-development-v1'), 'unknown schema')
@@ -46,7 +54,13 @@ def audit(path):
     final_count = 0
     hadron_count = 0
     max_hadronization_residual = 0.
-    for event in outcomes:
+    def event_records():
+        with path.open() as source:
+            for line in source:
+                record = json.loads(line)
+                if record['type'] == 'event':
+                    yield record
+    for event in event_records():
         if event['type'] != 'event':
             continue
         particles = event['particles'] + event['archived']
@@ -78,7 +92,7 @@ def audit(path):
 
     check(final_count == summary['final_records'], 'final-record count mismatch')
     failures = Counter((r['stage'], r['reason']) for r in outcomes if r['type'] == 'evolution_failure')
-    return dict(input=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+    return dict(input=str(path), sha256=digest.hexdigest(),
                 mode=header['mode'], summary=summary, hadronized_final_particles=hadron_count,
                 max_hadronization_momentum_residual_GeV=max_hadronization_residual,
                 failure_reasons=[dict(stage=s, reason=r, count=n) for (s, r), n in failures.items()],

@@ -1,0 +1,94 @@
+"""Native hadronized samples via hepyy/cppyy FastJet; not Fortran validation."""
+import argparse
+from collections import Counter
+import hashlib
+import importlib.metadata
+import json
+import math
+from pathlib import Path
+import platform
+
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('inputs',nargs='+',type=Path)
+parser.add_argument('--output',required=True,type=Path)
+parser.add_argument('--generator',type=Path,help='Executable used to produce the supplied files')
+args=parser.parse_args()
+from hepyy_utils.fastjet import require_fastjet
+fj=require_fastjet()
+bins={'pt':[10,15,20,30,40,60,80,100,150,250],
+      'girth':[0,.02,.04,.06,.08,.1,.15,.2,.3,.4],
+      'ptd':[0,.2,.3,.4,.5,.6,.7,.8,.9,1.0000001]}
+
+def histogram(values,edges):
+    result=[0]*(len(edges)-1)
+    for value in values:
+        for i,(lo,hi) in enumerate(zip(edges,edges[1:])):
+            if lo<=value<hi:
+                result[i]+=1
+                break
+    return result
+
+def analyze(path):
+    events=[];failures=Counter();summary=None;header=None
+    digest=hashlib.sha256()
+    with path.open('rb') as source:
+        for raw in source:
+            digest.update(raw);record=json.loads(raw)
+            if record['type']=='run':
+                assert header is None
+                header=record
+                assert header['schema']=='jewel-hadron-development-v1'
+            elif record['type']=='summary':
+                assert summary is None
+                summary=record
+            else:
+                assert header is not None and summary is None
+                assert record['attempt']==len(events)+1
+                jets=[];accepted=record['type']=='event';weight=record.get('weight',0.)
+                if accepted:
+                    particles=fj.gbl.std.vector[fj.PseudoJet]()
+                    for p in record['hadronized_particles']:
+                        if not p['final'] or abs(p['pdg']) in [12,14,16]:continue
+                        assert all(math.isfinite(v) for v in p['momentum'])
+                        particles.push_back(fj.PseudoJet(*p['momentum']))
+                    # No constituent acceptance cut: cluster first in full phase space.
+                    sequence=fj.ClusterSequence(particles,fj.JetDefinition(fj.antikt_algorithm,.4))
+                    for jet in fj.sorted_by_pt(sequence.inclusive_jets(0)):
+                        if jet.pt()<10 or abs(jet.eta())>=2:continue
+                        constituents=list(jet.constituents());total=math.fsum(p.pt() for p in constituents)
+                        if total<=0:continue
+                        girth=math.fsum(p.pt()*math.hypot(p.eta()-jet.eta(),math.remainder(p.phi()-jet.phi(),2*math.pi)) for p in constituents)/total
+                        ptd=math.sqrt(math.fsum(p.pt()**2 for p in constituents))/total
+                        jets.append(dict(pt=jet.pt(),eta=jet.eta(),girth=girth,ptd=ptd))
+                else:
+                    failures[record.get('stage','generation')+': '+record.get('reason','generation failure')]+=1
+                events.append(dict(attempt=record['attempt'],accepted=accepted,weight=weight,jets=jets,
+                    histograms={key:histogram([j[key] for j in jets],edges) for key,edges in bins.items()}))
+    assert summary is not None and summary['attempts']==len(events)==header['attempts_requested']
+    assert summary['accepted']==sum(e['accepted'] for e in events)
+    assert math.isclose(sum(e['weight'] for e in events),summary['generator_weight_sum'],rel_tol=1e-12)
+    distributions={}
+    for key,edges in bins.items():
+        distributions[key]=[]
+        for i in range(len(edges)-1):
+            values=[e['weight']*e['histograms'][key][i] for e in events]
+            mean=math.fsum(values)/len(events)
+            error=math.sqrt(math.fsum((v-mean)**2 for v in values)/(len(events)-1)/len(events)) if len(events)>1 else None
+            distributions[key].append(dict(low=edges[i],high=edges[i+1],weighted_count=math.fsum(values),
+                jets_per_attempt=mean,event_standard_error=error))
+    return dict(input=str(path),input_sha256=digest.hexdigest(),run=header,summary=summary,
+        selected_jets=sum(len(e['jets']) for e in events),failure_reasons=dict(failures),distributions=distributions,events=events)
+
+report=dict(scope='Native reduced PPJJ development samples; no Fortran comparison',full_goal_validated=False,
+ generator=None if args.generator is None else dict(path=str(args.generator.resolve()),sha256=hashlib.sha256(args.generator.read_bytes()).hexdigest()),
+ selection=dict(algorithm='anti-kt',R=.4,min_pt_GeV=10,max_abs_eta=2,
+ particles='all final visible particles; exclude neutrino PDG 12/14/16',
+ order='full-phase-space clustering before jet cuts',recoils='included; no thermal subtraction'),
+ normalization='weighted jets per attempted event; failed events contribute zero jets; not a cross-section normalization',
+ analysis_versions={'python':platform.python_version(),'hepyy':importlib.metadata.version('hepyy'),
+ 'cppyy':importlib.metadata.version('cppyy'),'fastjet':str(fj.gbl.fastjet.fastjet_version_string()),
+ 'loader_sha256':hashlib.sha256(Path(require_fastjet.__code__.co_filename).read_bytes()).hexdigest()},
+ samples=[analyze(path) for path in args.inputs])
+args.output.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+for sample in report['samples']:
+ print(sample['run']['mode'],sample['summary'], 'selected jets:',sample['selected_jets'])
