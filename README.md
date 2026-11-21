@@ -866,3 +866,9 @@ The collision fallback now [resolves negative roundoff at an algebraically zero 
 This documented numerical extension recovers source-nonfinite cases; ordinary
 finite-source comparisons retain their original tolerances. The 20-event
 experimental medium smoke sample completes, but full jet validation is pending.
+
+The [1,000-attempt-per-setting stability audit](docs/validation-stability-parton.md)
+now completes 953 vacuum and 952 medium cascades, with no nonfinite failures in
+that sample. A [parton-level interactive browser](docs/stability-parton-browser.html)
+shows hepyy/cppyy jet diagnostics; this is separate from matched hadron-level
+Fortran validation, which remains unfinished.

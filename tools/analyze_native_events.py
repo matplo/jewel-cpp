@@ -1,4 +1,4 @@
-"""Native hadronized samples via hepyy/cppyy FastJet; not Fortran validation."""
+"""Native hadron/parton samples via hepyy/cppyy FastJet; not Fortran validation."""
 import argparse
 from collections import Counter
 import hashlib
@@ -44,7 +44,7 @@ def analyze(path):
             if record['type']=='run':
                 assert header is None
                 header=record
-                assert header['schema'] in ['jewel-hadron-development-v1','jewel-fortran-hepmc-analysis-v1']
+                assert header['schema'] in ['jewel-parton-development-v1','jewel-hadron-development-v1','jewel-fortran-hepmc-analysis-v1']
             elif record['type']=='summary':
                 assert summary is None
                 summary=record
@@ -55,9 +55,10 @@ def analyze(path):
                 jets=[];accepted=record['type']=='event';weight=record.get('weight',0.)
                 if accepted:
                     particles=fj.gbl.std.vector[fj.PseudoJet]()
-                    collection='final_particles' if header['schema']=='jewel-fortran-hepmc-analysis-v1' else 'projected_particles' if header.get('subtraction',{}).get('put_on_shell',0) else 'subtracted_particles' if header.get('subtraction') else 'hadronized_particles'
+                    collection='particles' if header['schema']=='jewel-parton-development-v1' else 'final_particles' if header['schema']=='jewel-fortran-hepmc-analysis-v1' else 'projected_particles' if header.get('subtraction',{}).get('put_on_shell',0) else 'subtracted_particles' if header.get('subtraction') else 'hadronized_particles'
                     for p in record[collection]:
-                        if not p['final'] or abs(p['pdg']) in [12,14,16]:continue
+                        final=p['status'] in [3,4,5] if header['schema']=='jewel-parton-development-v1' else p['final']
+                        if not final or abs(p['pdg']) in [12,14,16]:continue
                         assert all(math.isfinite(v) for v in p['momentum'])
                         particles.push_back(fj.PseudoJet(*p['momentum']))
                     # No constituent acceptance cut: cluster first in full phase space.
@@ -108,7 +109,7 @@ def analyze(path):
                 counts[category]+=1;weighted[category]+=event['weight']
         accounting[key]={category:dict(jets=counts[category],weighted_count=weighted[category])
                          for category in ['in_range','underflow','overflow','undefined']}
-    return dict(denominator_scope=header.get('denominator_scope','attempted-events'),observable_accounting=accounting,input=str(path),input_sha256=digest.hexdigest(),run=header,summary=summary,
+    return dict(particle_level='parton' if header['schema']=='jewel-parton-development-v1' else 'hadron',denominator_scope=header.get('denominator_scope','attempted-events'),observable_accounting=accounting,input=str(path),input_sha256=digest.hexdigest(),run=header,summary=summary,
         selected_jets=sum(len(e['jets']) for e in events),failure_reasons=dict(failures),distributions=distributions,events=events)
 
 samples=[analyze(path) for path in args.inputs]
@@ -128,7 +129,7 @@ if args.generator is not None and len({s['run']['schema'] for s in samples})>1:
 report=dict(scope='Generator event analysis; no matched Fortran/native ratio validation',full_goal_validated=False,
  generator=None if args.generator is None else dict(path=str(args.generator.resolve()),sha256=hashlib.sha256(args.generator.read_bytes()).hexdigest()),
  selection=dict(algorithm='anti-kt',R=.4,min_pt_GeV=10,max_abs_eta=2,
- particles='all final visible particles; exclude neutrino PDG 12/14/16',
+ particles='per-sample particle_level: native partons use status 3/4/5; hadron samples use final flag; exclude neutrino PDG 12/14/16',
  soft_drop=SOFT_DROP,mass='FastJet signed invariant mass in GeV; negative values retained',
  order='full-phase-space clustering before jet cuts',
  geometry_matching=dict(max_delta_r=.3,coordinates='pseudorapidity and azimuth',assignment='hepyy_utils.match_hard_legs: maximize matches then minimize total distance',order='all positive-pT jets before analysis cuts',unmatched_jet_geometry=None),recoils='per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles'),

@@ -18,6 +18,10 @@ def fixture():
 
 
 class ComparisonTests(unittest.TestCase):
+    def test_parton_samples_cannot_pass_hadron_comparison(self):
+        data=fixture();data['samples'][0]['run']['schema']='jewel-parton-development-v1'
+        with self.assertRaises(ValueError):compare(data,0,1)
+
     def test_equal_yields_do_not_prove_physics_agreement(self):
         result=compare(fixture(),0,1)
         self.assertEqual(result['observables']['pt']['numerical_gate'],'pass')
