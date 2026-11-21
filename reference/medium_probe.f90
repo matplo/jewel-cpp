@@ -55,6 +55,15 @@ program mediumprobe
  common /ALPHASFAC/ ptfac
  integer initial_flag
  logical qqbardec
+ integer n,npad,k(23000,5),errl,elastic_flag
+ double precision p(23000,5),vertices(23000,5),mv(23000,5),xsecscalefac,etamax
+ double precision start,dt,elapsed
+ common /PYJETS/ n,npad,k,p,vertices
+ common /TIME/ mv
+ common /errline/ errl
+ common /scalfac/ xsecscalefac
+ common /rapmax/ etamax
+ logical getdeltat,collision
  character(20) op
  logfid=0
  logfid2=0
@@ -184,6 +193,15 @@ program mediumprobe
    read(*,*) px,py,pz,energy,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode
    v=getsscat(energy,px,py,pz,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode)
    write(*,'(ES26.17E3)')v
+  case('TIME')
+   read(*,*)p(1,1:5),k(1,2),mv(1,1:4),start,dt,ltime,xsecscalefac,elastic_flag
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   errl=1
+   collision=getdeltat(1,start,dt,elapsed,elastic_flag/=0)
+   write(*,'(I2,1X,ES26.17E3,1X,I8)')merge(1,0,collision),elapsed,cursor
   case('BCONFIG')
    read(*,*) knf,q0,lps,ptfac,angord
   case('MASS')

@@ -18,4 +18,12 @@ int main(){
  rejects([&]{rates.integral(10,-1,jewel::RateChannel::QA);});
  rejects([&]{rates.cross_section({10,0,0,10},0,0,'X','C',{0,0,0,1});});
  rejects([&]{rates.cross_section({10,0,0,10},0,0,'Q','C',{0,0,0,1},3);});
+ jewel::ReplayRandom empty({});
+ auto none=rates.next_collision({10,0,0,10},0,1,{},1,5,20,0,false,empty);
+ check(!none.collision&&none.elapsed==0&&empty.checkpoint()==0);
+ none=rates.next_collision({10,0,0,10},0,1,{},5,1,2,1,false,empty);
+ check(!none.collision&&none.elapsed==0&&empty.checkpoint()==0);
+ rejects([&]{rates.next_collision({10,0,0,10},0,1,{},1,5,20,1,false,empty);});
+ rejects([&]{rates.next_collision({},0,1,{},1,5,20,1,false,empty);});
+ rejects([&]{rates.next_collision({10,0,0,10},0,1,{},1,-1,20,1,false,empty);});
 }

@@ -34,7 +34,16 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="BCONFIG") {
+   if(op=="TIME") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    jewel::Momentum p;jewel::SpaceTime v;double mass,start,dt,lifetime,scale;int pdg,elastic;
+    if(!(std::cin>>p.px>>p.py>>p.pz>>p.energy>>mass>>pdg>>v.x>>v.y>>v.z>>v.t>>start>>dt>>lifetime>>scale>>elastic))throw std::runtime_error("bad transport query");
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("bad transport replay");
+    std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
+    jewel::ReplayRandom random(tape);
+    auto value=rates->next_collision(p,mass,pdg,v,start,dt,lifetime,scale,elastic!=0,random);
+    std::cout<<int(value.collision)<<' '<<value.elapsed<<' '<<random.checkpoint()<<'\n';
+   } else if(op=="BCONFIG") {
     jewel::Kernels k;double q0,pt;int angular;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>pt>>angular))throw std::runtime_error("invalid branching config");
     branching=std::make_unique<jewel::BranchingSampler>(k,q0,pt,angular);
@@ -141,106 +150,7 @@ int main() {
     if(!(std::cin>>count)||count>100000) throw std::runtime_error("invalid replay size");
     std::vector<double> tape(count); for(double& r:tape) if(!(std::cin>>r)) throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="BCONFIG") {
-    jewel::Kernels k;double q0,pt;int angular;
-    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>pt>>angular))throw std::runtime_error("invalid branching config");
-    branching=std::make_unique<jewel::BranchingSampler>(k,q0,pt,angular);
-   } else if(op=="MASS"||op=="FRACTION") {
-    if(!branching)throw std::runtime_error("BCONFIG required");
-    std::string name;double a,b,c,energy=0,maxmass=0;int initial=0;
-    std::cin>>name>>a>>b>>c;if(op=="MASS")std::cin>>energy>>maxmass>>initial;
-    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("invalid replay length");
-    std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
-    jewel::ReplayRandom random(tape);jewel::Channel channel;
-    if(name=="QQ")channel=jewel::Channel::QQ;else if(name=="GC")channel=jewel::Channel::GC;
-    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else throw std::runtime_error("invalid branching channel");
-    if(op=="MASS") {
-     auto result=branching->mass(a,b,c,energy,channel,maxmass,initial!=0,random);
-     std::cout<<result.mass<<' '<<result.fraction.value_or(-1)<<' '<<int(result.quark_pair.value_or(false))<<' '<<random.checkpoint()<<'\n';
-    } else std::cout<<branching->fraction(a,b,c,channel,random)<<' '<<random.checkpoint()<<'\n';
-   } else if(op=="XCONFIG") {
-    jewel::Kernels k;double q0,emax,scale;int boost;
-    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>k.lambda_scattering>>emax>>scale>>boost))throw std::runtime_error("bad rate configuration");
-    rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);
-   } else if(op=="XDUMP") {
-    if(!rates)throw std::runtime_error("XCONFIG required");
-    std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);
-    for(double x:rates->transfers())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
-    for(double x:rates->debye_masses())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
-    for(auto row:rates->values())for(double x:row)out.write(reinterpret_cast<const char*>(&x),sizeof(x));
-    if(!out)throw std::runtime_error("rate dump failed");
-   } else if(op=="XINT") {
-    if(!rates)throw std::runtime_error("XCONFIG required");
-    std::string name;double t,md;if(!(std::cin>>name>>t>>md))throw std::runtime_error("bad rate query");
-    jewel::RateChannel c;
-    if(name=="QA")c=jewel::RateChannel::QA;else if(name=="QB")c=jewel::RateChannel::QB;
-    else if(name=="GA")c=jewel::RateChannel::GA;else if(name=="GB")c=jewel::RateChannel::GB;else throw std::runtime_error("bad rate channel");
-    std::cout<<rates->integral(t,md,c)<<'\n';
-   } else if(op=="XSEC") {
-    if(!rates)throw std::runtime_error("XCONFIG required");
-    jewel::Momentum p;jewel::SpaceTime v;double mass,lower;char incoming,outgoing;int mode;
-    if(!(std::cin>>p.px>>p.py>>p.pz>>p.energy>>mass>>lower>>incoming>>outgoing>>v.x>>v.y>>v.z>>v.t>>mode))throw std::runtime_error("bad cross section query");
-    std::cout<<rates->cross_section(p,mass,lower,incoming,outgoing,v,mode)<<'\n';
-   } else if(op=="PCONFIG") {
-    jewel::Kernels k;double q0,emax,scale;int boost;
-    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad partonic PDF config");
-    pdf=std::make_unique<jewel::PartonicPdf>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
-   } else if(op=="PTABLE") {
-    if(!pdf)throw std::runtime_error("PCONFIG required");
-    for(auto row:pdf->table()){for(double x:row)std::cout<<x<<' ';std::cout<<'\n';}
-   } else if(op=="PDF"||op=="PEXACT"||op=="PINT") {
-    if(!pdf)throw std::runtime_error("PCONFIG required");
-    std::string name;double x,y;if(!(std::cin>>name>>x>>y))throw std::runtime_error("bad PDF query");
-    jewel::Channel c;
-    if(name=="QQ")c=jewel::Channel::QQ;else if(name=="QG")c=jewel::Channel::QG;
-    else if(name=="GQ")c=jewel::Channel::GQ;else if(name=="GG")c=jewel::Channel::GG;else throw std::runtime_error("invalid PDF channel");
-    std::cout<<(op=="PDF"?pdf->density(x,y,c):op=="PEXACT"?pdf->integrated_exact(x,c):pdf->integrated(x,c))<<'\n';
-   } else if(op=="FCONFIG") {
-    jewel::Kernels k;double q0,emax,scale;int boost;
-    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad final splitting config");
-    final_table=std::make_unique<jewel::FinalSplittingTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
-   } else if(op=="FDUMP") {
-    if(!final_table)throw std::runtime_error("FCONFIG required");
-    std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);
-    for(double x:final_table->scales())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
-    for(double x:final_table->fractions())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
-    for(auto row:final_table->values())for(double x:row)out.write(reinterpret_cast<const char*>(&x),sizeof(x));
-    if(!out)throw std::runtime_error("table dump failed");
-   } else if(op=="FSPLIT"||op=="FSUDA") {
-    if(!final_table)throw std::runtime_error("FCONFIG required");
-    std::string channel;double parent,q,zeta,energy,high=0;int angular;
-    std::cin>>channel;if(op=="FSUDA")std::cin>>high;
-    if(!(std::cin>>parent>>q>>zeta>>energy>>angular))throw std::runtime_error("bad final splitting query");
-    jewel::Channel c;
-    if(channel=="QQ")c=jewel::Channel::QQ;else if(channel=="QG")c=jewel::Channel::QG;
-    else if(channel=="GG")c=jewel::Channel::GG;else if(channel=="GC")c=jewel::Channel::GC;else throw std::runtime_error("unsupported final channel");
-    std::cout<<(op=="FSPLIT"?final_table->splitting(parent,q,zeta,energy,c,angular):final_table->sudakov(high,parent,q,zeta,energy,c,angular))<<'\n';
-   } else if(op=="RCONFIG") {
-    jewel::Kernels k;double q0,emax,scale;int boost;
-    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("invalid radiation configuration");
-    radiation=std::make_unique<jewel::InitialRadiation>(k,q0);
-    sudakov=std::make_unique<jewel::InitialSudakovTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
-   } else if(op=="RTABLE") {
-    if(!sudakov)throw std::runtime_error("RCONFIG required");
-    for(auto row:sudakov->table()) { for(double x:row)std::cout<<x<<' ';std::cout<<'\n'; }
-   } else if(op=="RSPLIT"||op=="RSUDA"||op=="RRED"||op=="RFAST") {
-    if(!sudakov)throw std::runtime_error("RCONFIG required");
-    std::string channel;double x,y;if(!(std::cin>>channel>>x>>y))throw std::runtime_error("invalid radiation probe");
-    jewel::Channel c;
-    if(channel=="QQ")c=jewel::Channel::QQ;else if(channel=="QG")c=jewel::Channel::QG;
-    else if(channel=="GG")c=jewel::Channel::GG;else if(channel=="GC")c=jewel::Channel::GC;
-    else if(channel=="GQ")c=jewel::Channel::GQ;else throw std::runtime_error("unknown channel");
-    double result=op=="RSPLIT"?radiation->splitting(x,c):op=="RSUDA"?radiation->sudakov(x,y,c):op=="RRED"?sudakov->reduced(x,c):sudakov->ratio(x,y,c);
-    std::cout<<result<<'\n';
-   } else if(op=="BOUNDS") {
-    auto v=medium->bounds();std::cout<<v.temperature_max<<' '<<v.debye_max<<' '<<v.debye_min<<' '<<v.scatterer_mass_max<<' '<<v.density_at_debye_min<<' '<<v.lifetime_max<<' '<<v.density_max<<'\n';
-   } else if(op=="AVERAGE"||op=="MAXIMUM") {
-    jewel::SpaceTime v;int boost;
-    if(op=="AVERAGE" && !(std::cin>>v.x>>v.y>>v.z>>v.t)) throw std::runtime_error("bad position");
-    if(!(std::cin>>boost)) throw std::runtime_error("bad boost");
-    auto a=op=="AVERAGE"?medium->average_scatterer(v,boost!=0):medium->maximum_scatterer(boost!=0);
-    std::cout<<a.momentum.px<<' '<<a.momentum.py<<' '<<a.momentum.pz<<' '<<a.momentum.energy<<' '<<a.mass<<'\n';
-   } else if(op=="EVENT") {
+    if(op=="EVENT") {
      jewel::GeometrySampler sampler(medium->cross_section_table());auto event=sampler.sample(a,b,random);
      *medium=medium->with_impact_parameter(event.impact_parameter);
      std::cout<<event.impact_parameter<<' '<<event.centrality_fraction;

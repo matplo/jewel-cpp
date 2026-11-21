@@ -3,6 +3,9 @@
 #include "jewel/radiation.hpp"
 namespace jewel {
 enum class RateChannel { QA, QB, GA, GB };
+struct CollisionTime {
+ bool collision{}; double elapsed{}; unsigned bound_violations{};
+};
 class ScatteringRates {
  Kernels kernels_; double q0_,scale_; bool boost_;
  ExpandingMedium medium_;
@@ -12,6 +15,9 @@ class ScatteringRates {
  std::vector<std::array<double,4>> values_;
 public:
  ScatteringRates(Kernels,double q0,double emax,double scale,ExpandingMedium,bool boost=true);
+ CollisionTime next_collision(Momentum,double mass,int pdg,SpaceTime production,
+  double start,double maximum_interval,double lifetime,double cross_section_scale,
+  bool elastic_only,Random&) const;
  const auto& transfers() const{return transfer_;}
  const auto& debye_masses() const{return debye_;}
  const auto& values() const{return values_;}

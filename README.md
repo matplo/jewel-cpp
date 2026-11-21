@@ -271,3 +271,35 @@ The reference-only executable additionally requires the hash-verified
 `pythia6425mod-lhapdf6.f` supplied with JEWEL. No Pythia6 library is linked into
 the standalone C++ implementation. The probes exercise active-particle transforms
 and selected momentum observables, not the full Pythia6 API.
+
+
+## Milestone 2c: collision-time veto sampling
+
+`ScatteringRates::next_collision()` translates GETDELTAT, using the medium and
+rate tables owned by the same model. It takes a projectile, production point,
+start time, maximum interval, plasma lifetime, cross-section multiplier and
+elastic-only switch. It returns whether a collision was accepted, the elapsed
+time and the number of rate-bound violations observed. Times are in fm/c.
+
+```cpp
+// rates is a ScatteringRates model; random implements jewel::Random.
+auto next = rates.next_collision(
+    {50., 0., 0., 50.}, 0., 21, {0., 0., 0., 0.},
+    0.4, 5., 20., 1., false, random);
+// next.collision identifies an accepted candidate at start + next.elapsed.
+// Applying its momentum transfer, radiation and recoils is a separate step.
+```
+
+The implementation preserves the factor of 5 in the collision rate, velocity
+p/E (distinct from GETPOSITION), the lifetime cap, six consecutive empty-medium
+trials and exact random-draw ordering. A zero rate or already-expired lifetime
+returns false with elapsed=0 as in stock; callers must not interpret that as a
+collision or repeatedly schedule the same unchanged state. An ordinary interval
+exit returns false with the capped interval. A bound violation is reported but
+the acceptance weight is not silently altered. The million-trial limit throws
+instead of returning an unfinished stock loop result. Invalid/nonfinite input
+and exhausted random tapes also throw.
+
+[Transport sampling validation](docs/validation-transport.md) covers both channel
+modes, quark/gluon projectiles, medium exits and replay draw counts. This does not
+yet apply collisions or recoils to the event, and is not full transport validation.
