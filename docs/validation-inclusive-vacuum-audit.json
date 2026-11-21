@@ -1,0 +1,86 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-inclusive-vac1500.jsonl",
+  "input_sha256": "aeea77b0592276cbf15e043ff056e7527e17b2aef99acca6c7218d324cf85443",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 1500,
+    "accepted": 1500,
+    "evolution_failures": 0,
+    "generation_failures": 0,
+    "accepted_weight": 1500,
+    "failed_weight": 0,
+    "generator_weight_sum": 1500,
+    "generator_sigma_mb": 0.13718533301421046,
+    "generator_sigma_error_mb": 0.001777383904515948,
+    "final_records": 49316
+  },
+  "junction_events": 198,
+  "failures": {},
+  "max_momentum_component_residual_gev": 3.312443368486129e-07,
+  "max_momentum_residual_over_total_energy": 6.598492765908615e-11,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": [
+      {
+        "attempt": 174,
+        "component": 2,
+        "residual_gev": -1.5105280213104089e-07
+      },
+      {
+        "attempt": 271,
+        "component": 2,
+        "residual_gev": 3.1619901829927884e-07
+      },
+      {
+        "attempt": 464,
+        "component": 2,
+        "residual_gev": 1.711482888345356e-07
+      },
+      {
+        "attempt": 568,
+        "component": 2,
+        "residual_gev": 1.0601919707853985e-07
+      },
+      {
+        "attempt": 645,
+        "component": 2,
+        "residual_gev": 1.5130917995127315e-07
+      },
+      {
+        "attempt": 716,
+        "component": 2,
+        "residual_gev": 1.2550079001721892e-07
+      },
+      {
+        "attempt": 973,
+        "component": 2,
+        "residual_gev": 1.2197892531543714e-07
+      },
+      {
+        "attempt": 1016,
+        "component": 2,
+        "residual_gev": 2.416919500855541e-07
+      },
+      {
+        "attempt": 1029,
+        "component": 2,
+        "residual_gev": 3.3124307355684134e-07
+      },
+      {
+        "attempt": 1307,
+        "component": 2,
+        "residual_gev": 1.6705042290296804e-07
+      },
+      {
+        "attempt": 1342,
+        "component": 2,
+        "residual_gev": -1.924773935617352e-07
+      }
+    ]
+  },
+  "boundary_invariants_pass": true
+}

@@ -919,3 +919,10 @@ finite placeholder for their unused shower time, preserving source random draws.
 [Validation and convention](docs/validation-mpi-passive.md) distinguish finite
 kinematic parity from the source infinite-time expression. The matched medium
 sample now completes 220/220 attempts; full physics validation remains open.
+
+### Current vacuum comparison
+
+The [updated comparison](docs/inclusive-vacuum-comparison.html) includes all
+1500 native attempts and 2126 selected jets, versus 1357 Fortran jets. It keeps
+the earlier sample selectable. The [10% gate still fails](docs/validation-inclusive-vacuum.md);
+recovering previously excluded event types does not establish physics agreement.

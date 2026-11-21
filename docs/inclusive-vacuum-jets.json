@@ -1,0 +1,1257 @@
+{
+  "scope": "Generator event analysis; no matched Fortran/native ratio validation",
+  "full_goal_validated": false,
+  "generator": null,
+  "selection": {
+    "algorithm": "anti-kt",
+    "R": 0.4,
+    "min_pt_GeV": 10,
+    "max_abs_eta": 2,
+    "particles": "per-sample particle_level: native partons use status 3/4/5; hadron samples use final flag; exclude neutrino PDG 12/14/16",
+    "soft_drop": {
+      "algorithm": "Soft Drop",
+      "reclustering": "Cambridge/Aachen",
+      "recombination": "E scheme",
+      "zcut": 0.1,
+      "beta": 0.0,
+      "R0": 0.4,
+      "reclustering_R": 1000.0,
+      "condition": "z > zcut (delta_R/R0)^beta",
+      "untagged": "null zg and groomed_mass; counted separately"
+    },
+    "mass": "FastJet signed invariant mass in GeV; negative values retained",
+    "order": "full-phase-space clustering before jet cuts",
+    "geometry_matching": {
+      "max_delta_r": 0.3,
+      "coordinates": "pseudorapidity and azimuth",
+      "assignment": "hepyy_utils.match_hard_legs: maximize matches then minimize total distance",
+      "order": "all positive-pT jets before analysis cuts",
+      "unmatched_jet_geometry": null
+    },
+    "recoils": "per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles"
+  },
+  "normalization": "weighted jets per denominator record: attempted events for native runs and ledger-backed Fortran; otherwise written Fortran events; not cross-section normalized or directly comparable without a configuration/normalization audit",
+  "analysis_versions": {
+    "source_sha256": {
+      "analyze_native_events.py": "0af304f5f38f27d2b95613b813a4551f77a621cecb567de8e5014d18a29b37d1",
+      "jet_substructure.py": "ce6868688f2e0951300f5509411e7e414e5fc3602d12bed8b52317694a25f39b",
+      "native_geometry_analysis.py": "4aaedd47f717d92601274a37b027a03f0daebc3d9bd2bd480ae81597ce2c0ee4"
+    },
+    "python": "3.14.7",
+    "hepyy": "0.2.30",
+    "cppyy": "3.5.0",
+    "fastjet": "FastJet version 3.5.1",
+    "matching_sha256": "064807f4c9767d71e01f2cca61f0a59e70767e6b1076abdde36b41729d72582f",
+    "loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+  },
+  "samples": [
+    {
+      "particle_level": "hadron",
+      "denominator_scope": "attempted-events",
+      "observable_accounting": {
+        "mass": {
+          "in_range": {
+            "jets": 2126,
+            "weighted_count": 2126
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "groomed_mass": {
+          "in_range": {
+            "jets": 2116,
+            "weighted_count": 2116
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 10,
+            "weighted_count": 10
+          }
+        },
+        "zg": {
+          "in_range": {
+            "jets": 2116,
+            "weighted_count": 2116
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 10,
+            "weighted_count": 10
+          }
+        },
+        "pt": {
+          "in_range": {
+            "jets": 2126,
+            "weighted_count": 2126
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "girth": {
+          "in_range": {
+            "jets": 2126,
+            "weighted_count": 2126
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "ptd": {
+          "in_range": {
+            "jets": 2126,
+            "weighted_count": 2126
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        }
+      },
+      "input": "/private/tmp/jewel-inclusive-vac1500.jsonl",
+      "input_sha256": "aeea77b0592276cbf15e043ff056e7527e17b2aef99acca6c7218d324cf85443",
+      "run": {
+        "type": "run",
+        "schema": "jewel-hadron-development-v1",
+        "scope": "experimental PPJJ ISR+MPI; incomplete topology and cascade validation",
+        "experimental_isr_mpi": true,
+        "inactive_nonparton_time_policy": "medium-lifetime-placeholder-preserve-source-draw",
+        "hard_colour_angle_policy": "not-evaluated-veto-disabled",
+        "medium_backend": "jewel-vacuum",
+        "mpi_channel_policy": "outgoing-flavour",
+        "mode": "vacuum",
+        "attempts_requested": 1500,
+        "seed": 2600421,
+        "pythia_version": 8317,
+        "table_lifetime_fm": 0,
+        "table_energy_gev": 846.494030493817,
+        "table_energy_prescription": "jewel-eovest",
+        "table_impact_parameter_fm": 0,
+        "geometry_seed": 3100421,
+        "angular_ordering": 0,
+        "first_angle_ordering": false,
+        "coherence": true,
+        "keep_recoils": true,
+        "recoil_rescattering": false,
+        "recoil_soft_cut_3T": 0,
+        "recoil_hard_cut_3T": 0,
+        "longitudinal_scatterer_boost": true,
+        "compression": true,
+        "pythia_settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 20",
+          "PhaseSpace:pTHatMax = 100",
+          "PDF:pSet = LHAPDF6:CT14nlo/0",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600421",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "SigmaProcess:alphaSvalue = 0.11799999999999999",
+          "SigmaProcess:alphaSorder = 2"
+        ],
+        "hadronization": true,
+        "hadrotype": 0,
+        "hadronizer_settings": [
+          "Tune:pp = 14",
+          "ProcessLevel:all = off",
+          "PartonLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = off",
+          "PartonLevel:MPI = off",
+          "PartonLevel:FSRinResonances = off",
+          "ProcessLevel:resonanceDecays = off",
+          "HadronLevel:all = on",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600421",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "StringFlav:probQQtoQ = 0.072999998927116394",
+          "StringFlav:probStoUD = 0.20000000298023224",
+          "StringFlav:probSQtoQQ = 0.93999999761581421",
+          "StringFlav:probQQ1toQQ0 = 0.032000001519918442",
+          "StringFlav:mesonUDvector = 0.44927536732658224",
+          "StringFlav:mesonSvector = 0.66666668322351263",
+          "StringFlav:mesonCvector = 1.1739131448850337",
+          "StringFlav:mesonBvector = 1.1739131448850337",
+          "StringFlav:etaSup = 0.62999999523162842",
+          "StringFlav:etaPrimeSup = 0.11999999731779099",
+          "StringPT:sigma = 0.32499998807907104",
+          "StringZ:aLund = 0.5",
+          "StringZ:bLund = 0.60000002384185791",
+          "StringZ:rFactC = 1",
+          "StringZ:rFactB = 0.67000001668930054"
+        ],
+        "centrality_percent": null
+      },
+      "summary": {
+        "type": "summary",
+        "attempts": 1500,
+        "accepted": 1500,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 1500,
+        "failed_weight": 0,
+        "generator_weight_sum": 1500,
+        "generator_sigma_mb": 0.13718533301421046,
+        "generator_sigma_error_mb": 0.001777383904515948,
+        "final_records": 49316
+      },
+      "selected_jets": 2126,
+      "failure_reasons": {},
+      "distributions": {
+        "mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 3.0,
+            "jets_per_attempt": 0.002,
+            "event_standard_error": 0.001153929967363583
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 68.0,
+            "jets_per_attempt": 0.04533333333333334,
+            "event_standard_error": 0.005373210934377292
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 715.0,
+            "jets_per_attempt": 0.4766666666666667,
+            "event_standard_error": 0.01671462967451059
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 753.0,
+            "jets_per_attempt": 0.502,
+            "event_standard_error": 0.016591924916237472
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 401.0,
+            "jets_per_attempt": 0.2673333333333333,
+            "event_standard_error": 0.012996626943620596
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 168.0,
+            "jets_per_attempt": 0.112,
+            "event_standard_error": 0.00887699151909387
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 17.0,
+            "jets_per_attempt": 0.011333333333333334,
+            "event_standard_error": 0.0028921257018898468
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 1.0,
+            "jets_per_attempt": 0.0006666666666666666,
+            "event_standard_error": 0.0006666666666666666
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "groomed_mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 41.0,
+            "jets_per_attempt": 0.027333333333333334,
+            "event_standard_error": 0.00431572172485375
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 154.0,
+            "jets_per_attempt": 0.10266666666666667,
+            "event_standard_error": 0.00833449402635007
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 813.0,
+            "jets_per_attempt": 0.542,
+            "event_standard_error": 0.017547597204954694
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 700.0,
+            "jets_per_attempt": 0.4666666666666667,
+            "event_standard_error": 0.01605158092883766
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 291.0,
+            "jets_per_attempt": 0.194,
+            "event_standard_error": 0.011170062278488633
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 105.0,
+            "jets_per_attempt": 0.07,
+            "event_standard_error": 0.006854697669650872
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 12.0,
+            "jets_per_attempt": 0.008,
+            "event_standard_error": 0.002300912021515346
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "zg": [
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 531.0,
+            "jets_per_attempt": 0.354,
+            "event_standard_error": 0.014777664362830076
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 357.0,
+            "jets_per_attempt": 0.238,
+            "event_standard_error": 0.012224895766240357
+          },
+          {
+            "low": 0.2,
+            "high": 0.25,
+            "weighted_count": 298.0,
+            "jets_per_attempt": 0.19866666666666666,
+            "event_standard_error": 0.011293826417926462
+          },
+          {
+            "low": 0.25,
+            "high": 0.3,
+            "weighted_count": 234.0,
+            "jets_per_attempt": 0.156,
+            "event_standard_error": 0.00996984557399972
+          },
+          {
+            "low": 0.3,
+            "high": 0.35,
+            "weighted_count": 197.0,
+            "jets_per_attempt": 0.13133333333333333,
+            "event_standard_error": 0.009219661033964441
+          },
+          {
+            "low": 0.35,
+            "high": 0.4,
+            "weighted_count": 156.0,
+            "jets_per_attempt": 0.104,
+            "event_standard_error": 0.008482240862599057
+          },
+          {
+            "low": 0.4,
+            "high": 0.45,
+            "weighted_count": 170.0,
+            "jets_per_attempt": 0.11333333333333333,
+            "event_standard_error": 0.008611221697865538
+          },
+          {
+            "low": 0.45,
+            "high": 0.5000000000000001,
+            "weighted_count": 173.0,
+            "jets_per_attempt": 0.11533333333333333,
+            "event_standard_error": 0.008721912149182793
+          }
+        ],
+        "pt": [
+          {
+            "low": 10,
+            "high": 15,
+            "weighted_count": 607.0,
+            "jets_per_attempt": 0.4046666666666667,
+            "event_standard_error": 0.01599654361896085
+          },
+          {
+            "low": 15,
+            "high": 20,
+            "weighted_count": 532.0,
+            "jets_per_attempt": 0.3546666666666667,
+            "event_standard_error": 0.014261407363047941
+          },
+          {
+            "low": 20,
+            "high": 30,
+            "weighted_count": 647.0,
+            "jets_per_attempt": 0.43133333333333335,
+            "event_standard_error": 0.015293835874582083
+          },
+          {
+            "low": 30,
+            "high": 40,
+            "weighted_count": 227.0,
+            "jets_per_attempt": 0.15133333333333332,
+            "event_standard_error": 0.01021554086774251
+          },
+          {
+            "low": 40,
+            "high": 60,
+            "weighted_count": 89.0,
+            "jets_per_attempt": 0.059333333333333335,
+            "event_standard_error": 0.006725975896509954
+          },
+          {
+            "low": 60,
+            "high": 80,
+            "weighted_count": 20.0,
+            "jets_per_attempt": 0.013333333333333334,
+            "event_standard_error": 0.003512000667955575
+          },
+          {
+            "low": 80,
+            "high": 100,
+            "weighted_count": 3.0,
+            "jets_per_attempt": 0.002,
+            "event_standard_error": 0.001153929967363583
+          },
+          {
+            "low": 100,
+            "high": 150,
+            "weighted_count": 1.0,
+            "jets_per_attempt": 0.0006666666666666666,
+            "event_standard_error": 0.0006666666666666666
+          },
+          {
+            "low": 150,
+            "high": 250,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "girth": [
+          {
+            "low": 0,
+            "high": 0.02,
+            "weighted_count": 4.0,
+            "jets_per_attempt": 0.0026666666666666666,
+            "event_standard_error": 0.0013319984422928393
+          },
+          {
+            "low": 0.02,
+            "high": 0.04,
+            "weighted_count": 19.0,
+            "jets_per_attempt": 0.012666666666666666,
+            "event_standard_error": 0.002888432708319249
+          },
+          {
+            "low": 0.04,
+            "high": 0.06,
+            "weighted_count": 62.0,
+            "jets_per_attempt": 0.04133333333333333,
+            "event_standard_error": 0.0054765082771861305
+          },
+          {
+            "low": 0.06,
+            "high": 0.08,
+            "weighted_count": 105.0,
+            "jets_per_attempt": 0.07,
+            "event_standard_error": 0.006854697669650872
+          },
+          {
+            "low": 0.08,
+            "high": 0.1,
+            "weighted_count": 194.0,
+            "jets_per_attempt": 0.12933333333333333,
+            "event_standard_error": 0.009166008628613852
+          },
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 832.0,
+            "jets_per_attempt": 0.5546666666666666,
+            "event_standard_error": 0.017473475986673422
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 715.0,
+            "jets_per_attempt": 0.4766666666666667,
+            "event_standard_error": 0.01674121641437195
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 195.0,
+            "jets_per_attempt": 0.13,
+            "event_standard_error": 0.009232258707651545
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "ptd": [
+          {
+            "low": 0,
+            "high": 0.2,
+            "weighted_count": 1.0,
+            "jets_per_attempt": 0.0006666666666666666,
+            "event_standard_error": 0.0006666666666666666
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 88.0,
+            "jets_per_attempt": 0.058666666666666666,
+            "event_standard_error": 0.0064944626122829295
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 812.0,
+            "jets_per_attempt": 0.5413333333333333,
+            "event_standard_error": 0.017138363964605625
+          },
+          {
+            "low": 0.4,
+            "high": 0.5,
+            "weighted_count": 794.0,
+            "jets_per_attempt": 0.5293333333333333,
+            "event_standard_error": 0.01681445703727759
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "weighted_count": 302.0,
+            "jets_per_attempt": 0.20133333333333334,
+            "event_standard_error": 0.011301699497580663
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "weighted_count": 90.0,
+            "jets_per_attempt": 0.06,
+            "event_standard_error": 0.006277264304021256
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "weighted_count": 19.0,
+            "jets_per_attempt": 0.012666666666666666,
+            "event_standard_error": 0.002888432708319249
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "weighted_count": 18.0,
+            "jets_per_attempt": 0.012,
+            "event_standard_error": 0.002812342946471093
+          },
+          {
+            "low": 0.9,
+            "high": 1.0000001,
+            "weighted_count": 2.0,
+            "jets_per_attempt": 0.0013333333333333333,
+            "event_standard_error": 0.0009424945097829577
+          }
+        ]
+      }
+    },
+    {
+      "particle_level": "hadron",
+      "denominator_scope": "attempted-events",
+      "observable_accounting": {
+        "mass": {
+          "in_range": {
+            "jets": 1357,
+            "weighted_count": 1357.0
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "groomed_mass": {
+          "in_range": {
+            "jets": 1350,
+            "weighted_count": 1350.0
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 7,
+            "weighted_count": 7.0
+          }
+        },
+        "zg": {
+          "in_range": {
+            "jets": 1350,
+            "weighted_count": 1350.0
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 7,
+            "weighted_count": 7.0
+          }
+        },
+        "pt": {
+          "in_range": {
+            "jets": 1357,
+            "weighted_count": 1357.0
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "girth": {
+          "in_range": {
+            "jets": 1357,
+            "weighted_count": 1357.0
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "ptd": {
+          "in_range": {
+            "jets": 1357,
+            "weighted_count": 1357.0
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        }
+      },
+      "input": "/private/tmp/jewel-stockvac-aligned/reference.jsonl",
+      "input_sha256": "aa12858b6ea972d6fa09593ae815066a4ddbf998184d37bc933ed88a0caa483c",
+      "run": {
+        "type": "run",
+        "schema": "jewel-fortran-hepmc-analysis-v1",
+        "generator_family": "JEWEL 2.6.0 Fortran",
+        "mode": "vacuum",
+        "attempts_requested": 1000,
+        "denominator_scope": "attempted-events",
+        "failed_attempts_known": true,
+        "keep_recoils": true,
+        "importer": {
+          "path": "/Users/ploskon/devel/jewel-cpp/tools/import_reference_hepmc.py",
+          "sha256": "09f9d4c81f5296d8cbe608537de3c1d07c6297276180abd880b806a54b119db6"
+        },
+        "reference_input": {
+          "path": "/private/tmp/jewel-stockvac-aligned/fortran/events.hepmc",
+          "sha256": "64a5289388223a4fb5e1b272007a431c773b5125cb3277e66d6718733e275ca3"
+        },
+        "cards": {
+          "path": "/private/tmp/jewel-stockvac-aligned/fortran/params.dat",
+          "sha256": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+          "text": "NEVENT 1000\nNJOB 2600421\nLOGFILE jewel.log\nHEPMCFILE events.hepmc\nSPLITINTFILE splitint.dat\nPDFFILE pdfs.dat\nXSECFILE xsecs.dat\nMEDIUMPARAMS medium.dat\nSQRTS 5020\nPTMIN 20\nPTMAX 100\nETAMAX 2\nNF 3\nQ0 1\nLAMBDAQCD 0.2\nLAMBDAQCDPS 0.2\nPDFSET 13100\nPDFALPHAS 0.118\nPROCESS PPJJ\nISOCHANNEL PP\nMASS 208\nNPROTON 82\nWEIGHTED F\nMPI T\nMPIFSR T\nANGORD 0\nAOFIRSTSPLIT F\nKEEPRECOILS T\nSCATRECOIL F\nHADRO T\nHADROTYPE 0\nPI0DEC T\nISRSCAT T\nSHORTHEPMC T\nCOMPRESS T\nWRITESCATCEN F\nWRITEDUMMIES F\nDOSUBTRACTION F\nPUTONSHELL 0\nXSECSCALEFAC 0\nRECSOFTCUT 0\nRECHARDCUT 0\nCOHLENGTHFAC 1\nPCOHREJ 1\nCOHSCAT T\n"
+        },
+        "medium_cards": {
+          "path": "/private/tmp/jewel-stockvac-aligned/fortran/medium.dat",
+          "sha256": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+          "text": "TAUI 0.4\nTI 0.59\nTC 0.17\nWOODSSAXON T\nCENTRMIN 0\nCENTRMAX 10\nNF 3\nN0 0.17\nD 0.54\nSIGMANN 6.199999809265137\nMDFACTOR 0.45\nMDSCALEFAC 1\n"
+        },
+        "output_policy": {
+          "DOSUBTRACTION": "F",
+          "PUTONSHELL": "0",
+          "RSUB": null,
+          "WRITESCATCEN": "F",
+          "WRITEDUMMIES": "F"
+        },
+        "selection_input": "HepMC status 1 only; neutrinos retained here and excluded by common analysis",
+        "normalization": "per logged GENEVENT attempt with explicit discarded indices",
+        "reference_ledger": {
+          "path": "/private/tmp/jewel-stockvac-aligned/fortran/jewel.log",
+          "sha256": "2d02cddc899339262665f52e81989f6069637a4a5ce2ddcf4ff93060b54d4b17",
+          "discarded_attempts": [
+            416,
+            445,
+            614
+          ],
+          "policy": "unweighted PP; conversion losses forbidden; each logged discard has unit weight"
+        }
+      },
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "accepted": 997,
+        "evolution_failures": null,
+        "generation_failures": null,
+        "discarded_events": 3,
+        "generator_weight_sum": 1000.0,
+        "generator_weight_sum2": 1000.0,
+        "last_cross_section": {
+          "value_pb": 134822000.0,
+          "error_pb": 0.0
+        },
+        "denominator_scope": "attempted-events",
+        "failed_attempts_known": true
+      },
+      "selected_jets": 1357,
+      "failure_reasons": {
+        "reference: JEWEL logged discarded event": 3
+      },
+      "distributions": {
+        "mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 42.0,
+            "jets_per_attempt": 0.042,
+            "event_standard_error": 0.006346359293033784
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 451.0,
+            "jets_per_attempt": 0.451,
+            "event_standard_error": 0.019798762360081778
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 497.0,
+            "jets_per_attempt": 0.497,
+            "event_standard_error": 0.0198591385861871
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 260.0,
+            "jets_per_attempt": 0.26,
+            "event_standard_error": 0.015576990808325036
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 96.0,
+            "jets_per_attempt": 0.096,
+            "event_standard_error": 0.010044146797258834
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 11.0,
+            "jets_per_attempt": 0.011,
+            "event_standard_error": 0.003299983316607811
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "groomed_mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 16.0,
+            "jets_per_attempt": 0.016,
+            "event_standard_error": 0.003969856390319398
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 111.0,
+            "jets_per_attempt": 0.111,
+            "event_standard_error": 0.010138135024834785
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 499.0,
+            "jets_per_attempt": 0.499,
+            "event_standard_error": 0.020455254029647672
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 460.0,
+            "jets_per_attempt": 0.46,
+            "event_standard_error": 0.019462239819167237
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 204.0,
+            "jets_per_attempt": 0.204,
+            "event_standard_error": 0.013949142575032294
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 54.0,
+            "jets_per_attempt": 0.054,
+            "event_standard_error": 0.007690457928052343
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 6.0,
+            "jets_per_attempt": 0.006,
+            "event_standard_error": 0.0024433521993298406
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "zg": [
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 331.0,
+            "jets_per_attempt": 0.331,
+            "event_standard_error": 0.01696250944662159
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 247.0,
+            "jets_per_attempt": 0.247,
+            "event_standard_error": 0.01536968533273298
+          },
+          {
+            "low": 0.2,
+            "high": 0.25,
+            "weighted_count": 182.0,
+            "jets_per_attempt": 0.182,
+            "event_standard_error": 0.013078495595711575
+          },
+          {
+            "low": 0.25,
+            "high": 0.3,
+            "weighted_count": 155.0,
+            "jets_per_attempt": 0.155,
+            "event_standard_error": 0.012046581262753351
+          },
+          {
+            "low": 0.3,
+            "high": 0.35,
+            "weighted_count": 116.0,
+            "jets_per_attempt": 0.116,
+            "event_standard_error": 0.01143130240500507
+          },
+          {
+            "low": 0.35,
+            "high": 0.4,
+            "weighted_count": 122.0,
+            "jets_per_attempt": 0.122,
+            "event_standard_error": 0.010640922386204555
+          },
+          {
+            "low": 0.4,
+            "high": 0.45,
+            "weighted_count": 105.0,
+            "jets_per_attempt": 0.105,
+            "event_standard_error": 0.010003753049484731
+          },
+          {
+            "low": 0.45,
+            "high": 0.5000000000000001,
+            "weighted_count": 92.0,
+            "jets_per_attempt": 0.092,
+            "event_standard_error": 0.009572232113129499
+          }
+        ],
+        "pt": [
+          {
+            "low": 10,
+            "high": 15,
+            "weighted_count": 355.0,
+            "jets_per_attempt": 0.355,
+            "event_standard_error": 0.01847474807179563
+          },
+          {
+            "low": 15,
+            "high": 20,
+            "weighted_count": 384.0,
+            "jets_per_attempt": 0.384,
+            "event_standard_error": 0.018244913726210846
+          },
+          {
+            "low": 20,
+            "high": 30,
+            "weighted_count": 424.0,
+            "jets_per_attempt": 0.424,
+            "event_standard_error": 0.01909420301003916
+          },
+          {
+            "low": 30,
+            "high": 40,
+            "weighted_count": 136.0,
+            "jets_per_attempt": 0.136,
+            "event_standard_error": 0.01198530966006501
+          },
+          {
+            "low": 40,
+            "high": 60,
+            "weighted_count": 46.0,
+            "jets_per_attempt": 0.046,
+            "event_standard_error": 0.007611960453256568
+          },
+          {
+            "low": 60,
+            "high": 80,
+            "weighted_count": 12.0,
+            "jets_per_attempt": 0.012,
+            "event_standard_error": 0.0037242274191931234
+          },
+          {
+            "low": 80,
+            "high": 100,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 100,
+            "high": 150,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 150,
+            "high": 250,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "girth": [
+          {
+            "low": 0,
+            "high": 0.02,
+            "weighted_count": 2.0,
+            "jets_per_attempt": 0.002,
+            "event_standard_error": 0.0014135055705578234
+          },
+          {
+            "low": 0.02,
+            "high": 0.04,
+            "weighted_count": 9.0,
+            "jets_per_attempt": 0.009,
+            "event_standard_error": 0.002987963843142672
+          },
+          {
+            "low": 0.04,
+            "high": 0.06,
+            "weighted_count": 38.0,
+            "jets_per_attempt": 0.038,
+            "event_standard_error": 0.006371545856116599
+          },
+          {
+            "low": 0.06,
+            "high": 0.08,
+            "weighted_count": 71.0,
+            "jets_per_attempt": 0.071,
+            "event_standard_error": 0.008247849842657601
+          },
+          {
+            "low": 0.08,
+            "high": 0.1,
+            "weighted_count": 121.0,
+            "jets_per_attempt": 0.121,
+            "event_standard_error": 0.010884735985657966
+          },
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 559.0,
+            "jets_per_attempt": 0.559,
+            "event_standard_error": 0.02080749749373893
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 420.0,
+            "jets_per_attempt": 0.42,
+            "event_standard_error": 0.0192346034523712
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 137.0,
+            "jets_per_attempt": 0.137,
+            "event_standard_error": 0.011591607540171698
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "ptd": [
+          {
+            "low": 0,
+            "high": 0.2,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 38.0,
+            "jets_per_attempt": 0.038,
+            "event_standard_error": 0.00652676019159572
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 524.0,
+            "jets_per_attempt": 0.524,
+            "event_standard_error": 0.020829254856039807
+          },
+          {
+            "low": 0.4,
+            "high": 0.5,
+            "weighted_count": 534.0,
+            "jets_per_attempt": 0.534,
+            "event_standard_error": 0.020670541146067544
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "weighted_count": 194.0,
+            "jets_per_attempt": 0.194,
+            "event_standard_error": 0.01365835094550402
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "weighted_count": 39.0,
+            "jets_per_attempt": 0.039,
+            "event_standard_error": 0.006286375626584727
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "weighted_count": 17.0,
+            "jets_per_attempt": 0.017,
+            "event_standard_error": 0.004089954489689063
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "weighted_count": 9.0,
+            "jets_per_attempt": 0.009,
+            "event_standard_error": 0.002987963843142672
+          },
+          {
+            "low": 0.9,
+            "high": 1.0000001,
+            "weighted_count": 2.0,
+            "jets_per_attempt": 0.002,
+            "event_standard_error": 0.0014135055705578234
+          }
+        ]
+      }
+    }
+  ]
+}
