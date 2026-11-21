@@ -4,6 +4,7 @@
 #include "jewel/subtraction.hpp"
 #include "jewel/projection.hpp"
 #include "input_options.hpp"
+#include "jewel/geometry.hpp"
 #include "jewel/pythia8_shower_output.hpp"
 #include "jewel/pythia8_hadronizer.hpp"
 #include <filesystem>
@@ -55,13 +56,13 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
   std::filesystem::path replay_directory;
   InputOptionState input_options;jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
-  double table_energy=100;std::optional<std::string> table_energy_option;
+  std::optional<double> geometry_step;double table_energy=100;std::optional<std::string> table_energy_option;
   bool longitudinal_boost=false,boost_option_seen=false;
   int angular_ordering=0;bool angular_option_seen=false;
   bool keep_recoils=true,recoil_option_seen=false;
@@ -70,6 +71,12 @@ int main(int argc,char** argv){
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config,input_options))continue;
+   if(option=="--geometry-step"){
+    if(geometry_step||i+1>=argc)throw std::invalid_argument("geometry step requires one positive value");
+    std::string token=argv[++i];std::size_t used=0;double value=std::stod(token,&used);
+    if(used!=token.size()||!std::isfinite(value)||value<=0)throw std::invalid_argument("geometry step must be finite and positive");
+    geometry_step=value;continue;
+   }
    if(option=="--table-energy"){
     if(table_energy_option||i+1>=argc)throw std::invalid_argument("table energy requires one GEV or jewel value");
     table_energy_option=argv[++i];
@@ -150,6 +157,7 @@ int main(int argc,char** argv){
   bool comma=false;for(const auto& s:input.settings()){if(comma)out<<',';comma=true;out<<std::quoted(s);}out<<"],\"hadronization\":"<<(hadronize_run?"true":"false")<<",\"hadrotype\":0,\"hadronizer_settings\":[";
   if(hadronizer){comma=false;for(const auto& setting:hadronizer->settings()){if(comma)out<<',';comma=true;out<<std::quoted(setting);}}out<<"],\"centrality_percent\":";
   if(centrality)out<<'['<<(*centrality)[0]<<','<<(*centrality)[1]<<']';else out<<"null";
+  if(geometry_step)out<<",\"geometry_estimator\":{\"schema\":\"geometry-v1-native\",\"step_fm\":"<<*geometry_step<<",\"radius_fm\":"<<(mode=="medium"?medium.thickness_table().back()[0]:0)<<",\"trajectory\":\"straight-line from shower-start momentum; not traversed shower history\"}";
   if(subtraction_radius)out<<",\"subtraction\":{\"algorithm\":\"jewel260-kernel-zero-offset\",\"radius\":"<<*subtraction_radius<<",\"put_on_shell\":"<<projection_mode<<",\"mass_policy\":\"signed-invariant-mass\",\"rng\":\"splitmix64-open52-v1\",\"seed_base\":"<<static_cast<std::uint64_t>(seed)+2000000<<",\"seed_stride\":100,\"input\":\"all-final-hadronized\",\"thermal_input\":\"stored-centres\",\"positive_thermal_residuals\":true}";
   if(projection_mode)out<<",\"projection_mass_source\":\"Pythia8 ParticleData::m0\",\"projection_range\":\"all-subtracted-PPJJ\"";
   out<<"}\n";
@@ -171,6 +179,11 @@ int main(int argc,char** argv){
     auto vertex=event_medium.sample_vertex(random);stage="hard initialization";
     jewel::HardInitializationConfig hard_config;hard_config.x=vertex.x;hard_config.y=vertex.y;hard_config.lifetime=event_lifetime;
     auto prepared=jewel::prepare_pythia_dijet(*hard,hard_config,branching,random);auto initial_hard=std::array<jewel::ShowerParticle,2>{prepared.state.at(prepared.hard[0]),prepared.state.at(prepared.hard[1])};
+    std::array<jewel::PathLengths,2> path_lengths;
+    if(geometry_step){stage="geometry estimate";for(int leg=0;leg<2;++leg)
+     path_lengths[leg]=jewel::straight_path_lengths(vertex.x,vertex.y,event_b,
+      mode=="medium"?event_medium.thickness_table().back()[0]:0,event_lifetime,
+      initial_hard[leg].particle.momentum,*geometry_step,event_medium);}
     if(!replay_directory.empty()){stage="replay export";replay_fixture(replay_directory/(std::to_string(attempt)+".input"),prepared,event_lifetime,config.evolution.cross_section_scale,shower_seed,random.checkpoint(),table_b,event_b,table_energy,longitudinal_boost,keep_recoils,scatter_recoils,soft_cut,hard_cut,angular_ordering);}
     jewel::TransferHistory history;history.records.resize(100);jewel::RecoilStorage ledger;stage="cascade";
     auto evolved=cascade.evolve(prepared.state,prepared.scratch,history,ledger,random);prepared.state.validate();
@@ -203,7 +216,13 @@ int main(int argc,char** argv){
     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"impact_parameter_fm\":"<<event_b<<",\"centrality_fraction\":";if(event_centrality)out<<*event_centrality;else out<<"null";out<<",\"event_lifetime_fm\":"<<event_lifetime<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"shower_seed\":"<<shower_seed<<",\"draws\":"<<random.checkpoint()<<",\"branch_calls\":"<<evolved.branch_calls<<",\"initial_hard\":[";
     particle(out,initial_hard[0]);out<<',';particle(out,initial_hard[1]);out<<"],\"input_sources\":[";comma=false;
     for(const auto& entry:prepared.input_sources){if(comma)out<<',';comma=true;out<<'['<<entry.first<<','<<entry.second<<']';}
-    out<<"],\"particles\":[";comma=false;
+    out<<']';
+    if(geometry_step){out<<",\"geometry\":[";
+     for(int leg=0;leg<2;++leg){if(leg)out<<',';const auto& g=path_lengths[leg];
+      out<<"{\"leg_id\":"<<leg+1<<",\"shower_start_id\":"<<initial_hard[leg].particle.id
+       <<",\"production_fm\":["<<vertex.x<<','<<vertex.y<<",0,0],\"L_geom_T_fm\":"<<g.geometric_transverse
+       <<",\"L_hot_fm\":"<<g.hot<<",\"L_hot_T_fm\":"<<g.hot_transverse<<",\"int_T3_dl\":"<<g.temperature_cubed_integral<<'}';}out<<']';}
+    out<<",\"particles\":[";comma=false;
     for(const auto& p:prepared.state.particles()){if(comma)out<<',';comma=true;particle(out,p);if(p.particle.status==3||p.particle.status==4||p.particle.status==5)++final_count;}
     out<<"],\"archived\":[";comma=false;for(const auto& entry:prepared.state.archived()){if(comma)out<<',';comma=true;particle(out,entry.second);}
     out<<"],\"thermal_references\":[";

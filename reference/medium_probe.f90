@@ -134,6 +134,13 @@ program mediumprobe
   if(ios<0) exit
   if(ios/=0) stop 2
   select case(trim(op))
+  case('LENGTHS')
+   block
+    double precision gx,gy,gb,gr,gt,gp(4),gs,lg,lh,lht,it3
+    read(*,*) gx,gy,gb,gr,gt,gp,gs
+    call JG_LENGTHS(gx,gy,gb,gr,gt,gp,gs,lg,lh,lht,it3)
+    write(*,'(4(ES26.17E3,1X))')lg,lh,lht,it3
+   end block
   case('CONFIG')
    read(*,*) mass,nf,woodflag,taui,ti,tc,n0,d,sigmann,breal,etamax2,mdfactor,mdscalefac
    woods=woodflag/=0

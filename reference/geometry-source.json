@@ -1,0 +1,6 @@
+{
+  "origin": "hepyy-recipes/jewel/2.6.0-custom.sh geometry-v1 JG_LENGTHS",
+  "recipe_sha256": "b5509383cd94cd09c4b8a5811c45b924288861f1c1ac19a07b78b4c8ec9e3067",
+  "routine_sha256": "b3c0f0e4d62fcb5f54270362fea451c91d5a6cf9f52caae2aaccaf222791cbff",
+  "scope": "unchanged JG_LENGTHS body; harness JG_FAIL terminates invalid inputs"
+}

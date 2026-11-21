@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/scattering.hpp"
+#include "jewel/geometry.hpp"
 #include "jewel/branching.hpp"
 #include "jewel/shower.hpp"
 #include "jewel/transfer.hpp"
@@ -45,7 +46,12 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="EVENTB") {
+   if(op=="LENGTHS") {
+    double x,y,b,r,t,step;jewel::Momentum p;
+    if(!(std::cin>>x>>y>>b>>r>>t>>p.px>>p.py>>p.pz>>p.energy>>step))throw std::runtime_error("bad geometry query");
+    auto v=jewel::straight_path_lengths(x,y,b,r,t,p,step,*medium);
+    std::cout<<v.geometric_transverse<<' '<<v.hot<<' '<<v.hot_transverse<<' '<<v.temperature_cubed_integral<<'\n';
+   } else if(op=="EVENTB") {
     double b;if(!(std::cin>>b))throw std::runtime_error("bad event impact parameter");
     *medium=medium->with_impact_parameter(b);
     if(rates)*rates=rates->with_event_impact_parameter(b);

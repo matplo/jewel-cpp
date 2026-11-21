@@ -3,7 +3,7 @@ project(jewel_cpp VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_library(jewel_core src/core.cpp src/medium.cpp src/radiation.cpp src/final_splitting.cpp src/partonic_pdf.cpp src/scattering.cpp src/branching.cpp src/kinematics.cpp src/shower_state.cpp src/transport.cpp src/shower.cpp src/transfer.cpp src/evolution.cpp src/recoil.cpp src/collision.cpp src/collision_sequence.cpp src/initial_splitting.cpp)
+add_library(jewel_core src/geometry.cpp src/core.cpp src/medium.cpp src/radiation.cpp src/final_splitting.cpp src/partonic_pdf.cpp src/scattering.cpp src/branching.cpp src/kinematics.cpp src/shower_state.cpp src/transport.cpp src/shower.cpp src/transfer.cpp src/evolution.cpp src/recoil.cpp src/collision.cpp src/collision_sequence.cpp src/initial_splitting.cpp)
 target_include_directories(jewel_core PUBLIC include)
 target_compile_options(jewel_core PRIVATE -Wall -Wextra -Wpedantic)
 add_executable(jewel-probe app/probe.cpp)
@@ -72,7 +72,7 @@ if(JEWEL_REFERENCE_SOURCE)
  if(NOT extracted_medium EQUAL 0)
   message(FATAL_ERROR "Medium reference verification failed")
  endif()
- add_executable(jewel-medium-reference ${CMAKE_BINARY_DIR}/medium-reference.f reference/medium_probe.f90 reference/guarded_cascade.f90 reference/generated_random.cpp)
+ add_executable(jewel-medium-reference ${CMAKE_BINARY_DIR}/medium-reference.f reference/medium_probe.f90 reference/geometry_lengths.f reference/guarded_cascade.f90 reference/generated_random.cpp)
  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   target_compile_options(jewel-medium-reference PRIVATE "$<$<COMPILE_LANGUAGE:Fortran>:-std=legacy;-ffixed-line-length-none>")
  endif()
@@ -617,4 +617,20 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
  add_test(NAME hard-range-cli COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/hard_range_cli.py $<TARGET_FILE:jewel-pythia8-input>
   $<TARGET_FILE:jewel-run-partons> ${CMAKE_BINARY_DIR}/hard-range-validation.json)
+endif()
+
+if(BUILD_TESTING)
+ add_executable(geometry-test tests/geometry.cpp)
+ target_link_libraries(geometry-test PRIVATE jewel_core)
+ add_test(NAME geometry-contracts COMMAND geometry-test)
+endif()
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME geometry-lengths-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/geometry_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/geometry-lengths-validation.json)
+ if(JEWEL_WITH_PYTHIA8)
+  add_test(NAME geometry-native-output COMMAND ${Python3_EXECUTABLE}
+   ${CMAKE_SOURCE_DIR}/tests/geometry_native.py $<TARGET_FILE:jewel-run-partons>
+   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/geometry-native-validation.json)
+ endif()
 endif()

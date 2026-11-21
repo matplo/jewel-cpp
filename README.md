@@ -821,3 +821,7 @@ agreement. [Commands, statistical treatment and limitations](docs/jet-comparison
 Hard-input and native runners now accept `--ecm GEV --pt-min GEV --pt-max GEV`.
 `--table-energy jewel` derives the table scale from those inputs. Defaults remain
 5020 GeV and pThat 20–100 GeV. See [hard-range validation](docs/validation-hard-range.md).
+
+Use `--geometry-step .02` to export both hard legs' production points and the
+custom JEWEL straight-line geometric/hot-medium length estimates in native JSON.
+[Definitions and Fortran validation](docs/validation-geometry-lengths.md).
