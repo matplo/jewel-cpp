@@ -56,11 +56,11 @@ branching differential tests also pass. [Hashes and full case list](validation-m
 ctest --test-dir build -R '^(minimum-strings-differential|strings-differential|strings-contracts|compression-differential|branching-differential)$' --output-on-failure
 ```
 
-## Integration still required
+## Pythia8 integration
 
-This validates the constructor and its boundary record only. The native runner
-still uses HADROTYPE=0. Enabling HADROTYPE=1 requires a separate adapter that
-turns the returned ordered strings into fresh, balanced Pythia8 colour tags,
-handles generated/synthetic endpoints and provenance, and validates actual
-hadronization. Neither hadron-level parity nor the requested jet ratio gate has
-been established by these component tests.
+The ordered-string export and `--hadrotype 1` runner mode are now implemented.
+See [adapter semantics and hadronization validation](validation-minimum-hadronization.md)
+for fresh colour assignment, synthetic-endpoint provenance and the generated
+quark mass-field adaptation. This component's exact Fortran-boundary result
+remains distinct from the later Pythia8 adapter and from hadron-level physics
+agreement. The requested final-jet ratio gate remains open.

@@ -831,5 +831,7 @@ the full phase space before applying jet cuts. Unmatched selected jets receive
 null geometry. [Matching rules and sample validation](docs/validation-native-jet-geometry.md).
 
 The HADROTYPE=1 minimum-invariant-mass string constructor is now ported and
-validated against the original Fortran routine. Its Pythia8 export and runner
-integration are still pending. [Evidence and source semantics](docs/validation-minimum-strings.md).
+validated against the original Fortran routine. The hadronized runner supports
+`--hadrotype 1`, with explicit synthetic-endpoint provenance and Pythia8 mass-field
+adaptation. [Constructor evidence](docs/validation-minimum-strings.md) and
+[runner/hadronization validation](docs/validation-minimum-hadronization.md).

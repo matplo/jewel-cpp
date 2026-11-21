@@ -640,3 +640,14 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/minimum_strings_differential.py $<TARGET_FILE:jewel-strings-probe>
   $<TARGET_FILE:jewel-strings-reference> ${CMAKE_BINARY_DIR}/minimum-strings-validation.json)
 endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_executable(pythia8-minimum-output-test tests/pythia8_minimum_output.cpp)
+ target_link_libraries(pythia8-minimum-output-test PRIVATE jewel_pythia8)
+ add_test(NAME pythia8-minimum-output-contracts COMMAND pythia8-minimum-output-test)
+endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
+ add_test(NAME runner-hadrotype-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_hadrotype.py $<TARGET_FILE:jewel-run-events>)
+endif()

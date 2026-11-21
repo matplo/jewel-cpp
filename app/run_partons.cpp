@@ -56,7 +56,7 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -64,13 +64,18 @@ int main(int argc,char** argv){
   InputOptionState input_options;jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
   std::optional<double> geometry_step;double table_energy=100;std::optional<std::string> table_energy_option;
   bool longitudinal_boost=false,boost_option_seen=false;
-  int angular_ordering=0;bool angular_option_seen=false;
+  int hadrotype=0;bool hadrotype_seen=false;int angular_ordering=0;bool angular_option_seen=false;
   bool keep_recoils=true,recoil_option_seen=false;
   bool scatter_recoils=false,scatter_option_seen=false,cuts_option_seen=false;double soft_cut=0,hard_cut=0;
   std::optional<double> subtraction_radius;int projection_mode=0;bool projection_seen=false;
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config,input_options))continue;
+   if(option=="--hadrotype"){
+    if(hadrotype_seen||i+1>=argc||!hadronize_run)throw std::invalid_argument("hadrotype requires jewel-run-events and one mode");
+    std::string value=argv[++i];if(value!="0"&&value!="1")throw std::invalid_argument("hadrotype must be 0 or 1");
+    hadrotype=value=="1"?1:0;hadrotype_seen=true;continue;
+   }
    if(option=="--geometry-step"){
     if(geometry_step||i+1>=argc)throw std::invalid_argument("geometry step requires one positive value");
     std::string token=argv[++i];std::size_t used=0;double value=std::stod(token,&used);
@@ -154,9 +159,10 @@ int main(int argc,char** argv){
   config.coherent.finalization.soft_recoil_cut=soft_cut;config.coherent.finalization.hard_recoil_cut=hard_cut;config.coherent.finalization.storage={0,true,false};
   std::ofstream out(argv[1]);if(!out)throw std::runtime_error("cannot create output");out<<std::setprecision(17);
   out<<"{\"type\":\"run\",\"schema\":"<<std::quoted(hadronize_run?"jewel-hadron-development-v1":"jewel-parton-development-v1")<<",\"scope\":\"reduced PPJJ; no ISR/MPI\",\"mode\":"<<std::quoted(mode)<<",\"attempts_requested\":"<<attempts<<",\"seed\":"<<seed<<",\"pythia_version\":"<<input.version()<<",\"table_lifetime_fm\":"<<lifetime<<",\"table_energy_gev\":"<<table_energy<<",\"table_energy_prescription\":"<<std::quoted(table_energy_option=="jewel"?"jewel-eovest":table_energy_option?"explicit":"legacy-100")<<",\"table_impact_parameter_fm\":"<<table_b<<",\"geometry_seed\":"<<geometry_seed<<",\"angular_ordering\":"<<angular_ordering<<",\"first_angle_ordering\":false,\"coherence\":true,\"keep_recoils\":"<<(keep_recoils?"true":"false")<<",\"recoil_rescattering\":"<<(scatter_recoils?"true":"false")<<",\"recoil_soft_cut_3T\":"<<soft_cut<<",\"recoil_hard_cut_3T\":"<<hard_cut<<",\"longitudinal_scatterer_boost\":"<<(longitudinal_boost?"true":"false")<<",\"compression\":true,\"pythia_settings\":[";
-  bool comma=false;for(const auto& s:input.settings()){if(comma)out<<',';comma=true;out<<std::quoted(s);}out<<"],\"hadronization\":"<<(hadronize_run?"true":"false")<<",\"hadrotype\":0,\"hadronizer_settings\":[";
+  bool comma=false;for(const auto& s:input.settings()){if(comma)out<<',';comma=true;out<<std::quoted(s);}out<<"],\"hadronization\":"<<(hadronize_run?"true":"false")<<",\"hadrotype\":"<<hadrotype<<",\"hadronizer_settings\":[";
   if(hadronizer){comma=false;for(const auto& setting:hadronizer->settings()){if(comma)out<<',';comma=true;out<<std::quoted(setting);}}out<<"],\"centrality_percent\":";
   if(centrality)out<<'['<<(*centrality)[0]<<','<<(*centrality)[1]<<']';else out<<"null";
+  if(hadrotype==1)out<<",\"minimum_string_policy\":{\"input_ids\":\"ordered-string-local\",\"native_sources\":\"parallel stable IDs; null for synthetic endpoints\",\"generated_quark_mass\":\"parent mass scaled with daughter four-momentum\",\"endpoint_energy_gev\":10,\"max_rapidity\":"<<medium_config.max_rapidity<<",\"rapidity_margin\":1}";
   if(geometry_step)out<<",\"geometry_estimator\":{\"schema\":\"geometry-v1-native\",\"step_fm\":"<<*geometry_step<<",\"radius_fm\":"<<(mode=="medium"?medium.thickness_table().back()[0]:0)<<",\"trajectory\":\"straight-line from shower-start momentum; not traversed shower history\"}";
   if(subtraction_radius)out<<",\"subtraction\":{\"algorithm\":\"jewel260-kernel-zero-offset\",\"radius\":"<<*subtraction_radius<<",\"put_on_shell\":"<<projection_mode<<",\"mass_policy\":\"signed-invariant-mass\",\"rng\":\"splitmix64-open52-v1\",\"seed_base\":"<<static_cast<std::uint64_t>(seed)+2000000<<",\"seed_stride\":100,\"input\":\"all-final-hadronized\",\"thermal_input\":\"stored-centres\",\"positive_thermal_residuals\":true}";
   if(projection_mode)out<<",\"projection_mass_source\":\"Pythia8 ParticleData::m0\",\"projection_range\":\"all-subtracted-PPJJ\"";
@@ -191,8 +197,9 @@ int main(int argc,char** argv){
     for(const auto& s:prepared.state.particles())if(s.particle.status==1||s.particle.status==2)throw std::runtime_error("unfinished cascade record");
     // GENEVENT excludes any residual status-3 centres before string construction.
     if(!keep_recoils)for(const auto& node:prepared.state.particles())if(node.particle.status==3)prepared.state.at(node.particle.id).particle.status=22;
+    const auto cascade_draws=random.checkpoint();
     std::vector<jewel::GeneratorParticle> hadron_input;std::optional<jewel::HadronizedSnapshot> hadrons;
-    if(hadronizer){stage="string construction";hadron_input=jewel::prepare_vacuum_hadronization(prepared.state,keep_recoils);
+    if(hadronizer){stage="string construction";hadron_input=hadrotype==0?jewel::prepare_vacuum_hadronization(prepared.state,keep_recoils):jewel::prepare_minimum_hadronization(prepared.state,branching,random,medium_config.max_rapidity,keep_recoils);
      stage="hadronization";hadrons=hadronizer->hadronize(hadron_input);if(!hadrons)throw std::runtime_error("Pythia8 hadronization failed");}
     std::optional<jewel::SubtractionResult> subtracted;
     const auto subtraction_seed=static_cast<std::uint64_t>(seed)+2000000+100*attempt;
@@ -213,7 +220,7 @@ int main(int argc,char** argv){
      for(const auto& p:projected->particles){projection_after.px+=p.momentum.px;projection_after.py+=p.momentum.py;projection_after.pz+=p.momentum.pz;projection_after.energy+=p.momentum.energy;}
     }
     ++accepted;accepted_weight+=hard->weight;
-    out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"impact_parameter_fm\":"<<event_b<<",\"centrality_fraction\":";if(event_centrality)out<<*event_centrality;else out<<"null";out<<",\"event_lifetime_fm\":"<<event_lifetime<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"shower_seed\":"<<shower_seed<<",\"draws\":"<<random.checkpoint()<<",\"branch_calls\":"<<evolved.branch_calls<<",\"initial_hard\":[";
+    out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"impact_parameter_fm\":"<<event_b<<",\"centrality_fraction\":";if(event_centrality)out<<*event_centrality;else out<<"null";out<<",\"event_lifetime_fm\":"<<event_lifetime<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"shower_seed\":"<<shower_seed<<",\"draws\":"<<cascade_draws<<",\"branch_calls\":"<<evolved.branch_calls<<",\"initial_hard\":[";
     particle(out,initial_hard[0]);out<<',';particle(out,initial_hard[1]);out<<"],\"input_sources\":[";comma=false;
     for(const auto& entry:prepared.input_sources){if(comma)out<<',';comma=true;out<<'['<<entry.first<<','<<entry.second<<']';}
     out<<']';
@@ -241,6 +248,9 @@ int main(int argc,char** argv){
      for(std::size_t i=0;i<projected->particles.size();++i){if(i)out<<',';const auto& p=projected->particles[i];const auto& source=subtracted->particles[i];
       out<<"{\"id\":"<<i+1<<",\"source_id\":"<<source.source<<",\"pdg\":"<<source.pdg<<",\"final\":true,\"thermal_residual\":"<<(source.thermal_residual?"true":"false")<<",\"mass\":"<<p.mass<<",\"nominal_mass\":"<<p.nominal_mass<<",\"momentum\":";momentum(out,p.momentum);out<<'}';}out<<']';
     }
+    if(hadrotype==1){out<<",\"string_draws\":"<<random.checkpoint()-cascade_draws<<",\"hadronization_native_sources\":[";
+     for(std::size_t i=0;i<hadron_input.size();++i){if(i)out<<',';int source=hadron_input[i].source_index;
+      if(source<0)out<<"null";else out<<prepared.state.particles().at(source).particle.id;}out<<']';}
     if(hadrons){out<<",\"hadronization_input\":[";comma=false;for(const auto& p:hadron_input){if(comma)out<<',';comma=true;generator_particle(out,p);}
      out<<"],\"hadronized_particles\":[";comma=false;for(const auto& p:hadrons->particles){if(comma)out<<',';comma=true;generator_particle(out,p);}
      out<<"],\"hadronization_sources\":[";comma=false;for(auto id:hadrons->input_sources){if(comma)out<<',';comma=true;out<<id;}out<<']';}out<<"}\n";
