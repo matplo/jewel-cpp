@@ -4,7 +4,7 @@ An experimental standalone C++17 port of JEWEL 2.6.0. Pythia8 supplies hard even
 
 ## Build and test
 
-Use CMake 3.18 or newer, a C++17 compiler, Python 3 and installations of Pythia8 and LHAPDF. The GitHub Actions workflow uses Pythia 8.317, LHAPDF 6.5.5 and the CT14nlo PDF set. Set the environment variables below to the installation prefixes and the directory containing your LHAPDF sets.
+Use CMake 3.18 or newer, a C++17 compiler, Python 3 and installations of Pythia8 and LHAPDF. The macOS ARM64 GitHub Actions workflow uses Pythia 8.317, LHAPDF 6.5.5 and the CT14nlo PDF set. Set the environment variables below to the installation prefixes and the directory containing your LHAPDF sets.
 
 ```sh
 export LHAPDF_DATA_PATH=/path/to/share/LHAPDF
@@ -16,7 +16,7 @@ cmake --build build-pythia8 --parallel 4
 ctest --test-dir build-pythia8 --output-on-failure
 ```
 
-The 54 native tests run on PRs into `main` and on pushes to `main`. The independent Fortran differential tests use the frozen JEWEL source described in the [porting notes](docs/porting-notes.md#build-and-validate).
+The 54 native tests run on PRs into `main` and on pushes to `main`. The initial Linux x86-64 build exposed numerical differences in three frozen MPI replay comparisons. The CI workflow uses the Apple Silicon platform used for validation and retains the replay tolerances. The independent Fortran differential tests use the frozen JEWEL source described in the [porting notes](docs/porting-notes.md#build-and-validate).
 
 ## Generate and analyze a small matched sample
 
