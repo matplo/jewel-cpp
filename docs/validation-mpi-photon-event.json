@@ -1,0 +1,33 @@
+{
+  "attempt": 217,
+  "type": "event",
+  "photons": [
+    {
+      "id": 89,
+      "pdg": 22,
+      "status": 23,
+      "final": true,
+      "colour": 0,
+      "anticolour": 0,
+      "mass": 0,
+      "momentum": [
+        0.8972817147938507,
+        0.5539711332578857,
+        -14.128683016606978,
+        14.167980882113897
+      ],
+      "vertex_mm": [
+        -6.709881990970712e-13,
+        -4.035864531644277e-12,
+        0,
+        0
+      ],
+      "mothers": [],
+      "daughters": []
+    }
+  ],
+  "photons_preserved_in_final_state": [
+    true
+  ],
+  "sample_sha256": "4ad33e72bb8b3e91cb612ba515c5e2766f61dd130c1e8ad8b90646d65ccebc1b"
+}

@@ -1,0 +1,14 @@
+{
+  "seed": 2600417,
+  "attempts": 150,
+  "unchanged_accepted_events": 148,
+  "previous_accepted_events": 148,
+  "failed_attempts": [
+    66,
+    115
+  ],
+  "inputs": {
+    "/private/tmp/jewel-unused-angle-medium150.jsonl": "71bdd26f05ad208ce7f85c1c449dbfe4857763cc95b07360f78e928f8c9cf088",
+    "/private/tmp/jewel-mpi-photon-medium150.jsonl": "33a17a70c50cb2fa7e329384ceae72db22e018736d86e06bbf138b48e782a814"
+  }
+}

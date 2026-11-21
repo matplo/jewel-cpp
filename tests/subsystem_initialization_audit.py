@@ -30,7 +30,7 @@ for event in map(json.loads,Path(snapshot).open()):
                 if p[own] and not any(q[other]==p[own] for q in finals):missing.append(p[own])
         assert missing and all(tag in tags for tag in missing)
         classes['junction_colour_partner']+=1;missing_tags+=len(missing)
-    elif init['error']=='subsystem initialization currently requires quark/gluon pairs':
+    elif init['error'] in ['subsystem initialization currently requires quark/gluon pairs','subsystem initialization requires quarks/gluons or inactive massless photons']:
         unsupported=[]
         for sub in event['subsystems']:
             for root in sub['process_outgoing']:

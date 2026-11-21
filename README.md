@@ -904,3 +904,10 @@ splitting angular veto is disabled, by omitting its unused colour-angle diagnost
 No junction angle is fabricated. Matched 150-attempt samples recover four events
 in both expanding-medium modes; [validation and limits](docs/validation-unused-colour-angles.md)
 include the remaining strict Fortran replay discrepancy.
+
+### MPI photons
+
+Native MPI pairs can now include inactive massless colourless photons. Their
+identity and mass survive pair initialization and hadronization.
+[Validation](docs/validation-mpi-photons.md) covers 228,960 Fortran comparisons
+and a generated photon event; massive nonpartons remain unsupported.

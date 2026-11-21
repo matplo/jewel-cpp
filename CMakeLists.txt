@@ -724,3 +724,9 @@ if(BUILD_TESTING)
  target_link_libraries(vacuum-backend-test PRIVATE jewel_core)
  add_test(NAME vacuum-backend-contracts COMMAND vacuum-backend-test)
 endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME mpi-photon-initialization-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/hard_initialization_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/mpi-photon-initialization-validation.json --photons)
+endif()

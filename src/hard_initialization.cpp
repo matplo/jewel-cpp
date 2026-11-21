@@ -40,7 +40,11 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  if(config.mpi_pair){require(config.mpi_sampling_channels.has_value(),"MPI initialization requires explicit TYPE1/TYPE2 channels");
   for(auto channel:*config.mpi_sampling_channels)require(channel==Channel::QQ||channel==Channel::GC,"unsupported MPI sampling channel");}
  auto working=state;auto& a=working.at(first);auto& b=working.at(second);
- for(auto* leg:{&a,&b})require(parton(leg->particle.pdg)&&(leg->particle.status==1||leg->particle.status==4),"hard dijet initialization requires active quarks/gluons");
+ for(auto* leg:{&a,&b}){
+  const auto& p=leg->particle;
+  bool photon=config.mpi_pair&&p.pdg==22&&p.status==4&&leg->record_mass==0&&p.colour==0&&p.anticolour==0;
+  require((parton(p.pdg)&&(p.status==1||p.status==4))||photon,"hard pair requires quarks/gluons or an inactive massless MPI photon");
+ }
  require(config.mpi_pair||config.evaluate_colour_angles||!config.first_angle_ordering,"first-angle ordering requires evaluated colour angles");
  HardInitializationResult result;result.colour_angles_evaluated=!config.mpi_pair&&config.evaluate_colour_angles;
  result.colour_angles=result.colour_angles_evaluated?std::array<double,2>{colour_opening_angle(working,first),colour_opening_angle(working,second)}:std::array<double,2>{-1,-1};

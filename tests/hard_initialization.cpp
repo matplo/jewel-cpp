@@ -71,4 +71,25 @@ int main(){
   check(angles.at(partner_id).parent==parents[parent_slot-1]);
   check(jewel::colour_opening_angle(angles,selected_id)==-1);
  }
+ // An inactive massless MPI photon retains its identity and never showers.
+ state.restore(baseline);auto& photon=state.at(first);
+ photon.particle.pdg=22;photon.particle.status=4;photon.particle.colour=0;photon.particle.anticolour=0;
+ auto photon_baseline=state.snapshot();
+ jewel::HardInitializationConfig photon_config;photon_config.mpi_pair=true;photon_config.mpi_fsr=false;
+ photon_config.mpi_sampling_channels=std::array<jewel::Channel,2>{jewel::Channel::GC,jewel::Channel::QQ};
+ jewel::ReplayRandom photon_draws({.5});
+ jewel::initialize_hard_dijet(state,first,second,photon_config,sampler,photon_draws);
+ check(photon_draws.checkpoint()==1&&state.at(first).particle.pdg==22&&state.at(first).particle.status==4);
+ check(state.at(first).record_mass==0&&state.at(first).decay_time==photon_config.lifetime&&state.at(first).fraction==0);
+ for(int invalid=0;invalid<4;++invalid){
+  state.restore(photon_baseline);auto cfg=photon_config;
+  if(invalid==0)state.at(first).record_mass=.1;
+  if(invalid==1)state.at(first).particle.status=1;
+  if(invalid==2)state.at(first).particle.colour=101;
+  if(invalid==3)cfg.mpi_pair=false;
+  jewel::ReplayRandom untouched({});bool failed=false;
+  try{jewel::initialize_hard_dijet(state,first,second,cfg,sampler,untouched);}catch(const std::domain_error&){failed=true;}
+  check(failed&&untouched.checkpoint()==0);
+ }
+
 }

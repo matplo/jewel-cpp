@@ -73,7 +73,8 @@ struct SubsystemInitialization {
 // this is an explicit adapter policy change, not stock GENEVENT equivalence.
 // In this native policy, colour-angle diagnostics are omitted when the first-
 // splitting veto is disabled. A required junction angle is never fabricated.
-// Currently all pairs must be quarks/gluons. Unsupported pairs fail before
+// Pairs may also contain inactive massless colourless MPI photons.
+// Massive nonpartons remain unsupported. Unsupported pairs fail before
 // drawing; later failures roll back the whole state but not the random stream.
 SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord&,
  HardInitializationConfig,const BranchingSampler&,Random&,

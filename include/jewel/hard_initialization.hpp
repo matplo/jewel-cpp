@@ -17,7 +17,7 @@ struct HardInitializationConfig {
 struct HardInitializationResult {std::size_t trials{};std::array<double,2> colour_angles{};bool colour_angles_evaluated{true};};
 // GETTHETAM, using source scheduling links for the partner's parent slot.
 double colour_opening_angle(const ShowerState&,ParticleId);
-// PPJJ and MPI-pair branches of FINDVIRTUALITIES. Requires two quarks/gluons;
+// PPJJ and MPI-pair branches of FINDVIRTUALITIES. Allows quarks/gluons and inactive massless colourless MPI photons;
 // PPJJ requires complete colour partners when angles are evaluated. MPI pair discovery and
 // other production channels are not mapped. MPI sampling channels must be supplied explicitly.
 // State changes are transactional; random draws are not rewound on failure.

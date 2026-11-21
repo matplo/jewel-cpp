@@ -181,7 +181,8 @@ SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imp
   for(auto id:pair.hard){
    require(seen.insert(id).second&&imported.input_sources.count(id),"invalid or duplicated subsystem hard leg");
    const auto& node=imported.state.at(id);int pdg=node.particle.pdg;
-   require(pdg==21||(std::abs(pdg)>=1&&std::abs(pdg)<=5),"subsystem initialization currently requires quark/gluon pairs");
+   bool photon=i>0&&pdg==22&&node.particle.status==4&&node.record_mass==0&&node.particle.colour==0&&node.particle.anticolour==0;
+   require(pdg==21||(std::abs(pdg)>=1&&std::abs(pdg)<=5)||photon,"subsystem initialization requires quarks/gluons or inactive massless photons");
    require(node.particle.status==1||(i>0&&node.particle.status==4),"subsystem initialization requires prepared hard legs");
    require(imported.roles.at(id)==(i==0?ImportedRole::primary_hard:ImportedRole::mpi_hard),"subsystem hard role mismatch");
   }
