@@ -22,16 +22,21 @@ bool convert(Momentum p,Cylindrical& c){
  for(double x:{c.pt,c.mdelta,c.phi,c.y})if(!std::isfinite(x))throw std::domain_error("nonfinite subtraction coordinates");
  return true;
 }
-SubtractionParticle restore(const Cylindrical& c,ParticleId source,int pdg,bool thermal){
+SubtractionParticle restore(const Cylindrical& c,ParticleId source,int pdg,bool thermal,SubtractionMassPolicy policy,std::size_t& spacelike){
  double mt=c.pt+c.mdelta;
  Momentum p{c.pt*std::cos(c.phi),c.pt*std::sin(c.phi),mt*std::sinh(c.y),mt*std::cosh(c.y)};
- double mass=std::sqrt(square(mt)-square(c.pt));
+ double mass2=square(mt)-square(c.pt);
+ // Signed metadata preserves spacelike information without modifying any
+ // momentum component. Strict reference mode still rejects a non-real mass.
+ double mass;
+ if(policy==SubtractionMassPolicy::SignedMass&&mass2<0){mass=-std::sqrt(-mass2);++spacelike;}
+ else mass=std::sqrt(mass2);
  for(double x:{p.px,p.py,p.pz,p.energy,mass})if(!std::isfinite(x))throw std::domain_error("nonfinite subtraction result");
  return {source,pdg,p,mass,thermal};
 }
 }
 SubtractionResult subtract_thermal_momenta(const std::vector<SubtractionParticle>& input,
- const std::vector<Momentum>& thermals,double radius,Random& random){
+ const std::vector<Momentum>& thermals,double radius,Random& random,SubtractionMassPolicy policy){
  if(!std::isfinite(radius)||radius<0)throw std::domain_error("invalid subtraction radius");
  SubtractionResult result;std::vector<Cylindrical> particles,thermal;
  std::vector<std::size_t> sources;
@@ -56,14 +61,14 @@ SubtractionResult subtract_thermal_momenta(const std::vector<SubtractionParticle
  }
  for(std::size_t i=0;i<particles.size();++i)if(particles[i].pt>0){
   const auto& source=input[sources[i]];
-  result.particles.push_back(restore(particles[i],source.source,source.pdg,false));
+  result.particles.push_back(restore(particles[i],source.source,source.pdg,false,policy,result.spacelike_mass_fields));
  }
  for(const auto& t:thermal)if(t.pt>0){
   double draw=random.uniform();
   if(!std::isfinite(draw)||draw<0||draw>1)throw std::domain_error("invalid subtraction random draw");
   int pdg=draw<1./3?211:draw<2./3?-211:111;
   if(result.particles.size()+1>=23000){result.particles.clear();result.capacity_exceeded=true;return result;}
-  result.particles.push_back(restore(t,0,pdg,true));
+  result.particles.push_back(restore(t,0,pdg,true,policy,result.spacelike_mass_fields));
  }
  return result;
 }

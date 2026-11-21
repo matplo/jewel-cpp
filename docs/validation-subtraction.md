@@ -3,8 +3,9 @@
 Recorded 2026-11-21, AppleClang 21, macOS arm64 Release. The new
 `subtract_thermal_momenta` API in `include/jewel/subtraction.hpp` adapts the
 JEWEL 2.6.0 `subtraction.C` helpers to owned C++ vectors. It does not depend on
-Pythia, Fortran COMMON blocks or a fixed-size input array. It is not yet wired
-into the native runner, and does not implement on-shell projection.
+Pythia, Fortran COMMON blocks or a fixed-size input array. An optional native-runner adapter now uses it; see
+[native integration](validation-native-subtraction.md). On-shell projection
+remains separate and unimplemented.
 
 ## Preserved numerical behaviour
 
@@ -46,7 +47,11 @@ The source forms `&vector[0]` for an empty distance vector. Both the typed port
 and reference driver avoid invoking that undefined access when no pairs exist;
 all nonempty helper calls use unchanged bodies. Non-forward/lightlike inputs
 are skipped with counters rather than writing diagnostics to standard output.
-Nonfinite inputs/results and invalid radii throw explicit errors.
+Nonfinite inputs and invalid radii throw explicit errors. The default
+`Reference` mass policy rejects non-real mass results. The opt-in `SignedMass`
+policy records negative invariant squares as `-sqrt(-m²)` and counts those
+fields without changing any four-momentum; this represents cases where the
+original helper emits NaN mass metadata. It is not on-shell projection.
 
 [Source/executable hashes and numerical results](validation-subtraction.json).
 
@@ -61,9 +66,9 @@ argument additionally assumes termination when comparing strings.
 This API deliberately accepts **already selected particles** and does not
 reproduce those process-offset operations. That is an explicit boundary change,
 not a claim of equivalence to the full `DOSUBTRACTION` wrapper. The reference
-comparison establishes the actual subtraction kernel at offset zero. A native
-adapter still needs final-particle selection, thermal-ledger mapping, recorded
-random-stream policy, output provenance, analysis routing and integration tests.
+comparison establishes the actual subtraction kernel at offset zero. The native
+adapter now supplies final-particle selection, thermal-ledger mapping, recorded
+random-stream policy, output provenance and analysis routing, with integration tests.
 The separate `PUTONSHELL` modes and full event-level physics comparisons also
 remain outstanding.
 

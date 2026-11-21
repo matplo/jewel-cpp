@@ -1,0 +1,671 @@
+{
+  "scope": "native subtraction adapter; not full DOSUBTRACTION/PUTONSHELL equivalence",
+  "reference_integration": {
+    "reference_particles": 298,
+    "max_momentum_error": 2.7755575615628914e-17,
+    "spacelike_mass_fields": 30,
+    "residual_thermal_particles": 31
+  },
+  "strict_kernel": {
+    "scope": "subtraction.C helpers with explicit zero offset; not Fortran-facing wrapper or native event integration",
+    "cases": 132,
+    "values": 5106,
+    "max_absolute_error": 1.7763568394002505e-15,
+    "failures": [],
+    "relative_tolerance": 2e-12,
+    "absolute_tolerance": 2e-13,
+    "input_sha256": "8f1eaab8b7890ef42f3e9c7a450fea2441533220660c7f3226e1c44a5e57ad02",
+    "source": {
+      "sha256": "5b84552df996799d9e1061d85fdddf9ee3add56aacc2e4a4655f8e7943d82d17",
+      "lines": 216,
+      "read_name": "subtraction.C"
+    },
+    "executables": {
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-subtraction-probe": "6b992b43e7079e52927de27af28251542725964929141634750f7a56a876937a",
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-subtraction-reference": "313f7ee14d4dca82447aab2e5a7d870c16745a2ae43988435a85e376dd1696a3"
+    }
+  },
+  "checks": [
+    "raw upstream records unchanged",
+    "separate seeded random stream",
+    "deterministic repeated output",
+    "source IDs and thermal-residual tags",
+    "invalid settings reject before output",
+    "current-build 20-attempt raw/subtracted upstream records identical",
+    "hepyy full-phase-space clustering before cuts",
+    "generated HTML JavaScript syntax check"
+  ],
+  "executables": {
+    "/Users/ploskon/devel/jewel-cpp/build-pythia8/jewel-run-events": "a47e8a640afef2184b99fdbd6a78916ae31fce294ea341ffc38bae4f6248bb17",
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-subtraction-reference": "313f7ee14d4dca82447aab2e5a7d870c16745a2ae43988435a85e376dd1696a3"
+  },
+  "native_smoke": {
+    "scope": "Native reduced PPJJ development samples; no Fortran comparison",
+    "full_goal_validated": false,
+    "generator": {
+      "path": "/Users/ploskon/devel/jewel-cpp/build-pythia8/jewel-run-events",
+      "sha256": "a47e8a640afef2184b99fdbd6a78916ae31fce294ea341ffc38bae4f6248bb17"
+    },
+    "selection": {
+      "algorithm": "anti-kt",
+      "R": 0.4,
+      "min_pt_GeV": 10,
+      "max_abs_eta": 2,
+      "particles": "all final visible particles; exclude neutrino PDG 12/14/16",
+      "order": "full-phase-space clustering before jet cuts",
+      "recoils": "per-run keep_recoils flag; use subtracted_particles when run declares subtraction; otherwise raw hadronized_particles"
+    },
+    "normalization": "weighted jets per attempted event; failed events contribute zero jets; not a cross-section normalization",
+    "analysis_versions": {
+      "python": "3.14.7",
+      "hepyy": "0.2.30",
+      "cppyy": "3.5.0",
+      "fastjet": "FastJet version 3.5.1",
+      "loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+    },
+    "samples": [
+      {
+        "input": "/private/tmp/jewel-subtraction-raw-medium20.jsonl",
+        "input_sha256": "0600262bc99b642c61a618b55925b11d1286395dd874d8ad0831b076aa6b109c",
+        "run": {
+          "type": "run",
+          "schema": "jewel-hadron-development-v1",
+          "scope": "reduced PPJJ; no ISR/MPI",
+          "mode": "medium",
+          "attempts_requested": 20,
+          "seed": 2601001,
+          "pythia_version": 8317,
+          "table_lifetime_fm": 62.4582300264562,
+          "table_energy_gev": 846.494030493817,
+          "table_energy_prescription": "jewel-eovest",
+          "table_impact_parameter_fm": 1.7620092319197471,
+          "geometry_seed": 3101001,
+          "angular_ordering": 1,
+          "first_angle_ordering": false,
+          "coherence": true,
+          "keep_recoils": true,
+          "recoil_rescattering": false,
+          "recoil_soft_cut_3T": 0,
+          "recoil_hard_cut_3T": 0,
+          "longitudinal_scatterer_boost": true,
+          "compression": true,
+          "pythia_settings": [
+            "Tune:pp = 14",
+            "Beams:idA = 2212",
+            "Beams:idB = 2212",
+            "Beams:eCM = 5020",
+            "HardQCD:all = on",
+            "PhaseSpace:pTHatMin = 20",
+            "PhaseSpace:pTHatMax = 100",
+            "PDF:pSet = 13",
+            "HadronLevel:all = off",
+            "PartonLevel:FSR = off",
+            "PartonLevel:ISR = off",
+            "PartonLevel:MPI = off",
+            "Check:event = on",
+            "Random:setSeed = on",
+            "Random:seed = 2601001",
+            "Init:showChangedSettings = off",
+            "Init:showChangedParticleData = off",
+            "Init:showProcesses = off",
+            "Next:numberShowInfo = 0",
+            "Next:numberShowProcess = 0",
+            "Next:numberShowEvent = 0"
+          ],
+          "hadronization": true,
+          "hadrotype": 0,
+          "hadronizer_settings": [
+            "Tune:pp = 14",
+            "ProcessLevel:all = off",
+            "PartonLevel:all = off",
+            "PartonLevel:FSR = off",
+            "PartonLevel:ISR = off",
+            "PartonLevel:MPI = off",
+            "PartonLevel:FSRinResonances = off",
+            "ProcessLevel:resonanceDecays = off",
+            "HadronLevel:all = on",
+            "HadronLevel:Decay = on",
+            "ColourReconnection:reconnect = off",
+            "ColourReconnection:forceHadronLevelCR = off",
+            "ParticleDecays:limitTau0 = on",
+            "ParticleDecays:tau0Max = 10",
+            "Check:event = on",
+            "Random:setSeed = on",
+            "Random:seed = 2601001",
+            "Init:showChangedSettings = off",
+            "Init:showChangedParticleData = off",
+            "Init:showProcesses = off",
+            "Next:numberShowInfo = 0",
+            "Next:numberShowProcess = 0",
+            "Next:numberShowEvent = 0"
+          ],
+          "centrality_percent": [
+            0,
+            10
+          ]
+        },
+        "summary": {
+          "type": "summary",
+          "attempts": 20,
+          "accepted": 19,
+          "evolution_failures": 1,
+          "generation_failures": 0,
+          "accepted_weight": 19,
+          "failed_weight": 1,
+          "generator_weight_sum": 20,
+          "generator_sigma_mb": 0.15199660026516534,
+          "generator_sigma_error_mb": 0.01580675911776028,
+          "final_records": 885
+        },
+        "selected_jets": 9,
+        "failure_reasons": {
+          "cascade: nonfinite kinematics input": 1
+        },
+        "distributions": {
+          "pt": [
+            {
+              "low": 10,
+              "high": 15,
+              "weighted_count": 6.0,
+              "jets_per_attempt": 0.3,
+              "event_standard_error": 0.10513149660756935
+            },
+            {
+              "low": 15,
+              "high": 20,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 20,
+              "high": 30,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 30,
+              "high": 40,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 40,
+              "high": 60,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 60,
+              "high": 80,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 80,
+              "high": 100,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 100,
+              "high": 150,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 150,
+              "high": 250,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            }
+          ],
+          "girth": [
+            {
+              "low": 0,
+              "high": 0.02,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.02,
+              "high": 0.04,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.04,
+              "high": 0.06,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.06,
+              "high": 0.08,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 0.08,
+              "high": 0.1,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.1,
+              "high": 0.15,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.15,
+              "high": 0.2,
+              "weighted_count": 4.0,
+              "jets_per_attempt": 0.2,
+              "event_standard_error": 0.09176629354822471
+            },
+            {
+              "low": 0.2,
+              "high": 0.3,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.3,
+              "high": 0.4,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            }
+          ],
+          "ptd": [
+            {
+              "low": 0,
+              "high": 0.2,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.2,
+              "high": 0.3,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 0.3,
+              "high": 0.4,
+              "weighted_count": 3.0,
+              "jets_per_attempt": 0.15,
+              "event_standard_error": 0.08191780219091253
+            },
+            {
+              "low": 0.4,
+              "high": 0.5,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.5,
+              "high": 0.6,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 0.6,
+              "high": 0.7,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.7,
+              "high": 0.8,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.8,
+              "high": 0.9,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.9,
+              "high": 1.0000001,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            }
+          ]
+        }
+      },
+      {
+        "input": "/private/tmp/jewel-subtraction-signed-medium20.jsonl",
+        "input_sha256": "d06aa72fd2a05ceb9ade3ba722c9904170774ef1e88366e0b400a0b857f72cce",
+        "run": {
+          "type": "run",
+          "schema": "jewel-hadron-development-v1",
+          "scope": "reduced PPJJ; no ISR/MPI",
+          "mode": "medium",
+          "attempts_requested": 20,
+          "seed": 2601001,
+          "pythia_version": 8317,
+          "table_lifetime_fm": 62.4582300264562,
+          "table_energy_gev": 846.494030493817,
+          "table_energy_prescription": "jewel-eovest",
+          "table_impact_parameter_fm": 1.7620092319197471,
+          "geometry_seed": 3101001,
+          "angular_ordering": 1,
+          "first_angle_ordering": false,
+          "coherence": true,
+          "keep_recoils": true,
+          "recoil_rescattering": false,
+          "recoil_soft_cut_3T": 0,
+          "recoil_hard_cut_3T": 0,
+          "longitudinal_scatterer_boost": true,
+          "compression": true,
+          "pythia_settings": [
+            "Tune:pp = 14",
+            "Beams:idA = 2212",
+            "Beams:idB = 2212",
+            "Beams:eCM = 5020",
+            "HardQCD:all = on",
+            "PhaseSpace:pTHatMin = 20",
+            "PhaseSpace:pTHatMax = 100",
+            "PDF:pSet = 13",
+            "HadronLevel:all = off",
+            "PartonLevel:FSR = off",
+            "PartonLevel:ISR = off",
+            "PartonLevel:MPI = off",
+            "Check:event = on",
+            "Random:setSeed = on",
+            "Random:seed = 2601001",
+            "Init:showChangedSettings = off",
+            "Init:showChangedParticleData = off",
+            "Init:showProcesses = off",
+            "Next:numberShowInfo = 0",
+            "Next:numberShowProcess = 0",
+            "Next:numberShowEvent = 0"
+          ],
+          "hadronization": true,
+          "hadrotype": 0,
+          "hadronizer_settings": [
+            "Tune:pp = 14",
+            "ProcessLevel:all = off",
+            "PartonLevel:all = off",
+            "PartonLevel:FSR = off",
+            "PartonLevel:ISR = off",
+            "PartonLevel:MPI = off",
+            "PartonLevel:FSRinResonances = off",
+            "ProcessLevel:resonanceDecays = off",
+            "HadronLevel:all = on",
+            "HadronLevel:Decay = on",
+            "ColourReconnection:reconnect = off",
+            "ColourReconnection:forceHadronLevelCR = off",
+            "ParticleDecays:limitTau0 = on",
+            "ParticleDecays:tau0Max = 10",
+            "Check:event = on",
+            "Random:setSeed = on",
+            "Random:seed = 2601001",
+            "Init:showChangedSettings = off",
+            "Init:showChangedParticleData = off",
+            "Init:showProcesses = off",
+            "Next:numberShowInfo = 0",
+            "Next:numberShowProcess = 0",
+            "Next:numberShowEvent = 0"
+          ],
+          "centrality_percent": [
+            0,
+            10
+          ],
+          "subtraction": {
+            "algorithm": "jewel260-kernel-zero-offset",
+            "radius": 0.4,
+            "put_on_shell": 0,
+            "mass_policy": "signed-invariant-mass",
+            "rng": "splitmix64-open52-v1",
+            "seed_base": 4601001,
+            "seed_stride": 100,
+            "input": "all-final-hadronized",
+            "thermal_input": "stored-centres",
+            "positive_thermal_residuals": true
+          }
+        },
+        "summary": {
+          "type": "summary",
+          "attempts": 20,
+          "accepted": 19,
+          "evolution_failures": 1,
+          "generation_failures": 0,
+          "accepted_weight": 19,
+          "failed_weight": 1,
+          "generator_weight_sum": 20,
+          "generator_sigma_mb": 0.15199660026516534,
+          "generator_sigma_error_mb": 0.01580675911776028,
+          "final_records": 885
+        },
+        "selected_jets": 5,
+        "failure_reasons": {
+          "cascade: nonfinite kinematics input": 1
+        },
+        "distributions": {
+          "pt": [
+            {
+              "low": 10,
+              "high": 15,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 15,
+              "high": 20,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 20,
+              "high": 30,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 30,
+              "high": 40,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 40,
+              "high": 60,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 60,
+              "high": 80,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 80,
+              "high": 100,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 100,
+              "high": 150,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 150,
+              "high": 250,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            }
+          ],
+          "girth": [
+            {
+              "low": 0,
+              "high": 0.02,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.02,
+              "high": 0.04,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.04,
+              "high": 0.06,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.06,
+              "high": 0.08,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 0.08,
+              "high": 0.1,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.1,
+              "high": 0.15,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.15,
+              "high": 0.2,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.2,
+              "high": 0.3,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.3,
+              "high": 0.4,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            }
+          ],
+          "ptd": [
+            {
+              "low": 0,
+              "high": 0.2,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.2,
+              "high": 0.3,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.3,
+              "high": 0.4,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.4,
+              "high": 0.5,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.5,
+              "high": 0.6,
+              "weighted_count": 1.0,
+              "jets_per_attempt": 0.05,
+              "event_standard_error": 0.049999999999999996
+            },
+            {
+              "low": 0.6,
+              "high": 0.7,
+              "weighted_count": 2.0,
+              "jets_per_attempt": 0.1,
+              "event_standard_error": 0.06882472016116853
+            },
+            {
+              "low": 0.7,
+              "high": 0.8,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.8,
+              "high": 0.9,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            },
+            {
+              "low": 0.9,
+              "high": 1.0000001,
+              "weighted_count": 0.0,
+              "jets_per_attempt": 0.0,
+              "event_standard_error": 0.0
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

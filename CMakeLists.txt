@@ -537,3 +537,9 @@ if(BUILD_TESTING)
  target_link_libraries(subtraction-test PRIVATE jewel_core)
  add_test(NAME subtraction-contracts COMMAND subtraction-test)
 endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_test(NAME runner-subtraction-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_subtraction.py $<TARGET_FILE:jewel-run-events>
+  $<TARGET_FILE:jewel-run-partons>)
+endif()

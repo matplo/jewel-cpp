@@ -729,7 +729,15 @@ where C++ fails but Fortran completes. These modes are not yet fully validated.
 
 The typed `subtract_thermal_momenta` API ports the JEWEL 2.6.0 subtraction
 helpers, with 132 passing reference cases. It retains source IDs and marks
-positive residual thermal particles explicitly. It is not yet connected to the
-native runner or on-shell projection. The upstream process-offset wrapper has
+positive residual thermal particles explicitly. The native hadronized runner enables it with
+`--subtraction-radius R`; on-shell projection is not yet implemented. The upstream process-offset wrapper has
 known defects and is excluded from the kernel parity claim.
 See [behaviour, validation and integration limits](docs/validation-subtraction.md).
+
+With subtraction enabled, the runner retains raw hadrons and writes
+`subtracted_particles`, including source IDs and signed mass metadata.
+`tools/analyze_native_events.py` selects this collection automatically; the
+report labels its subtraction setting. The adapter uses all final particles,
+all stored thermal centres and a separate recorded SplitMix stream. It does not
+reproduce the broken process-offset wrapper. See
+[native subtraction validation](docs/validation-native-subtraction.md).
