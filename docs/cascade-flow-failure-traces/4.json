@@ -1,0 +1,52 @@
+{
+  "aligned_entries": 29,
+  "aligned_numeric_mismatches": [],
+  "unmatched_cpp_entries": [],
+  "unmatched_fortran_entries": [],
+  "cpp_records": 58,
+  "fortran_records": 58,
+  "first_discrete_difference": null,
+  "first_numeric_difference": null,
+  "max_finite_absolute_error": 2.496891582381977e-13,
+  "cpp_last": [
+    1,
+    29,
+    49,
+    61,
+    14967,
+    1
+  ],
+  "fortran_last": [
+    1,
+    29,
+    49,
+    61,
+    14967,
+    1
+  ],
+  "unmatched_cpp": [],
+  "unmatched_fortran": [],
+  "files": {
+    "/private/tmp/jewel-boost-traces/4.jewel-medium-probe.err": "23059a6a588ab0d89641ce4742c1f137055d4e32680c6df3f4fbf1e5f4e5186f",
+    "/private/tmp/jewel-boost-traces/4.jewel-medium-reference.err": "300f2153f069e3b4cc2cb544127894fe1466a176f30c9bf9eddc6d7a3a6e36a4"
+  },
+  "columns": [
+    "phase (0 before, 1 after)",
+    "branch call",
+    "scheduling slot",
+    "record count",
+    "RNG cursor",
+    "discard",
+    "px",
+    "py",
+    "pz",
+    "energy",
+    "mass",
+    "fraction",
+    "evolution time",
+    "production time",
+    "decay time"
+  ],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13
+}

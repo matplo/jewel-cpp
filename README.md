@@ -690,3 +690,8 @@ It controls the maximum scatterer used by tables, local rates and sampled
 momentum transfers consistently. The default remains `off` to reproduce prior
 native samples. [Flow validation](docs/validation-longitudinal-flow.md) includes
 Fortran comparisons and explicitly records the remaining cascade failures.
+
+Set `JEWEL_CASCADE_TRACE=1` for optional branch-boundary diagnostics in the
+native probe and guarded Fortran cascade. The [flow-failure investigation](docs/validation-cascade-flow-failures.md)
+includes reproducible input fixtures, traces and their comparison. These traces
+help distinguish shared rejected events from differences introduced by the port.

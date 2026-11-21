@@ -10,6 +10,7 @@
 #include "jewel/cascade.hpp"
 #include "jewel/hard_initialization.hpp"
 #include <iostream>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <memory>
@@ -198,7 +199,17 @@ int main() {
        jewel::ScatteringEvolution final_evolution(evolution_config,*branching,*sudakov,*final_table,*rates,*transfers);
        jewel::Cascade cascade({evolution_config,config.collision,config.finalization,1000000,op=="CCASCADE"||op=="NCASCADE"},evolution,final_evolution,*branching,*medium);
        if(op=="BRANCH")cascade.branch(state,selected,1,history,ledger,random,&histograms);
-       else cascade.evolve(state,1,history,ledger,random,&histograms);
+       else {
+        jewel::CascadeObserver observer;
+        const char* trace=std::getenv("JEWEL_CASCADE_TRACE");
+        if(trace&&std::string(trace)=="1")observer=[&](std::size_t call,std::size_t index,bool before,const jewel::ShowerState& current){
+         std::cerr<<std::setprecision(17)<<"CASCADE_TRACE "<<(before?0:1)<<' '<<call<<' '<<index+1<<' '<<current.particles().size()<<' '<<checkpoint()<<' '<<current.discarded;
+         if(before){const auto& s=current.particles().at(index);const auto& p=s.particle.momentum;
+          std::cerr<<' '<<p.px<<' '<<p.py<<' '<<p.pz<<' '<<p.energy<<' '<<s.record_mass<<' '<<s.fraction<<' '<<s.evolution_time<<' '<<s.particle.production.t<<' '<<s.decay_time;}
+         std::cerr<<'\n';
+        };
+        cascade.evolve(state,1,history,ledger,random,&histograms,observer);
+       }
       }
      }else result=jewel::evolve_coherent(state,selected,1,history,ledger,now,left,angle,split_time,config,*rates,*transfers,*branching,*medium,random,&histograms);
      state.validate();

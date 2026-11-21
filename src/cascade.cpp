@@ -133,7 +133,7 @@ void Cascade::branch(ShowerState& state,ParticleId selected,ParticleId scratch,T
  if(end.particle.status==2&&end.fraction<0)end.particle.status=5;
 }
 CascadeResult Cascade::evolve(ShowerState& state,ParticleId scratch,TransferHistory& history,RecoilStorage& ledger,
- Random& random,CoherentHistograms* histograms) const {
+ Random& random,CoherentHistograms* histograms,const CascadeObserver& observer) const {
  if(state.particles().empty()||state.particles().front().particle.id!=scratch)throw std::domain_error("cascade scratch must be first record");
  CascadeResult result;
  while(!state.discarded){
@@ -143,7 +143,10 @@ CascadeResult Cascade::evolve(ShowerState& state,ParticleId scratch,TransferHist
    auto id=state.particles()[i].particle.id;auto status=state.at(id).particle.status;
    if(status==1||status==2){
     active=true;if(result.branch_calls>=config_.maximum_branch_calls)throw std::runtime_error("cascade branch limit exhausted");
-    ++result.branch_calls;branch(state,id,scratch,history,ledger,random,histograms);if(state.discarded)return result;
+    ++result.branch_calls;if(observer)observer(result.branch_calls,i,true,state);
+    branch(state,id,scratch,history,ledger,random,histograms);
+    if(observer)observer(result.branch_calls,i,false,state);
+    if(state.discarded)return result;
    }
   }
   if(!active)break;
