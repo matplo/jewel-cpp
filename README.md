@@ -887,3 +887,12 @@ Both denominators include discarded attempts using a complete Fortran run log.
 The 10% numerical target is not met; full configuration equivalence remains
 unproven. This setting uses an expanding background with scattering disabled,
 not JEWEL's distinct vacuum medium backend.
+
+### Vacuum backend distinction
+
+`vacuum` now uses JEWEL's actual vacuum medium contract: zero lifetime and
+medium fields, origin vertices and the source's fixed maximum scatterer for
+table initialization. `zero-interaction` preserves the previous noninteracting
+expanding-background behavior and permits centrality settings. `medium` keeps
+the interacting expanding background. See [backend validation](docs/validation-vacuum-backend.md)
+and the [larger true-vacuum comparison](docs/vacuum-backend-comparison.html).

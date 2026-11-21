@@ -87,3 +87,10 @@ Reproduction uses the commands and paths in the JSON provenance. Build with
 directory, then import with `--run-log`, analyze both inputs together using
 `tools/analyze_native_events.py`, compare with `tools/compare_jet_samples.py
 --pair 0:1`, and render with `tools/render_jet_comparison.py`.
+
+## Subsequent runner naming
+
+The [vacuum backend update](validation-vacuum-backend.md) gives the `vacuum`
+argument its actual JEWEL meaning. Use `zero-interaction` for the historical
+setting in this report. The stored samples keep their original run labels and
+have not been relabelled as genuine vacuum-backend evidence.

@@ -4,6 +4,8 @@ program mediumprobe
  use, intrinsic :: ieee_arithmetic
  use iso_c_binding, only: c_int64_t
  implicit none
+ logical reference_vacuum_enabled, vacuum_mode
+ data vacuum_mode/.false./
  integer hard_type1,hard_type2,seq_count,seq_pairs(2,11500),seq_i
  integer hard_mstp(200),hard_msti(200),lme1,lme2,lv,llep1,llep2,lme1orig,lme2orig
  double precision hard_parp(200),hard_pari(200),hard_x,hard_y,hard_z1,hard_z2,hard_angle1,hard_angle2,getthetam
@@ -141,7 +143,12 @@ program mediumprobe
     call JG_LENGTHS(gx,gy,gb,gr,gt,gp,gs,lg,lh,lht,it3)
     write(*,'(4(ES26.17E3,1X))')lg,lh,lht,it3
    end block
+  case('VACUUM')
+   if(.not.reference_vacuum_enabled())stop 93
+   vacuum_mode=.true.
   case('CONFIG')
+   if(reference_vacuum_enabled())stop 94
+   vacuum_mode=.false.
    read(*,*) mass,nf,woodflag,taui,ti,tc,n0,d,sigmann,breal,etamax2,mdfactor,mdscalefac
    woods=woodflag/=0
    call calcta
@@ -242,7 +249,7 @@ program mediumprobe
    boost=boostflag/=0
    call insudaint(emax)
    call pdfint(emax)
-   call xsecint(emax)
+   if(.not.vacuum_mode)call xsecint(emax)
   case('XDUMP')
    read(*,'(A)') dumpfile
    open(unit=89,file=trim(dumpfile),access='stream',form='unformatted',status='replace')

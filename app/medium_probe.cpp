@@ -19,7 +19,7 @@
 int main() {
  try {
  jewel::ExponentialIntegral ei;
- std::unique_ptr<jewel::ExpandingMedium> medium;
+ std::unique_ptr<jewel::MediumModel> medium;
  std::unique_ptr<jewel::InitialRadiation> radiation;
  std::unique_ptr<jewel::InitialSudakovTable> sudakov;
  std::unique_ptr<jewel::FinalSplittingTable> final_table;
@@ -30,12 +30,13 @@ int main() {
  jewel::EvolutionConfig evolution_config;jewel::Kernels evolution_kernels;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
-  if(op=="CONFIG") {
+  if(op=="VACUUM") { medium=std::make_unique<jewel::MediumModel>(); }
+  else if(op=="CONFIG") {
    jewel::MediumConfig c; int woods;
    std::cin>>c.mass_number>>c.nf>>woods>>c.tau_initial>>c.temperature_initial>>c.temperature_cutoff
     >>c.nuclear_density>>c.skin_depth>>c.sigma_nn>>c.impact_parameter>>c.max_rapidity>>c.debye_floor>>c.debye_scale;
    if(!std::cin) throw std::runtime_error("bad configuration");
-   c.woods_saxon=woods!=0; medium=std::make_unique<jewel::ExpandingMedium>(c);
+   c.woods_saxon=woods!=0; medium=std::make_unique<jewel::MediumModel>(jewel::ExpandingMedium(c));
   } else if(op=="EI") { double x; if(!(std::cin>>x)) throw std::runtime_error("bad EI input"); std::cout<<ei(x)<<'\n'; }
   else if(op=="LOW"||op=="HIGH"||op=="SCAT") {
    jewel::Kernels k; double x,y;

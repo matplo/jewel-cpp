@@ -14,6 +14,7 @@ CollisionTime ScatteringRates::next_collision(Momentum p,double mass,int pdg,
  if(p.energy<=0||maximum_interval<0||scale<0)
   throw std::domain_error("invalid collision-time domain");
  CollisionTime result;
+ if(medium_.is_vacuum())return result;
  double limit=maximum_interval;
  if(start+limit>=lifetime)limit=lifetime-start;
  if(limit<0)return result;

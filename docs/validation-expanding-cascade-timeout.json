@@ -1,0 +1,71 @@
+{
+  "case": 52,
+  "settings": [
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260052,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 100,
+      "mass": 10,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21,
+      "operation": "CASCADE",
+      "status": 1,
+      "start": 0.5,
+      "birth": 0.4,
+      "scatter_recoils": 0
+    }
+  ],
+  "input_sha256": "11da6032bd64e480e01346381b796686cd1bbc63fa7229bf8d0b35a78bda4ddd",
+  "results": [
+    {
+      "executable": "build/jewel-medium-reference",
+      "status": "timeout",
+      "returncode": null,
+      "seconds": 60.00463124993257,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 19000,
+      "stderr_sha256": "ea359a9c075a984088094cf9e13a607a115d8934b43973d29fcd5b3e2b5cc05e",
+      "executable_sha256": "37bc6273115ba5693ee85cfe3a9125f37a2704de3fab6d73ef51a6ec992845cc"
+    },
+    {
+      "executable": "/private/tmp/jewel-vacuum-baseline/jewel-medium-reference-baseline",
+      "status": "timeout",
+      "returncode": null,
+      "seconds": 60.00487758289091,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 19000,
+      "stderr_sha256": "ea359a9c075a984088094cf9e13a607a115d8934b43973d29fcd5b3e2b5cc05e",
+      "executable_sha256": "1a8af2aab5a227479fd7ef4d9451a242b4780a7d52da9a185683a1449fa47ef8"
+    }
+  ],
+  "scope": "Diagnostic of an unresolved stock cascade timeout; not a passing physics comparison",
+  "baseline_commit": "f8ff295117a5134892e5da4d1b30f96a9be92918",
+  "baseline_probe_sha256": "da8e842525bfba68c210bc0221ed9963c7cff5e8b5394eee44a7c878f63ad35d",
+  "current_probe_sha256": "c159db4e886a65a2f9b27138343d8dc1af0a3b867571a76b2fc8af0fce22bdff",
+  "full_suite": {
+    "cases": 58,
+    "completed_reference_blocks": 52,
+    "concurrent_reference_timeout_seconds": 240,
+    "isolated_reference_timeout_seconds": 240,
+    "status": "timeout"
+  }
+}

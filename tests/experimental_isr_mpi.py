@@ -8,9 +8,13 @@ with tempfile.TemporaryDirectory() as tmp:
     rows=[json.loads(line) for line in output.open()]
     assert rows[0]['experimental_isr_mpi'] is True
     assert rows[0]['mpi_channel_policy']=='outgoing-flavour'
+    assert rows[0]['medium_backend']=='jewel-vacuum' and rows[0]['table_lifetime_fm']==0
     settings=rows[0]['pythia_settings']
     assert 'PartonLevel:ISR = on' in settings and 'PartonLevel:MPI = on' in settings
     event=rows[1];assert event['type']=='event',event
+    assert event['event_lifetime_fm']==0 and event['thermal_references']==[]
+    assert all(p['production_fm']==[0,0,0,0] for p in event['initial_hard'])
+    assert (fixtures/'1.input').read_text().startswith('VACUUM\n')
     assert rows[-1]['accepted']==1 and rows[-1]['accepted_weight']==event['weight']
     assert all(p['status'] not in [1,2] for p in event['particles'])
     replay=subprocess.run([probe],input=(fixtures/'1.input').read_text(),text=True,capture_output=True,check=True,timeout=90)
@@ -52,7 +56,7 @@ with tempfile.TemporaryDirectory() as tmp:
             after=math.fsum(p['momentum'][component] for p in final)
             assert math.isclose(before,after,rel_tol=1e-9,abs_tol=1e-7),(before,after)
     assert junction_events==3
-    for executable,options in [(runner,['--experimental-isr-mpi','--experimental-isr-mpi']),(hadron_runner,['--experimental-isr-mpi','--hadrotype','1'])]:
+    for executable,options in [(runner,['--experimental-isr-mpi','--experimental-isr-mpi']),(hadron_runner,['--experimental-isr-mpi','--hadrotype','1']),(runner,['--centrality','0','10'])]:
         invalid=root/'invalid.jsonl'
         result=subprocess.run([executable,str(invalid),'1','2600417','vacuum',*options],capture_output=True,timeout=10)
         assert result.returncode!=0 and not invalid.exists()

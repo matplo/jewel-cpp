@@ -8,13 +8,13 @@ struct CollisionTime {
 };
 class ScatteringRates {
  Kernels kernels_; double q0_,scale_; bool boost_;
- ExpandingMedium medium_;
+ MediumModel medium_;
  InitialRadiation radiation_; InitialSudakovTable sudakov_; PartonicPdf pdf_;
  ExponentialIntegral ei_;
  std::array<double,1000> transfer_{}; std::array<double,100> debye_{};
  std::vector<std::array<double,4>> values_;
 public:
- ScatteringRates(Kernels,double q0,double emax,double scale,ExpandingMedium,bool boost=true);
+ ScatteringRates(Kernels,double q0,double emax,double scale,MediumModel,bool boost=true);
  // Preserve initialized grids while changing event-local medium/bounds.
  ScatteringRates with_event_impact_parameter(double) const;
  double no_initial_radiation(Momentum,double mass,int pdg,SpaceTime) const;

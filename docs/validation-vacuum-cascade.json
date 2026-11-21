@@ -1,0 +1,1187 @@
+{
+  "scope": "identical Pythia-initialized states; guarded Fortran scheduler",
+  "executables": {
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe": "2725a19dfa77e58b3c6ef8235d508e5c292dbd00904605282026bd4fd1aefe86",
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference": "72f29bff8db0fe9efb03c59590900d679b77e44c57625fe130b26e21cc9018aa"
+  },
+  "guard_sha256": "6e6a6da4d9eab65a20c98bd20be30c7317285bec4e3a2d5e111004cab170ca18",
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ],
+        "GETPDF": [
+          6928,
+          7022
+        ],
+        "GETPDFXINTEXACT": [
+          7096,
+          7129
+        ],
+        "PDFINT": [
+          8082,
+          8135
+        ],
+        "GETPDFXINT": [
+          7027,
+          7090
+        ],
+        "PGQ": [
+          7938,
+          7942
+        ],
+        "XSECINT": [
+          8142,
+          8228
+        ],
+        "GETXSECINT": [
+          7135,
+          7241
+        ],
+        "GETSSCAT": [
+          7365,
+          7458
+        ],
+        "GETMASS": [
+          7465,
+          7625
+        ],
+        "GENERATEZ": [
+          7632,
+          7685
+        ],
+        "GETDELTAT": [
+          8423,
+          8554
+        ],
+        "REJECTSPLITTING": [
+          3688,
+          3865
+        ],
+        "MAKESPLITTING": [
+          3288,
+          3682
+        ],
+        "GETNEWMASS": [
+          5253,
+          5360
+        ],
+        "GETPNORAD1": [
+          5366,
+          5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ],
+        "MAKECASCADE": [
+          2902,
+          2942
+        ],
+        "MAKEBRANCH": [
+          2948,
+          3282
+        ],
+        "FINDVIRTUALITIES": [
+          1893,
+          2239
+        ],
+        "GETTHETAM": [
+          2303,
+          2365
+        ],
+        "ISPARTON": [
+          8690,
+          8700
+        ],
+        "ISDIQUARK": [
+          8658,
+          8671
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "results": [
+    {
+      "attempt": 1,
+      "fixture_sha256": "1b0e87394213a7a6435f4e0c15259ea5843e46e9a5d3bbaf7d2a2d67be3612ad",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          40,
+          122,
+          0,
+          19,
+          259,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0           9\n",
+        "header": [
+          40,
+          122,
+          0,
+          19,
+          259,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 2893,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 0.0
+    },
+    {
+      "attempt": 2,
+      "fixture_sha256": "2596c8a01bb33d09aee5dd4182ca3ba10c5d2d54e41d9c07381c56c70e279b33",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          69,
+          137,
+          0,
+          23,
+          432,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          23\n",
+        "header": [
+          69,
+          137,
+          0,
+          23,
+          432,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 3676,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 4.884981308350689e-14
+    },
+    {
+      "attempt": 3,
+      "fixture_sha256": "3d6dca8b9935a831448ef5eaeaa0a351e4dd3e25984dfe53d484209276964b99",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          54,
+          128,
+          0,
+          11,
+          820,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          26\n",
+        "header": [
+          54,
+          128,
+          0,
+          11,
+          820,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "scalar mismatch",
+      "values": 3271,
+      "mismatches": 9,
+      "examples": [
+        {
+          "row": 27,
+          "column": 5,
+          "cpp": -0.3110012818754585,
+          "reference": -0.3110012818772588
+        },
+        {
+          "row": 28,
+          "column": 5,
+          "cpp": -0.2006674489204014,
+          "reference": -0.20066744891860266
+        },
+        {
+          "row": 35,
+          "column": 6,
+          "cpp": 0.18860110206946762,
+          "reference": 0.18860110206988834
+        },
+        {
+          "row": 36,
+          "column": 5,
+          "cpp": -0.32786571191521363,
+          "reference": -0.32786571191719693
+        },
+        {
+          "row": 38,
+          "column": 5,
+          "cpp": 0.34083568956222593,
+          "reference": 0.34083568956357935
+        },
+        {
+          "row": 41,
+          "column": 5,
+          "cpp": 0.17913054251973856,
+          "reference": 0.1791305425210969
+        },
+        {
+          "row": 41,
+          "column": 14,
+          "cpp": 0.04177500279299189,
+          "reference": 0.041775002793324974
+        },
+        {
+          "row": 42,
+          "column": 14,
+          "cpp": 0.04177500279299189,
+          "reference": 0.041775002793324974
+        },
+        {
+          "row": 49,
+          "column": 5,
+          "cpp": -0.3612976208874192,
+          "reference": -0.36129762088905687
+        }
+      ],
+      "max_absolute_error": 1.9833024111903796e-12
+    },
+    {
+      "attempt": 4,
+      "fixture_sha256": "b814745e1d68e1bcf69feccd15b1e2ff6a260576f0955b100d77a031a09c1d2e",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          82,
+          148,
+          0,
+          27,
+          592,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          29\n",
+        "header": [
+          82,
+          148,
+          0,
+          27,
+          592,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4027,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 1.787459069646502e-13
+    },
+    {
+      "attempt": 5,
+      "fixture_sha256": "f956771e6e9161c0866d0f185f5c8422336a6f43e2f3e0066ed3cbc3430b6945",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          107,
+          165,
+          0,
+          39,
+          771,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          37\n",
+        "header": [
+          107,
+          165,
+          0,
+          39,
+          771,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4702,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 4.773959005888173e-14
+    },
+    {
+      "attempt": 6,
+      "fixture_sha256": "9e1940124867743a925a89d70341db22a55e31b26af4342787d6609fddbfcc09",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          103,
+          163,
+          0,
+          47,
+          542,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          23\n",
+        "header": [
+          103,
+          163,
+          0,
+          47,
+          542,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4594,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 8.881784197001252e-16
+    },
+    {
+      "attempt": 7,
+      "fixture_sha256": "1a4fcd208a80e6309bd39aa2dc747c359fe8234fb086071a88c8b809373cd22e",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          82,
+          148,
+          0,
+          31,
+          440,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          17\n",
+        "header": [
+          82,
+          148,
+          0,
+          31,
+          440,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4027,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 3.552713678800501e-15
+    },
+    {
+      "attempt": 8,
+      "fixture_sha256": "63db9ba735b5f0f863f2a0de5c486b714c742b100bf4ce24e57251327ef846a3",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          118,
+          168,
+          0,
+          39,
+          728,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          43\n",
+        "header": [
+          118,
+          168,
+          0,
+          39,
+          728,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4999,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 1.0902390101819037e-13
+    },
+    {
+      "attempt": 9,
+      "fixture_sha256": "8c48613e2dd03a99bd7c16a02dcf212e395d1402ca7a0364042067fef5dd200c",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          70,
+          140,
+          0,
+          19,
+          450,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          28\n",
+        "header": [
+          70,
+          140,
+          0,
+          19,
+          450,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 3703,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 9.584000260076664e-14
+    },
+    {
+      "attempt": 10,
+      "fixture_sha256": "50d33d74143070125e309e561a2faa2d04d647e8eb90bc70e03dccd5c663d798",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          86,
+          150,
+          0,
+          23,
+          758,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          34\n",
+        "header": [
+          86,
+          150,
+          0,
+          23,
+          758,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "scalar mismatch",
+      "values": 4135,
+      "mismatches": 2,
+      "examples": [
+        {
+          "row": 67,
+          "column": 5,
+          "cpp": 0.10047833780367459,
+          "reference": 0.1004783378034524
+        },
+        {
+          "row": 76,
+          "column": 6,
+          "cpp": -0.22048542592282394,
+          "reference": -0.22048542592224804
+        }
+      ],
+      "max_absolute_error": 7.958078640513122e-13
+    },
+    {
+      "attempt": 11,
+      "fixture_sha256": "8b7eeef3b0b44d54af335b4c0e5963481ee6731ce827c9e338095e2026a1da04",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          99,
+          154,
+          0,
+          35,
+          699,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          28\n",
+        "header": [
+          99,
+          154,
+          0,
+          35,
+          699,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4486,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 4.263256414560601e-14
+    },
+    {
+      "attempt": 12,
+      "fixture_sha256": "b6456a506f2bdcc409f2b718a05b947b2db58b4c748db34d68e67765ac4d8790",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          104,
+          165,
+          0,
+          35,
+          627,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          36\n",
+        "header": [
+          104,
+          165,
+          0,
+          35,
+          627,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4621,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 2.4868995751603507e-13
+    },
+    {
+      "attempt": 13,
+      "fixture_sha256": "75d63b7bd706888c1d833397fecc1a3051ff977669fe42a2dab20df2b847f92c",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          49,
+          127,
+          0,
+          15,
+          553,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          18\n",
+        "header": [
+          49,
+          127,
+          0,
+          15,
+          553,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 3136,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 1.509903313490213e-14
+    },
+    {
+      "attempt": 14,
+      "fixture_sha256": "9edd8d61bda1d2071a1a55bdc9c1c54c4eba36d66c9754309567bbfdd9575b07",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          40,
+          124,
+          0,
+          19,
+          124,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0           8\n",
+        "header": [
+          40,
+          124,
+          0,
+          19,
+          124,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 2893,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 0.0
+    },
+    {
+      "attempt": 15,
+      "fixture_sha256": "6b457467825ce36ec574417b8ec08f0656c15e7c937bd5b1bd54c73c0ccfa890",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          47,
+          122,
+          0,
+          15,
+          289,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          15\n",
+        "header": [
+          47,
+          122,
+          0,
+          15,
+          289,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 3082,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 1.0658141036401503e-14
+    },
+    {
+      "attempt": 16,
+      "fixture_sha256": "a5c092a27cb43a7184e1fcac203e7324738a7648a91e84135c25475fd9bd6f84",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          112,
+          167,
+          0,
+          39,
+          827,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          37\n",
+        "header": [
+          112,
+          167,
+          0,
+          39,
+          827,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4837,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 9.059419880941277e-14
+    },
+    {
+      "attempt": 17,
+      "fixture_sha256": "cccbd29da94254da42478d8b318d5cdd1f2fa29f1a7364d1b3da14056a59c1da",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          112,
+          160,
+          0,
+          39,
+          485,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          32\n",
+        "header": [
+          112,
+          160,
+          0,
+          39,
+          485,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4837,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 3.6415315207705135e-14
+    },
+    {
+      "attempt": 18,
+      "fixture_sha256": "608dca1a7389f36931bf2d0415cc3701f399fc23f4da17e6a4d595374284af1d",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          49,
+          123,
+          0,
+          11,
+          429,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          28\n",
+        "header": [
+          49,
+          123,
+          0,
+          11,
+          429,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 3136,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 1.648126080056045e-13
+    },
+    {
+      "attempt": 19,
+      "fixture_sha256": "1f366746c3d795f8a84e0dcd29b338022f33ab5acbf7c55d0697a8209c8fbab5",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          118,
+          172,
+          0,
+          43,
+          1000,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          41\n",
+        "header": [
+          118,
+          172,
+          0,
+          43,
+          1000,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "passed",
+      "values": 4999,
+      "mismatches": 0,
+      "examples": [],
+      "max_absolute_error": 8.79296635503124e-14
+    },
+    {
+      "attempt": 20,
+      "fixture_sha256": "7269475f6e4e3242671d46efce84603d0f8f4802b4902e7ef895a5729e3fb13b",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          141,
+          184,
+          0,
+          55,
+          615,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-vacuum-reference",
+        "returncode": 0,
+        "stderr": " GUARD_STATS            0          40\n",
+        "header": [
+          141,
+          184,
+          0,
+          55,
+          615,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "scalar mismatch",
+      "values": 5620,
+      "mismatches": 3,
+      "examples": [
+        {
+          "row": 130,
+          "column": 5,
+          "cpp": -0.731780823016774,
+          "reference": -0.7317808230124827
+        },
+        {
+          "row": 130,
+          "column": 6,
+          "cpp": -0.22248241401730498,
+          "reference": -0.2224824140185373
+        },
+        {
+          "row": 136,
+          "column": 6,
+          "cpp": -0.813429062183942,
+          "reference": -0.8134290621820575
+        }
+      ],
+      "max_absolute_error": 4.3436365615434624e-12
+    }
+  ],
+  "medium_backend": "vacuum",
+  "vacuum_source_sha256": "c83fda6a0b81ce0dc9f524bbf9a3c68f0225f090107a5cd4d6711edad0b20ea0"
+}

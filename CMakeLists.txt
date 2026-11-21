@@ -72,8 +72,17 @@ if(JEWEL_REFERENCE_SOURCE)
  if(NOT extracted_medium EQUAL 0)
   message(FATAL_ERROR "Medium reference verification failed")
  endif()
- add_executable(jewel-medium-reference ${CMAKE_BINARY_DIR}/medium-reference.f reference/medium_probe.f90 reference/geometry_lengths.f reference/guarded_cascade.f90 reference/generated_random.cpp)
+ file(WRITE ${CMAKE_BINARY_DIR}/reference-expanding-backend.f90 "logical function reference_vacuum_enabled()\nreference_vacuum_enabled=.false.\nend function\n")
+ file(WRITE ${CMAKE_BINARY_DIR}/reference-vacuum-backend.f90 "logical function reference_vacuum_enabled()\nreference_vacuum_enabled=.true.\nend function\n")
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_medium.py
+  ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/vacuum-reference.f --vacuum RESULT_VARIABLE extracted_vacuum)
+ if(NOT extracted_vacuum EQUAL 0)
+  message(FATAL_ERROR "Vacuum reference verification failed")
+ endif()
+ add_executable(jewel-vacuum-reference ${CMAKE_BINARY_DIR}/vacuum-reference.f reference/medium_probe.f90 reference/geometry_lengths.f reference/guarded_cascade.f90 reference/generated_random.cpp ${CMAKE_BINARY_DIR}/reference-vacuum-backend.f90)
+ add_executable(jewel-medium-reference ${CMAKE_BINARY_DIR}/medium-reference.f reference/medium_probe.f90 reference/geometry_lengths.f reference/guarded_cascade.f90 reference/generated_random.cpp ${CMAKE_BINARY_DIR}/reference-expanding-backend.f90)
  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-vacuum-reference PRIVATE "$<$<COMPILE_LANGUAGE:Fortran>:-std=legacy;-ffixed-line-length-none>")
   target_compile_options(jewel-medium-reference PRIVATE "$<$<COMPILE_LANGUAGE:Fortran>:-std=legacy;-ffixed-line-length-none>")
  endif()
 endif()
@@ -153,6 +162,7 @@ endif()
 
 if(JEWEL_REFERENCE_SOURCE)
  target_sources(jewel-medium-reference PRIVATE ${CMAKE_BINARY_DIR}/kinematics-reference.f reference/pythia_probe_stubs.f90)
+ target_sources(jewel-vacuum-reference PRIVATE ${CMAKE_BINARY_DIR}/kinematics-reference.f reference/pythia_probe_stubs.f90)
  add_test(NAME rejection-differential COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/rejection_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/rejection-validation.json)
@@ -211,6 +221,7 @@ if(JEWEL_REFERENCE_SOURCE)
   message(FATAL_ERROR "Collision reference extraction failed")
  endif()
  target_sources(jewel-medium-reference PRIVATE ${CMAKE_BINARY_DIR}/collision-reference.f)
+ target_sources(jewel-vacuum-reference PRIVATE ${CMAKE_BINARY_DIR}/collision-reference.f)
  add_test(NAME collision-differential COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/collision_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/collision-validation.json)
@@ -361,7 +372,7 @@ if(BUILD_TESTING)
 endif()
 
 if(JEWEL_REFERENCE_SOURCE)
- foreach(target jewel-medium-reference jewel-coherence-reference jewel-coherent-start-reference)
+ foreach(target jewel-medium-reference jewel-vacuum-reference jewel-coherence-reference jewel-coherent-start-reference)
   target_sources(${target} PRIVATE ${CMAKE_BINARY_DIR}/compression-reference.f reference/record_listing_stub.f90)
  endforeach()
  add_test(NAME cascade-compression-differential COMMAND ${Python3_EXECUTABLE}
@@ -701,4 +712,15 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
  add_test(NAME experimental-isr-mpi-contracts COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/experimental_isr_mpi.py $<TARGET_FILE:jewel-run-partons>
   $<TARGET_FILE:jewel-medium-probe> $<TARGET_FILE:jewel-run-events>)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME vacuum-backend-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/vacuum_backend_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-vacuum-reference> ${CMAKE_BINARY_DIR}/vacuum-backend-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(vacuum-backend-test tests/vacuum_backend.cpp)
+ target_link_libraries(vacuum-backend-test PRIVATE jewel_core)
+ add_test(NAME vacuum-backend-contracts COMMAND vacuum-backend-test)
 endif()

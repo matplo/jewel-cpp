@@ -125,7 +125,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('input',type=Path);p.add_argument('--cards',type=Path,required=True)
     p.add_argument('--medium-cards',type=Path,required=True)
-    p.add_argument('--mode',choices=['vacuum','medium'],required=True)
+    p.add_argument('--mode',choices=['vacuum','medium','zero-interaction'],required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--run-log',type=Path,help='Complete JEWEL log: restore discarded unweighted PP attempts and normalize per attempt')
     a=p.parse_args();import_events(a.input,a.cards,a.medium_cards,a.mode,a.output,a.run_log)

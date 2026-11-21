@@ -90,6 +90,8 @@ if __name__ == '__main__':
         results = list(pool.map(lambda p: compare(p, args), fixtures))
     report = dict(scope='identical Pythia-initialized states; guarded Fortran scheduler',
                   executables={str(p): digest(p) for p in [args.cpp, args.reference]},
+                  medium_backends=sorted({'vacuum' if p.read_text().startswith('VACUUM\n') else 'expanding' for p in fixtures}),
+                  vacuum_source_sha256='c83fda6a0b81ce0dc9f524bbf9a3c68f0225f090107a5cd4d6711edad0b20ea0' if any(p.read_text().startswith('VACUUM\n') for p in fixtures) else None,
                   guard_sha256=digest(Path(__file__).parents[1]/'reference/guarded_cascade.f90'),
                   sources=json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),
                   relative_tolerance=2e-12, absolute_tolerance=2e-13, results=results)
