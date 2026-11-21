@@ -488,3 +488,9 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/event_geometry_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/event-geometry-validation.json)
 endif()
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ add_test(NAME runner-flow-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_flow.py $<TARGET_FILE:jewel-run-events>
+  $<TARGET_FILE:jewel-medium-probe>)
+endif()

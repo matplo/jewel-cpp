@@ -684,3 +684,9 @@ scale. Omission preserves the earlier 100 GeV setting. All four table families,
 run metadata and replay fixtures use the same value. See
 [table-energy validation](docs/validation-table-energy.md) for reference checks
 and the remaining strict cascade mismatch.
+
+Use `--longitudinal-boost on` to enable JEWEL's longitudinal scatterer flow.
+It controls the maximum scatterer used by tables, local rates and sampled
+momentum transfers consistently. The default remains `off` to reproduce prior
+native samples. [Flow validation](docs/validation-longitudinal-flow.md) includes
+Fortran comparisons and explicitly records the remaining cascade failures.
