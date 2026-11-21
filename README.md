@@ -73,7 +73,8 @@ It is computed on request. The 100-point thickness table is built at constructio
 The Ei table has 1,000 positive/negative nodes and uses stock interpolation.
 
 The `medium-differential` CTest compares every generated table entry, interpolation,
-participant density, medium samples and the three Ei-dependent kernels against
+participant density, medium samples, interpolation-knot neighbours, heating/cooling
+cutoff transitions and the three Ei-dependent kernels against
 unchanged, hash-verified stock Fortran routines. The reference harness dispatches
 only DERIV modes 5 and 101 and sets parameters explicitly rather than invoking
 MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
@@ -98,7 +99,7 @@ MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
   printing a warning and returning a partial result.
 
 Shower/scattering rate grids are covered by the later milestones below.
-Transport evolution remains unimplemented; these checks do not establish full JEWEL event parity.
+Later milestones implement transport and collision components; these checks do not establish full JEWEL event parity.
 
 ## Milestone 1c: medium sampling and bounds
 
@@ -522,3 +523,16 @@ matching run settings.
 cases and explicitly records 59 reference NaN cases rejected by C++. This is the
 initial-state split constructor; initial-state/coherent evolution and complete
 shower scheduling remain outstanding.
+
+## Milestone 2n: coherent-scattering arithmetic
+
+`coherent_resolution()` and `reconstruct_coherent()` in `jewel/coherence.hpp`
+implement the resolution gate and daughter-momentum reconstruction used inside
+DOCOHSCATTERING. They retain its literal transfer-component ordering and strict
+threshold comparison. Reconstruction returns the parent, auxiliary vertex,
+possible daughters and kinematic rejection state without mutating an event.
+
+[Section-level validation](docs/validation-coherence.md) compares 1,353 defined
+reference cases, with another 109 undefined reference cases explicitly rejected
+by C++. Coherent event merging, loop orchestration and rollback remain pending;
+these helpers do not yet implement full coherent shower evolution.

@@ -239,3 +239,28 @@ if(BUILD_TESTING)
  target_link_libraries(initial-splitting-test PRIVATE jewel_core)
  add_test(NAME initial-splitting-contracts COMMAND initial-splitting-test)
 endif()
+
+# Coherent-scattering arithmetic dependencies, independently replayable.
+target_sources(jewel_core PRIVATE src/coherence.cpp)
+add_executable(jewel-coherence-probe app/coherence_probe.cpp)
+target_link_libraries(jewel-coherence-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_coherence.py
+  ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/coherence-reference.f RESULT_VARIABLE coherence_extracted)
+ if(NOT coherence_extracted EQUAL 0)
+  message(FATAL_ERROR "Coherence reference extraction failed")
+ endif()
+ add_executable(jewel-coherence-reference ${CMAKE_BINARY_DIR}/coherence-reference.f
+  ${CMAKE_BINARY_DIR}/kinematics-reference.f reference/coherence_probe.f90 reference/pythia_probe_stubs.f90)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-coherence-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME coherence-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/coherence_differential.py $<TARGET_FILE:jewel-coherence-probe>
+  $<TARGET_FILE:jewel-coherence-reference> ${CMAKE_BINARY_DIR}/coherence-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(coherence-test tests/coherence.cpp)
+ target_link_libraries(coherence-test PRIVATE jewel_core)
+ add_test(NAME coherence-contracts COMMAND coherence-test)
+endif()

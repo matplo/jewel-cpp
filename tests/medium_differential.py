@@ -1,7 +1,17 @@
-import hashlib,json,math,random,subprocess,sys
+import hashlib,json,math,random,struct,subprocess,sys
 from pathlib import Path
 cpp,fortran,output=sys.argv[1:]
 commands=['EITABLE\n']; labels=['ei-table']*1000
+# Query each reference interpolation knot and its adjacent representable values.
+# Coordinates come from Fortran; table contents are still compared independently.
+ei_rows=subprocess.run([fortran],input='EITABLE\n',text=True,capture_output=True,check=True).stdout.splitlines()
+assert len(ei_rows)==1000
+for row in ei_rows:
+ knot=float(row.split()[0])
+ for sign in [-1,1]:
+  for x in [math.nextafter(sign*knot,-math.inf),sign*knot,math.nextafter(sign*knot,math.inf)]:
+   if abs(x)<=55:
+    commands.append(f'EI\n{x:.17g}\n'); labels.append('ei-knot-neighbours')
 for x in [-55,-54.99,-40,-1,-.055,-.01,-1e-12,0,1e-12,.01,.055,.11,1,39.99,40,40.01,54.99,55]:
  commands.append(f'EI\n{x:.17g}\n'); labels.append('ei-interpolation')
 for nf in [0,3,4,5,6]:
@@ -23,6 +33,11 @@ for mass,nf,woods,b,taui,ti,tc in [(208,3,1,0,.4,.59,.17),(208,3,1,7,.4,.59,.17)
   result=subprocess.run([exe],input=prefix,text=True,capture_output=True,check=True)
   return [list(map(float,line.split())) for line in result.stdout.splitlines()][-100:]
  knots=table_from(fortran)
+ for knot,_ in knots:
+  for x in [math.nextafter(knot,-math.inf),knot,math.nextafter(knot,math.inf)]:
+   # The text probe does not accept subnormal decimal input; zero is tested.
+   if x==0 or x>=sys.float_info.min:
+    commands.append(f'THICK\n{x:.17g} 0\n'); labels.append('thickness-knot-neighbours')
  commands.append('CROSS\n'); labels+=['cross-section-table']*200
  commands.append('BOUNDS\n'); labels.append('medium-bounds')
  for boost in [0,1]:
@@ -41,9 +56,19 @@ for mass,nf,woods,b,taui,ti,tc in [(208,3,1,0,.4,.59,.17),(208,3,1,7,.4,.59,.17)
  for i in range(80):
   tau=r.uniform(.001,30);eta=r.uniform(-3,3);x=r.uniform(-10,10);y=r.uniform(-10,10)
   commands.append(f'POINT\n{x:.17g} {y:.17g} {tau*math.sinh(eta):.17g} {tau*math.cosh(eta):.17g}\n'); labels.append('medium-sample')
+# Flat profile isolates the exact early growth / late cooling cutoff from
+# Woods-Saxon normalization. Include adjacent doubles and safely bracketed points.
+# JEWEL's cooling exponent is default REAL promoted to double, not exactly 1/3.
+exponent=struct.unpack('f',struct.pack('f',.3333))[0]
+for taui,ti,tc in [(.4,.59,.17),(.6,.45,.15),(.3,.7,.12)]:
+ commands.append(f'CONFIG\n208 3 0 {taui} {ti} {tc} .17 .54 6.199999809265137 0 2 .45 1\n')
+ for transition in [taui*tc/ti,taui,taui*(ti/tc)**(1/exponent)]:
+  for tau in [transition*(1-1e-10),math.nextafter(transition,0),transition,math.nextafter(transition,math.inf),transition*(1+1e-10)]:
+   commands.append(f'POINT\n0 0 0 {tau:.17g}\n'); labels.append('temperature-transition')
 payload=''.join(commands)
 def run(exe):
- result=subprocess.run([exe],input=payload,text=True,capture_output=True,check=True)
+ result=subprocess.run([exe],input=payload,text=True,capture_output=True)
+ if result.returncode: raise RuntimeError((exe,result.returncode,result.stderr))
  rows=[list(map(float,line.split())) for line in result.stdout.splitlines()]
  if len(rows)!=len(labels): raise AssertionError((exe,len(rows),len(labels),result.stderr))
  return rows
@@ -55,7 +80,8 @@ for i,(label,a,b) in enumerate(zip(labels,actual,expected)):
  for col,(x,y) in enumerate(zip(a,b)):
   error=abs(x-y);rel=error/max(abs(y),1e-300)
   group['values']+=1;group['max_absolute_error']=max(group['max_absolute_error'],error);group['max_relative_error']=max(group['max_relative_error'],rel)
-  if not math.isfinite(x) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13): failures.append({'row':i,'column':col,'label':label,'cpp':x,'fortran':y})
+  activity_mismatch=label in ['medium-sample','temperature-transition'] and col in [0,3] and ((x==0)!=(y==0))
+  if activity_mismatch or not math.isfinite(x) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13): failures.append({'row':i,'column':col,'label':label,'cpp':x,'fortran':y})
 report={'scope':'optical medium and numerical tables, not full events','input_sha256':hashlib.sha256(payload.encode()).hexdigest(),
  'relative_tolerance':2e-12,'absolute_tolerance':2e-13,'groups':summary,'failures':failures,
  'sources':json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),

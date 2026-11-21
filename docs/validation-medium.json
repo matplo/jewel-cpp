@@ -1,11 +1,16 @@
 {
   "scope": "optical medium and numerical tables, not full events",
-  "input_sha256": "d0cce94c8052f6f8e67f34bb9a7b1db35585bc8fdf8217bdf3c3e21d834b0a9b",
+  "input_sha256": "2173feb931c3720913b00ab034460e9a5cd4d1aab2eb82eafedfb102d8346c84",
   "relative_tolerance": 2e-12,
   "absolute_tolerance": 2e-13,
   "groups": {
     "ei-table": {
       "values": 3000,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "ei-knot-neighbours": {
+      "values": 5998,
       "max_absolute_error": 0.0,
       "max_relative_error": 0.0
     },
@@ -34,6 +39,11 @@
       "max_absolute_error": 0.0,
       "max_relative_error": 0.0
     },
+    "thickness-knot-neighbours": {
+      "values": 1192,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
     "cross-section-table": {
       "values": 2400,
       "max_absolute_error": 0.0,
@@ -42,7 +52,7 @@
     "medium-bounds": {
       "values": 28,
       "max_absolute_error": 2.842170943040401e-14,
-      "max_relative_error": 2.7657485409900073e-16
+      "max_relative_error": 2.258965278599117e-16
     },
     "maximum-scatterer": {
       "values": 40,
@@ -66,8 +76,13 @@
     },
     "medium-sample": {
       "values": 3440,
-      "max_absolute_error": 2.220446049250313e-16,
-      "max_relative_error": 3.739714272056119e-16
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "temperature-transition": {
+      "values": 180,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
     }
   },
   "failures": [],
@@ -106,6 +121,134 @@
         "SCATPRIMFUNC": [
           7692,
           7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ],
+        "GETPDF": [
+          6928,
+          7022
+        ],
+        "GETPDFXINTEXACT": [
+          7096,
+          7129
+        ],
+        "PDFINT": [
+          8082,
+          8135
+        ],
+        "GETPDFXINT": [
+          7027,
+          7090
+        ],
+        "PGQ": [
+          7938,
+          7942
+        ],
+        "XSECINT": [
+          8142,
+          8228
+        ],
+        "GETXSECINT": [
+          7135,
+          7241
+        ],
+        "GETSSCAT": [
+          7365,
+          7458
+        ],
+        "GETMASS": [
+          7465,
+          7625
+        ],
+        "GENERATEZ": [
+          7632,
+          7685
+        ],
+        "GETDELTAT": [
+          8423,
+          8554
+        ],
+        "REJECTSPLITTING": [
+          3688,
+          3865
+        ],
+        "MAKESPLITTING": [
+          3288,
+          3682
+        ],
+        "GETNEWMASS": [
+          5253,
+          5360
+        ],
+        "GETPNORAD1": [
+          5366,
+          5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
         ]
       }
     },
@@ -209,7 +352,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "f8705aa5d4a47b10d9632b3208e0365bdb1cb015fd0a1e6dbbedac86bc036e80",
-    "jewel-medium-reference": "6b7123d1e88e744046b7457c30b232e376cee02d69d32ed477cd76c65c6253ad"
+    "jewel-medium-probe": "504783190e63f3bc984157d73faac22a348d17ab55441b2a6f047c08b2a177b8",
+    "jewel-medium-reference": "ec28f49c85425c338df6bb4a865a948ee1fddc654aa44d8159510263b8c3b235"
   }
 }

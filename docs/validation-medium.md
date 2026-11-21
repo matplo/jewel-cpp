@@ -1,54 +1,73 @@
 # Expanding medium and table validation
 
-Recorded on 2026-11-20 (America/Los_Angeles), macOS arm64;
-AppleClang 21.0.0.21000101 and GNU Fortran 16.2.0, Release builds.
-
-All six reference-enabled CTest suites passed. Both C++-only contract suites
-also passed. The original 1,320 kernel comparisons remain passing.
-The new suite passed **10,785 scalar comparisons** against extracted,
-unchanged JEWEL 2.6.0 Fortran routines. Source hashes and exact routine spans
-are recorded in [validation-medium.json](validation-medium.json).
+Updated on 2026-11-20, macOS arm64, Release build with AppleClang 21 and
+GNU Fortran 16.2. The medium differential suite passes **18,155 scalar
+comparisons** against unchanged, hash-verified JEWEL 2.6.0 routines.
+[Machine-readable results](validation-medium.json) include source and executable
+hashes, input hash, tolerances and all comparison groups.
 
 | Comparison | Values | Maximum absolute error |
 |---|---:|---:|
-| ei-table | 3000 | 0 |
+| ei-table | 3,000 | 0 |
+| ei-knot-neighbours | 5,998 | 0 |
 | ei-interpolation | 18 | 0 |
 | LOW | 300 | 2.0817e-17 |
 | HIGH | 300 | 2.0817e-17 |
 | SCAT | 75 | 0 |
 | thickness-table | 800 | 0 |
-| cross-section-table | 2400 | 0 |
+| thickness-knot-neighbours | 1,192 | 0 |
+| cross-section-table | 2,400 | 0 |
+| medium-bounds | 28 | 2.8422e-14 |
+| maximum-scatterer | 40 | 0 |
+| average-scatterer | 200 | 0 |
 | thickness-boundary | 24 | 0 |
 | participants | 160 | 0 |
-| medium-sample | 3440 | 2.2204e-16 |
+| medium-sample | 3,440 | 0 |
+| temperature-transition | 180 | 0 |
 
 Acceptance uses relative tolerance 2e-12 and absolute tolerance 2e-13.
-The largest observed relative difference was 7.39e-16. Exact agreement is
-specific to this compiler/platform configuration, not a cross-platform promise.
+Temperature and density must additionally agree exactly on zero versus nonzero:
+a cutoff disagreement cannot pass using the absolute tolerance.
 
-The tests compare all entries of the 1,000-node Ei table, 100-node thickness
-tables and 200-row cross-section tables. Medium configurations include
-A=208,16,197; central and displaced collisions; Woods-Saxon and uniform
-initial temperature profiles; NF=0,3,5; several initial times and temperatures.
-Sample points cover early-time growth, the initial-time transition, cooling,
-late-time cutoff, overlap edges and rapidity limits. Ei-dependent kernels cover
-NF=0,3,4,5,6, three Lambda values and multiple momentum scales.
+Every entry of the 1,000-node Ei, 100-node nuclear-thickness and 200-row
+cross-section tables is compared. The boundary extension queries both signs of
+every Ei knot and adjacent representable doubles within the supported range,
+and every thickness knot and its adjacent doubles. Zero is included; the text
+probe cannot read subnormal decimal inputs, so the adjacent subnormal at zero
+is excluded. Table coordinates come from the reference; table values are
+independently calculated and compared.
 
-The reference probe initializes COMMON data explicitly; it does not run MEDINIT.
-DERIV dispatch is a harness implementation limited to the original mode-5
-exp(-x)/x expression and mode-101 MEDDERIV call. The selected quadrature,
-medium, table and kernel bodies are otherwise extracted without edits.
-No temperature or table values from C++ are supplied to the Fortran reference.
-Thickness boundary coordinates are read from the Fortran table to exercise
-its actual knots, which are separately compared against the C++ table.
+Medium configurations cover A=208,16,197; central/displaced collisions;
+Woods-Saxon and flat profiles; NF=0,3,5; varied initial temperatures and times.
+Samples include growth, cooling, overlap edges, late cutoff and rapidity limits.
+Three flat-profile configurations additionally isolate the early heating cutoff,
+initial-time transition and late cooling cutoff. Each is tested at its calculated
+transition, adjacent doubles and relative offsets of ±1e-10. The cooling exponent
+uses stock default-REAL rounding of 0.3333. All 180 transition output values agree
+exactly on this platform. Exact numerical agreement is not a cross-platform promise.
 
-C++-only contracts additionally cover scalar quadrature against an analytic
-integral in both directions, invalid parameters, invalid/nonfinite positions,
-empty medium, light-cone behavior and out-of-table Ei requests. Deliberate
-behavior changes outside the stock valid domain are documented in the README;
-they are not included in the numerical parity claim.
+The reference probe initializes COMMON data explicitly rather than running
+MEDINIT/card parsing. DERIV dispatch is a harness implementation limited to the
+original mode-5 exp(-x)/x expression and mode-101 MEDDERIV call. Routine bodies
+are extracted without edits; no C++ temperatures or table values are supplied
+to the reference.
 
-Medium event/vertex sampling, thermal draws and bounds now have additional
-coverage in [sampling validation](validation-sampling.md). Still unimplemented:
-full splitting/Sudakov/scattering grids,
-shower evolution, Pythia8 import/hadronization, or complete events.
+C++ contracts cover analytic quadrature, invalid parameters and positions,
+empty medium, light-cone behavior and out-of-range Ei requests. Deliberate domain
+extensions are documented in the README and excluded from reference-parity claims.
+
+Related component validation covers [sampling](validation-sampling.md),
+[initial radiation](validation-radiation.md),
+[final splitting tables](validation-final-splitting.md),
+[partonic PDFs](validation-pdf.md) and
+[scattering grids](validation-scattering.md). These numerical comparisons do not
+validate a complete event generator or final-state jet observables.
+
+## Related checks rerun with this update
+
+All 11 selected CTest suites passed: medium differential; medium, radiation,
+final-splitting, PDF and scattering contracts; and sampling, radiation,
+final-splitting, PDF and scattering differential tests. In particular, the
+final-splitting comparison checks 6,004,000 table values, and the scattering
+comparison checks 1,203,300 grid values, plus their lookup/integral tests.
+No production physics code changed in this update.

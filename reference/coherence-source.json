@@ -1,0 +1,27 @@
+{
+  "file": "jewel-2.6.0.f.stock",
+  "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+  "sections": {
+    "gate": {
+      "lines": [
+        4859,
+        4865
+      ],
+      "sha256": "a8095b460d56e9eb17389c72fb7f4d0b2725279f1087dd5d6c97802ac14845c0"
+    },
+    "axial": {
+      "lines": [
+        4896,
+        4903
+      ],
+      "sha256": "22cc66ec552c7404dd69acd37f84398838dde3cf7f6f6da03977c82471ea1637"
+    },
+    "daughters": {
+      "lines": [
+        4913,
+        4927
+      ],
+      "sha256": "a3ececbd23d445eea3bfe473593adc8454ace3ec8da131b6b9c964fd457b6b5d"
+    }
+  }
+}
