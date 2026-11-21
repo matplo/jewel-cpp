@@ -96,6 +96,46 @@ int main() {
      for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
       <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
     }
+   } else if(op=="SEQUENCE") {
+    if(!branching)throw std::runtime_error("BCONFIG required");
+    jewel::CollisionConfig config;jewel::CollisionSequenceRequest request;int qp,coh;std::size_t first,last;
+    std::cin>>config.kinematic_mode>>config.cutoff>>config.mass_scale>>request.target_mass>>request.time>>request.energy_fraction
+     >>request.fraction>>qp>>coh>>first>>last;
+    if(first<1||first>last||last>10000)throw std::runtime_error("bad sequence range");
+    request.first=first-1;request.last=last-1;request.quark_pair=qp;request.coherent=coh;
+    jewel::ShowerState state;jewel::ShowerParticle leg,scratch;auto& p=leg.particle.momentum;auto& v=leg.generator_vertex;auto& x=leg.particle.production;
+    std::cin>>p.px>>p.py>>p.pz>>p.energy>>leg.record_mass>>leg.particle.pdg>>leg.particle.status
+     >>x.x>>x.y>>x.z>>x.t>>v.x>>v.y>>v.z>>v.t>>leg.decay_time>>leg.fraction>>leg.angle
+     >>leg.particle.colour>>leg.particle.anticolour>>state.colour_max;
+    auto scratch_id=state.append(scratch),id=state.append(leg);
+    jewel::CollisionFinalizationConfig finish;jewel::RecoilStorage ledger;int had,scat,write,subtract;
+    std::cin>>finish.formation_factor>>finish.soft_recoil_cut>>finish.hard_recoil_cut>>had>>scat>>finish.storage.mode>>write>>subtract>>ledger.used>>ledger.capacity;
+    finish.hadronize_recoils=had;finish.scatter_recoils=scat;finish.storage.write_centres=write;finish.storage.subtract=subtract;
+    ledger.records.resize(ledger.capacity);for(auto& r:ledger.records)r={-99,{1,2,3,4},5,{6,7,8,9},10};
+    jewel::TransferHistory history;history.records.resize(last);
+    for(auto& r:history.records){auto& q=r.scatterer.momentum;auto& y=r.position;
+     std::cin>>r.invariant>>r.time>>r.scatterer.type>>q.px>>q.py>>q.pz>>q.energy>>r.scatterer.mass>>y.x>>y.y>>y.z>>y.t;
+    }
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("bad sequence tape");
+    std::vector<double> tape(count);for(auto& a:tape)std::cin>>a;
+    if(!std::cin)throw std::runtime_error("bad sequence input");jewel::ReplayRandom random(tape);
+    jewel::CollisionSequenceResult result{id,request.last,0,request.fraction,false};int invalid=0;
+    try{result=jewel::apply_collisions(state,id,scratch_id,history,ledger,request,config,finish,*branching,*medium,random);state.validate();}
+    catch(const std::domain_error&){invalid=1;}
+    catch(const std::out_of_range& e){if(std::string(e.what())!="RNG tape exhausted")throw;invalid=3;}
+    catch(const std::runtime_error& e){if(std::string(e.what())!="collision sequence retries exhausted")throw;invalid=2;}
+    auto slot=[&](jewel::ParticleId id){if(id==0)return std::size_t(0);for(std::size_t i=0;i<state.particles().size();++i)if(state.particles()[i].particle.id==id)return i+1;throw std::runtime_error("dangling sequence ID");};
+    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<result.retry_splitting<<' '
+     <<result.last+1<<' '<<result.fraction<<' '<<random.checkpoint()<<' '<<state.discarded<<' '<<invalid<<'\n';
+    for(auto a:state.particles()){
+     auto p=a.particle.momentum;auto v=a.generator_vertex;auto x=a.particle.production;
+     std::cout<<a.particle.status<<' '<<a.particle.pdg<<' '<<slot(a.parent)<<' '<<slot(a.daughters[0])<<' '<<slot(a.daughters[1])<<' '
+      <<p.px<<' '<<p.py<<' '<<p.pz<<' '<<p.energy<<' '<<a.record_mass<<' '<<v.x<<' '<<v.y<<' '<<v.z<<' '<<v.t<<' '
+      <<x.x<<' '<<x.y<<' '<<x.z<<' '<<x.t<<' '<<a.decay_time<<' '<<a.fraction<<' '<<a.angle<<' '<<a.quark_pair<<' '
+      <<a.angular_required<<' '<<a.particle.colour<<' '<<a.particle.anticolour<<'\n';
+    }
+    for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
+     <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
    } else if(op=="FSTATE") {
     if(!branching||!sudakov||!final_table||!rates||!transfers)throw std::runtime_error("evolution models required");
     double now,left;std::cin>>now>>left;

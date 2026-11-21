@@ -55,9 +55,10 @@ vertices retain the reference's round-trip arithmetic. A rejected pair still
 carries these updates and must not be treated as two outgoing particles.
 
 The sampler must share Q0 and other run settings with the collision config.
-The current single-transfer interface uses its incoming projectile as the
-original recoil for temperature-dependent mass evaluation; chaining requires
-passing the original sequence projectile separately during integration.
+The single-transfer interface defaults to its incoming projectile as the
+original recoil. It now also accepts the original sequence projectile and
+requested mass explicitly; `apply_collisions` supplies them across transfers
+and retries. See [full-sequence validation](validation-collision-sequence.md).
 
 C++ contracts cover conservation, input immutability, zero/invalid transfers,
 invalid mode and nonfinite configuration. The affected reference comparisons

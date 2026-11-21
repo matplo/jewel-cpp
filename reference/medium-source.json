@@ -153,6 +153,10 @@
       "DOFISTATESCAT": [
         5080,
         5247
+      ],
+      "DOKINEMATICS": [
+        5643,
+        6452
       ]
     }
   },

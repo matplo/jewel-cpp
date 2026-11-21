@@ -15,7 +15,7 @@ double squared(double x){return x*x;}
 }
 CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,const TransferRecord& transfer,
  double total,double remaining,double target,double delta,CollisionConfig config,
- const BranchingSampler& sampler,const Medium& medium,Random& random){
+ const BranchingSampler& sampler,const Medium& medium,Random& random,const ShowerParticle* original_projectile,std::optional<double> requested_mass){
  for(double value:{config.cutoff,config.mass_scale,total,remaining,target,delta,transfer.invariant})
   if(!std::isfinite(value))throw std::domain_error("nonfinite collision input");
  if(config.kinematic_mode<0||config.kinematic_mode>3||config.cutoff<=0||config.mass_scale<=0)
@@ -25,7 +25,8 @@ CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,cons
  auto& a=result.incoming;auto& b=result.centre;auto& c=result.outgoing;auto& d=result.recoil;
  auto& p=a.particle.momentum;auto& q=b.particle.momentum;
  auto& pc=c.particle.momentum;auto& pd=d.particle.momentum;
- bool is_recoil=projectile.particle.status==2;
+ const auto& origin=original_projectile?*original_projectile:projectile;
+ bool is_recoil=origin.particle.status==2;
  Channel channel=projectile.particle.pdg==21?Channel::GC:Channel::QQ;
  if(projectile.particle.pdg==21)result.colour_direction=random.uniform()<.5?1:-1;
  b.particle.status=6;b.particle.pdg=transfer.scatterer.type;q=transfer.scatterer.momentum;
@@ -56,8 +57,8 @@ CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,cons
   newmass=original+dm;double value=std::copysign(squared(newmass),newmass);
   if(delta==0&&is_recoil&&config.kinematic_mode==3){
    double local=medium.sample(b.particle.production).temperature;
-   double old=medium.sample(projectile.particle.production).temperature;
-   if(local>0){if(old==0)throw std::domain_error("zero original recoil temperature");value=squared(projectile.record_mass*local/old);result.target_mass=std::sqrt(value);}
+   double old=medium.sample(origin.particle.production).temperature;
+   if(local>0){if(old==0)throw std::domain_error("zero original recoil temperature");value=squared(origin.record_mass*local/old);result.target_mass=std::sqrt(value);}
   }
   return value;
  };
@@ -100,7 +101,7 @@ CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,cons
  if(mass2<0)throw std::domain_error("negative collision recoil mass");
  d.record_mass=std::sqrt(mass2);
  c.particle.status=a.particle.status;
- if(config.last_transfer&&is_recoil&&target>projectile.record_mass&&c.record_mass>config.cutoff)c.particle.status=1;
+ if(config.last_transfer&&is_recoil&&requested_mass.value_or(target)>origin.record_mass&&c.record_mass>config.cutoff)c.particle.status=1;
  c.particle.pdg=a.particle.pdg;a.particle.status=a.particle.status==1?12:14;
  d.particle.status=3;d.particle.pdg=21;
  if(reshuffle){

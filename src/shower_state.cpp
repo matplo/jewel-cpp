@@ -16,9 +16,11 @@ void fields(const ShowerParticle& s){
 ParticleId ShowerState::append(ShowerParticle s){
  fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
  require(s.daughters[0]==0&&s.daughters[1]==0,"append requires unattached daughters");
- if(s.parent)at(s.parent);
+ require(!(s.parent&&s.collision_source),"ambiguous primary/collision ancestry");
+ if(s.parent||s.collision_source)at(s.parent?s.parent:s.collision_source);
  auto id=next_;s.particle.id=id;
- s.particle.parents=s.parent?std::vector<ParticleId>{s.parent}:std::vector<ParticleId>{};
+ auto origin=s.parent?s.parent:s.collision_source;
+ s.particle.parents=origin?std::vector<ParticleId>{origin}:std::vector<ParticleId>{};
  auto inserted=slots_.emplace(id,particles_.size());
  try{particles_.push_back(std::move(s));}catch(...){slots_.erase(inserted.first);throw;}
  ++next_;return id;
@@ -34,6 +36,12 @@ void ShowerState::connect(ParticleId parent,ParticleId first,ParticleId second){
  require(b.parent==parent&&c.parent==parent,"daughter parent mismatch");
  a.daughters={first,second};
 }
+void ShowerState::connect_collision(ParticleId incoming,ParticleId recoil,ParticleId outgoing){
+ require(incoming!=recoil&&incoming!=outgoing&&recoil!=outgoing,"invalid collision IDs");
+ auto& a=at(incoming);const auto& b=at(recoil);const auto& c=at(outgoing);
+ require(b.parent==0&&b.collision_source==incoming&&c.parent==incoming&&c.collision_source==0,"collision ancestry mismatch");
+ a.daughters={recoil,outgoing};
+}
 void ShowerState::validate() const {
  require(std::isfinite(weight),"nonfinite event weight");require(colour_max>=0,"negative maximum colour");
  require(slots_.size()==particles_.size(),"shower index mismatch");
@@ -41,18 +49,19 @@ void ShowerState::validate() const {
  std::unordered_map<ParticleId,int> visited;
  for(const auto& s:particles_){
   std::vector<ParticleId> path;auto id=s.particle.id;
-  while(id&&visited[id]!=2){require(visited[id]!=1,"cyclic shower ancestry");visited[id]=1;path.push_back(id);id=at(id).parent;}
+  while(id&&visited[id]!=2){require(visited[id]!=1,"cyclic shower ancestry");visited[id]=1;path.push_back(id);const auto& node=at(id);id=node.parent?node.parent:node.collision_source;}
   for(auto entry:path)visited[entry]=2;
  }
  for(const auto& s:particles_){
   fields(s);auto id=s.particle.id;require(&at(id)==&s,"particle ID changed");
   require(s.particle.colour<=colour_max&&s.particle.anticolour<=colour_max,"colour exceeds allocated maximum");
-  if(s.parent)at(s.parent);
-  require(s.particle.parents==(s.parent?std::vector<ParticleId>{s.parent}:std::vector<ParticleId>{}),"parent metadata mismatch");
+  require(!(s.parent&&s.collision_source),"ambiguous primary/collision ancestry");
+  auto origin=s.parent?s.parent:s.collision_source;if(origin)at(origin);
+  require(s.particle.parents==(origin?std::vector<ParticleId>{origin}:std::vector<ParticleId>{}),"parent metadata mismatch");
   require((s.daughters[0]==0)==(s.daughters[1]==0),"incomplete daughter pair");
   if(s.daughters[0]){
    require(s.daughters[0]!=s.daughters[1],"duplicate daughters");
-   for(auto daughter:s.daughters)require(at(daughter).parent==id,"nonreciprocal daughter link");
+   for(auto daughter:s.daughters)require(at(daughter).parent==id||at(daughter).collision_source==id,"nonreciprocal daughter link");
   }
  }
 }

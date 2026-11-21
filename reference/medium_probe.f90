@@ -92,6 +92,8 @@ program mediumprobe
  logical writescatcen,writedummies,dosubtraction,cohflaglogical
  common /storescatcen/ nscatcen,maxnscatcen,scatflav,scatcen,writescatcen,writedummies,dosubtraction,putonshell,rsub
  common /storedummies/ dummies
+ integer seqfirst,seqlast
+ logical seqretry
  logical above_cutoff
  character(20) op
  logfid=0
@@ -273,6 +275,37 @@ program mediumprobe
      write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
     enddo
    endif
+  case('SEQUENCE')
+   read(*,*)kinmode,q0,scalefacm,pairtarget,nowtime,energyfraction,zdec,qflag,cohflag,seqfirst,seqlast
+   n=2;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.
+   mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0;discard=.false.
+   read(*,*)p(2,:),k(2,2),k(2,1),mv(2,1:4),vertices(2,1:4),mv(2,5),zd(2),thetad(2),trip(2),anti(2),colmax
+   read(*,*)ftfac,recsoftcut,rechardcut,hadflag,scatflag,recmode,writeflag,subflag,nscatcen,maxnscatcen
+   allhad=hadflag/=0;scatrecoil=scatflag/=0;writescatcen=writeflag/=0;dosubtraction=subflag/=0
+   scatflav=-99
+   do j=1,5
+    scatcen(:,j)=dble(j);dummies(:,j)=dble(j+5)
+   enddo
+   allqs=0;scatcentres=0
+   do i=1,seqlast
+    read(*,*)allqs(i,1),allqs(i,6),scatcentres(i,:)
+   enddo
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0;seqretry=.false.
+   call dokinematics(2,2,seqfirst,seqlast,pairtarget,seqretry,nowtime,energyfraction,zdec,qflag/=0,cohflag/=0)
+   initial_flag=merge(0,1,all(ieee_is_finite(p(1:n,:))).and.all(ieee_is_finite(mv(1:n,:))).and. &
+    all(ieee_is_finite(zd(1:n))).and.all(ieee_is_finite(thetad(1:n))).and. &
+    all(ieee_is_finite(scatcen(1:maxnscatcen,:))).and.all(ieee_is_finite(dummies(1:maxnscatcen,:))))
+   write(*,'(5I8,ES26.17E3,3I8)')n,colmax,nscatcen,merge(1,0,seqretry),seqlast,zdec,cursor,merge(1,0,discard),initial_flag
+   do i=1,n
+    write(*,'(5I8,16ES26.17E3,4I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
+     merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i)
+   enddo
+   do i=1,maxnscatcen
+    write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
+   enddo
   case('FSTATE')
    read(*,*)nowtime,lefttime
    n=2

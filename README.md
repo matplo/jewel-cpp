@@ -486,3 +486,25 @@ lightlike dummy masses have separately reported, roundoff-bounded invariant
 comparisons. Event genealogy, multi-transfer sequencing, the final lifetime
 overwrite and outer retries are still pending; full DOKINEMATICS parity is not
 yet claimed.
+
+## Milestone 2l: complete collision-sequence orchestration
+
+`apply_collisions()` implements full DOKINEMATICS sequence control, including
+multiple transfers, event genealogy, final lifetime overwrite, target-mass
+fallbacks, shortened retry ranges, colour/count restoration and capacity checks.
+The transfer range is zero-based and inclusive; the returned range end,
+fraction and retry flag carry the source's updates. Original recoil properties
+are retained separately from intermediate outgoing records.
+
+`ShowerParticle::collision_source` preserves recoil ancestry while leaving its
+stock primary-parent field zero. Stable event IDs survive snapshots and are
+never recycled after rollback. A rejected attempt restores active links and
+counts while preserving the source's round-trip arithmetic and recoil-storage
+tail. Exceptions require caller rollback/discard; rejected-attempt random draws
+are not rewound.
+
+[Full-routine validation](docs/validation-collision-sequence.md) checks 534
+wholly finite reference calls and separately records 30 nonfinite reference
+cases and 12 guarded/exhausted runs. These are explicit limitations, not successful
+collision outputs. This completes the collision-application component; complete
+shower evolution and final-event validation are still in progress.

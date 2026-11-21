@@ -8,6 +8,7 @@ struct ShowerParticle {
  Particle particle;
  double record_mass{}; // Pythia's signed P(:,5), distinct from computed p^2.
  ParticleId parent{};
+ ParticleId collision_source{}; // Recoil origin; stock K(:,3) remains zero.
  std::array<ParticleId,2> daughters{};
  SpaceTime generator_vertex; // Auxiliary V record, distinct from MV production point.
  double decay_time{}, evolution_time{}, fraction{-1}, angle{};
@@ -32,6 +33,7 @@ public:
  ShowerParticle& at(ParticleId);
  const auto& particles() const{return particles_;}
  void connect(ParticleId parent,ParticleId first,ParticleId second);
+ void connect_collision(ParticleId incoming,ParticleId recoil,ParticleId outgoing);
  void validate() const;
  ShowerSnapshot snapshot() const;
  void restore(const ShowerSnapshot&);
