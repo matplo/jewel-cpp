@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEWEL native / Fortran comparison</title>
+<style>body{font:16px system-ui;color:#193448;background:#f3f6f8;margin:0}main{max-width:1100px;margin:32px auto;padding:0 24px}section,details{background:white;padding:22px;margin:20px 0;border-radius:10px}select,button{font:inherit;padding:8px;margin:5px 18px 5px 5px}svg{width:100%;height:auto}table{width:100%;border-collapse:collapse}th,td{padding:9px;text-align:right;border-bottom:1px solid #ddd}.notice{border-left:5px solid #b16b22;padding:15px;background:#fff2da}pre{white-space:pre-wrap;overflow-wrap:anywhere}.small{font-size:14px}h1{margin-bottom:8px}</style>
+<main><h1>JEWEL native / Fortran comparison</h1><p>Common jet finding through hepyy/cppyy FastJet</p>
+<div class="notice" id="status"></div>
+<section><label>Samples <select id="pair"></select></label><label>Observable <select id="observable"></select></label><button id="download">Download CSV</button>
+<p id="counts"></p><svg id="yields" viewBox="0 0 1000 300" role="img" aria-label="Native and Fortran jet distributions"></svg>
+<p class="small">Blue: native C++. Orange: Fortran. Weighted jets per original denominator record, without bin-width or shape normalization.</p>
+<svg id="ratios" viewBox="0 0 1000 300" role="img" aria-label="Native divided by Fortran with ten percent agreement band"></svg>
+<p class="small">Green band: 0.9–1.1. Error bars use independent event ensembles and do not relax the ratio gate. Undefined bins have no plotted point.</p>
+<p id="gate"></p><table><thead><tr><th>Bin</th><th>Native</th><th>Fortran</th><th>Ratio</th><th>Ratio error</th><th>Within 10%?</th></tr></thead><tbody id="rows"></tbody></table></section>
+<details><summary>Selection, normalization, settings and provenance</summary><pre id="provenance"></pre></details></main>
+<script>
+const data=__DATA__, pair=document.getElementById('pair'), observable=document.getElementById('observable');
+const ns='http://www.w3.org/2000/svg';
+function svgElement(name,attrs,text){const e=document.createElementNS(ns,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e}
+function fmt(x){return x===null?'undefined':Number(x).toPrecision(5)}
+function current(){return data.comparisons[Number(pair.value)]}
+function selected(){return current().observables[observable.value]}
+data.comparisons.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${c.samples[0].run.mode}: native ${c.native_index} / Fortran ${c.reference_index}`;pair.appendChild(o)});
+function axes(id,bins,maximum,title){const svg=document.getElementById(id);svg.replaceChildren();const x0=75,y0=245,w=900,h=205;const y=v=>y0-h*v/maximum;svg.appendChild(svgElement('text',{x:75,y:20,'font-size':16},title));for(let i=0;i<=4;i++){const v=maximum*i/4;svg.appendChild(svgElement('line',{x1:x0,x2:x0+w,y1:y(v),y2:y(v),stroke:'#d9e2e7'}));svg.appendChild(svgElement('text',{x:66,y:y(v)+4,'text-anchor':'end','font-size':12},fmt(v)))}bins.forEach((b,i)=>svg.appendChild(svgElement('text',{x:x0+(i+.5)*w/bins.length,y:270,'text-anchor':'middle','font-size':11},`${b.low}–${Number(b.high.toPrecision(4))}`)));return {svg,y,x:i=>x0+(i+.5)*w/bins.length}}
+function point(plot,i,value,error,color,offset=0){if(value===null)return;const x=plot.x(i)+offset,y=plot.y(value);if(error!==null)plot.svg.appendChild(svgElement('line',{x1:x,x2:x,y1:plot.y(Math.max(0,value-error)),y2:plot.y(value+error),stroke:color}));const dot=svgElement('circle',{cx:x,cy:y,r:4,fill:color});dot.appendChild(svgElement('title',{},`${fmt(value)} ± ${fmt(error)}`));plot.svg.appendChild(dot)}
+function render(){const c=current(), result=selected(), bins=result.bins;
+ document.getElementById('status').textContent=`Physics agreement: ${c.physics_gate}. ${c.blockers.join(' ')}`;
+ document.getElementById('counts').textContent=`Native: ${c.selected_jets[0]} selected jets. Fortran: ${c.selected_jets[1]}. Required: ${c.minimum_selected_jets} each.`;
+ const ymax=Math.max(1e-12,...bins.flatMap(b=>[b.native+(b.native_standard_error||0),b.reference+(b.reference_standard_error||0)]))*1.15;
+ const yp=axes('yields',bins,ymax,observable.value+' distributions');bins.forEach((b,i)=>{point(yp,i,b.native,b.native_standard_error,'#176d89',-4);point(yp,i,b.reference,b.reference_standard_error,'#b16b22',4)});
+ const rmax=Math.max(1.25,...bins.map(b=>b.ratio===null?0:b.ratio+(b.ratio_standard_error||0)))*1.08;
+ const rp=axes('ratios',bins,rmax,'Native / Fortran');const band=svgElement('rect',{x:75,y:rp.y(1.1),width:900,height:rp.y(.9)-rp.y(1.1),fill:'#9cdbad',opacity:.45});rp.svg.appendChild(band);rp.svg.appendChild(svgElement('line',{x1:75,x2:975,y1:rp.y(1),y2:rp.y(1),stroke:'#247540','stroke-dasharray':'5 4'}));bins.forEach((b,i)=>point(rp,i,b.ratio,b.ratio_standard_error,'#193448'));
+ document.getElementById('gate').textContent=`Numerical gate: ${result.numerical_gate}; ${result.undefined_bins} undefined bins. Physics agreement requires a separate configuration and normalization audit.`;
+ const rows=document.getElementById('rows');rows.replaceChildren();bins.forEach(b=>{const tr=document.createElement('tr');[`${b.low}–${b.high}`,fmt(b.native),fmt(b.reference),fmt(b.ratio),fmt(b.ratio_standard_error),b.status].forEach(value=>{const td=document.createElement('td');td.textContent=value;tr.appendChild(td)});rows.appendChild(tr)});
+ document.getElementById('provenance').textContent=JSON.stringify({selection:data.selection,analysis_versions:data.analysis_versions,analysis_sha256:data.analysis_sha256,normalization:c.normalization,uncertainty:c.uncertainty,samples:c.samples},null,2);
+}
+function selectPair(){observable.replaceChildren();Object.keys(current().observables).forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;observable.appendChild(o)});observable.value='pt' in current().observables?'pt':observable.options[0].value;render()}
+pair.addEventListener('change',selectPair);observable.addEventListener('change',render);
+document.getElementById('download').addEventListener('click',()=>{const fields=['low','high','native','reference','ratio','ratio_standard_error','status'];const csv=fields.join(',')+'\n'+selected().bins.map(b=>fields.map(k=>b[k]===null?'':b[k]).join(',')).join('\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const a=document.createElement('a');a.href=url;a.download=`jewel-${pair.value}-${observable.value}-ratio.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});selectPair();
+</script></html>

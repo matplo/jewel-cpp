@@ -810,3 +810,10 @@ physical use for reconstructed Pythia8 histories remains under investigation.
 [MPI pair virtuality initialization](docs/validation-mpi-initialization.md) now
 preserves the source rapidity-dependent scale, MPIFSR switch and explicit
 TYPE1/TYPE2 context. MPI pair discovery and event generation remain pending.
+
+### Native/Fortran ratio report
+
+The [comparison browser](docs/jet-comparison.html) adds selectable distributions,
+native/Fortran ratios, the ±10% band and a 1,000-selected-jet gate for each sample.
+The current example uses unmatched smoke samples and does not establish physics
+agreement. [Commands, statistical treatment and limitations](docs/jet-comparison.md).
