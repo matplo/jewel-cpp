@@ -428,3 +428,10 @@ if(JEWEL_WITH_PYTHIA8)
  add_executable(jewel-run-partons app/run_partons.cpp)
  target_link_libraries(jewel-run-partons PRIVATE jewel_pythia8)
 endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME cascade-native-input-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/cascade_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-native-input.json
+  --baseline --generated --native-input)
+endif()

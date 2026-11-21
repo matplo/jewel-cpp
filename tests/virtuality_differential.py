@@ -22,6 +22,13 @@ for nf,q0,lps,lqcd,boost,scale in [(3,1,.2,.2,0,1),(5,1.5,.25,.18,1,1.2)]:
      energy=math.sqrt(momentum*momentum+mass*mass)
      values=[momentum,0,0,energy,mass,pdg,x,0,z,t]
      commands.append('NORAD\n'+' '.join(format(x,'.17g') for x in values)+'\n');labels.append('no-initial-radiation')
+ # Source returns finite values despite its transient 0/0 at zero shat.
+ for pdg in [1,-1,21]:
+  threshold=q0/scale
+  for energy in [0,.1,math.nextafter(threshold,0),threshold,math.nextafter(threshold,math.inf),10]:
+   for x,z,t in [(0,0,0),(2,0,0),(0,1,1),(0,-1,1),(0,2,1)]:
+    values=[energy,0,0,energy,0,pdg,x,0,z,t]
+    commands.append('NORAD\n'+' '.join(format(x,'.17g') for x in values)+'\n');labels.append('zero-invariant-no-radiation')
  payload=base+''.join(commands);rows=[]
  for exe in [cpp,reference]:
   result=subprocess.run([exe],input=payload,text=True,capture_output=True)

@@ -377,7 +377,8 @@ preserved. Undefined zero-denominator decisions and retry exhaustion throw.
 medium, average scatterer and rate grids. It preserves the reference quark/gluon
 colour factors and raw return convention, including −1 for a gluon with zero
 total cross section (versus 1 for a quark). Values are not clipped to [0,1].
-Undefined scattering invariants throw rather than propagate NaNs.
+Zero scattering invariants preserve the source's finite energy-cutoff or
+zero-cross-section return; negative invariants throw.
 
 [Validation](docs/validation-virtuality.md) covers increasing/decreasing scales,
 all angular-ordering modes, initial/final updates, retained metadata, different
@@ -629,3 +630,10 @@ references. It does not yet hadronize the evolved state.
 record 20/20 accepted vacuum attempts and 16/20 medium attempts. The four medium
 failures remain unresolved and are counted explicitly; these smoke tests are
 not a passing full-event comparison with JEWEL.
+
+### Native medium replay correction
+
+Exact initialized-state replay exposed and fixed a zero-invariant branch in
+GETPNORAD1. The same 20-attempt medium sample now accepts 18 events. The two
+remaining failures also produce nonfinite states in guarded Fortran replay;
+other cascade mismatches remain open. See [replay evidence and limitations](docs/validation-native-replay.md).

@@ -140,23 +140,25 @@ int main() {
     }
     for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
      <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
-   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE") {
+   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE"||op=="NCASCADE") {
     if(!rates||!transfers||!branching)throw std::runtime_error("coherent models required");
     jewel::CoherentConfig config;config.lifetime=evolution_config.lifetime;config.cross_section_scale=evolution_config.cross_section_scale;
     config.collision.cutoff=evolution_config.cutoff;config.collision.mass_scale=evolution_config.mass_scale;
     int enabled;std::size_t selected;double now,left,angle,split_time;
-    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
+    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE"||op=="NCASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
     std::cin>>selected>>enabled>>now>>left>>angle>>split_time>>config.length_factor>>config.collision.kinematic_mode>>state.colour_max>>state.weight>>history.last;
     config.enabled=enabled;history.first=1;int retry_initial=0;double coherence_rejection=1;
     if(op!="COHERENT")std::cin>>retry_initial>>coherence_rejection;
-    std::array<std::array<jewel::ParticleId,2>,5> links;
-    for(int i=0;i<5;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,ao;
+    std::size_t input_count=5;if(op=="NCASCADE")std::cin>>input_count;
+    if(input_count<2||input_count>22990)throw std::runtime_error("invalid native record count");
+    std::vector<std::array<jewel::ParticleId,2>> links(input_count);
+    for(std::size_t i=0;i<input_count;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,ao;
      std::cin>>p.status>>p.pdg>>s.parent>>links[i][0]>>links[i][1]>>p.momentum.px>>p.momentum.py>>p.momentum.pz>>p.momentum.energy>>s.record_mass
       >>s.generator_vertex.x>>s.generator_vertex.y>>s.generator_vertex.z>>s.generator_vertex.t>>p.production.x>>p.production.y>>p.production.z>>p.production.t>>s.decay_time
       >>s.fraction>>s.angle>>qp>>ao>>p.colour>>p.anticolour>>s.evolution_time;
      s.quark_pair=qp;s.angular_required=ao;state.append(s);
     }
-    for(int i=0;i<5;++i)state.at(i+1).daughters=links[i];
+    for(std::size_t i=0;i<input_count;++i)state.at(i+1).daughters=links[i];
     if(op=="CCASCADE"){
      std::size_t padding;std::cin>>padding;if(padding>22995)throw std::runtime_error("invalid compression padding");
      jewel::ShowerParticle retired;retired.particle.status=13;
@@ -176,6 +178,7 @@ int main() {
     if(count==-1)std::cin>>seed;else{tape.resize(count);for(auto& v:tape)std::cin>>v;}
     if(!std::cin)throw std::runtime_error("bad coherent input");
     jewel::ReplayRandom replay(std::move(tape));jewel::SplitMixRandom generated(seed);
+    if(op=="NCASCADE"){std::uint64_t offset;std::cin>>offset;if(!std::cin||count!=-1)throw std::runtime_error("invalid native random offset");generated.restore(offset);}
     jewel::Random& random=count==-1?static_cast<jewel::Random&>(generated):static_cast<jewel::Random&>(replay);
     auto checkpoint=[&]{return count==-1?generated.checkpoint():replay.checkpoint();};jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
     jewel::InitialScatteringResult initial_result;initial_result.selected=selected;
@@ -188,7 +191,7 @@ int main() {
        initial_result=evolution.sample(state,selected,1,history,ledger,now,left,retry_initial,random,&histograms);result.selected=initial_result.selected;
       }else{
        jewel::ScatteringEvolution final_evolution(evolution_config,*branching,*sudakov,*final_table,*rates,*transfers);
-       jewel::Cascade cascade({evolution_config,config.collision,config.finalization,1000000,op=="CCASCADE"},evolution,final_evolution,*branching,*medium);
+       jewel::Cascade cascade({evolution_config,config.collision,config.finalization,1000000,op=="CCASCADE"||op=="NCASCADE"},evolution,final_evolution,*branching,*medium);
        if(op=="BRANCH")cascade.branch(state,selected,1,history,ledger,random,&histograms);
        else cascade.evolve(state,1,history,ledger,random,&histograms);
       }
@@ -208,7 +211,7 @@ int main() {
      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
      <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '<<s.fraction<<' '<<s.angle<<' '
      <<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time;
-     if(op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE")std::cout<<' '<<s.medium_induced;
+     if(op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE"||op=="NCASCADE")std::cout<<' '<<s.medium_induced;
      std::cout<<'\n';}
     std::cout<<history.sum.px<<' '<<history.sum.py<<' '<<history.sum.pz<<' '<<history.sum.energy<<' '<<history.sum_squared<<'\n';
     for(const auto& r:history.records)std::cout<<r.invariant<<' '<<r.momentum.px<<' '<<r.momentum.py<<' '<<r.momentum.pz<<' '<<r.momentum.energy<<' '<<r.time<<' '

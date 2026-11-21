@@ -1,0 +1,476 @@
+{
+  "scope": "identical Pythia-initialized states; guarded Fortran scheduler",
+  "executables": {
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe": "1d79bd72c2e42d3eedcfcdeb1eaea6035145bf0e08c0371eec9b57f738c4c52b",
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference": "fed054973fe39aa8850a91eb00547b3b3287c0aea1e8feebe8eaa5ef7d2ad345"
+  },
+  "guard_sha256": "e7037917cab19b08f840635c0d4065aeb67e4ddc1478f72930e36ff141e64a40",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "results": [
+    {
+      "attempt": 14,
+      "fixture_sha256": "c0d49003b1003e7cf32c2697852f06e5c377503b3db6d343f1a43a5ee52bb9c8",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          242,
+          219,
+          93,
+          3,
+          724325,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+        "returncode": 0,
+        "stderr": "1974        4.1134429057338764        7.0466267875643744     \n problem in getmass: weight> 1   1.1267686112969248      GC  0.12601342448040698        1.7473041159751876        7.0839865056081974        1.9839156108234399        1.5028742967203108     \n problem in getmass: weight> 1   1.1748608460301795      GC   9.2270346458836444E-002  0.61989899192385323        4.7209211561200046        2.7094295144055818        4.7046489896085379     \n problem in getmass: weight> 1   1.1091389730046270      GC  0.13869968662658880       0.61989899192385323        4.7209211561200046        1.8024554062119624        4.2207968969060410     \n problem in getmass: weight> 1   1.2196452898210304      GC   6.3118080348633102E-002  0.61989899192385323        4.7209211561200046        3.9608302188394116        4.7017193571424070     \n problem in getmass: weight> 1   1.0785675464935620      GC  0.16075592076145770       0.61989899192385323        4.7209211561200046        1.5551526737915284        3.8819619578795463     \n problem in getmass: weight> 1   1.0910431468389006      GC  0.15177009685934884       0.61989899192385323        4.7209211561200046        1.6472283089578876        1.2922483909194804     \n problem in getmass: weight> 1   1.1326030333951678      GC  0.12187035985611699       0.61989899192385323        4.7209211561200046        2.0513601526667835        4.6116622667098506     \n problem in getmass: weight> 1   1.2161068293415833      GC   6.5300624474941851E-002  0.61989899192385323        4.7209211561200046        3.8284473082785571        4.5448331765408883     \n problem in getmass: weight> 1   1.0117054135928003      GC  0.20757932170032162       0.61989899192385323        4.7209211561200046        1.2043588829185998        4.4918368654599643     \n problem in getmass: weight> 1   1.0215290541584383      GC  0.20090013337850349       0.61989899192385323        4.7209211561200046        1.2443993729411345        3.7426321122692627     \n GUARD_STATS            0         109\n",
+        "header": [
+          242,
+          219,
+          93,
+          3,
+          724325,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "scalar mismatch",
+      "values": 9370,
+      "mismatches": 7,
+      "examples": [
+        {
+          "row": 94,
+          "column": 16,
+          "cpp": -0.2622252372376388,
+          "reference": -0.26222523723867575
+        },
+        {
+          "row": 95,
+          "column": 16,
+          "cpp": -0.2622252372376388,
+          "reference": -0.26222523723867575
+        },
+        {
+          "row": 97,
+          "column": 5,
+          "cpp": 0.034566104140463356,
+          "reference": 0.034566104140716966
+        },
+        {
+          "row": 98,
+          "column": 16,
+          "cpp": 0.011039852752972257,
+          "reference": 0.011039852752146917
+        },
+        {
+          "row": 99,
+          "column": 16,
+          "cpp": 0.011039852752972257,
+          "reference": 0.011039852752146917
+        },
+        {
+          "row": 100,
+          "column": 16,
+          "cpp": 0.35597257780928654,
+          "reference": 0.3559725778085134
+        },
+        {
+          "row": 101,
+          "column": 16,
+          "cpp": 0.35597257780928654,
+          "reference": 0.3559725778085134
+        }
+      ],
+      "max_absolute_error": 1.7319479184152442e-12
+    },
+    {
+      "attempt": 18,
+      "fixture_sha256": "4196f37806841301116dfaf27f271212782e293eccd812da74a665ae5cfc29e2",
+      "cpp": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+        "returncode": 0,
+        "stderr": "COH_STATS 0 0 0\n",
+        "header": [
+          268,
+          228,
+          98,
+          3,
+          25567,
+          0,
+          0,
+          0
+        ]
+      },
+      "reference": {
+        "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+        "returncode": 0,
+        "stderr": " problem in getmass: weight> 1   1.2174487446221041      GC   6.4475407040811616E-002   4.4064149677495159        21.835782189526441        3.8774474093937106        10.379085844804269     \n problem in getmass: weight> 1   1.1565124176529220      GC  0.10494214086462129        4.4064149677495159        21.835782189526441        2.3822651028485113        2.3359562040005653     \n error: P_norad=   1.0002672505165964        1.3478727945769009        0.0000000000000000        1.0000000000000000        1.0250500987148818               21  0.62605952284926003     \n GUARD_STATS            0         102\n",
+        "header": [
+          268,
+          228,
+          98,
+          3,
+          25567,
+          0,
+          0,
+          0
+        ]
+      },
+      "classification": "scalar mismatch",
+      "values": 10127,
+      "mismatches": 6,
+      "examples": [
+        {
+          "row": 48,
+          "column": 5,
+          "cpp": -0.0415187696492084,
+          "reference": -0.041518769647941794
+        },
+        {
+          "row": 216,
+          "column": 15,
+          "cpp": 0.09541848028013944,
+          "reference": 0.0954184802803495
+        },
+        {
+          "row": 217,
+          "column": 15,
+          "cpp": 0.09541848028013944,
+          "reference": 0.0954184802803495
+        },
+        {
+          "row": 229,
+          "column": 15,
+          "cpp": 0.09181212043616871,
+          "reference": 0.09181212043637865
+        },
+        {
+          "row": 230,
+          "column": 15,
+          "cpp": 0.09181212043616871,
+          "reference": 0.09181212043637865
+        },
+        {
+          "row": 246,
+          "column": 6,
+          "cpp": 0.21877214302303816,
+          "reference": 0.21877214302248316
+        }
+      ],
+      "max_absolute_error": 1.2666048765375137e-12
+    }
+  ],
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ],
+        "GETPDF": [
+          6928,
+          7022
+        ],
+        "GETPDFXINTEXACT": [
+          7096,
+          7129
+        ],
+        "PDFINT": [
+          8082,
+          8135
+        ],
+        "GETPDFXINT": [
+          7027,
+          7090
+        ],
+        "PGQ": [
+          7938,
+          7942
+        ],
+        "XSECINT": [
+          8142,
+          8228
+        ],
+        "GETXSECINT": [
+          7135,
+          7241
+        ],
+        "GETSSCAT": [
+          7365,
+          7458
+        ],
+        "GETMASS": [
+          7465,
+          7625
+        ],
+        "GENERATEZ": [
+          7632,
+          7685
+        ],
+        "GETDELTAT": [
+          8423,
+          8554
+        ],
+        "REJECTSPLITTING": [
+          3688,
+          3865
+        ],
+        "MAKESPLITTING": [
+          3288,
+          3682
+        ],
+        "GETNEWMASS": [
+          5253,
+          5360
+        ],
+        "GETPNORAD1": [
+          5366,
+          5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ],
+        "MAKECASCADE": [
+          2902,
+          2942
+        ],
+        "MAKEBRANCH": [
+          2948,
+          3282
+        ],
+        "FINDVIRTUALITIES": [
+          1893,
+          2239
+        ],
+        "GETTHETAM": [
+          2303,
+          2365
+        ],
+        "ISPARTON": [
+          8690,
+          8700
+        ],
+        "ISDIQUARK": [
+          8658,
+          8671
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  }
+}

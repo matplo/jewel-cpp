@@ -90,6 +90,10 @@ double ScatteringRates::no_initial_radiation(Momentum p,double mass,int pdg,Spac
  double md=medium_.sample(v).debye_mass;
  auto average=medium_.average_scatterer(v,boost_);auto a=average.momentum;double ms=average.mass;
  double shat=ms*ms+mass*mass+2*(a.energy*p.energy-a.px*p.px-a.py*p.py-a.pz*p.pz);
+ // GETPNORAD1 forms 0/0 at a zero invariant, but its subsequent energy
+ // cutoff or GETSSCAT==0 branch returns a finite result without using UP.
+ // Preserve that observable branch result without propagating the transient NaN.
+ if(shat==0)return p.energy<q0_/scale_||pdg!=21?1:-1;
  check(shat>0,"undefined scattering invariant for radiation probability");
  double pcms2=std::pow(shat+mass*mass-ms*ms,2)/(4*shat)-mass*mass;
  double upper=4*pcms2,lower=q0_*q0_/(scale_*scale_);
