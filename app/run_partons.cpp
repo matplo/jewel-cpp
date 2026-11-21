@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_shower_input.hpp"
 #include "jewel/cascade.hpp"
+#include "input_options.hpp"
 #include "jewel/pythia8_shower_output.hpp"
 #include "jewel/pythia8_hadronizer.hpp"
 #include <filesystem>
@@ -51,19 +52,21 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--jewel-fragmentation]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--jewel-fragmentation] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
   std::filesystem::path replay_directory;
+  jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
   bool jewel_fragmentation=false;
   for(int i=5;i<argc;++i){std::string option=argv[i];
+   if(input_option(argc,argv,i,input_config))continue;
    if(option=="--jewel-fragmentation"){if(!hadronize_run)throw std::invalid_argument("fragmentation option requires jewel-run-events");jewel_fragmentation=true;}
    else if(option.rfind("--",0)==0||!replay_directory.empty())throw std::invalid_argument("unknown or repeated runner option");
    else replay_directory=option;
   }
   if(!replay_directory.empty()&&!std::filesystem::create_directory(replay_directory))throw std::runtime_error("replay directory must be new");
-  jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);jewel::Pythia8Input input(input_config);
+  jewel::Pythia8Input input(input_config);
   std::unique_ptr<jewel::Pythia8Hadronizer> hadronizer;
   if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14});
   jewel::Kernels kernels;jewel::MediumConfig medium_config;medium_config.max_rapidity=2;jewel::ExpandingMedium medium(medium_config);

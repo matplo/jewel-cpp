@@ -665,3 +665,9 @@ fragmentation overrides in `jewel-run-events`, including probability-to-ratio
 conversion for vector mesons. [Mapping, tests and remaining configuration gaps](docs/validation-fragmentation-mapping.md)
 explain why this is not yet equivalent to Pythia6 fragmentation. Existing
 native ensemble results retain their original Monash settings.
+
+External hard-input PDFs are available with `--lhapdf SET/MEMBER`, together
+with explicit `--hard-alpha-s VALUE --hard-alpha-s-order ORDER`. These options
+work in the hard-input, parton and hadronized runners. [CT14nlo validation and
+runtime setup](docs/validation-external-pdf.md) record deterministic hard-event
+checks, plugin/grid provenance and the remaining coupling-comparison limits.

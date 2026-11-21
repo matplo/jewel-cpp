@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_input.hpp"
 #include <filesystem>
+#include "input_options.hpp"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -11,11 +12,11 @@ unsigned long argument(const char* value){std::string text=value;std::size_t use
 }
 int main(int argc,char** argv){
  try{
-  if(argc!=4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
+  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
   auto count=argument(argv[2]),seed=argument(argv[3]);
   if(count==0||count>10000000||seed==0||seed>900000000)throw std::invalid_argument("invalid attempts or seed");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
-  jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);jewel::Pythia8Input input(config);
+  jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);for(int i=4;i<argc;++i)if(!input_option(argc,argv,i,config))throw std::invalid_argument("unknown hard-input option");jewel::Pythia8Input input(config);
   std::ofstream out(argv[1]);if(!out)throw std::runtime_error("cannot create output");out<<std::setprecision(17)<<std::boolalpha;
   out<<"{\"type\":\"run\",\"schema\":\"jewel-hard-input-v1\",\"scope\":\"adapter-only; no JEWEL shower\",\"pythia_version\":"<<input.version()<<",\"momentum_unit\":\"GeV\",\"vertex_unit\":\"mm\",\"attempts_requested\":"<<count<<",\"seed\":"<<seed<<",\"settings\":[";
   bool first=true;for(const auto& setting:input.settings()){if(!first)out<<',';first=false;out<<std::quoted(setting);}out<<"]}\n";

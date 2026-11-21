@@ -5,6 +5,13 @@
 #include <stdexcept>
 void check(bool value){if(!value)throw std::runtime_error("Pythia8 input contract failed");}
 int main(){
+ jewel::PythiaInputConfig bad;bool invalid=false;
+ bad.external_pdf="CT14nlo/0";
+ try{jewel::Pythia8Input input(bad);}catch(const std::domain_error&){invalid=true;}check(invalid);
+ bad.hard_alpha_s=.118;bad.hard_alpha_s_order=2;bad.external_pdf="CT14nlo/0\nPartonLevel:ISR = on";invalid=false;
+ try{jewel::Pythia8Input input(bad);}catch(const std::domain_error&){invalid=true;}check(invalid);
+ bad.external_pdf="";bad.hard_alpha_s_order=4;invalid=false;
+ try{jewel::Pythia8Input input(bad);}catch(const std::domain_error&){invalid=true;}check(invalid);
  jewel::PythiaInputConfig config;config.seed=2600317;
  jewel::Pythia8Input first(config),second(config);unsigned accepted=0;
  for(int i=0;i<20;++i){auto a=first.next(),b=second.next();check(a.has_value()==b.has_value());if(!a)continue;++accepted;

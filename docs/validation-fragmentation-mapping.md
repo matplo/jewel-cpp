@@ -88,7 +88,7 @@ option 13 as **NNPDF2.3 QCD+QED LO**, not the same set.
 | Coupling from PDF | Modified Pythia6 reads PDF metadata with PDFALPHAS fallback | Pythia8 tune's process coupling | Inspect actual initialization output; PDFALPHAS alone does not prove equality |
 
 The existing installed Pythia8 prefix contains its LHAPDF6 plugin, and CT14nlo
-is installed, so a common external PDF is technically available. Its use and
-coupling configuration have not yet been implemented or validated by the native
-input adapter. No full-generator sample with these mismatches is labelled
+is installed, so a common external PDF is technically available. A subsequent [external-PDF milestone](validation-external-pdf.md) implements
+explicit selection and coupling controls, with CT14nlo integration checks.
+The legacy hard-process coupling prescription still needs comparison. No full-generator sample with these mismatches is labelled
 “same settings” in the report.

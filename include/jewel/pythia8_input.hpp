@@ -10,6 +10,10 @@ struct PythiaInputConfig {
  std::string xml_directory;
  double ecm{5020},pt_min{20},pt_max{100};
  int seed{260000},pdf_set{13},pp_tune{14};
+ // External set/member, e.g. CT14nlo/0. Requires an explicit hard coupling policy.
+ std::string external_pdf;
+ std::optional<double> hard_alpha_s;
+ std::optional<int> hard_alpha_s_order;
 };
 struct GeneratorParticle {
  ParticleId id{};

@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iomanip>
 #include <sstream>
+#include <regex>
 #include <stdexcept>
 #include <unordered_set>
 namespace jewel {
@@ -34,15 +35,22 @@ struct Pythia8Input::Impl {
  explicit Impl(const PythiaInputConfig& c):engine(c.xml_directory.empty()?JEWEL_PYTHIA8_XML:c.xml_directory,false){
   require(std::isfinite(c.ecm)&&std::isfinite(c.pt_min)&&std::isfinite(c.pt_max)&&c.ecm>0&&c.pt_min>0&&c.pt_max>c.pt_min&&2*c.pt_min<c.ecm,"invalid hard-process energy range");
   require(c.seed>0&&c.seed<=900000000,"Pythia seed must be between 1 and 900000000");
-  require(c.pdf_set==13&&c.pp_tune==14,"only explicitly validated PDF 13 and tune 14 are supported in this adapter milestone");
+  require(c.pdf_set==13&&c.pp_tune==14,"base tune 14 and internal PDF 13 are required; use external_pdf for an LHAPDF override");
+  require(c.external_pdf.empty()||std::regex_match(c.external_pdf,std::regex("[A-Za-z0-9_-]+/[0-9]+")),"external PDF requires set/member with no whitespace");
+  require(c.hard_alpha_s.has_value()==c.hard_alpha_s_order.has_value(),"hard alpha_s value and order must be specified together");
+  require(c.external_pdf.empty()||c.hard_alpha_s.has_value(),"external PDF requires explicit hard alpha_s and running order");
+  if(c.hard_alpha_s)require(std::isfinite(*c.hard_alpha_s)&&*c.hard_alpha_s>=.06&&*c.hard_alpha_s<=.25&&*c.hard_alpha_s_order>=0&&*c.hard_alpha_s_order<=3,"invalid hard alpha_s policy");
   settings={"Tune:pp = 14","Beams:idA = 2212","Beams:idB = 2212","Beams:eCM = "+number(c.ecm),
    "HardQCD:all = on","PhaseSpace:pTHatMin = "+number(c.pt_min),"PhaseSpace:pTHatMax = "+number(c.pt_max),
-   "PDF:pSet = 13","HadronLevel:all = off","PartonLevel:FSR = off","PartonLevel:ISR = off","PartonLevel:MPI = off",
+   "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off","PartonLevel:ISR = off","PartonLevel:MPI = off",
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
+  if(c.hard_alpha_s){settings.push_back("SigmaProcess:alphaSvalue = "+number(*c.hard_alpha_s));settings.push_back("SigmaProcess:alphaSorder = "+std::to_string(*c.hard_alpha_s_order));}
   for(const auto& setting:settings)if(!engine.readString(setting))throw std::runtime_error("Pythia rejected setting: "+setting);
   if(!engine.init())throw std::runtime_error("Pythia input initialization failed");
+  if(c.hard_alpha_s)require(engine.settings.parm("SigmaProcess:alphaSvalue")==*c.hard_alpha_s&&engine.settings.mode("SigmaProcess:alphaSorder")==*c.hard_alpha_s_order,"Pythia changed explicit hard coupling settings");
+  if(!c.external_pdf.empty())require(engine.settings.word("PDF:pSet")=="LHAPDF6:"+c.external_pdf,"Pythia changed explicit external PDF");
  }
 };
 Pythia8Input::Pythia8Input(PythiaInputConfig config):impl_(std::make_unique<Impl>(config)){}
