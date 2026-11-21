@@ -2,7 +2,7 @@ import hashlib,json,math,subprocess,sys
 from pathlib import Path
 cpp,reference,output=sys.argv[1:]
 commands=[];labels=[]
-for nf,q0,lam,emax,scale,boost in [(3,1,.2,50,1,0),(5,1.5,.25,100,1,1),(0,.8,.15,20,2,0),(3,1,.2,6500,1,1)]:
+for nf,q0,lam,emax,scale,boost in [(3,1,.2,50,1,0),(5,1.5,.25,100,1,1),(0,.8,.15,20,2,0),(3,1,.2,6500,1,1),(3,1,.2,1.5*150*math.cosh(2),1,0)]:
  commands.append(f'CONFIG\n208 {nf} 1 .4 .59 .17 .17 .54 6.199999809265137 3 2 .45 1\n')
  commands.append(f'RCONFIG\n{nf} {q0} {lam} {emax} {scale} {boost}\nRTABLE\n');labels+=['table']*1000
  for c in ['QQ','QG','GG','GC','GQ']:

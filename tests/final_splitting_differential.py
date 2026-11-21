@@ -11,7 +11,7 @@ def compare(name,actual,expected):
    g['outside_tolerance']+=1
    if len(failures)<30:failures.append(dict(group=name,index=i,cpp=x,fortran=y))
 with tempfile.TemporaryDirectory() as tmp:
- for nf,q0,lam,emax,boost in [(3,1,.2,50,0),(5,1.5,.25,200,1)]:
+ for nf,q0,lam,emax,boost in [(3,1,.2,50,0),(5,1.5,.25,200,1),(3,1,.2,1.5*150*math.cosh(2),0)]:
   base=f'CONFIG\n208 {nf} 1 .4 .59 .17 .17 .54 6.199999809265137 0 2 .45 1\nFCONFIG\n{nf} {q0} {lam} {emax} 1 {boost}\n'
   queries=[]
   for c in ['QQ','QG','GG','GC']:

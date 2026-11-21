@@ -3,8 +3,8 @@ import hashlib,json,math,subprocess,sys,tempfile
 from pathlib import Path
 cpp,reference,output=sys.argv[1:];reports=[];failures=[];values=0;maximum=0
 with tempfile.TemporaryDirectory() as directory:
- for table_b,boost in [(0,0),(7,1)]:
-  base=f'CONFIG\n208 3 1 .4 .59 .17 .17 .54 6.199999809265137 {table_b} 2 .45 1\nXCONFIG\n3 1 .2 .2 100 1 {boost}\n'
+ for table_b,boost,energy in [(b,boost,e) for b,boost in [(0,0),(7,1)] for e in [100,1.5*150*math.cosh(2),2510]]:
+  base=f'CONFIG\n208 3 1 .4 .59 .17 .17 .54 6.199999809265137 {table_b} 2 .45 1\nXCONFIG\n3 1 .2 .2 {energy:.17g} 1 {boost}\n'
   results=[]
   for exe in [cpp,reference]:
    before=Path(directory)/(Path(exe).name+'.before');after=Path(directory)/(Path(exe).name+'.after')
@@ -21,13 +21,13 @@ with tempfile.TemporaryDirectory() as directory:
    result=subprocess.run([exe],input=payload,text=True,capture_output=True,timeout=90)
    if result.returncode:raise RuntimeError((exe,result.stderr[-1000:]))
    assert before.read_bytes()==after.read_bytes(),'event geometry rebuilt initialized tables'
-   reports.append(dict(executable=Path(exe).name,table_b=table_b,boost=boost,
+   reports.append(dict(executable=Path(exe).name,table_b=table_b,boost=boost,table_energy_gev=energy,
      unchanged_table_sha256=hashlib.sha256(before.read_bytes()).hexdigest()))
    results.append([float(v) for v in result.stdout.split()])
   a,b=results;assert len(a)==len(b)
   for i,(x,y) in enumerate(zip(a,b)):
    values+=1;maximum=max(maximum,abs(x-y))
-   if not math.isfinite(x) or not math.isfinite(y) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13):failures.append(dict(table_b=table_b,index=i,cpp=x,reference=y))
+   if not math.isfinite(x) or not math.isfinite(y) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13):failures.append(dict(table_b=table_b,table_energy_gev=energy,index=i,cpp=x,reference=y))
 report=dict(scope='event-local medium/rates after frozen initialization tables',values=values,max_absolute_error=maximum,
  failures=failures,reports=reports,relative_tolerance=2e-12,absolute_tolerance=2e-13,
  sources=json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),

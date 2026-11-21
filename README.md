@@ -677,3 +677,10 @@ centrality interval in percent. Event records carry their impact parameter,
 centrality fraction and lifetime. [Geometry validation](docs/validation-event-geometry.md)
 checks event-local medium/rate updates against Fortran while retaining the
 initialized numerical tables. Omit the option to retain fixed b=0 behavior.
+
+Use `--table-energy jewel` to compute the table initialization scale with JEWEL
+2.6.0's EOVEST prescription, or `--table-energy GEV` for an explicit positive
+scale. Omission preserves the earlier 100 GeV setting. All four table families,
+run metadata and replay fixtures use the same value. See
+[table-energy validation](docs/validation-table-energy.md) for reference checks
+and the remaining strict cascade mismatch.
