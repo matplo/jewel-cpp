@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/scattering.hpp"
+#include "jewel/branching.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -14,6 +15,7 @@ int main() {
  std::unique_ptr<jewel::FinalSplittingTable> final_table;
  std::unique_ptr<jewel::PartonicPdf> pdf;
  std::unique_ptr<jewel::ScatteringRates> rates;
+ std::unique_ptr<jewel::BranchingSampler> branching;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -32,7 +34,24 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="XCONFIG") {
+   if(op=="BCONFIG") {
+    jewel::Kernels k;double q0,pt;int angular;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>pt>>angular))throw std::runtime_error("invalid branching config");
+    branching=std::make_unique<jewel::BranchingSampler>(k,q0,pt,angular);
+   } else if(op=="MASS"||op=="FRACTION") {
+    if(!branching)throw std::runtime_error("BCONFIG required");
+    std::string name;double a,b,c,energy=0,maxmass=0;int initial=0;
+    std::cin>>name>>a>>b>>c;if(op=="MASS")std::cin>>energy>>maxmass>>initial;
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("invalid replay length");
+    std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
+    jewel::ReplayRandom random(tape);jewel::Channel channel;
+    if(name=="QQ")channel=jewel::Channel::QQ;else if(name=="GC")channel=jewel::Channel::GC;
+    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else throw std::runtime_error("invalid branching channel");
+    if(op=="MASS") {
+     auto result=branching->mass(a,b,c,energy,channel,maxmass,initial!=0,random);
+     std::cout<<result.mass<<' '<<result.fraction.value_or(-1)<<' '<<int(result.quark_pair.value_or(false))<<' '<<random.checkpoint()<<'\n';
+    } else std::cout<<branching->fraction(a,b,c,channel,random)<<' '<<random.checkpoint()<<'\n';
+   } else if(op=="XCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>k.lambda_scattering>>emax>>scale>>boost))throw std::runtime_error("bad rate configuration");
     rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);
@@ -122,7 +141,24 @@ int main() {
     if(!(std::cin>>count)||count>100000) throw std::runtime_error("invalid replay size");
     std::vector<double> tape(count); for(double& r:tape) if(!(std::cin>>r)) throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="XCONFIG") {
+    if(op=="BCONFIG") {
+    jewel::Kernels k;double q0,pt;int angular;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>pt>>angular))throw std::runtime_error("invalid branching config");
+    branching=std::make_unique<jewel::BranchingSampler>(k,q0,pt,angular);
+   } else if(op=="MASS"||op=="FRACTION") {
+    if(!branching)throw std::runtime_error("BCONFIG required");
+    std::string name;double a,b,c,energy=0,maxmass=0;int initial=0;
+    std::cin>>name>>a>>b>>c;if(op=="MASS")std::cin>>energy>>maxmass>>initial;
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("invalid replay length");
+    std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
+    jewel::ReplayRandom random(tape);jewel::Channel channel;
+    if(name=="QQ")channel=jewel::Channel::QQ;else if(name=="GC")channel=jewel::Channel::GC;
+    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else throw std::runtime_error("invalid branching channel");
+    if(op=="MASS") {
+     auto result=branching->mass(a,b,c,energy,channel,maxmass,initial!=0,random);
+     std::cout<<result.mass<<' '<<result.fraction.value_or(-1)<<' '<<int(result.quark_pair.value_or(false))<<' '<<random.checkpoint()<<'\n';
+    } else std::cout<<branching->fraction(a,b,c,channel,random)<<' '<<random.checkpoint()<<'\n';
+   } else if(op=="XCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>k.lambda_scattering>>emax>>scale>>boost))throw std::runtime_error("bad rate configuration");
     rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);

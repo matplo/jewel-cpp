@@ -223,3 +223,28 @@ query types or nonfinite inputs throw.
 and channel queries, including distinct coupling scales, medium boosts,
 non-unit SCALEFACM and a constant Debye-mass grid. Full transport evolution,
 colour/recoil bookkeeping and Pythia8 event integration remain outstanding.
+
+## Milestone 2a: branch candidate sampling
+
+`include/jewel/branching.hpp` provides `BranchingSampler`, translating GETMASS
+and GENERATEZ. It retains the Sudakov-overestimate veto loop, kinematic limits,
+quark/gluon branch decisions, running coupling, mode-3/4 angular vetoes and exact
+random draw ordering. `mass()` returns the candidate mass plus optional splitting
+fraction and quark-pair choice; accepted initial-state candidates do not assign
+these outputs in stock, so C++ represents them as absent rather than stale data.
+Empty phase space and the narrow-interval special case retain stock assignments.
+
+`fraction()` supports QQ, GG and QG and preserves the otherwise unused initial
+random draw in the QG branch. Epsilon > 0.5 returns 0.5 without consuming draws.
+Invalid square-root domains and zero epsilon throw. Replay exhaustion also
+throws, allowing a failed or unexpectedly long rejection loop to be diagnosed.
+
+All ANGORD values 0–5 are covered by replay tests. Initial-state GETMASS calls
+in stock GETNEWMASS pass theta=-1. For INS=true, positive theta and modes 3/4,
+the reference reads an uninitialized local Z; C++ rejects this undefined API
+combination. With the stock theta=-1 convention C++ skips that unused angular
+expression and reproduces the observable result and draw sequence.
+
+[Branching validation](docs/validation-branching.md) covers 3,168 replay cases.
+This implements branch candidates, not yet the event-tree update, transport
+scheduler, colour assignment or complete shower evolution.

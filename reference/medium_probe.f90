@@ -51,6 +51,10 @@ program mediumprobe
  double precision getxsecint,getsscat,pmass,lower
  integer rate_mode
  character incoming,outgoing
+ double precision ptfac,getmass,generatez,zdec,angle,maxmass
+ common /ALPHASFAC/ ptfac
+ integer initial_flag
+ logical qqbardec
  character(20) op
  logfid=0
  logfid2=0
@@ -180,6 +184,26 @@ program mediumprobe
    read(*,*) px,py,pz,energy,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode
    v=getsscat(energy,px,py,pz,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode)
    write(*,'(ES26.17E3)')v
+  case('BCONFIG')
+   read(*,*) knf,q0,lps,ptfac,angord
+  case('MASS')
+   read(*,*) channel,x,y,angle,energy,maxmass,initial_flag
+   read(*,*) count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   zdec=-1.d0
+   qqbardec=.false.
+   v=getmass(x,y,angle,energy,channel,maxmass,initial_flag/=0,zdec,qqbardec)
+   write(*,'(2ES26.17E3,1X,I0,1X,I0)')v,zdec,merge(1,0,qqbardec),cursor
+  case('FRACTION')
+   read(*,*) channel,x,y,z
+   read(*,*) count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   v=generatez(x,y,z,channel)
+   write(*,'(ES26.17E3,1X,I0)')v,cursor
   case('CROSS')
    call calcxsection
    do i=1,200
