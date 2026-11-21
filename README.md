@@ -786,3 +786,8 @@ ISR-off.
 The core now includes the [backward ISR production-time calculation](docs/validation-isr-times.md),
 validated against the unedited JEWEL timing block. Connecting actual Pythia8
 ancestry and non-hard-parton virtualities remains outstanding.
+
+[Actual ISR ancestry mapping](docs/validation-isr-ancestry.md) now identifies
+both incoming chains and reconstructs stage-local spacelike branch momenta.
+Recoil-frame and coordinate transport remain separate work before timing
+integration; signed spacelike energies are preserved.

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_input.hpp"
+#include "jewel/pythia8_isr.hpp"
 #include "jewel/pythia8_shower_input.hpp"
 #include <cmath>
 #include <stdexcept>
@@ -13,7 +14,7 @@ int main(){
  bad.external_pdf="";bad.hard_alpha_s_order=4;invalid=false;
  try{jewel::Pythia8Input input(bad);}catch(const std::domain_error&){invalid=true;}check(invalid);
  for(bool isr:{false,true}){
- jewel::PythiaInputConfig config;config.seed=2600317;config.initial_state_radiation=isr;unsigned emission_count=0;
+ jewel::PythiaInputConfig config;config.seed=2600317;config.initial_state_radiation=isr;unsigned emission_count=0,negative_energy_count=0;
  jewel::Pythia8Input first(config),second(config);unsigned accepted=0;
  for(int i=0;i<20;++i){auto a=first.next(),b=second.next();check(a.has_value()==b.has_value());if(!a)continue;++accepted;
   check(a->process_code==b->process_code&&a->weight==b->weight&&a->particles.size()==b->particles.size());
@@ -26,6 +27,15 @@ int main(){
   check(a->isr_emissions==b->isr_emissions&&a->isr_final==b->isr_final);
   emission_count+=a->isr_emissions.size();
   if(isr){
+   auto chains=jewel::map_pythia_isr_ancestry(*a);unsigned branches=0;
+   for(std::size_t side=0;side<2;++side){const auto& chain=chains[side];
+    check(chain.hard_incoming==a->hard_incoming[side]&&chain.backward_lines.front()==chain.hard_incoming);
+    check(std::abs(a->particles[chain.beam-1].status)==12);branches+=chain.branches.size();
+    for(const auto& branch:chain.branches){check(branch.virtuality_squared>0&&std::isfinite(branch.spacelike_daughter.energy));negative_energy_count+=branch.spacelike_daughter.energy<0;}
+   }
+   check(branches==a->isr_emissions.size());
+   auto malformed=*a;malformed.particles[chains[0].beam-1].daughters.clear();bool bad_chain=false;
+   try{jewel::map_pythia_isr_ancestry(malformed);}catch(const std::domain_error&){bad_chain=true;}check(bad_chain);
    std::array<double,4> total{};
    for(const auto& p:a->particles)if(p.final){total[0]+=p.momentum.px;total[1]+=p.momentum.py;total[2]+=p.momentum.pz;total[3]+=p.momentum.energy;}
    for(int j=0;j<3;++j)check(std::abs(total[j])<1e-8*config.ecm);
@@ -57,5 +67,6 @@ int main(){
  auto s=first.statistics();check(accepted>0&&s.attempts==20&&s.returned==accepted&&s.failed==20-accepted);
  check(s.sigma_mb>0&&std::isfinite(s.sigma_error_mb));
  check(isr?emission_count>0:emission_count==0);
+ if(isr)check(negative_energy_count>0);
  }
 }

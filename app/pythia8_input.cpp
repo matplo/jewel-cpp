@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_input.hpp"
+#include "jewel/pythia8_isr.hpp"
 #include <filesystem>
 #include "input_options.hpp"
 #include <fstream>
@@ -34,6 +35,15 @@ int main(int argc,char** argv){
    const auto& e=*event;
    out<<"{\"type\":\"event\",\"attempt\":"<<e.attempt<<",\"process_code\":"<<e.process_code<<",\"weight\":"<<e.weight<<",\"pt_hat\":"<<e.pt_hat<<",\"x1\":"<<e.x1<<",\"x2\":"<<e.x2<<",\"incoming_id1\":"<<e.incoming_id1<<",\"incoming_id2\":"<<e.incoming_id2<<",\"q_factorization\":"<<e.q_factorization<<",\"q_renormalization\":"<<e.q_renormalization<<",\"hard_incoming\":";list(out,e.hard_incoming);out<<",\"hard_outgoing\":";list(out,e.hard_outgoing);out<<",\"hard_final\":";list(out,e.hard_final);
    out<<",\"initial_state_radiation\":"<<e.initial_state_radiation<<",\"isr_emissions\":";list(out,e.isr_emissions);out<<",\"isr_final\":";list(out,e.isr_final);
+   out<<",\"isr_chains\":[";
+   if(e.initial_state_radiation){auto chains=jewel::map_pythia_isr_ancestry(e);bool first_chain=true;
+    for(const auto& chain:chains){if(!first_chain)out<<',';first_chain=false;
+     out<<"{\"hard_incoming\":"<<chain.hard_incoming<<",\"beam\":"<<chain.beam<<",\"backward_lines\":";list(out,chain.backward_lines);out<<",\"branches\":[";bool first_branch=true;
+     for(const auto& b:chain.branches){if(!first_branch)out<<',';first_branch=false;
+      out<<"{\"mother\":"<<b.mother<<",\"daughter\":"<<b.daughter<<",\"emitted\":"<<b.emitted<<",\"emitted_final\":"<<b.emitted_final<<",\"virtuality_squared\":"<<b.virtuality_squared<<",\"spacelike_daughter\":";
+      list(out,std::array<double,4>{b.spacelike_daughter.px,b.spacelike_daughter.py,b.spacelike_daughter.pz,b.spacelike_daughter.energy});out<<'}';}
+     out<<"]}";}
+   }out<<']';
    out<<",\"particles\":[";first=true;
    for(const auto& p:e.particles){if(!first)out<<',';first=false;
     out<<"{\"id\":"<<p.id<<",\"source_index\":"<<p.source_index<<",\"pdg\":"<<p.pdg<<",\"status\":"<<p.status<<",\"final\":"<<p.final<<",\"colour\":"<<p.colour<<",\"anticolour\":"<<p.anticolour<<",\"momentum\":";list(out,std::array<double,4>{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy});
