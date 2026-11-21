@@ -97,6 +97,18 @@ program mediumprobe
  integer seqfirst,seqlast
  logical seqretry
  logical above_cutoff
+ double precision cohlengthfac,pcohrej,decaytl,decaytsib,split_time,split_angle
+ logical cohscat,didcohscat
+ integer nbef,lbef,lsib,klbef1,klsib1,cohselected
+ common /cohparams/ cohlengthfac,pcohrej,cohscat
+ common /revertcohscat/ nbef,lbef,lsib,klbef1,klsib1,didcohscat,decaytl,decaytsib
+ double precision histot(100),histothat(100),histotacc(100),histotrej(100),histothatacc(100),histothatrej(100)
+ double precision histotcoh(100),histothatcoh(100),histotheta(100),histoz(100),histomass(100),histotau(100)
+ double precision tmin,timax,thatmin,thatmax,thetamin,thetamax,zmin,zmax,massmin,massmax,taumin,taumax
+ integer ntbins,nthatbins,ntbinsaccrej,nthatbinsaccrej,nthetabins,nzbins,nmassbins,ntaubins
+ common /histograms/ histot,histothat,histotacc,histotrej,histothatacc,histothatrej,histotcoh,histothatcoh, &
+ histotheta,histoz,histomass,histotau,tmin,timax,thatmin,thatmax,thetamin,thetamax,zmin,zmax,massmin,massmax,taumin,taumax, &
+ ntbins,nthatbins,ntbinsaccrej,nthatbinsaccrej,nthetabins,nzbins,nmassbins,ntaubins
  character(20) op
  logfid=0
  logfid2=0
@@ -308,6 +320,49 @@ program mediumprobe
    do i=1,maxnscatcen
     write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
    enddo
+  case('COHERENT')
+   read(*,*)cohselected,cohflag,nowtime,lefttime,split_angle,split_time,cohlengthfac,kinmode,colmax,evweight,nend
+   cohscat=cohflag/=0
+   n=5;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.;starttime=0;medind=.false.
+   mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0;discard=.false.;nstart=1
+   do i=1,5
+    read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
+    qqbard(i)=qflag/=0;aoreq(i)=aflag/=0
+   enddo
+   read(*,*)ftfac,recsoftcut,rechardcut,hadflag,scatflag,recmode,writeflag,subflag,maxnscatcen
+   allhad=hadflag/=0;scatrecoil=scatflag/=0;writescatcen=writeflag/=0;dosubtraction=subflag/=0
+   nscatcen=0;scatflav=-99
+   do j=1,5
+    scatcen(:,j)=dble(j);dummies(:,j)=dble(j+5)
+   enddo
+   allqs=0;scatcentres=0;qsumvec=0;qsum2=0
+   do i=1,nend
+    read(*,*)allqs(i,:),scatcentres(i,:)
+    qsumvec=qsumvec+allqs(i,2:5);qsum2=qsum2+allqs(i,1)
+   enddo
+   histotcoh=0;histothatcoh=0;tmin=0;timax=100;thatmin=0;thatmax=100;ntbinsaccrej=100;nthatbinsaccrej=100
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   call docohscattering(cohselected,nowtime,lefttime,split_angle,split_time)
+   initial_flag=merge(0,1,all(ieee_is_finite(p(1:n,:))).and.all(ieee_is_finite(mv(1:n,:))).and. &
+    all(ieee_is_finite(zd(1:n))).and.all(ieee_is_finite(thetad(1:n))).and. &
+    all(ieee_is_finite(scatcen(1:maxnscatcen,:))).and.all(ieee_is_finite(dummies(1:maxnscatcen,:))))
+   write(*,'(8I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend
+   do i=1,n
+    write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
+     merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i)
+   enddo
+   write(*,'(5ES26.17E3)')qsumvec,qsum2
+   do i=1,100
+    write(*,'(16ES26.17E3)')allqs(i,:),scatcentres(i,:)
+   enddo
+   do i=1,maxnscatcen
+    write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
+   enddo
+   write(*,'(100ES26.17E3)')histotcoh
+   write(*,'(100ES26.17E3)')histothatcoh
   case('FSTATE')
    read(*,*)nowtime,lefttime
    n=2

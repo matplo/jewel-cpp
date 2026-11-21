@@ -50,10 +50,10 @@ C++ event is marked discarded without appending a merged record. Unassigned new
 auxiliary fields are initialized to zero, matching the zeroed reference driver;
 no parity claim is made for undefined/stale Fortran auxiliary slots.
 
-This is initialization and genealogy validation, not full DOCOHSCATTERING.
-Scattering-loop orchestration, source-specific failed-kick rollback, propagation,
-final resplitting and histogram updates remain pending. Complete generator and
-final-jet validation remain open.
+This report covers initialization and genealogy. The subsequent loop, failed-kick
+rollback, propagation, final resplitting and histograms now have
+[full-routine validation](validation-coherent-evolution.md). Complete generator
+and final-jet validation remain open.
 
 ## Regression checks
 

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #pragma once
 #include "jewel/transfer.hpp"
+#include "jewel/collision.hpp"
+#include "jewel/scattering.hpp"
 namespace jewel {
 struct CoherentStart {
  bool active{},quark{},quark_pair{};
@@ -14,6 +16,25 @@ struct CoherentStart {
 // remaining intentionally retains the requested interval when duration is shortened.
 CoherentStart begin_coherent(ShowerState&,ParticleId selected,bool enabled,
  double start_time,double duration,double split_angle);
+struct CoherentHistogram {
+ double minimum{},maximum{100};int bins{100};std::array<double,100> values{};
+};
+struct CoherentHistograms {CoherentHistogram time,transfer;};
+struct CoherentConfig {
+ bool enabled{true};double length_factor{1},lifetime{20},cross_section_scale{1};
+ CollisionConfig collision;CollisionFinalizationConfig finalization;
+};
+struct CoherentResult {
+ CoherentStart initial;ParticleId selected{};
+ unsigned collision_calls{},kinematic_calls{},undone_kicks{};
+};
+// Models must share compatible run settings.
+// Full DOCOHSCATTERING orchestration. On exceptions restore/discard caller-owned
+// event, recoil, transfer and histogram state; consumed RNG is not rewound.
+CoherentResult evolve_coherent(ShowerState&,ParticleId selected,ParticleId scratch,
+ TransferHistory&,RecoilStorage&,double start,double duration,double split_angle,double split_time,
+ CoherentConfig,const ScatteringRates&,const TransferSampler&,const BranchingSampler&,
+ const Medium&,Random&,CoherentHistograms* = nullptr);
 struct CoherentResolution {
  double transverse_transfer{}, separation{}, threshold{};
  bool resolved{};

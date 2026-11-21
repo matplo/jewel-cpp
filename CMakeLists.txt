@@ -276,3 +276,15 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/coherent_start_differential.py $<TARGET_FILE:jewel-coherent-start-probe>
   $<TARGET_FILE:jewel-coherent-start-reference> ${CMAKE_BINARY_DIR}/coherent-start-validation.json)
 endif()
+
+target_sources(jewel_core PRIVATE src/coherent_evolution.cpp)
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME coherent-evolution-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/coherent_evolution_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/coherent-evolution-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(coherent-evolution-test tests/coherent_evolution.cpp)
+ target_link_libraries(coherent-evolution-test PRIVATE jewel_core)
+ add_test(NAME coherent-evolution-contracts COMMAND coherent-evolution-test)
+endif()

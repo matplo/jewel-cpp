@@ -5,6 +5,7 @@
 #include "jewel/transfer.hpp"
 #include "jewel/evolution.hpp"
 #include "jewel/collision.hpp"
+#include "jewel/coherence.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -136,6 +137,52 @@ int main() {
     }
     for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
      <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
+   } else if(op=="COHERENT") {
+    if(!rates||!transfers||!branching)throw std::runtime_error("coherent models required");
+    jewel::CoherentConfig config;config.lifetime=evolution_config.lifetime;config.cross_section_scale=evolution_config.cross_section_scale;
+    config.collision.cutoff=evolution_config.cutoff;config.collision.mass_scale=evolution_config.mass_scale;
+    int enabled;std::size_t selected;double now,left,angle,split_time;
+    jewel::ShowerState state;jewel::TransferHistory history;history.records.resize(100);
+    std::cin>>selected>>enabled>>now>>left>>angle>>split_time>>config.length_factor>>config.collision.kinematic_mode>>state.colour_max>>state.weight>>history.last;
+    config.enabled=enabled;history.first=1;
+    std::array<std::array<jewel::ParticleId,2>,5> links;
+    for(int i=0;i<5;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,ao;
+     std::cin>>p.status>>p.pdg>>s.parent>>links[i][0]>>links[i][1]>>p.momentum.px>>p.momentum.py>>p.momentum.pz>>p.momentum.energy>>s.record_mass
+      >>s.generator_vertex.x>>s.generator_vertex.y>>s.generator_vertex.z>>s.generator_vertex.t>>p.production.x>>p.production.y>>p.production.z>>p.production.t>>s.decay_time
+      >>s.fraction>>s.angle>>qp>>ao>>p.colour>>p.anticolour>>s.evolution_time;
+     s.quark_pair=qp;s.angular_required=ao;state.append(s);
+    }
+    for(int i=0;i<5;++i)state.at(i+1).daughters=links[i];
+    auto& finish=config.finalization;jewel::RecoilStorage ledger;int had,scat,write,subtract;
+    std::cin>>finish.formation_factor>>finish.soft_recoil_cut>>finish.hard_recoil_cut>>had>>scat>>finish.storage.mode>>write>>subtract>>ledger.capacity;
+    finish.hadronize_recoils=had;finish.scatter_recoils=scat;finish.storage.write_centres=write;finish.storage.subtract=subtract;
+    ledger.records.resize(ledger.capacity);for(auto& r:ledger.records)r={-99,{1,2,3,4},5,{6,7,8,9},10};
+    if(history.last>99)throw std::runtime_error("bad coherent history");
+    for(std::size_t i=0;i<history.last;++i){auto& r=history.records[i];auto& q=r.momentum;auto& a=r.scatterer.momentum;auto& x=r.position;
+     std::cin>>r.invariant>>q.px>>q.py>>q.pz>>q.energy>>r.time>>r.scatterer.type>>a.px>>a.py>>a.pz>>a.energy>>r.scatterer.mass>>x.x>>x.y>>x.z>>x.t;
+     history.sum.px+=q.px;history.sum.py+=q.py;history.sum.pz+=q.pz;history.sum.energy+=q.energy;history.sum_squared+=r.invariant;
+    }
+    std::size_t count;std::cin>>count;if(count>100000)throw std::runtime_error("bad coherent tape");
+    std::vector<double> tape(count);for(auto& v:tape)std::cin>>v;if(!std::cin)throw std::runtime_error("bad coherent input");
+    jewel::ReplayRandom random(tape);jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
+    try{result=jewel::evolve_coherent(state,selected,1,history,ledger,now,left,angle,split_time,config,*rates,*transfers,*branching,*medium,random,&histograms);state.validate();}
+    catch(const std::domain_error& e){invalid=1;std::cerr<<"COH_ERROR "<<e.what()<<'\n';}
+    catch(const std::out_of_range& e){if(std::string(e.what())!="RNG tape exhausted")throw;invalid=3;}
+    std::cerr<<"COH_STATS "<<result.collision_calls<<' '<<result.kinematic_calls<<' '<<result.undone_kicks<<'\n';
+    auto slot=[&](jewel::ParticleId id){if(!id)return std::size_t(0);for(std::size_t i=0;i<state.particles().size();++i)if(state.particles()[i].particle.id==id)return i+1;throw std::runtime_error("dangling coherent ID");};
+    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<random.checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last<<'\n';
+    for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(s.parent)<<' '<<slot(s.daughters[0])<<' '<<slot(s.daughters[1])<<' '
+     <<p.momentum.px<<' '<<p.momentum.py<<' '<<p.momentum.pz<<' '<<p.momentum.energy<<' '<<s.record_mass<<' '
+     <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
+     <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '<<s.fraction<<' '<<s.angle<<' '
+     <<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time<<'\n';}
+    std::cout<<history.sum.px<<' '<<history.sum.py<<' '<<history.sum.pz<<' '<<history.sum.energy<<' '<<history.sum_squared<<'\n';
+    for(const auto& r:history.records)std::cout<<r.invariant<<' '<<r.momentum.px<<' '<<r.momentum.py<<' '<<r.momentum.pz<<' '<<r.momentum.energy<<' '<<r.time<<' '
+     <<r.scatterer.type<<' '<<r.scatterer.momentum.px<<' '<<r.scatterer.momentum.py<<' '<<r.scatterer.momentum.pz<<' '<<r.scatterer.momentum.energy<<' '<<r.scatterer.mass<<' '
+     <<r.position.x<<' '<<r.position.y<<' '<<r.position.z<<' '<<r.position.t<<'\n';
+    for(const auto& r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
+     <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
+    for(const auto& h:{histograms.time,histograms.transfer}){for(auto value:h.values)std::cout<<value<<' ';std::cout<<'\n';}
    } else if(op=="FSTATE") {
     if(!branching||!sudakov||!final_table||!rates||!transfers)throw std::runtime_error("evolution models required");
     double now,left;std::cin>>now>>left;

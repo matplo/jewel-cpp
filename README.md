@@ -550,3 +550,18 @@ and validation follows both ancestry edges.
 reference cases and all 36,270 output values. Collision descendants explicitly
 clear the second-input field, retaining their immediate origin. The coherent
 scattering loop, partial rollback and final resplitting still need integration.
+
+## Milestone 2p: complete coherent evolution
+
+`evolve_coherent()` in `jewel/coherence.hpp` connects initialization, elastic
+collision-time sampling, transfer resolution/retries, collision application,
+failed-kick rollback, daughter propagation, final resplitting and weighted
+coherent histograms. It returns the selected new daughter and saved pre-merge
+records. Callers own snapshots of event, recoil, transfer and histogram state
+for exceptions or the enclosing shower's separate coherence-reversion policy.
+
+[Full-routine validation](docs/validation-coherent-evolution.md) compares 124
+finite JEWEL reference calls and explicitly records seven nonfinite subtraction
+cases. Stored transfer momenta have a separately documented numerical tolerance;
+discrete fields and random-draw counts agree exactly in the finite cases.
+Initial-state evolution and complete shower/Pythia8 integration remain pending.
