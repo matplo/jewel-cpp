@@ -414,3 +414,29 @@ transfer history. No automatic history rollback is implied by ShowerSnapshot.
 directions, accumulated/recalculated transfers and the retry-limit fallback.
 This supplies transfer candidates; DOCOHSCATTERING, collision application,
 recoil/colour construction and full transport scheduling remain unfinished.
+
+
+## Milestone 2h: final-state scattering sequence
+
+`ScatteringEvolution::final_state()` in `jewel/evolution.hpp` translates
+DOFISTATESCAT. It combines collision-time sampling, momentum-transfer history,
+virtuality updates and formation-time accumulation. `EvolutionConfig` supplies
+Q0, SCALEFACM, FTFAC, plasma lifetime and the cross-section multiplier; the
+referenced numerical models must outlive the evolution object and use matching
+settings. This interface operates on an existing first transfer.
+
+`TransferHistory::first/last` carry the one-based active NSTART/NEND range;
+allocated records outside that range can retain rejected candidates as in stock.
+The return value contains elapsed time, candidate mass, fraction, pair flag and
+above-cutoff flag. The same initial lifetime draw is reused through the sequence,
+and the final 1/N rejection and collapse-to-first-transfer conventions are
+preserved. The source's 100-transfer limit is distinct from GETQVEC's storage
+limit. A one-million-iteration guard catches non-converging input.
+
+The operation updates transfer history and scratch records, but does not apply
+those kicks to outgoing particles or build recoils. It may retain branch metadata
+when restoring the old mass; callers must use the complete returned state.
+Rollback must include both the event and transfer history. See
+[validation](docs/validation-final-scattering.md) for whole-sequence comparisons.
+DOKINEMATICS, initial-state/coherent evolution, complete shower scheduling and
+Pythia8 event integration remain outstanding.

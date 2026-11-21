@@ -3,6 +3,7 @@
 #include "jewel/branching.hpp"
 #include "jewel/shower.hpp"
 #include "jewel/transfer.hpp"
+#include "jewel/evolution.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -19,6 +20,7 @@ int main() {
  std::unique_ptr<jewel::ScatteringRates> rates;
  std::unique_ptr<jewel::BranchingSampler> branching;
  std::unique_ptr<jewel::TransferSampler> transfers;
+ jewel::EvolutionConfig evolution_config;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -37,7 +39,42 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="QCONFIG") {
+   if(op=="ECONFIG") {
+    std::cin>>evolution_config.cutoff>>evolution_config.mass_scale>>evolution_config.formation_factor
+     >>evolution_config.lifetime>>evolution_config.cross_section_scale;
+   } else if(op=="FSTATE") {
+    if(!branching||!sudakov||!final_table||!rates||!transfers)throw std::runtime_error("evolution models required");
+    double now,left;std::cin>>now>>left;
+    jewel::ShowerState state;jewel::ShowerParticle temp,leg;temp.particle.status=13;leg.particle.status=1;
+    auto& p=leg.particle.momentum;auto& v=leg.generator_vertex;auto& birth=leg.particle.production;
+    std::cin>>p.px>>p.py>>p.pz>>p.energy>>leg.record_mass>>leg.particle.pdg>>birth.x>>birth.y>>birth.z>>birth.t>>v.x>>v.y>>v.z>>v.t;
+    auto scratch=state.append(temp),id=state.append(leg);
+    jewel::FinalScatteringResult input;int pair,above;
+    std::cin>>input.mass>>input.fraction>>pair>>above;input.quark_pair=pair!=0;input.above_cutoff=above!=0;
+    jewel::TransferHistory history;history.records.resize(100);auto& sum=history.sum;
+    std::cin>>history.first>>history.last>>sum.px>>sum.py>>sum.pz>>sum.energy>>history.sum_squared;
+    if(history.last>100)throw std::runtime_error("invalid initial transfer count");
+    for(std::size_t i=0;i<history.last;++i){
+     auto& r=history.records[i];auto& q=r.momentum;auto& a=r.scatterer.momentum;auto& x=r.position;
+     std::cin>>r.invariant>>q.px>>q.py>>q.pz>>q.energy>>r.time>>r.scatterer.type
+      >>a.px>>a.py>>a.pz>>a.energy>>r.scatterer.mass>>x.x>>x.y>>x.z>>x.t;
+    }
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("bad evolution replay");
+    std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
+    jewel::ReplayRandom random(tape);
+    jewel::ScatteringEvolution evolution(evolution_config,*branching,*sudakov,*final_table,*rates,*transfers);
+    auto result=evolution.final_state(state,id,scratch,history,now,left,input,random);
+    auto momentum=[](jewel::Momentum p){std::cout<<p.px<<' '<<p.py<<' '<<p.pz<<' '<<p.energy<<' ';};
+    auto position=[](jewel::SpaceTime x){std::cout<<x.x<<' '<<x.y<<' '<<x.z<<' '<<x.t<<' ';};
+    std::cout<<result.mass<<' '<<result.elapsed<<' '<<result.fraction<<' '<<int(result.quark_pair)<<' '
+     <<int(result.above_cutoff)<<' '<<history.first<<' '<<history.last<<' '<<random.checkpoint()<<'\n';
+    momentum(history.sum);std::cout<<history.sum_squared<<'\n';
+    const auto& out=state.at(id);momentum(out.particle.momentum);std::cout<<out.record_mass<<' ';position(out.generator_vertex);std::cout<<'\n';
+    const auto& tmp=state.at(scratch);std::cout<<tmp.particle.status<<' '<<tmp.particle.pdg<<' ';momentum(tmp.particle.momentum);
+    std::cout<<tmp.record_mass<<' ';position(tmp.generator_vertex);position(tmp.particle.production);std::cout<<'\n';
+    for(const auto& r:history.records){std::cout<<r.invariant<<' ';momentum(r.momentum);std::cout<<r.time<<' '<<r.scatterer.type<<' ';
+     momentum(r.scatterer.momentum);std::cout<<r.scatterer.mass<<' ';position(r.position);std::cout<<'\n';}
+   } else if(op=="QCONFIG") {
     jewel::Kernels k;int boost;std::cin>>k.nf>>k.lambda_shower>>k.lambda_scattering>>boost;
     transfers=std::make_unique<jewel::TransferSampler>(k,*medium,boost!=0);
    } else if(op=="TRANSFER") {

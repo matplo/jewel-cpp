@@ -101,7 +101,9 @@ MediumSample ExpandingMedium::sample(SpaceTime v) const {
  double density=0;
  if(v.t>std::abs(v.z)) {
   double tau=std::sqrt(v.t*v.t-v.z*v.z),cosheta=v.t/tau;
-  density=(2.*6*config_.nf*0.9*2/3+16.*1.2*3/2)*t*t*t/(pi*pi)/cosheta;
+  // Fortran T**3 is formed before multiplication by the species factor.
+  double cube=(t*t)*t;
+  density=(2.*6*config_.nf*0.9*2/3+16.*1.2*3/2)*cube/(pi*pi)/cosheta;
  }
  return {t,md,md/double(std::sqrt(2.f)),density};
 }
@@ -233,7 +235,10 @@ MediumBounds ExpandingMedium::bounds() const {
  double t=temperature({0,0,0,c.tau_initial});
  double mdmax=std::max(c.debye_scale*3*t,c.debye_floor),mdmin=std::max(c.debye_scale*3*c.temperature_cutoff,c.debye_floor);
  double atmin=mdmin/(c.debye_scale*3);
- auto density=[&](double temperature){return (2.*6*c.nf*.9*2/3+16.*1.2*3/2)*std::pow(temperature,3)/(pi*pi);};
+ auto density=[&](double temperature){
+  double cube=(temperature*temperature)*temperature;
+  return (2.*6*c.nf*.9*2/3+16.*1.2*3/2)*cube/(pi*pi);
+ };
  // GETMSMAX uses sqrt(2.D0), unlike local GETMS's default REAL sqrt(2.).
  return {t,mdmax,mdmin,mdmax/std::sqrt(2.),density(atmin),c.tau_initial*std::pow(t/c.temperature_cutoff,3)*std::cosh(c.max_rapidity),density(t)};
 }

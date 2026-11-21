@@ -82,6 +82,8 @@ program mediumprobe
  integer nstart,nend,recalcflag
  double precision allqs(10000,6),scatcentres(10000,10),qsumvec(4),qsum2
  common /COHERENT/ nstart,nend,allqs,scatcentres,qsumvec,qsum2
+ double precision nowtime,lefttime,newmass
+ logical above_cutoff
  character(20) op
  logfid=0
  logfid2=0
@@ -207,6 +209,45 @@ program mediumprobe
    read(*,*) channel,x,y
    v=getxsecint(x,y,channel)
    write(*,'(ES26.17E3)')v
+  case('ECONFIG')
+   read(*,*)q0,scalefacm,ftfac,ltime,xsecscalefac
+  case('FSTATE')
+   read(*,*)nowtime,lefttime
+   n=2
+   k=0
+   p=0
+   vertices=0
+   mv=0
+   mstu=0
+   mstu(4)=23000
+   paru(1)=3.141592653589793d0
+   k(1,1)=13
+   k(2,1)=1
+   discard=.false.
+   errl=2
+   allqs=0
+   scatcentres=0
+   read(*,*)p(2,:),k(2,2),mv(2,1:4),vertices(2,1:4)
+   read(*,*)newmass,zdec,qflag,aflag
+   qqbardec=qflag/=0
+   above_cutoff=aflag/=0
+   read(*,*)nstart,nend,qsumvec,qsum2
+   if(nend<1.or.nend>100)stop 5
+   do i=1,nend
+    read(*,*)allqs(i,:),scatcentres(i,:)
+   enddo
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   call dofistatescat(2,nowtime,lefttime,elapsed,newmass,above_cutoff,zdec,qqbardec)
+   write(*,'(3ES26.17E3,5I8)')newmass,elapsed,zdec,merge(1,0,qqbardec),merge(1,0,above_cutoff),nstart,nend,cursor
+   write(*,'(5ES26.17E3)')qsumvec,qsum2
+   write(*,'(9ES26.17E3)')p(2,:),vertices(2,1:4)
+   write(*,'(2I8,13ES26.17E3)')k(1,1),k(1,2),p(1,:),vertices(1,1:4),mv(1,1:4)
+   do i=1,100
+    write(*,'(16ES26.17E3)')allqs(i,:),scatcentres(i,:)
+   enddo
   case('QCONFIG')
    read(*,*)knf,lps,lqcd,boostflag
    boost=boostflag/=0

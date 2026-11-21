@@ -8,6 +8,7 @@ struct TransferRecord {
  Scatterer scatterer; SpaceTime position;
 };
 struct TransferHistory {
+ std::size_t first{},last{}; // Active one-based NSTART/NEND; zero denotes none.
  std::vector<TransferRecord> records;
  Momentum sum; double sum_squared{};
 };
