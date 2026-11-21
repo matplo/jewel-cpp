@@ -79,3 +79,11 @@ is counted as passing parity. Do not clamp or retune the physics to hide it.
 The full-generator feature and >=1000-selected-jet comparison requirements
 remain open. This work explains two failures in the small flow-enabled sample;
 it does not establish an acceptable failure rate or full JEWEL equivalence.
+
+## Follow-up: the inner nonfinite trigger is identified
+
+[Collision roundoff investigation](validation-collision-roundoff.md) now locates
+the first negative squared momentum in both engines. The previous uncertainty
+about the inner trigger is resolved for this fixture: the DOKINEMATICS fallback
+computes a tiny negative residual in `E4new**2 - m42`, then takes its square root.
+Production physics and failure accounting remain unchanged.

@@ -695,3 +695,8 @@ Set `JEWEL_CASCADE_TRACE=1` for optional branch-boundary diagnostics in the
 native probe and guarded Fortran cascade. The [flow-failure investigation](docs/validation-cascade-flow-failures.md)
 includes reproducible input fixtures, traces and their comparison. These traces
 help distinguish shared rejected events from differences introduced by the port.
+
+The [collision roundoff investigation](docs/validation-collision-roundoff.md)
+identifies a shared C++/Fortran nonfinite trigger in the flow sample. Its
+reproduction tool instruments temporary source copies and checks that event
+output remains unchanged; it does not clamp or alter the production physics.

@@ -1,0 +1,138 @@
+{
+  "scope": "diagnostic copies; no physics changes; failed event is not parity",
+  "fixture_sha256": "59139ad471ceb6da3c2b6388fd919bc99a8ed96c3d59e0743c760f806649faf4",
+  "columns": [
+    "p32",
+    "p42",
+    "e3",
+    "e4",
+    "m32",
+    "m42",
+    "shat",
+    "transfer_t",
+    "p3old"
+  ],
+  "results": [
+    {
+      "engine": "cpp",
+      "negative_collision_squares": [
+        [
+          -9.019477114474516e-19,
+          0.0,
+          0.44489742494943835,
+          0.428832100771065,
+          0.19793371872664112,
+          0.18389697065172483,
+          0.7634032841157757,
+          -0.12357783701689702,
+          0.2077579194234616
+        ]
+      ],
+      "unchanged_stdout_sha256": "078f3238a27788991c5545949a176f54a6fda23eb99cbd214ccd56b5b5120fa8",
+      "baseline_executable_sha256": "23198bb48f3f44456b45fb832e3d8be2f31e32cb7098524721ec565a76a43e1f",
+      "diagnostic_executable_sha256": "3c437248d6f55bb337e43053cfd29b4f8c387d698b623587e1df24ec10414608",
+      "exact_residual_of_rounded_operands": "-9.0194771144745157489376565177186245233935953482303643502504542E-19",
+      "separately_rounded_multiply_subtract": 0.0
+    },
+    {
+      "engine": "fortran",
+      "negative_collision_squares": [
+        [
+          -7.99235252020522e-18,
+          0.0,
+          0.4448974249494171,
+          0.4288321007710514,
+          0.19793371872662222,
+          0.18389697065171318,
+          0.7634032841157148,
+          -0.12357783701688729,
+          0.20775791942345614
+        ]
+      ],
+      "unchanged_stdout_sha256": "bee0be89614a347cb988418c10be7c6788b2929a5901ce9e24685423395de184",
+      "baseline_executable_sha256": "183549c850082bbbde7491f5f9459e64ed5b8a7a7112ffcc98c0fbaf210656d3",
+      "diagnostic_executable_sha256": "94b19fda7cee837c6ebdb537f524031f7396a43ebd5915a4eb1b6fcead4d254f",
+      "exact_residual_of_rounded_operands": "-7.99235252020522071914997315736270503922584942241291727782481757E-18",
+      "separately_rounded_multiply_subtract": 0.0
+    }
+  ],
+  "commands": [
+    [
+      "/usr/bin/c++",
+      "-O3",
+      "-DNDEBUG",
+      "-std=c++17",
+      "-arch",
+      "arm64",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-I/Users/ploskon/devel/jewel-cpp/include",
+      "-I/Users/ploskon/devel/jewel-cpp/src",
+      "-c",
+      "/private/tmp/jewel-roundoff-reproduction/collision-diagnostic.cpp",
+      "-o",
+      "/private/tmp/jewel-roundoff-reproduction/collision-diagnostic.o"
+    ],
+    [
+      "/usr/bin/c++",
+      "-O3",
+      "-DNDEBUG",
+      "-arch",
+      "arm64",
+      "-Wl,-search_paths_first",
+      "-Wl,-headerpad_max_install_names",
+      "CMakeFiles/jewel-medium-probe.dir/app/medium_probe.cpp.o",
+      "-o",
+      "/private/tmp/jewel-roundoff-reproduction/jewel-cpp-diagnostic",
+      "/private/tmp/jewel-roundoff-reproduction/collision-diagnostic.o",
+      "libjewel_core.a"
+    ],
+    [
+      "/opt/homebrew/bin/gfortran",
+      "-O3",
+      "-std=legacy",
+      "-ffixed-line-length-none",
+      "-c",
+      "/private/tmp/jewel-roundoff-reproduction/medium-diagnostic.f",
+      "-o",
+      "/private/tmp/jewel-roundoff-reproduction/medium-diagnostic.o"
+    ],
+    [
+      "/usr/bin/c++",
+      "-O3",
+      "-DNDEBUG",
+      "-arch",
+      "arm64",
+      "-Wl,-search_paths_first",
+      "-Wl,-headerpad_max_install_names",
+      "/private/tmp/jewel-roundoff-reproduction/medium-diagnostic.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/medium_probe.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/guarded_cascade.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/generated_random.cpp.o",
+      "CMakeFiles/jewel-medium-reference.dir/kinematics-reference.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/pythia_probe_stubs.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/collision-reference.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/compression-reference.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/record_listing_stub.f90.o",
+      "-o",
+      "/private/tmp/jewel-roundoff-reproduction/jewel-fortran-diagnostic",
+      "-L/opt/homebrew/Cellar/gcc/16.2.0/lib/gcc/current/gcc/aarch64-apple-darwin25/16",
+      "-L/opt/homebrew/Cellar/gcc/16.2.0/lib/gcc/current/gcc",
+      "-L/opt/homebrew/Cellar/gcc/16.2.0/lib/gcc/current",
+      "-L/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/lib",
+      "-L/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/lib/swift",
+      "-lemutls_w",
+      "-lheapt_w",
+      "-lgfortran",
+      "-lgcc",
+      "-lquadmath"
+    ]
+  ],
+  "sources": {
+    "/Users/ploskon/devel/jewel-cpp/src/collision.cpp": "529421e73bb56ea5663457bd80099b1e9df5317886e36242fb8af068f3084f70",
+    "/Users/ploskon/devel/jewel-cpp/build/medium-reference.f": "749c76179f3731965878c7c2cff6841f7117dd3ea7ed1690905c9824cbb7b88d",
+    "/private/tmp/jewel-roundoff-reproduction/collision-diagnostic.cpp": "d0761bb70769b92a2a03d76b23efce17916ff720aa7100590ef0e72705271edc",
+    "/private/tmp/jewel-roundoff-reproduction/medium-diagnostic.f": "a599ea15215357878fab2fe3f86687b3683e81ad6cdb6df59c5b2dd5f3cb725d"
+  }
+}
