@@ -42,6 +42,8 @@ int main(){
   for(auto it=a->particles.rbegin();it!=a->particles.rend();++it)if(it->final)import_order.push_back(it->id);
   auto imported=jewel::import_pythia_final_record(*a,1.2,-.7,20,import_order);
   auto& native=imported.state;auto& sources=imported.input_sources;
+  // GENEVENT clears ZD for the complete event before importing ISR/remnants.
+  for(const auto& node:native.particles())check(node.fraction==0&&node.angle==0&&!node.quark_pair&&!node.angular_required);
   check(native.particles()[0].particle.id==imported.beams[0]&&native.particles()[1].particle.id==imported.beams[1]&&imported.scratch==imported.beams[0]);
   check(native.weight==a->weight&&sources.size()==import_order.size()&&imported.junctions.size()==a->junctions.size());
   for(std::size_t j=0;j<imported.junctions.size();++j)check(imported.junctions[j].kind==a->junctions[j].kind&&imported.junctions[j].colours==a->junctions[j].colours);

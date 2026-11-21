@@ -46,7 +46,8 @@ struct ImportedPythiaRecord {
  std::vector<GeneratorJunction> junctions;
 };
 // Raw final-record import, not an evolution-ready event. All finals start at
-// status 4. Distinct original hard records, incoming records and beam records
+// status 4; fractions and angles start at source GENEVENT zero.
+// Distinct original hard records, incoming records and beam records
 // preserve ancestry; MPI hard legs separately have scheduling parent zero.
 // Beam records occupy slots 1/2 and slot 1 is scratch.
 // Selection, virtuality assignment and evolution still remain separate stages.

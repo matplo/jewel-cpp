@@ -112,3 +112,7 @@ MPI legs now retain their original-record ancestry while explicitly setting
 source scheduling slots to `{0,0,0}`. GETTHETAM and coherence use those scheduling
 links. This corrects the earlier extension of primary parent semantics to MPI.
 See [MPI scheduling evidence](validation-mpi-scheduling.md).
+
+Imported fractions explicitly start at zero, matching GENEVENT's `ZD(I)=0`.
+The generic ShowerParticle default of -1 is a different sentinel and must not
+leak into initial ISR/remnant records. See the [regression and cascade evidence](validation-imported-fractions.md).

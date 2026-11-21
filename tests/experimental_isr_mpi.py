@@ -17,6 +17,12 @@ with tempfile.TemporaryDirectory() as tmp:
     header=replay_rows[0];assert header[0]==len(event['particles']) and header[4]==event['draws'] and header[5:7]==[0,0]
     for native,reference in zip(event['particles'],replay_rows[1:]):
         assert native['momentum']==reference[5:9] and native['mass']==reference[9]
+    # Attempt 2 used to reach NaN from an imported ISR fraction of -1.
+    medium_output=root/'medium.jsonl'
+    subprocess.run([runner,str(medium_output),'2','2600417','medium','--experimental-isr-mpi'],check=True,capture_output=True,timeout=90)
+    medium=[json.loads(line) for line in medium_output.open()]
+    assert medium[-1]['accepted']==2 and medium[-1]['evolution_failures']==0
+    assert [r['attempt'] for r in medium if r['type']=='event']==[1,2]
     for executable,options in [(runner,['--experimental-isr-mpi','--experimental-isr-mpi']),(hadron_runner,['--experimental-isr-mpi'])]:
         invalid=root/'invalid.jsonl'
         result=subprocess.run([executable,str(invalid),'1','2600417','vacuum',*options],capture_output=True,timeout=10)

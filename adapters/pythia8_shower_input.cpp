@@ -92,7 +92,7 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
  }
  auto chains=map_subsystem_isr_ancestry(input);
  ImportedPythiaRecord result;result.state.weight=input.weight;result.junctions=input.junctions;
- auto anchor=[&](ParticleId source,ParticleId parent){const auto& p=input.particles[source-1];ShowerParticle node;
+ auto anchor=[&](ParticleId source,ParticleId parent){const auto& p=input.particles[source-1];ShowerParticle node;node.fraction=0;
   node.particle.pdg=p.pdg;node.particle.status=21;node.particle.momentum=p.momentum;node.record_mass=p.mass;
   node.particle.production={x,y,0,0};node.decay_time=lifetime;node.parent=parent;
   node.generator_vertex={p.vertex_mm[0]*1e12,p.vertex_mm[1]*1e12,p.vertex_mm[2]*1e12,p.vertex_mm[3]*1e12};
@@ -126,7 +126,7 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
   return result.beams[source==result.source_beams[0]?0:1];
  };
  std::set<ParticleId> isr(input.isr_final.begin(),input.isr_final.end());
- for(auto source:order){const auto& p=input.particles[source-1];ShowerParticle node;
+ for(auto source:order){const auto& p=input.particles[source-1];ShowerParticle node;node.fraction=0;
   node.particle.pdg=p.pdg;node.particle.status=4;node.particle.momentum=p.momentum;node.record_mass=p.mass;
   node.particle.colour=p.colour;node.particle.anticolour=p.anticolour;
   node.particle.production={x,y,0,0};node.decay_time=lifetime;

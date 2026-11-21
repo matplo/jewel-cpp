@@ -1,0 +1,648 @@
+{
+  "scope": "Source event-start fraction correction; remaining cascade mismatches are not resolved",
+  "trace_comparison": {
+    "aligned_entries": 5,
+    "aligned_numeric_mismatches": [],
+    "unmatched_cpp_entries": [],
+    "unmatched_fortran_entries": [],
+    "cpp_records": 9,
+    "fortran_records": 10,
+    "first_discrete_difference": null,
+    "first_numeric_difference": null,
+    "max_finite_absolute_error": 0.0,
+    "cpp_last": [
+      0,
+      5,
+      29,
+      53,
+      5994,
+      0,
+      -1.7228506231344414,
+      -0.2969348488285889,
+      -0.016241098115751876,
+      1.7483272998359305,
+      0.0,
+      -1.0,
+      -1000000.0,
+      -0.007296527907596425,
+      62.908690318670054
+    ],
+    "fortran_last": [
+      1,
+      5,
+      29,
+      55,
+      6052,
+      0
+    ],
+    "unmatched_cpp": [],
+    "unmatched_fortran": [
+      [
+        1,
+        5,
+        29,
+        55,
+        6052,
+        0
+      ]
+    ],
+    "files": {
+      "/private/tmp/jewel-medium2-native-trace.err": "d9d93dfac4f5b7c8491e3fe893641478153bfd842c87a25ee40f1b60daf1be99",
+      "/private/tmp/jewel-medium2-reference-trace.err": "f6b046247214856db21eb721180435a687ccee26dd98c252056e2ce24bfad7df"
+    },
+    "columns": [
+      "phase (0 before, 1 after)",
+      "branch call",
+      "scheduling slot",
+      "record count",
+      "RNG cursor",
+      "discard",
+      "px",
+      "py",
+      "pz",
+      "energy",
+      "mass",
+      "fraction",
+      "evolution time",
+      "production time",
+      "decay time"
+    ],
+    "relative_tolerance": 2e-12,
+    "absolute_tolerance": 2e-13
+  },
+  "corrected_replay": {
+    "scope": "identical Pythia-initialized states; guarded Fortran scheduler",
+    "executables": {
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe": "5d532a0a4516dd4d437e7c4f4c02f9b3c7b0a92a18dae8c1a00962a926a66585",
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference": "0d5f2871ffb692e3d40d0ce392e2a447dd6a4d758fc70bf0aed0da592568afaa"
+    },
+    "guard_sha256": "6e6a6da4d9eab65a20c98bd20be30c7317285bec4e3a2d5e111004cab170ca18",
+    "sources": {
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "ODEINT": [
+            8315,
+            8347
+          ],
+          "RKSTEPPER": [
+            8354,
+            8400
+          ],
+          "RK4STEP": [
+            8407,
+            8416
+          ],
+          "EI": [
+            7872,
+            7920
+          ],
+          "EIXINT": [
+            8282,
+            8308
+          ],
+          "INTPQGLOW": [
+            7784,
+            7802
+          ],
+          "INTPQGHIGH": [
+            7809,
+            7827
+          ],
+          "SCATPRIMFUNC": [
+            7692,
+            7710
+          ],
+          "GETINSPLITI": [
+            6837,
+            6922
+          ],
+          "GETINSUDAKOV": [
+            6545,
+            6582
+          ],
+          "INSUDAINT": [
+            8235,
+            8275
+          ],
+          "GETINSUDARED": [
+            7284,
+            7359
+          ],
+          "GETINSUDAFAST": [
+            7247,
+            7278
+          ],
+          "SPLITFNCINT": [
+            7994,
+            8075
+          ],
+          "GETSPLITI": [
+            6692,
+            6831
+          ],
+          "GETSUDAKOV": [
+            6486,
+            6539
+          ],
+          "PQQ": [
+            7927,
+            7931
+          ],
+          "PGG": [
+            7949,
+            7953
+          ],
+          "PQG": [
+            7960,
+            7964
+          ],
+          "ALPHAS": [
+            7971,
+            7987
+          ],
+          "GETPDF": [
+            6928,
+            7022
+          ],
+          "GETPDFXINTEXACT": [
+            7096,
+            7129
+          ],
+          "PDFINT": [
+            8082,
+            8135
+          ],
+          "GETPDFXINT": [
+            7027,
+            7090
+          ],
+          "PGQ": [
+            7938,
+            7942
+          ],
+          "XSECINT": [
+            8142,
+            8228
+          ],
+          "GETXSECINT": [
+            7135,
+            7241
+          ],
+          "GETSSCAT": [
+            7365,
+            7458
+          ],
+          "GETMASS": [
+            7465,
+            7625
+          ],
+          "GENERATEZ": [
+            7632,
+            7685
+          ],
+          "GETDELTAT": [
+            8423,
+            8554
+          ],
+          "REJECTSPLITTING": [
+            3688,
+            3865
+          ],
+          "MAKESPLITTING": [
+            3288,
+            3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ],
+          "DOKINEMATICS": [
+            5643,
+            6452
+          ],
+          "MAKEINSPLIT": [
+            3871,
+            4126
+          ],
+          "DOCOHSCATTERING": [
+            4644,
+            5072
+          ],
+          "DOINSTATESCAT": [
+            4132,
+            4638
+          ],
+          "MAKECASCADE": [
+            2902,
+            2942
+          ],
+          "MAKEBRANCH": [
+            2948,
+            3282
+          ],
+          "FINDVIRTUALITIES": [
+            1893,
+            2239
+          ],
+          "GETTHETAM": [
+            2303,
+            2365
+          ],
+          "ISPARTON": [
+            8690,
+            8700
+          ],
+          "ISDIQUARK": [
+            8658,
+            8671
+          ]
+        },
+        "declaration_normalizations": {
+          "DOINSTATESCAT": [
+            {
+              "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+              "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+              "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+            }
+          ]
+        }
+      },
+      "medium-simple.f.stock": {
+        "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+        "routines": {
+          "GETTEMP": [
+            473,
+            523
+          ],
+          "GETMD": [
+            430,
+            438
+          ],
+          "GETMS": [
+            442,
+            446
+          ],
+          "GETNEFF": [
+            450,
+            469
+          ],
+          "NPART": [
+            661,
+            674
+          ],
+          "NTHICK": [
+            678,
+            716
+          ],
+          "CALCTA": [
+            720,
+            758
+          ],
+          "MEDDERIV": [
+            808,
+            829
+          ],
+          "CALCXSECTION": [
+            762,
+            804
+          ],
+          "MEDNEXTEVT": [
+            207,
+            243
+          ],
+          "PICKVTX": [
+            255,
+            278
+          ],
+          "GETSCATTERER": [
+            292,
+            368
+          ],
+          "GETTEMPMAX": [
+            527,
+            542
+          ],
+          "GETMDMAX": [
+            546,
+            554
+          ],
+          "GETMDMIN": [
+            558,
+            576
+          ],
+          "GETMSMAX": [
+            580,
+            584
+          ],
+          "GETNATMDMIN": [
+            588,
+            612
+          ],
+          "GETLTIMEMAX": [
+            616,
+            634
+          ],
+          "GETNEFFMAX": [
+            638,
+            657
+          ],
+          "AVSCATCEN": [
+            371,
+            403
+          ],
+          "MAXSCATCEN": [
+            406,
+            426
+          ]
+        }
+      },
+      "meix.f": {
+        "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "routines": {
+          "EIX": [
+            7,
+            38
+          ]
+        }
+      }
+    },
+    "relative_tolerance": 2e-12,
+    "absolute_tolerance": 2e-13,
+    "results": [
+      {
+        "attempt": 2,
+        "fixture_sha256": "53878b9172856c8d968de031d8bdd70ad8114de6c7f3bb9a4f33c3a6ba702ff7",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            223,
+            212,
+            61,
+            23,
+            140129,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": "6800        1.8305168701441725        19.847919083397692     \n problem in getmass: weight> 1   1.0783077124083249      GC  0.16094993733572666        19.331567869176759        20.025011334346800        1.5532780200996485        19.911277551291366     \n problem in getmass: weight> 1   1.2232858224418544      GC   6.0892904437969964E-002   19.331567869176759        20.025011334346800        4.1055686587370550        20.020655627260464     \n problem in getmass: weight> 1   1.1376917433625986      GC  0.11823476925730157        19.331567869176759        20.025011334346800        2.1144372469315855        19.777633165275606     \n problem in getmass: weight> 1   1.1016236719467054      GC  0.14415649436651529        19.331567869176759        20.025011334346800        1.7342264120572988        19.422198610005328     \n problem in getmass: weight> 1   1.0145168610155140      GC  0.20567876623550765        19.331567869176759        20.025011334346800        1.2154876488987849        19.551602740455230     \n problem in getmass: weight> 1   1.2318061150018147      GC   5.5777641183748082E-002   19.331567869176759        20.025011334346800        4.4820826893060230        19.989869071229197     \n problem in getmass: weight> 1   1.2769564380204297      GC   3.1409550768759370E-002   19.331567869176759        20.025011334346800        7.9593624831035621        20.017913211383949     \n problem in getmass: weight> 1   1.1417664711701923      GC  0.11533885397671857        19.331567869176759        20.025011334346800        2.1675263051465996        19.989725296215294     \n problem in getmass: weight> 1   1.0817532257593538      GC  0.15846144508645521        19.331567869176759        20.025011334346800        1.5776708325713056        5.7874345925235549     \n problem in getmass: weight> 1   1.2800449682790285      GC   2.9926498989630325E-002   18.100929279697585        18.440767961149302        8.3538004257239109        18.430373823269189     \n GUARD_STATS            0          96\n",
+          "header": [
+            223,
+            212,
+            61,
+            23,
+            140129,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 8505,
+        "mismatches": 14,
+        "examples": [
+          {
+            "row": 153,
+            "column": 5,
+            "cpp": -0.2929493774021529,
+            "reference": -0.29294937740089233
+          },
+          {
+            "row": 153,
+            "column": 6,
+            "cpp": -0.017403447224027844,
+            "reference": -0.017403447222218857
+          },
+          {
+            "row": 155,
+            "column": 5,
+            "cpp": -0.28607772069598547,
+            "reference": -0.28607772069494236
+          },
+          {
+            "row": 155,
+            "column": 6,
+            "cpp": -0.10065253926234735,
+            "reference": -0.10065253926100388
+          },
+          {
+            "row": 155,
+            "column": 7,
+            "cpp": 0.09260208430183954,
+            "reference": 0.09260208430061494
+          },
+          {
+            "row": 155,
+            "column": 8,
+            "cpp": 0.5201335650531133,
+            "reference": 0.5201335650520513
+          },
+          {
+            "row": 156,
+            "column": 6,
+            "cpp": -0.11328940797053015,
+            "reference": -0.1132894079700585
+          },
+          {
+            "row": 225,
+            "column": 1,
+            "cpp": -0.10399490118130272,
+            "reference": -0.10399490118089964
+          },
+          {
+            "row": 225,
+            "column": 2,
+            "cpp": 0.12953213374223901,
+            "reference": 0.12953213374173855
+          },
+          {
+            "row": 225,
+            "column": 3,
+            "cpp": -0.13860979904533063,
+            "reference": -0.13860979904494453
+          }
+        ],
+        "max_absolute_error": 5.047573470307043e-12
+      },
+      {
+        "attempt": 14,
+        "fixture_sha256": "596a58f2f2658c026dab48045ac6e78bcbbab39eaf863f797e04c85e945167e6",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            173,
+            188,
+            51,
+            19,
+            1077377,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": "092796        2.4222298410107670     \n problem in getmass: weight> 1   1.0177298486001005      GC  0.20349622846229926        1.3233210462751430        2.5238819586326282        1.2285239971723421        1.8838216770949778     \n problem in getmass: weight> 1   1.0916499145561820      GC  0.15133724884647640        1.9663900912335581        2.6936183350973706        1.6519396375020121        2.1473737515235318     \n WARNING in getpdfxint: need to extrapolate:    645.72584033157045        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    645.72584033157045        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    645.72584033157045        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    645.72584033157045        248.75909225703947     \n problem in getmass: weight> 1   1.0615051001917462      GC  0.17294833157169973       -1.0506169064493203        1.9438752354598687        1.4455184258100617        1.7162947538209672     \n problem in getmass: weight> 1   1.0561356496914591      GC  0.17675930932176570       -1.0506169064493203        1.9438752354598687        1.4143526638526847        1.7577226048757124     \n problem in getmass: weight> 1   1.0848702015521581      GC  0.15622854067489741       -1.0506169064493203        1.9438752354598687        1.6002197736726964        1.6721407697886370     \n problem in getmass: weight> 1   1.1070744405298196      GC  0.14020547370360312       -1.0506169064493203        1.9438752354598687        1.7830972885445577        1.4832253355303409     \n WARNING in getpdfxint: need to extrapolate:    555.59160865377498        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    555.59160865377498        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    555.59160865377498        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    555.59160865377498        248.75909225703947     \n GUARD_STATS            0          84\n",
+          "header": [
+            173,
+            188,
+            51,
+            19,
+            1077377,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 7045,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 1.2789769243681803e-13
+      }
+    ]
+  },
+  "samples": {
+    "vac": {
+      "before_summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 873
+      },
+      "after_summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 873
+      },
+      "parsed_records_identical": true,
+      "failures": [],
+      "before_sha256": "07c7c4044cda1a31689ca042c4491fe8386cf20b1a404b99e9be9a14ad673bcb",
+      "after_sha256": "07c7c4044cda1a31689ca042c4491fe8386cf20b1a404b99e9be9a14ad673bcb"
+    },
+    "medium": {
+      "before_summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 2,
+        "evolution_failures": 18,
+        "generation_failures": 0,
+        "accepted_weight": 2,
+        "failed_weight": 18,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 235
+      },
+      "after_summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 16,
+        "evolution_failures": 4,
+        "generation_failures": 0,
+        "accepted_weight": 16,
+        "failed_weight": 4,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 3396
+      },
+      "parsed_records_identical": false,
+      "failures": [
+        {
+          "type": "evolution_failure",
+          "attempt": 11,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "draws": 58078
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 13,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "draws": 1215516
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 18,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "draws": 74806
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 19,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 48890
+        }
+      ],
+      "before_sha256": "3d940e3db11d91fbaae29e080189e0b5a9f72e5672eb908b9aca359fdec7a7c8",
+      "after_sha256": "bb24ff527aada1076b0504d3597a3faac16e53f29d271cfacac20dd8276c06f1"
+    }
+  },
+  "reference_nonfinite_record_before_fix": {
+    "attempt": 2,
+    "branch": 5,
+    "slot": 55,
+    "field": "angle",
+    "fraction": -1,
+    "mass": 0,
+    "draws": 6052
+  },
+  "source_sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+  "native_runner_sha256": "d0dc6553d782ec158496ee254cb4b74b7182d903a2b7facbd203c9ac4dbad103"
+}

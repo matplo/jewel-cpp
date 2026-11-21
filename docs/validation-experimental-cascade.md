@@ -69,3 +69,10 @@ python3 tools/replay_native_cascade.py build/jewel-medium-probe build/jewel-medi
 python3 tools/replay_native_cascade.py build/jewel-medium-probe build/jewel-medium-reference /tmp/isr-mpi-med-replay /tmp/isr-mpi-med-comparison --attempts 1 2 14 --timeout 60
 ctest --test-dir build-pythia8 -R '^(experimental-isr-mpi-contracts|runner-flow-contracts)$' --output-on-failure
 ```
+
+## Follow-up: imported fraction correction
+
+The original 2/20 medium result above used an incorrect imported fraction
+default. The [source event-start correction](validation-imported-fractions.md)
+raises completion to 16/20 for the same sample. Vacuum output is unchanged.
+The original results remain historical evidence, not the current failure rate.
