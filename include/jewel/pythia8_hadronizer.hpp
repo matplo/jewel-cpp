@@ -28,6 +28,8 @@ public:
  // string repair, reconnection, hard generation or showering is done here.
  std::optional<HadronizedSnapshot> hadronize(const std::vector<GeneratorParticle>&,
   const std::vector<GeneratorJunction>& = {});
+ // Nominal ParticleData mass, without a random resonance-mass draw.
+ double nominal_mass(int pdg) const;
  HadronizationStatistics statistics() const;
  const std::vector<std::string>& settings() const;
 };

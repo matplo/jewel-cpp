@@ -83,4 +83,12 @@ std::optional<HadronizedSnapshot> Pythia8Hadronizer::hadronize(const std::vector
  for(double v:{delta.px(),delta.py(),delta.pz(),delta.e()})if(std::abs(v)>1e-8*std::max(1.,total.e()))throw std::domain_error("hadronization momentum does not close");
  ++impl_->returned;return result;
 }
+double Pythia8Hadronizer::nominal_mass(int pdg) const {
+ auto& data=impl_->engine.particleData;
+ if(!data.isParticle(pdg))throw std::domain_error("unknown projection PDG ID");
+ double mass=data.m0(pdg);
+ if(!std::isfinite(mass)||mass<0)throw std::domain_error("invalid nominal projection mass");
+ return mass;
+}
+
 }

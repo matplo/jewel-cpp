@@ -14,7 +14,7 @@ html='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewpor
 <section class="panel"><h2>Failures and selection</h2><pre id="failures"></pre><pre id="selection"></pre></section><details class="panel"><summary>Run settings and provenance</summary><pre id="provenance"></pre></details></main>
 <script>const data=__DATA__;
 const setting=document.getElementById('setting'), observable=document.getElementById('observable');
-data.samples.forEach((s,i)=>{const option=document.createElement('option');option.value=i;option.textContent=`${s.run.mode} · recoils ${s.run.keep_recoils===false?'excluded':'included'} · ${s.run.subtraction?'subtracted R='+s.run.subtraction.radius:'unsubtracted'}`;setting.appendChild(option)});
+data.samples.forEach((s,i)=>{const option=document.createElement('option');option.value=i;option.textContent=`${s.run.mode} · recoils ${s.run.keep_recoils===false?'excluded':'included'} · ${s.run.subtraction?'subtracted R='+s.run.subtraction.radius+' · projection '+(s.run.subtraction.put_on_shell||0):'unsubtracted'}`;setting.appendChild(option)});
 const ns='http://www.w3.org/2000/svg';function element(name,attrs,text){const e=document.createElementNS(ns,name);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;return e}
 function current(){return data.samples[Number(setting.value)]}function fmt(v){return v===null?'—':Number(v).toPrecision(5)}
 function render(){const s=current(), bins=s.distributions[observable.value], chart=document.getElementById('chart');chart.replaceChildren();

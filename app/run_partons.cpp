@@ -2,6 +2,7 @@
 #include "jewel/pythia8_shower_input.hpp"
 #include "jewel/cascade.hpp"
 #include "jewel/subtraction.hpp"
+#include "jewel/projection.hpp"
 #include "input_options.hpp"
 #include "jewel/pythia8_shower_output.hpp"
 #include "jewel/pythia8_hadronizer.hpp"
@@ -54,7 +55,7 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--jewel-fragmentation] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -65,7 +66,7 @@ int main(int argc,char** argv){
   int angular_ordering=0;bool angular_option_seen=false;
   bool keep_recoils=true,recoil_option_seen=false;
   bool scatter_recoils=false,scatter_option_seen=false,cuts_option_seen=false;double soft_cut=0,hard_cut=0;
-  std::optional<double> subtraction_radius;
+  std::optional<double> subtraction_radius;int projection_mode=0;bool projection_seen=false;
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config))continue;
@@ -107,6 +108,11 @@ int main(int argc,char** argv){
     if(used!=token.size()||!std::isfinite(value)||value<0)throw std::invalid_argument("subtraction radius must be finite and nonnegative");
     subtraction_radius=value;
    }
+   else if(option=="--put-on-shell"){
+    if(projection_seen||i+1>=argc||!hadronize_run)throw std::invalid_argument("projection requires jewel-run-events and one mode");
+    const std::string value=argv[++i];if(value.size()!=1||value[0]<'0'||value[0]>'2')throw std::invalid_argument("projection mode must be 0, 1 or 2");
+    projection_mode=value[0]-'0';projection_seen=true;
+   }
    else if(option=="--centrality"){
     if(centrality||i+2>=argc)throw std::invalid_argument("centrality requires one MIN MAX pair");
     std::array<double,2> range;
@@ -117,6 +123,7 @@ int main(int argc,char** argv){
    else if(option.rfind("--",0)==0||!replay_directory.empty())throw std::invalid_argument("unknown or repeated runner option");
    else replay_directory=option;
   }
+  if(projection_seen&&!subtraction_radius)throw std::invalid_argument("projection requires --subtraction-radius");
   if(subtraction_radius&&!keep_recoils)throw std::invalid_argument("thermal subtraction requires retained recoils");
   if(!replay_directory.empty()&&!std::filesystem::create_directory(replay_directory))throw std::runtime_error("replay directory must be new");
   jewel::Pythia8Input input(input_config);
@@ -143,7 +150,8 @@ int main(int argc,char** argv){
   bool comma=false;for(const auto& s:input.settings()){if(comma)out<<',';comma=true;out<<std::quoted(s);}out<<"],\"hadronization\":"<<(hadronize_run?"true":"false")<<",\"hadrotype\":0,\"hadronizer_settings\":[";
   if(hadronizer){comma=false;for(const auto& setting:hadronizer->settings()){if(comma)out<<',';comma=true;out<<std::quoted(setting);}}out<<"],\"centrality_percent\":";
   if(centrality)out<<'['<<(*centrality)[0]<<','<<(*centrality)[1]<<']';else out<<"null";
-  if(subtraction_radius)out<<",\"subtraction\":{\"algorithm\":\"jewel260-kernel-zero-offset\",\"radius\":"<<*subtraction_radius<<",\"put_on_shell\":0,\"mass_policy\":\"signed-invariant-mass\",\"rng\":\"splitmix64-open52-v1\",\"seed_base\":"<<static_cast<std::uint64_t>(seed)+2000000<<",\"seed_stride\":100,\"input\":\"all-final-hadronized\",\"thermal_input\":\"stored-centres\",\"positive_thermal_residuals\":true}";
+  if(subtraction_radius)out<<",\"subtraction\":{\"algorithm\":\"jewel260-kernel-zero-offset\",\"radius\":"<<*subtraction_radius<<",\"put_on_shell\":"<<projection_mode<<",\"mass_policy\":\"signed-invariant-mass\",\"rng\":\"splitmix64-open52-v1\",\"seed_base\":"<<static_cast<std::uint64_t>(seed)+2000000<<",\"seed_stride\":100,\"input\":\"all-final-hadronized\",\"thermal_input\":\"stored-centres\",\"positive_thermal_residuals\":true}";
+  if(projection_mode)out<<",\"projection_mass_source\":\"Pythia8 ParticleData::m0\",\"projection_range\":\"all-subtracted-PPJJ\"";
   out<<"}\n";
   std::uint64_t accepted=0,failed=0,generated_failed=0,final_count=0;double accepted_weight=0,failed_weight=0;
   for(unsigned long attempt=1;attempt<=attempts;++attempt){auto hard=input.next();
@@ -183,6 +191,14 @@ int main(int argc,char** argv){
      subtracted=jewel::subtract_thermal_momenta(selected,thermals,*subtraction_radius,subtraction_random,jewel::SubtractionMassPolicy::SignedMass);
      if(subtracted->capacity_exceeded)throw std::runtime_error("subtracted event exceeds capacity");
     }
+    std::optional<jewel::ProjectionResult> projected;jewel::Momentum projection_before{},projection_after{};
+    if(projection_mode){
+     stage="on-shell projection";std::vector<jewel::ProjectionParticle> selected;
+     for(const auto& p:subtracted->particles){selected.push_back({p.momentum,p.mass,hadronizer->nominal_mass(p.pdg)});
+      projection_before.px+=p.momentum.px;projection_before.py+=p.momentum.py;projection_before.pz+=p.momentum.pz;projection_before.energy+=p.momentum.energy;}
+     projected=jewel::project_on_shell(selected,projection_mode,0);
+     for(const auto& p:projected->particles){projection_after.px+=p.momentum.px;projection_after.py+=p.momentum.py;projection_after.pz+=p.momentum.pz;projection_after.energy+=p.momentum.energy;}
+    }
     ++accepted;accepted_weight+=hard->weight;
     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"impact_parameter_fm\":"<<event_b<<",\"centrality_fraction\":";if(event_centrality)out<<*event_centrality;else out<<"null";out<<",\"event_lifetime_fm\":"<<event_lifetime<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"shower_seed\":"<<shower_seed<<",\"draws\":"<<random.checkpoint()<<",\"branch_calls\":"<<evolved.branch_calls<<",\"initial_hard\":[";
     particle(out,initial_hard[0]);out<<',';particle(out,initial_hard[1]);out<<"],\"input_sources\":[";comma=false;
@@ -198,6 +214,13 @@ int main(int argc,char** argv){
      std::size_t id=0;for(const auto& p:subtracted->particles){if(id)out<<',';
       out<<"{\"id\":"<<++id<<",\"source_id\":"<<p.source<<",\"pdg\":"<<p.pdg<<",\"final\":true,\"thermal_residual\":"<<(p.thermal_residual?"true":"false")<<",\"mass\":"<<p.mass<<",\"momentum\":";momentum(out,p.momentum);out<<'}';}
      out<<']';
+    }
+    if(projected){
+     out<<",\"projection\":{\"mode\":"<<projection_mode<<",\"massless_iterations\":"<<projected->massless_iterations<<",\"massive_iterations\":"<<projected->massive_iterations
+        <<",\"massless_converged\":"<<(projected->massless_converged?"true":"false")<<",\"massive_converged\":"<<(projected->massive_converged?"true":"false")
+        <<",\"insufficient_energy\":"<<(projected->insufficient_energy?"true":"false")<<",\"total_before\":";momentum(out,projection_before);out<<",\"total_after\":";momentum(out,projection_after);out<<"},\"projected_particles\":[";
+     for(std::size_t i=0;i<projected->particles.size();++i){if(i)out<<',';const auto& p=projected->particles[i];const auto& source=subtracted->particles[i];
+      out<<"{\"id\":"<<i+1<<",\"source_id\":"<<source.source<<",\"pdg\":"<<source.pdg<<",\"final\":true,\"thermal_residual\":"<<(source.thermal_residual?"true":"false")<<",\"mass\":"<<p.mass<<",\"nominal_mass\":"<<p.nominal_mass<<",\"momentum\":";momentum(out,p.momentum);out<<'}';}out<<']';
     }
     if(hadrons){out<<",\"hadronization_input\":[";comma=false;for(const auto& p:hadron_input){if(comma)out<<',';comma=true;generator_particle(out,p);}
      out<<"],\"hadronized_particles\":[";comma=false;for(const auto& p:hadrons->particles){if(comma)out<<',';comma=true;generator_particle(out,p);}

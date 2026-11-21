@@ -730,7 +730,7 @@ where C++ fails but Fortran completes. These modes are not yet fully validated.
 The typed `subtract_thermal_momenta` API ports the JEWEL 2.6.0 subtraction
 helpers, with 132 passing reference cases. It retains source IDs and marks
 positive residual thermal particles explicitly. The native hadronized runner enables it with
-`--subtraction-radius R`; the on-shell numerical core is validated, with runner integration still pending. The upstream process-offset wrapper has
+`--subtraction-radius R`; optional on-shell projection follows it via `--put-on-shell 0|1|2`. The upstream process-offset wrapper has
 known defects and is excluded from the kernel parity claim.
 See [behaviour, validation and integration limits](docs/validation-subtraction.md).
 
@@ -746,6 +746,12 @@ reproduce the broken process-offset wrapper. See
 
 `project_on_shell` supports modes 0, 1 and 2 with explicit nominal masses and
 mode-2 ranges. All 208 reference cases pass, including nonconverged and
-insufficient-energy source paths, which are reported explicitly. This numerical
-API is not yet enabled in the native runner. See
+insufficient-energy source paths, which are reported explicitly. The native runner exposes these modes after subtraction using explicit Pythia8
+nominal masses. See
 [projection behaviour and validation limits](docs/validation-projection.md).
+
+The projection adapter retains subtracted records and adds `projected_particles`,
+recording nominal masses, convergence outcomes and total four-momentum changes.
+Analysis selects the projected collection when enabled. See
+[native projection validation](docs/validation-native-projection.md) and the
+[selectable smoke report](docs/native-projection-smoke.html).

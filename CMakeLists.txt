@@ -567,3 +567,8 @@ if(BUILD_TESTING)
  target_link_libraries(projection-test PRIVATE jewel_core)
  add_test(NAME projection-contracts COMMAND projection-test)
 endif()
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_test(NAME runner-projection-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_projection.py $<TARGET_FILE:jewel-run-events>
+  $<TARGET_FILE:jewel-run-partons>)
+endif()

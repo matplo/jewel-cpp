@@ -3,8 +3,8 @@
 Recorded 2026-11-21, AppleClang 21 / GNU Fortran 16.2, macOS arm64 Release.
 `project_on_shell` in `include/jewel/projection.hpp` implements the numerical
 operations of JEWEL 2.6.0 `PUTPARTICLESONSHELL`. Native-runner integration and
-Pythia8 nominal-mass lookup are still pending; the current runner continues to
-record `put_on_shell=0`.
+Pythia8 nominal-mass lookup are now available through `--put-on-shell 0|1|2`;
+see [native adapter validation](validation-native-projection.md).
 
 ## Modes and result contract
 
@@ -69,7 +69,6 @@ ctest --test-dir build -R '^projection-' --output-on-failure
 ctest --test-dir build-pythia8 -R '^projection-contracts$' --output-on-failure
 ```
 
-This establishes component parity over the defined tested domain. Wiring the
-component after native subtraction, recording nominal-mass provenance and
-convergence outcomes, validating complete events and completing the ≥1000-jet
+This establishes component parity over the defined tested domain. The native adapter now records nominal-mass provenance and convergence outcomes
+after subtraction. Validating the full generator and completing the ≥1000-jet
 Fortran/native physics comparison remain outstanding.
