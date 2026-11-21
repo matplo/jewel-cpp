@@ -51,7 +51,8 @@ int main(){
    check(pair.hard_origins[0]!=pair.hard_origins[1]);
    for(int side=0;side<2;++side)check(native.at(pair.incoming[side]).parent==imported.beams[side]&&native.at(pair.hard_origins[side]).parent==0);
    for(int side=0;side<2;++side){auto id=pair.hard[side];check(sources.at(id)==pair.source_hard[side]&&native.at(id).parent==pair.hard_origins[side]);
-    check(imported.roles.at(id)==(system==0?jewel::ImportedRole::primary_hard:jewel::ImportedRole::mpi_hard));}
+    check(imported.roles.at(id)==(system==0?jewel::ImportedRole::primary_hard:jewel::ImportedRole::mpi_hard));
+    check(native.scheduling_parent(id)==(system==0?pair.hard_origins[side]:0));}
   }
   for(const auto& [id,source]:sources){auto& node=native.at(id);const auto& original=a->particles[source-1];
    check(node.particle.status==4&&node.particle.production.x==1.2&&node.particle.production.y==-.7&&node.particle.production.z==0&&node.particle.production.t==0&&node.decay_time==20);
@@ -102,6 +103,11 @@ int main(){
   check(preparation_rejected&&mass_calls==2);
   for(const auto& [id,source]:sources){const auto& old=native.at(id);const auto& node=preparation_copy.state.at(id);
    check(node.particle.status==4&&node.record_mass==old.record_mass&&node.particle.momentum.energy==old.particle.momentum.energy&&node.decay_time==old.decay_time&&node.particle.production.t==old.particle.production.t);}
+
+  jewel::prepare_imported_partons(preparation_copy,[&](int pdg){return first.nominal_mass(pdg);},2);
+  for(const auto& [id,source]:sources){const auto& old=native.at(id);const auto& node=preparation_copy.state.at(id);
+   check(node.parent==old.parent&&node.scheduling_slots==old.scheduling_slots);
+   check(node.particle.production.t==old.particle.production.t&&node.decay_time==old.decay_time);}
 
   bool invalid_mass=false;
   try{jewel::prepare_subsystem_isr_timing(*a,[](int){return -1.;});}catch(const std::domain_error&){invalid_mass=true;}

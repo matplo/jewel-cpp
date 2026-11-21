@@ -142,6 +142,9 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
   }else node.parent=remnant_parent(source);
   result.state.colour_max=std::max({result.state.colour_max,p.colour,p.anticolour});
   auto id=result.state.append(node,true,true);result.input_sources.emplace(id,source);result.roles.emplace(id,role);
+  // JEWEL's MPI candidates have K(:,3)=0. Keep stable source ancestry, but
+  // expose the source scheduling parent to GETTHETAM/coherence separately.
+  if(role==ImportedRole::mpi_hard)result.state.at(id).scheduling_slots=std::array<std::size_t,3>{0,0,0};
   if(hard!=hard_owner.end())result.subsystems[hard->second.first].hard[hard->second.second]=id;
  }
  result.state.validate();return result;

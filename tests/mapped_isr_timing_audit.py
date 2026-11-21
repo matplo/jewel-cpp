@@ -54,6 +54,8 @@ for line in Path(snapshot).open():
    assert system['incoming_native']==[3+4*index,4+4*index]
    assert system['hard_origins_native']==[5+4*index,6+4*index]
    assert system['hard_parents_native']==system['hard_origins_native'];parent_links+=2
+   if 'hard_scheduling_parents_native' in system:
+    assert system['hard_scheduling_parents_native']==(system['hard_origins_native'] if index==0 else [0,0])
    beam_ids=[c['beam'] for c in e['subsystem_isr_chains'][index]]
    owned={i for sub in e['subsystems'] for i in sub['outgoing_final']}
    remnants=[v for v in e['particles'] if v['final'] and v['id'] not in owned]

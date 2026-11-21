@@ -17,8 +17,8 @@ finals are classified as remnants in this FSR/hadronization-off adapter.
 The importer creates two inert beam records in physical slots 1 and 2, with
 slot 1 also reserved for the cascade scratch record. Each subsystem has two
 incoming records parented to those beams, and two distinct original hard
-records with no parents. Hard final copies point to their respective original
-hard records; ISR emissions point to their respective incoming records;
+records with no parents. Hard final copies retain ancestry to their respective original
+hard records; MPI hard legs separately expose scheduling parent zero; ISR emissions point to their respective incoming records;
 remnants follow reciprocal source ancestry back to a beam. Unsupported remnant
 ancestry is rejected. These records have status 21 and no fabricated daughters.
 
@@ -102,3 +102,13 @@ to the preceding import run. A focused colour-angle contract checks beam slots
 
 [Parentage audit evidence](validation-native-parentage.json) records both runs.
 These are input-record and timing checks, not full-cascade validation.
+
+## MPI scheduling correction
+
+The original parent-category audit used a stock sample with MPI disabled.
+An MPI-enabled stock trace shows that the original-hard-parent rule applies
+to the primary pair; stock MPI candidates instead have parent zero. Native
+MPI legs now retain their original-record ancestry while explicitly setting
+source scheduling slots to `{0,0,0}`. GETTHETAM and coherence use those scheduling
+links. This corrects the earlier extension of primary parent semantics to MPI.
+See [MPI scheduling evidence](validation-mpi-scheduling.md).

@@ -46,8 +46,12 @@ int main(){
   auto selected_id=angles.append(selected,true,true);
   jewel::ShowerParticle partner;partner.particle.status=4;partner.particle.pdg=-1;
   partner.particle.anticolour=101;partner.particle.momentum={0,10,0,10};partner.parent=parents[parent_slot-1];
-  angles.append(partner,true,true);angles.validate();
+  auto partner_id=angles.append(partner,true,true);angles.validate();
   auto opening=jewel::colour_opening_angle(angles,selected_id);
   check(parent_slot<=2?opening==-1:std::abs(opening-std::acos(0.0))<1e-15);
+  // MPI provenance may point beyond slot 2, while source scheduling parent is 0.
+  angles.at(partner_id).scheduling_slots=std::array<std::size_t,3>{0,0,0};
+  check(angles.at(partner_id).parent==parents[parent_slot-1]);
+  check(jewel::colour_opening_angle(angles,selected_id)==-1);
  }
 }

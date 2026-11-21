@@ -1,0 +1,482 @@
+{
+  "scope": "MPI scheduling-parent correction; not full native evolution",
+  "stock_trace": {
+    "scope": "Actual stock Pythia6 histories at JEWEL ISR timing; not Pythia8 equivalence",
+    "downstream_stages": {
+      "1": {
+        "records": 518,
+        "active_records": 358,
+        "nonfinite_records": 0,
+        "active_nonfinite_records": 0,
+        "attempts": 20,
+        "nonfinite_examples": []
+      },
+      "2": {
+        "records": 518,
+        "active_records": 216,
+        "nonfinite_records": 0,
+        "active_nonfinite_records": 0,
+        "attempts": 20,
+        "nonfinite_examples": []
+      }
+    },
+    "stage_trace_sha256": "baacca4501a1712210bba04862a05d7e08dd718f76afd2c25d9a3f3a7558b775",
+    "accepted_events": 20,
+    "interpretation_attempts": 20,
+    "trace_rows": 206,
+    "groups": {
+      "hard_incoming": {
+        "lines": 40,
+        "negative_energy": 5,
+        "zero_energy": 0,
+        "reversed_intervals": 5,
+        "zero_intervals": 0,
+        "nonfinite_time_records": 6,
+        "min_energy": -21.25555319487075,
+        "max_energy": 1105.8147010895168
+      },
+      "terminal_beam": {
+        "lines": 34,
+        "negative_energy": 0,
+        "zero_energy": 0,
+        "reversed_intervals": 0,
+        "zero_intervals": 0,
+        "nonfinite_time_records": 0,
+        "min_energy": 13.339094002123705,
+        "max_energy": 1415.6932030495402
+      },
+      "emitted": {
+        "lines": 83,
+        "negative_energy": 0,
+        "zero_energy": 0,
+        "reversed_intervals": 0,
+        "zero_intervals": 0,
+        "nonfinite_time_records": 0,
+        "min_energy": 1.3295563116077402,
+        "max_energy": 1029.8484691401727
+      },
+      "ancestor_incoming": {
+        "lines": 49,
+        "negative_energy": 0,
+        "zero_energy": 0,
+        "reversed_intervals": 0,
+        "zero_intervals": 0,
+        "nonfinite_time_records": 0,
+        "min_energy": 3.9259866375275734,
+        "max_energy": 1210.237046312861
+      }
+    },
+    "finite_incoming_energy_time_sign_agreement": true,
+    "finite_incoming_sign_checks": 83,
+    "nonfinite_time_records": [
+      {
+        "attempt": "1",
+        "role": "1",
+        "side": "1",
+        "line": "106",
+        "parent": "4",
+        "pdg": "2",
+        "px": "  1.25831699651491391E+000",
+        "py": "  1.83976246175626162E-001",
+        "pz": " -5.72021107185381538E+002",
+        "energy": "  5.72022520775635712E+002",
+        "mass": " -0.00000000000000000E+000",
+        "x": "                 -Infinity",
+        "y": "                 -Infinity",
+        "z": "                  Infinity",
+        "production_time": "                 -Infinity",
+        "end_time": "  0.00000000000000000E+000"
+      },
+      {
+        "attempt": "6",
+        "role": "1",
+        "side": "1",
+        "line": "106",
+        "parent": "4",
+        "pdg": "21",
+        "px": "  1.18362697158163477E+000",
+        "py": " -1.69131365518746724E+000",
+        "pz": " -5.91926880493073426E+001",
+        "energy": "  5.92286740792893340E+001",
+        "mass": " -0.00000000000000000E+000",
+        "x": "                 -Infinity",
+        "y": "                  Infinity",
+        "z": "                  Infinity",
+        "production_time": "                 -Infinity",
+        "end_time": "  0.00000000000000000E+000"
+      },
+      {
+        "attempt": "9",
+        "role": "1",
+        "side": "0",
+        "line": "105",
+        "parent": "3",
+        "pdg": "2",
+        "px": "  8.37469707074504188E-001",
+        "py": "  1.60141946162728671E-001",
+        "pz": "  8.68291354921432912E+002",
+        "energy": "  8.68291773560161687E+002",
+        "mass": " -0.00000000000000000E+000",
+        "x": "                 -Infinity",
+        "y": "                 -Infinity",
+        "z": "                 -Infinity",
+        "production_time": "                 -Infinity",
+        "end_time": "  0.00000000000000000E+000"
+      },
+      {
+        "attempt": "11",
+        "role": "1",
+        "side": "1",
+        "line": "106",
+        "parent": "4",
+        "pdg": "2",
+        "px": " -1.58977488234483516E-001",
+        "py": "  7.69036552904443726E-001",
+        "pz": " -5.80029535186798057E+002",
+        "energy": "  5.80030066789709167E+002",
+        "mass": " -0.00000000000000000E+000",
+        "x": "                  Infinity",
+        "y": "                 -Infinity",
+        "z": "                  Infinity",
+        "production_time": "                 -Infinity",
+        "end_time": "  0.00000000000000000E+000"
+      },
+      {
+        "attempt": "14",
+        "role": "1",
+        "side": "0",
+        "line": "105",
+        "parent": "3",
+        "pdg": "2",
+        "px": " -6.26215455449529501E-001",
+        "py": "  1.09485483392165328E+000",
+        "pz": "  8.81627766906170677E+002",
+        "energy": "  8.81628669130527555E+002",
+        "mass": " -0.00000000000000000E+000",
+        "x": "                  Infinity",
+        "y": "                 -Infinity",
+        "z": "                 -Infinity",
+        "production_time": "                 -Infinity",
+        "end_time": "  0.00000000000000000E+000"
+      },
+      {
+        "attempt": "16",
+        "role": "1",
+        "side": "1",
+        "line": "106",
+        "parent": "4",
+        "pdg": "1",
+        "px": " -2.57616225828127732E+000",
+        "py": "  1.80782704677538408E+000",
+        "pz": " -1.10581022254954996E+003",
+        "energy": "  1.10581470108951680E+003",
+        "mass": " -0.00000000000000000E+000",
+        "x": "                  Infinity",
+        "y": "                 -Infinity",
+        "z": "                  Infinity",
+        "production_time": "                 -Infinity",
+        "end_time": "  0.00000000000000000E+000"
+      }
+    ],
+    "baseline_byte_identity_sha256": {
+      "events.hepmc": "b7e10e9ea154c172845806ad2b235d50cea2b34c7189974c33eb41650a831baf",
+      "out.ran": "be2148ff2ccff2ff817372d753441954bf9e50b6513e52bcc77f987c5e4d8def"
+    },
+    "trace_sha256": "528adcf4beb4ddf1d8481cb901b6a37dc17f3d380c90dbfdfe01834c11e7ddc3",
+    "parameter_card": "NEVENT 20\nNJOB 901\nLOGFILE jewel.log\nHEPMCFILE events.hepmc\nSPLITINTFILE /private/tmp/jewel-geometry-validation-final/tables/splitint.dat\nPDFFILE /private/tmp/jewel-geometry-validation-final/tables/pdfs.dat\nXSECFILE /private/tmp/jewel-geometry-validation-final/tables/xsecs.dat\nMEDIUMPARAMS /private/tmp/jewel-geometry-validation-final/vac-on/medium.dat\nSQRTS 5020.0\nPTMIN 50.0\nPTMAX 400.0\nETAMAX 3.1\nPDFSET 13100\nWEIGHTED F\nISOCHANNEL PP\nKEEPRECOILS F\nWRITESCATCEN F\nWRITEDUMMIES F\nSHORTHEPMC T\nMPI T\n",
+    "input_files": {
+      "SPLITINTFILE": {
+        "path": "/private/tmp/jewel-geometry-validation-final/tables/splitint.dat",
+        "sha256": "d6c379a976157a77a722ff75029b01b64cdf30747f5a085d63d7a6a8984e515e"
+      },
+      "PDFFILE": {
+        "path": "/private/tmp/jewel-geometry-validation-final/tables/pdfs.dat",
+        "sha256": "8dfc6199c3737f8fd6a45c98667058880dbbeac182dc6354ae445f4b30b13656"
+      },
+      "XSECFILE": {
+        "path": "/private/tmp/jewel-geometry-validation-final/tables/xsecs.dat",
+        "sha256": "48d7be15f3848d2a0e8fe35ec7a5aed84959ec20551047c255d7a5815e468be2"
+      },
+      "MEDIUMPARAMS": {
+        "path": "/private/tmp/jewel-geometry-validation-final/vac-on/medium.dat",
+        "sha256": "94a6adc405e111723f0b247c2747261df57d6eaf92ee510c2d2e180ec2920e65"
+      }
+    },
+    "build_manifest": {
+      "scope": "Diagnostic of stock interpretpythiaevent ISR energies and times",
+      "commands": [
+        [
+          "gfortran",
+          "-O2",
+          "-std=legacy",
+          "-ffixed-line-length-none",
+          "-c",
+          "jewel-2.6.0.f"
+        ],
+        [
+          "gfortran",
+          "-O2",
+          "-std=legacy",
+          "-ffixed-line-length-none",
+          "-c",
+          "medium-vac.f"
+        ],
+        [
+          "gfortran",
+          "-O2",
+          "-std=legacy",
+          "-ffixed-line-length-none",
+          "-c",
+          "pythia6425mod-lhapdf6.f"
+        ],
+        [
+          "gfortran",
+          "-O2",
+          "-std=legacy",
+          "-ffixed-line-length-none",
+          "-c",
+          "meix.f"
+        ],
+        [
+          "c++",
+          "-c",
+          "subtraction.C"
+        ],
+        [
+          "gfortran",
+          "-o",
+          "jewel-vac-trace",
+          "jewel-2.6.0.o",
+          "medium-vac.o",
+          "pythia6425mod-lhapdf6.o",
+          "meix.o",
+          "subtraction.o",
+          "-L/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/lhapdf/6.5.5/lib",
+          "-lLHAPDF",
+          "-lc++"
+        ],
+        [
+          "gfortran",
+          "-O2",
+          "-std=legacy",
+          "-ffixed-line-length-none",
+          "-c",
+          "baseline.f"
+        ],
+        [
+          "gfortran",
+          "-o",
+          "jewel-vac-baseline",
+          "baseline.o",
+          "medium-vac.o",
+          "pythia6425mod-lhapdf6.o",
+          "meix.o",
+          "subtraction.o",
+          "-L/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/lhapdf/6.5.5/lib",
+          "-lLHAPDF",
+          "-lc++"
+        ]
+      ],
+      "normalization": {
+        "old": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+        "new": "TAUEST,QSUMVECOLD(4),ZDUM,"
+      },
+      "sources": {
+        "jewel-2.6.0.f.stock": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "medium-vac.f.stock": "c83fda6a0b81ce0dc9f524bbf9a3c68f0225f090107a5cd4d6711edad0b20ea0",
+        "pythia6425mod-lhapdf6.f": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+        "meix.f": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "subtraction.C": "5b84552df996799d9e1061d85fdddf9ee3add56aacc2e4a4655f8e7943d82d17"
+      },
+      "artifacts": {
+        "jewel-2.6.0.f": "782beba8ef866474a4a98180336fc613caad3491b7ed4eb8ebb18636902316e4",
+        "baseline.f": "4b7e946bf4a35be16f77f9300c82f1c826a9985fda1763d3e5b6c7bdf82bc26c",
+        "jewel-vac-trace": "84bc9a143e37031d1685c89a0097794af9890a8180e00a464f4cbd35c03c7c6f",
+        "jewel-vac-baseline": "16da11ba50fdea632fde6aae95d3f4768740b0b18b8f9e5e3c7b2526a7541004"
+      },
+      "builder_sha256": "4614b1a591feedb5ae7e33e5bce3df4a67b73dfd943daefdf836b5a200d78763"
+    },
+    "runner_sha256": "b8a2a625a99808c1e130ecdb4d06fe9984f8c72ec70986ff9b04556eaa8c7a65"
+  },
+  "stock_parent_counts": {
+    "1": [
+      {
+        "parent": 0,
+        "kind": "QCD",
+        "records": 172
+      },
+      {
+        "parent": 0,
+        "kind": "other",
+        "records": 4
+      },
+      {
+        "parent": 1,
+        "kind": "QCD",
+        "records": 10
+      },
+      {
+        "parent": 1,
+        "kind": "other",
+        "records": 17
+      },
+      {
+        "parent": 2,
+        "kind": "QCD",
+        "records": 12
+      },
+      {
+        "parent": 2,
+        "kind": "other",
+        "records": 20
+      },
+      {
+        "parent": 3,
+        "kind": "QCD",
+        "records": 43
+      },
+      {
+        "parent": 4,
+        "kind": "QCD",
+        "records": 40
+      },
+      {
+        "parent": 7,
+        "kind": "QCD",
+        "records": 20
+      },
+      {
+        "parent": 8,
+        "kind": "QCD",
+        "records": 20
+      }
+    ],
+    "2": [
+      {
+        "parent": 0,
+        "kind": "QCD",
+        "records": 172
+      },
+      {
+        "parent": 0,
+        "kind": "other",
+        "records": 4
+      },
+      {
+        "parent": 1,
+        "kind": "QCD",
+        "records": 10
+      },
+      {
+        "parent": 1,
+        "kind": "other",
+        "records": 17
+      },
+      {
+        "parent": 2,
+        "kind": "QCD",
+        "records": 12
+      },
+      {
+        "parent": 2,
+        "kind": "other",
+        "records": 20
+      },
+      {
+        "parent": 3,
+        "kind": "QCD",
+        "records": 43
+      },
+      {
+        "parent": 4,
+        "kind": "QCD",
+        "records": 40
+      },
+      {
+        "parent": 7,
+        "kind": "QCD",
+        "records": 20
+      },
+      {
+        "parent": 8,
+        "kind": "QCD",
+        "records": 20
+      }
+    ]
+  },
+  "native_primary_legs": 3994,
+  "native_mpi_legs": 23496,
+  "timing_fixtures_unchanged": true,
+  "native_audits": [
+    {
+      "scope": "Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence",
+      "native_attachment_records": 13249,
+      "hard_pair_records": 13528,
+      "native_parent_links": 26777,
+      "attempts": 1000,
+      "systems_replayed": 6764,
+      "emitted_values": 66245,
+      "max_timing_absolute_error": 0,
+      "kinematic_values": 240156,
+      "max_independent_kinematic_difference": 6.240554739633808e-10,
+      "discarded_reference_nonfinite_values": 20340,
+      "failures": [
+        {
+          "type": "mapping_failure",
+          "attempt": 273,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+        }
+      ],
+      "negative_incoming_energies": 1362,
+      "maximum_emission_copy_error_gev": 7.101334631443024e-09,
+      "input_hashes": {
+        "/private/tmp/jewel-fractions-final-2600417.jsonl": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a",
+        "/private/tmp/jewel-mpi-scheduling-2600417.jsonl": "84e34f3da556dc771101451eb36b93173dda8dbcec86d6625ab31655a45900b9",
+        "/private/tmp/jewel-mpi-scheduling-2600417.fixtures": "454c91da53695dabb5ad0c40c1fdf1228900313ffbb1af55905a7dffc3250689"
+      },
+      "executable_hashes": {
+        "build/jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+        "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+      },
+      "audit_sha256": "abf3fe64ec646c5b048105c3ed36ee5ca4b55c0b6134c78321a4585904e9ff38"
+    },
+    {
+      "scope": "Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence",
+      "native_attachment_records": 13683,
+      "hard_pair_records": 13962,
+      "native_parent_links": 27645,
+      "attempts": 1000,
+      "systems_replayed": 6981,
+      "emitted_values": 68415,
+      "max_timing_absolute_error": 0,
+      "kinematic_values": 247968,
+      "max_independent_kinematic_difference": 2.765659701253753e-09,
+      "discarded_reference_nonfinite_values": 20880,
+      "failures": [
+        {
+          "type": "mapping_failure",
+          "attempt": 458,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+        },
+        {
+          "type": "mapping_failure",
+          "attempt": 613,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+        }
+      ],
+      "negative_incoming_energies": 1357,
+      "maximum_emission_copy_error_gev": 7.959897629916668e-09,
+      "input_hashes": {
+        "/private/tmp/jewel-fractions-final-2600418.jsonl": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c",
+        "/private/tmp/jewel-mpi-scheduling-2600418.jsonl": "1d68aa5c281b35bc196c3f4b18e69431bada3e7c2ea3ee5ee2ee7c6bb545a78f",
+        "/private/tmp/jewel-mpi-scheduling-2600418.fixtures": "0ea9da39f73e3f88c7ab3101674849fe5a508dc09f73c00d1acdf5dc5e331a52"
+      },
+      "executable_hashes": {
+        "build/jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+        "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+      },
+      "audit_sha256": "abf3fe64ec646c5b048105c3ed36ee5ca4b55c0b6134c78321a4585904e9ff38"
+    }
+  ],
+  "native_probe_sha256": "0814adccffd8623d7fc6b3bf589eccacbfed4f9de01ee84dd25c3fa113f60921"
+}

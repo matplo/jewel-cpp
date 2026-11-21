@@ -36,7 +36,7 @@ int main(int argc,char** argv){try{
    jewel::prepare_imported_partons(imported,[&](int pdg){return generator.nominal_mass(pdg);},2);
    for(const auto& old:before.particles()){
     const auto& n=imported.state.at(old.particle.id);auto a=n.particle.production,b=old.particle.production;
-    if(n.parent!=old.parent||n.daughters!=old.daughters||n.particle.parents!=old.particle.parents||n.particle.colour!=old.particle.colour||n.particle.anticolour!=old.particle.anticolour||a.x!=b.x||a.y!=b.y||a.z!=b.z||a.t!=b.t||n.decay_time!=old.decay_time||n.evolution_time!=old.evolution_time)throw std::runtime_error("preparation altered timing or ancestry");
+    if(n.scheduling_slots!=old.scheduling_slots||n.parent!=old.parent||n.daughters!=old.daughters||n.particle.parents!=old.particle.parents||n.particle.colour!=old.particle.colour||n.particle.anticolour!=old.particle.anticolour||a.x!=b.x||a.y!=b.y||a.z!=b.z||a.t!=b.t||n.decay_time!=old.decay_time||n.evolution_time!=old.evolution_time)throw std::runtime_error("preparation altered timing or ancestry");
     if(!imported.input_sources.count(old.particle.id)&&(n.particle.status!=old.particle.status||n.record_mass!=old.record_mass||n.particle.momentum.energy!=old.particle.momentum.energy))throw std::runtime_error("preparation altered anchor");
    }
    fixtures<<fixture.str();++completed;

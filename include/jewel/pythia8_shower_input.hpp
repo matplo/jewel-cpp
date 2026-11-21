@@ -47,7 +47,8 @@ struct ImportedPythiaRecord {
 };
 // Raw final-record import, not an evolution-ready event. All finals start at
 // status 4. Distinct original hard records, incoming records and beam records
-// preserve parent categories; beam records occupy slots 1/2 and slot 1 is scratch.
+// preserve ancestry; MPI hard legs separately have scheduling parent zero.
+// Beam records occupy slots 1/2 and slot 1 is scratch.
 // Selection, virtuality assignment and evolution still remain separate stages.
 // Optional order must be a permutation of all final source IDs.
 ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot&,

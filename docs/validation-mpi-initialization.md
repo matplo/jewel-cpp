@@ -74,3 +74,13 @@ history from `interpretpythiaevent`, rather than simply being all initialized
 as MPI pairs. The unresolved signed-energy/formation-time mapping is not
 bypassed by this extension. The full >=1000-jet Fortran/native ratio gate
 remains outstanding.
+
+## Updated source-context finding
+
+`findspeclines` sets global TYPE1/TYPE2 from the primary outgoing legs (gluon
+maps to GC, otherwise QQ), before the primary `findvirtualities` call and the
+later `findmpivirtualities` loop. The future subsystem initializer must carry
+that primary context through MPI calls. It must not derive sampling channels
+from each MPI pair. The [MPI-enabled parent trace](validation-mpi-scheduling.md)
+also resolves the distinction between stable native ancestry and source
+scheduling-parent zero. Pair sequencing and full-runner integration remain open.
