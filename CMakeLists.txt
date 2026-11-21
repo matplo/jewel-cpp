@@ -697,3 +697,8 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
  target_link_libraries(subsystem-initialization-test PRIVATE jewel_pythia8)
  add_test(NAME subsystem-initialization-contracts COMMAND subsystem-initialization-test)
 endif()
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
+ add_test(NAME experimental-isr-mpi-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/experimental_isr_mpi.py $<TARGET_FILE:jewel-run-partons>
+  $<TARGET_FILE:jewel-medium-probe> $<TARGET_FILE:jewel-run-events>)
+endif()

@@ -61,3 +61,7 @@ junction colour-angle handling and non-QCD MPI pairs as concrete remaining gaps.
 The sequence now also has [full-record Fortran replay](validation-subsystem-reference.md)
 for the 1,898 supported events from that diagnostic. It does not resolve the
 junction, non-QCD, source-order or full-cascade gaps.
+
+An explicit [experimental parton cascade mode](validation-experimental-cascade.md)
+now connects this sequence to evolution. It does not resolve the remaining
+physics gaps or enable the hadronized runner.

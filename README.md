@@ -853,3 +853,11 @@ This adapter stage is not yet connected to full ISR/MPI cascade evolution.
 Prepared records also support [primary/MPI subsystem initialization](docs/validation-subsystem-initialization.md),
 with primary sampling channels inherited by MPI calls and whole-event rollback
 on failure. This sequence remains separate from full ISR/MPI cascade execution.
+
+### Experimental ISR/MPI parton cascades
+
+`jewel-run-partons --experimental-isr-mpi` connects the validated input stages
+to cascade evolution. It is an explicit diagnostic mode with substantial open
+medium failures, not a validated full generator; the hadronized runner rejects
+this option. See the [smoke samples and Fortran replays](docs/validation-experimental-cascade.md)
+for acceptance/failure accounting and reproduction commands.
