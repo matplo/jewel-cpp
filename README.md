@@ -825,3 +825,7 @@ Hard-input and native runners now accept `--ecm GEV --pt-min GEV --pt-max GEV`.
 Use `--geometry-step .02` to export both hard legs' production points and the
 custom JEWEL straight-line geometric/hot-medium length estimates in native JSON.
 [Definitions and Fortran validation](docs/validation-geometry-lengths.md).
+
+The common hepyy analysis now associates native geometry with final jets across
+the full phase space before applying jet cuts. Unmatched selected jets receive
+null geometry. [Matching rules and sample validation](docs/validation-native-jet-geometry.md).

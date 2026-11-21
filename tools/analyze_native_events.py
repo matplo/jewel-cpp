@@ -8,6 +8,7 @@ import math
 from pathlib import Path
 import platform
 from jet_substructure import soft_drop, SOFT_DROP
+from native_geometry_analysis import associate_geometry, match_hard_legs
 
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('inputs',nargs='+',type=Path)
@@ -50,6 +51,7 @@ def analyze(path):
             else:
                 assert header is not None and summary is None
                 assert record['attempt']==len(events)+1
+                geometry_matches=None
                 jets=[];accepted=record['type']=='event';weight=record.get('weight',0.)
                 if accepted:
                     particles=fj.gbl.std.vector[fj.PseudoJet]()
@@ -60,7 +62,14 @@ def analyze(path):
                         particles.push_back(fj.PseudoJet(*p['momentum']))
                     # No constituent acceptance cut: cluster first in full phase space.
                     sequence=fj.ClusterSequence(particles,fj.JetDefinition(fj.antikt_algorithm,.4))
-                    for jet in fj.sorted_by_pt(sequence.inclusive_jets(0)):
+                    all_jets=[j for j in fj.sorted_by_pt(sequence.inclusive_jets(0)) if j.pt()>0]
+                    geometry_by_jet={}
+                    if 'geometry' in record:
+                        if header.get('geometry_estimator',{}).get('schema')!='geometry-v1-native':
+                            raise ValueError('unsupported native geometry schema')
+                        axes=[dict(jet_id=i,jet_rank=i+1,eta=j.eta(),phi=j.phi(),pt=j.pt()) for i,j in enumerate(all_jets)]
+                        geometry_matches,geometry_by_jet=associate_geometry(record,axes)
+                    for jet_id,jet in enumerate(all_jets):
                         if jet.pt()<10 or abs(jet.eta())>=2:continue
                         constituents=list(jet.constituents());total=math.fsum(p.pt() for p in constituents)
                         if total<=0:continue
@@ -68,10 +77,14 @@ def analyze(path):
                         ptd=math.sqrt(math.fsum(p.pt()**2 for p in constituents))/total
                         jets.append(dict(pt=jet.pt(),eta=jet.eta(),mass=jet.m(),girth=girth,ptd=ptd,
                                          **soft_drop(jet,fj)))
+                        if geometry_matches is not None:
+                            jets[-1].update(jet_id=jet_id,jet_rank=jet_id+1,**geometry_by_jet.get(jet_id,
+                                dict(matched_leg_id=None,matching_delta_r=None,matching_ambiguous=None,geometry=None)))
                 else:
                     failures[record.get('stage','generation')+': '+record.get('reason','generation failure')]+=1
                 events.append(dict(attempt=record['attempt'],accepted=accepted,weight=weight,jets=jets,
                     histograms={key:histogram([j[key] for j in jets],edges) for key,edges in bins.items()}))
+                if geometry_matches is not None:events[-1]['hard_leg_matches']=geometry_matches
     assert summary is not None and summary['attempts']==len(events)==header['attempts_requested']
     assert summary['accepted']==sum(e['accepted'] for e in events)
     assert math.isclose(sum(e['weight'] for e in events),summary['generator_weight_sum'],rel_tol=1e-12)
@@ -99,6 +112,17 @@ def analyze(path):
         selected_jets=sum(len(e['jets']) for e in events),failure_reasons=dict(failures),distributions=distributions,events=events)
 
 samples=[analyze(path) for path in args.inputs]
+for sample in samples:
+    geometry_events=[e for e in sample['events'] if 'hard_leg_matches' in e]
+    if geometry_events:
+        legs=[m for e in geometry_events for m in e['hard_leg_matches']]
+        selected=[j for e in geometry_events for j in e['jets']]
+        sample['geometry_accounting']=dict(events=len(geometry_events),hard_legs=len(legs),
+            matched_legs=sum(m['matched'] for m in legs),
+            matched_jets_passing_analysis=sum(m['jet_passes_analysis'] for m in legs),
+            matched_jets_outside_analysis=sum(m['matched'] and not m['jet_passes_analysis'] for m in legs),
+            ambiguous_legs=sum(m['ambiguous'] for m in legs),
+            unmatched_selected_jets=sum(j['matched_leg_id'] is None for j in selected))
 if args.generator is not None and len({s['run']['schema'] for s in samples})>1:
     parser.error('--generator cannot describe a mixed native/Fortran input set')
 report=dict(scope='Generator event analysis; no matched Fortran/native ratio validation',full_goal_validated=False,
@@ -106,11 +130,13 @@ report=dict(scope='Generator event analysis; no matched Fortran/native ratio val
  selection=dict(algorithm='anti-kt',R=.4,min_pt_GeV=10,max_abs_eta=2,
  particles='all final visible particles; exclude neutrino PDG 12/14/16',
  soft_drop=SOFT_DROP,mass='FastJet signed invariant mass in GeV; negative values retained',
- order='full-phase-space clustering before jet cuts',recoils='per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles'),
+ order='full-phase-space clustering before jet cuts',
+ geometry_matching=dict(max_delta_r=.3,coordinates='pseudorapidity and azimuth',assignment='hepyy_utils.match_hard_legs: maximize matches then minimize total distance',order='all positive-pT jets before analysis cuts',unmatched_jet_geometry=None),recoils='per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles'),
  normalization='weighted jets per denominator record: attempted events for native runs, written events for imported Fortran; not cross-section normalized or directly comparable without a configuration/normalization audit',
  analysis_versions={'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
- for name in ['analyze_native_events.py','jet_substructure.py']},'python':platform.python_version(),'hepyy':importlib.metadata.version('hepyy'),
+ for name in ['analyze_native_events.py','jet_substructure.py','native_geometry_analysis.py']},'python':platform.python_version(),'hepyy':importlib.metadata.version('hepyy'),
  'cppyy':importlib.metadata.version('cppyy'),'fastjet':str(fj.gbl.fastjet.fastjet_version_string()),
+ 'matching_sha256':hashlib.sha256(Path(match_hard_legs.__code__.co_filename).read_bytes()).hexdigest(),
  'loader_sha256':hashlib.sha256(Path(require_fastjet.__code__.co_filename).read_bytes()).hexdigest()},
  samples=samples)
 args.output.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
