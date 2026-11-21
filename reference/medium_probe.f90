@@ -73,6 +73,11 @@ program mediumprobe
  integer mstu(200),mstj(200)
  double precision paru(200),parj(200)
  common /PYDAT1/ mstu,paru,mstj,parj
+ double precision ftfac,evweight,sumofweights
+ integer trip(23000),anti(23000),colmax
+ common /FTIMEFAC/ ftfac
+ common /COLOUR/ trip,anti,colmax
+ common /WEIGHT/ evweight,sumofweights
  character(20) op
  logfid=0
  logfid2=0
@@ -211,15 +216,34 @@ program mediumprobe
    errl=1
    collision=getdeltat(1,start,dt,elapsed,elastic_flag/=0)
    write(*,'(I2,1X,ES26.17E3,1X,I8)')merge(1,0,collision),elapsed,cursor
-  case('REJECT')
-   read(*,*) n,mother
+  case('REJECT','SPLIT')
+   if(trim(op)=='SPLIT')then
+    read(*,*)n,mother,ftfac,colmax
+    k=0
+    p=0
+    vertices=0
+    mv=0
+    starttime=0
+    zd=0
+    thetad=0
+    qqbard=.false.
+    aoreq=.false.
+    trip=0
+    anti=0
+   else
+    read(*,*)n,mother
+   endif
    if(n>23000.or.n<1)stop 5
    mstu=0
    mstu(4)=23000
    paru(1)=3.141592653589793d0
    discard=.false.
    do i=1,n
-    read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i),qflag,aflag
+    if(trim(op)=='SPLIT')then
+     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i),qflag,aflag,trip(i),anti(i)
+    else
+     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i),qflag,aflag
+    endif
     qqbard(i)=qflag/=0
     aoreq(i)=aflag/=0
    enddo
@@ -227,11 +251,21 @@ program mediumprobe
    if(count<0.or.count>100000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
-   call rejectsplitting(k(mother,4),mother)
-   write(*,'(2I8)')merge(1,0,discard),cursor
+   if(trim(op)=='SPLIT')then
+    call makesplitting(mother)
+    write(*,'(4I8)')merge(1,0,discard),cursor,n,colmax
+   else
+    call rejectsplitting(k(mother,4),mother)
+    write(*,'(2I8)')merge(1,0,discard),cursor
+   endif
    do i=1,n
+    if(trim(op)=='SPLIT')then
+     write(*,'(5I8,17ES26.17E3,4I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i), &
+      merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i)
+    else
     write(*,'(5I8,17ES26.17E3,2I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i), &
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
+    endif
    enddo
   case('BCONFIG')
    read(*,*) knf,q0,lps,ptfac,angord

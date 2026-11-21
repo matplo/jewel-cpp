@@ -75,4 +75,119 @@ void reject_splitting(ShowerState& state,ParticleId mother,const BranchingSample
  for(auto id:range)rotate(state.at(id),theta,0);
  for(auto id:range)rotate(state.at(id),0,phi);
 }
+void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sampler,
+ const Medium& medium,double formation_factor,Random& random){
+ auto& parent=state.at(id);auto& p=parent.particle.momentum;
+ int status=parent.particle.status,mode=sampler.angular_ordering();
+ if(parent.record_mass==0||status==11||status==12||status==13||status==14||status==3||parent.fraction<0)return;
+ if(state.particles().size()+2>22990){state.discarded=true;return;}
+ if(!std::isfinite(formation_factor)||formation_factor<=0||p.energy<=0)
+  throw std::domain_error("invalid splitting formation scale or energy");
+ double theta_in=polar_angle(p),phi_in=azimuth(p);
+ rotate(parent,0,-phi_in);rotate(parent,-theta_in,0);
+ double theta=0;
+ if(mode==3){
+  auto v=parent.particle.production;double dt=parent.decay_time-v.t;
+  v={v.x+dt*p.px/p.energy,v.y+dt*p.py/p.energy,v.z+dt*p.pz/p.energy,parent.decay_time};
+  theta=medium.sample(v).temperature>0?-1:parent.angle;
+ }else if(mode==4)theta=parent.angle;
+ bool quark=parent.particle.pdg!=21,qqbar=parent.quark_pair;
+ int direction=(quark||qqbar)?0:(random.uniform()<.5?1:-1);
+ double z=parent.fraction;
+ if(z==0){state.discarded=true;return;}
+ if(z<=0||z>=1||p.pz==0)throw std::domain_error("undefined splitting kinematics");
+ double bmax=std::min(parent.record_mass,z*p.energy),cmax=std::min(parent.record_mass,(1-z)*p.energy);
+ bool newb=true,newc=true;MassSample bmass,cmass;double pz=0,pts=0,thetab=0,thetac=0;
+ auto restore=[&]{rotate(state.at(id),theta_in,0);rotate(state.at(id),0,phi_in);};
+ for(unsigned trial=0;;++trial){
+  if(trial==1000000)throw std::runtime_error("splitting kinematics failed to converge");
+  if(newb)bmass=sampler.mass(0,bmax,theta,z*p.energy,(quark||qqbar)?Channel::QQ:Channel::GC,bmax,false,random);
+  if(newc)cmass=sampler.mass(0,cmax,theta,(1-z)*p.energy,(quark||!qqbar)?Channel::GC:Channel::QQ,cmax,false,random);
+  double mb=bmass.mass,mc=cmass.mass;
+  pz=(2*z*p.energy*p.energy-parent.record_mass*parent.record_mass-mb*mb+mc*mc)/(2*p.pz);
+  pts=z*z*p.energy*p.energy-pz*pz-mb*mb;
+  if(pts<0||mb+mc>parent.record_mass){
+   if(mb==0&&mc==0){
+    state.discarded=true;restore();
+    // Stock label 31 also rotates the last two existing records on this exit.
+    auto n=state.particles().size();
+    if(n<2)throw std::domain_error("splitting requires an initialized event record");
+    auto a=state.particles()[n-2].particle.id,b=state.particles()[n-1].particle.id;
+    rotate(state.at(a),theta_in,0);rotate(state.at(b),theta_in,0);
+    rotate(state.at(a),0,phi_in);rotate(state.at(b),0,phi_in);return;
+   }
+   if(mb==0){newb=false;newc=true;cmax=mc;}
+   else if(mc==0){newb=true;newc=false;bmax=mb;}
+   else if(random.uniform()>.5){newb=false;newc=true;cmax=mc;}
+   else {newb=true;newc=false;bmax=mb;}
+   continue;
+  }
+  if(mode==5)parent.angle=std::asin(std::sqrt(pts/(z*z*p.energy*p.energy-mb*mb)))+
+    std::asin(std::sqrt(pts/((1-z)*(1-z)*p.energy*p.energy-mc*mc)));
+  if(mode==1||mode==5){
+   auto mother=parent.parent;
+   if(!mother)throw std::domain_error("angular ordering requires a parent record");
+   bool scattered=false,first=state.at(mother).daughters[0]==id;
+   for(std::size_t count=0;state.at(mother).particle.status==12;++count){
+    if(count>=state.particles().size())throw std::domain_error("cyclic scattering ancestry");
+    auto& m=state.at(mother);
+    if(state.at(m.daughters[0]).particle.status!=11)scattered=true;
+    first=state.at(m.parent).daughters[0]==mother;mother=m.parent;
+   }
+   auto& m=state.at(mother);bool reject=false;
+   if(!scattered&&parent.angular_required&&m.angle>=0){
+    auto daughter=m.daughters[first?1:0];scattered=false;
+    for(std::size_t count=0;state.at(daughter).particle.status==12;++count){
+     if(count>=state.particles().size())throw std::domain_error("cyclic sibling scattering history");
+     auto& d=state.at(daughter);
+     if(state.at(state.at(d.parent).daughters[0]).particle.status!=11)scattered=true;
+     daughter=d.daughters[1];
+    }
+    if(!scattered&&state.at(daughter).particle.status!=11)
+     reject=state.at(m.daughters[0]).angle>m.angle||state.at(m.daughters[1]).angle>m.angle;
+   }
+   if(reject){restore();reject_splitting(state,mother,sampler,random);return;}
+  }
+  auto zb=bmass.fraction.value(),zc=cmass.fraction.value();
+  thetab=zb>0?mb/(std::sqrt(zb*(1-zb))*z*p.energy):0;
+  thetac=zc>0?mc/(std::sqrt(zc*(1-zc))*(1-z)*p.energy):0;
+  if(mode==2&&parent.angle>0){
+   if(thetab>parent.angle){newb=true;newc=false;bmax=mb;continue;}
+   if(thetac>parent.angle){newc=true;newb=false;cmax=mc;continue;}
+  }
+  break;
+ }
+ ShowerParticle c,b;
+ for(auto* child:{&c,&b}){child->particle.status=1;child->parent=id;child->angular_required=true;child->particle.production.t=parent.decay_time;}
+ c.record_mass=cmass.mass;c.fraction=cmass.fraction.value();c.quark_pair=cmass.quark_pair.value();c.angle=thetac;
+ b.record_mass=bmass.mass;b.fraction=bmass.fraction.value();b.quark_pair=bmass.quark_pair.value();b.angle=thetab;
+ if(qqbar){c.particle.pdg=-1;c.particle.anticolour=parent.particle.anticolour;}
+ else{
+  c.particle.pdg=21;
+  if(parent.particle.pdg>0&&direction>=0){c.particle.colour=parent.particle.colour;c.particle.anticolour=state.colour_max+1;}
+  else {c.particle.colour=state.colour_max+1;c.particle.anticolour=parent.particle.anticolour;}
+  ++state.colour_max;
+ }
+ if(quark){b.particle.pdg=parent.particle.pdg;
+  if(b.particle.pdg>0)b.particle.colour=c.particle.anticolour;else b.particle.anticolour=c.particle.colour;
+ }else if(qqbar){b.particle.pdg=1;b.particle.colour=parent.particle.colour;}
+ else {b.particle.pdg=21;
+  if(direction==1){b.particle.colour=c.particle.anticolour;b.particle.anticolour=parent.particle.anticolour;}
+  else {b.particle.colour=parent.particle.colour;b.particle.anticolour=c.particle.colour;}
+ }
+ double phi=2*3.141592653589793*random.uniform();
+ b.particle.momentum={std::sqrt(pts)*std::cos(phi),std::sqrt(pts)*std::sin(phi),pz,z*p.energy};
+ auto pb=b.particle.momentum;
+ c.particle.momentum={p.px-pb.px,p.py-pb.py,p.pz-pb.pz,(1-z)*p.energy};
+ for(auto* child:{&c,&b})if(child->record_mass>0){
+  double lambda=1/(formation_factor*child->particle.momentum.energy*double(.2f)/(child->record_mass*child->record_mass));
+  child->decay_time=parent.decay_time-std::log(1-random.uniform())/lambda;
+ }
+ parent.particle.status=status==2?13:11;
+ // append can reallocate: do not retain references into state beyond this point.
+ auto cid=state.append(c),bid=state.append(b);state.connect(id,cid,bid);
+ restore();rotate(state.at(cid),theta_in,0);rotate(state.at(bid),theta_in,0);
+ rotate(state.at(cid),0,phi_in);rotate(state.at(bid),0,phi_in);
+}
+
 }

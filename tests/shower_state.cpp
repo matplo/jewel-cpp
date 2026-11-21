@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/shower_state.hpp"
 #include "jewel/kinematics.hpp"
+#include "jewel/shower.hpp"
 #include <cmath>
 #include <stdexcept>
 void check(bool b){if(!b)throw std::runtime_error("state/kinematics contract failed");}
@@ -28,4 +29,14 @@ int main(){
  check(std::abs(x.x-production.x)<1e-13&&std::abs(x.t-production.t)<1e-13);
  auto position=jewel::position_at({100,0,0,10},{1,2,3,0},5);check(position.x==6&&position.y==2);
  rejects([]{jewel::position_at({},{},1);});
+ jewel::BranchingSampler sampler({},1,1,0);jewel::Vacuum vacuum;jewel::ReplayRandom empty({});
+ jewel::ShowerState event;auto on_shell=root;on_shell.record_mass=0;on_shell.particle.pdg=1;on_shell.fraction=.5;
+ auto leg=event.append(on_shell);
+ jewel::make_splitting(event,leg,sampler,vacuum,1,empty);
+ check(event.particles().size()==1&&!event.discarded&&empty.checkpoint()==0);
+ event.at(leg).record_mass=2;event.at(leg).fraction=0;
+ rejects([&]{jewel::make_splitting(event,leg,sampler,vacuum,0,empty);});
+ jewel::make_splitting(event,leg,sampler,vacuum,1,empty);
+ check(event.discarded&&empty.checkpoint()==0);
+
 }

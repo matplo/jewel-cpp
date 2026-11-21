@@ -325,3 +325,32 @@ A one-million-trial guard replaces an otherwise unbounded rejection loop.
 random consumption, with independent momentum-conservation and mass-shell checks.
 This prepares the rejection path needed by MAKESPLITTING; accepted branch
 construction and the complete shower scheduler remain to be implemented.
+
+
+## Milestone 2e: accepted branch construction
+
+`make_splitting(state, particle_id, sampler, medium, formation_factor, random)`
+translates MAKESPLITTING. It samples the two daughter masses, retries forbidden
+kinematics, applies all six ANGORD modes, invokes sibling repair on angular
+rejection, assigns colour connections and creates the two daughter records.
+Daughter order follows stock: radiated gluon/antiquark first, continuing parton
+second. Gluon-to-quark-pair daughters retain stock's placeholder flavours −1/+1.
+
+Formation times preserve the source's single-precision `0.2` factor. As in the
+original routine, daughter birth times are assigned here, while spatial production
+coordinates and evolution bookkeeping must be completed by MAKEBRANCH. Newly
+owned records initialize these pending fields to zero; they must not be treated
+as physical production points until that caller step is implemented. Physical
+production points are never rotated with the auxiliary generator coordinates.
+
+Event discard and retry behavior follow the reference, including its temporary
+frame on zero-fraction failure and its last-record rotations on impossible
+kinematics. Discarded records must not be used for physics output. Invalid input,
+undefined kinematics and one million retries raise exceptions; callers own
+rollback via snapshots. The formation factor must be finite and positive.
+
+[Branch construction validation](docs/validation-splitting.md) covers full records,
+colour flow, formation times, angular rejection and second-generation daughters.
+This is a working branch operation, not a complete vacuum or medium shower:
+MAKEBRANCH scheduling, scattering/recoil application and Pythia8 integration
+remain outstanding.

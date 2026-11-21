@@ -6,4 +6,6 @@ namespace jewel {
 // REJECTSPLITTING: resample sibling masses and repair their kinematics/lifetimes.
 // Mutates state; caller owns event discard/exception handling.
 void reject_splitting(ShowerState&,ParticleId mother,const BranchingSampler&,Random&);
+void make_splitting(ShowerState&,ParticleId,const BranchingSampler&,
+ const Medium&,double formation_factor,Random&);
 }

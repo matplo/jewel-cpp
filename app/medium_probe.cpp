@@ -35,16 +35,19 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="REJECT") {
+   if(op=="REJECT"||op=="SPLIT") {
     if(!branching)throw std::runtime_error("BCONFIG required");
     std::size_t n; jewel::ParticleId mother;std::cin>>n>>mother;
     if(n>23000||n==0)throw std::runtime_error("invalid event size");
-    jewel::ShowerState state;std::vector<std::array<jewel::ParticleId,2>> links;
+    jewel::ShowerState state;double formation=1;
+    if(op=="SPLIT")std::cin>>formation>>state.colour_max;
+    std::vector<std::array<jewel::ParticleId,2>> links;
     for(std::size_t i=0;i<n;++i){
      jewel::ShowerParticle a;std::array<jewel::ParticleId,2> daughters;auto& p=a.particle.momentum;auto& v=a.generator_vertex;auto& x=a.particle.production;int qq,ao;
      std::cin>>a.particle.status>>a.particle.pdg>>a.parent>>daughters[0]>>daughters[1]
       >>p.px>>p.py>>p.pz>>p.energy>>a.record_mass>>v.x>>v.y>>v.z>>v.t
       >>x.x>>x.y>>x.z>>x.t>>a.decay_time>>a.evolution_time>>a.fraction>>a.angle>>qq>>ao;
+     if(op=="SPLIT")std::cin>>a.particle.colour>>a.particle.anticolour;
      if(!std::cin)throw std::runtime_error("bad shower record");
      a.quark_pair=qq!=0;a.angular_required=ao!=0;state.append(a);links.push_back(daughters);
     }
@@ -52,15 +55,22 @@ int main() {
     state.validate();std::size_t count;std::cin>>count;
     if(count>100000)throw std::runtime_error("bad replay size");
     std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
-    jewel::ReplayRandom random(tape);jewel::reject_splitting(state,mother,*branching,random);state.validate();
-    std::cout<<int(state.discarded)<<' '<<random.checkpoint()<<'\n';
+    jewel::ReplayRandom random(tape);
+    if(op=="SPLIT")jewel::make_splitting(state,mother,*branching,*medium,formation,random);
+    else jewel::reject_splitting(state,mother,*branching,random);
+    state.validate();
+    std::cout<<int(state.discarded)<<' '<<random.checkpoint();
+    if(op=="SPLIT")std::cout<<' '<<state.particles().size()<<' '<<state.colour_max;
+    std::cout<<'\n';
     for(const auto& a:state.particles()){
      auto p=a.particle.momentum;auto v=a.generator_vertex;auto x=a.particle.production;
      std::cout<<a.particle.status<<' '<<a.particle.pdg<<' '<<a.parent<<' '<<a.daughters[0]<<' '<<a.daughters[1]<<' '
       <<p.px<<' '<<p.py<<' '<<p.pz<<' '<<p.energy<<' '<<a.record_mass<<' '
       <<v.x<<' '<<v.y<<' '<<v.z<<' '<<v.t<<' '<<x.x<<' '<<x.y<<' '<<x.z<<' '<<x.t<<' '
       <<a.decay_time<<' '<<a.evolution_time<<' '<<a.fraction<<' '<<a.angle<<' '
-      <<int(a.quark_pair)<<' '<<int(a.angular_required)<<'\n';
+      <<int(a.quark_pair)<<' '<<int(a.angular_required);
+     if(op=="SPLIT")std::cout<<' '<<a.particle.colour<<' '<<a.particle.anticolour;
+     std::cout<<'\n';
     }
    } else if(op=="TIME") {
     if(!rates)throw std::runtime_error("XCONFIG required");
