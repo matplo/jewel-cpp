@@ -440,3 +440,19 @@ Rollback must include both the event and transfer history. See
 [validation](docs/validation-final-scattering.md) for whole-sequence comparisons.
 DOKINEMATICS, initial-state/coherent evolution, complete shower scheduling and
 Pythia8 event integration remain outstanding.
+
+## Milestone 2i: recoil storage for collision application
+
+`store_recoil()` in `jewel/recoil.hpp` implements the DOKINEMATICS storage
+section for all RECMODE values 0–3. It records incoming centres or momentum
+transfers and creates subtraction dummies along the source-prescribed direction,
+including negative-energy transfer handling. `RecoilStorage` owns records and
+an independent used count; snapshots must include both for rollback.
+
+Soft recoils in modes 0/1 advance the count without replacing that slot, as in
+the original. Full storage and rejected/disabled writes leave the count unchanged.
+Invalid dummy projections throw; callers must restore or discard partial state.
+[Section-level validation](docs/validation-recoil.md) uses unchanged,
+hash-verified Fortran statements and compares every allocated slot.
+This is a dependency of collision application, not yet a complete DOKINEMATICS
+implementation or final-event recoil subtraction.

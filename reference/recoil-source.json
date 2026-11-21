@@ -1,0 +1,10 @@
+{
+  "file": "jewel-2.6.0.f.stock",
+  "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+  "routine": "DOKINEMATICS",
+  "lines": [
+    6261,
+    6376
+  ],
+  "section_sha256": "56b1ec0a70f48dc908e826a8ea6f0409ba0f5471da5cae71a0430a22e9958489"
+}

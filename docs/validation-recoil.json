@@ -1,0 +1,27 @@
+{
+  "scope": "DOKINEMATICS recoil-storage section only (lines 6261-6376)",
+  "cases": 1664,
+  "scalars": 49536,
+  "max_absolute_error": 1.5707332651769443e-20,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "dummy_absolute_tolerance": 2e-20,
+  "negative_energy_transfer_cases": 213,
+  "untouched_soft_slots": 338,
+  "failures": [],
+  "input_sha256": "5bb81cc0f21e022eed310c8031fc41ecf0474d75c1b77c5fc2510d1edd0281b2",
+  "source": {
+    "file": "jewel-2.6.0.f.stock",
+    "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+    "routine": "DOKINEMATICS",
+    "lines": [
+      6261,
+      6376
+    ],
+    "section_sha256": "56b1ec0a70f48dc908e826a8ea6f0409ba0f5471da5cae71a0430a22e9958489"
+  },
+  "executables": {
+    "jewel-recoil-probe": "f12499efa6a31447c18e206b349ad998293a5623d0891fe377892528438e52bf",
+    "jewel-recoil-reference": "dca8a6782cce6c76e890c684980576c3a2aeeccd54a2e1d6d71a24104781d646"
+  }
+}
