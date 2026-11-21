@@ -7,12 +7,26 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+namespace {
+void initialized_record(std::ostream& out,const jewel::ShowerState& state,const jewel::ShowerParticle& n,const char* separator){
+ auto p=n.particle.momentum;auto v=n.generator_vertex;auto x=n.particle.production;
+ auto daughters=state.scheduling_daughters(n.particle.id);
+ const double values[]={double(n.particle.status),double(n.particle.pdg),double(state.scheduling_parent(n.particle.id)),double(daughters[0]),double(daughters[1]),p.px,p.py,p.pz,p.energy,n.record_mass,v.x,v.y,v.z,v.t,x.x,x.y,x.z,x.t,n.decay_time,n.fraction,n.angle,double(n.quark_pair),double(n.angular_required),double(n.particle.colour),double(n.particle.anticolour),n.evolution_time};
+ bool sep=false;for(auto value:values){if(sep)out<<separator;sep=true;out<<value;}
+}
+}
 int main(int argc,char** argv){try{
  if(argc!=5&&argc!=6)throw std::runtime_error("usage: jewel-native-preparation OUTPUT FIXTURES COUNT SEED [--initialize]");
  bool initialize=argc==6;if(initialize&&std::string(argv[5])!="--initialize")throw std::runtime_error("unknown option");
  int count=std::stoi(argv[3]),seed=std::stoi(argv[4]);if(count<=0)throw std::runtime_error("invalid count");
  if(std::filesystem::exists(argv[1])||std::filesystem::exists(argv[2]))throw std::runtime_error("outputs already exist");
  std::ofstream out(argv[1]),fixtures(argv[2]);if(!out||!fixtures)throw std::runtime_error("cannot open outputs");
+ std::ofstream initialization_fixtures;
+ if(initialize){auto path=std::string(argv[2])+".initialization";
+  if(std::filesystem::exists(path))throw std::runtime_error("initialization fixtures already exist");
+  initialization_fixtures.open(path);if(!initialization_fixtures)throw std::runtime_error("cannot open initialization fixtures");
+  initialization_fixtures<<std::setprecision(17)<<"CONFIG\n208 3 1 .4 .59 .17 .17 .54 6.199999809265137 0 2 .45 1\nBCONFIG\n3 1 .2 1 0\n";
+ }
  out<<std::setprecision(17);
  jewel::PythiaInputConfig config;config.seed=seed;config.initial_state_radiation=true;config.multiple_parton_interactions=true;
  jewel::Pythia8Input generator(config);unsigned completed=0;
@@ -55,6 +69,12 @@ int main(int argc,char** argv){try{
     try{
      auto prepared=imported.state;
      auto result=jewel::initialize_imported_subsystems(imported,init,sampler,init_random);
+     initialization_fixtures<<"SEQINIT\n"<<imported.subsystems[0].pt_hat<<" 1.2 -.7 1 20 0\n"<<prepared.particles().size()<<' '<<imported.subsystems.size()<<" 1\n";
+     for(const auto& pair:imported.subsystems)initialization_fixtures<<pair.hard[0]<<' '<<pair.hard[1]<<'\n';
+     for(const auto& node:prepared.particles()){initialized_record(initialization_fixtures,prepared,node," ");initialization_fixtures<<'\n';}
+     initialization_fixtures<<"-1\n"<<(std::uint64_t(seed)*100000+attempt)<<'\n';
+     out<<",\"records\":[";bool comma=false;
+     for(const auto& node:imported.state.particles()){if(comma)out<<',';comma=true;out<<'[';initialized_record(out,imported.state,node,",");out<<']';}out<<']';
      double maximum_pair_residual=0;std::size_t active=0;
      for(const auto& pair:imported.subsystems){auto a=prepared.at(pair.hard[0]).particle.momentum,b=prepared.at(pair.hard[1]).particle.momentum;
       auto c=imported.state.at(pair.hard[0]).particle.momentum,d=imported.state.at(pair.hard[1]).particle.momentum;

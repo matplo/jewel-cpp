@@ -4,7 +4,7 @@ program mediumprobe
  use, intrinsic :: ieee_arithmetic
  use iso_c_binding, only: c_int64_t
  implicit none
- integer hard_type1,hard_type2
+ integer hard_type1,hard_type2,seq_count,seq_pairs(2,11500),seq_i
  integer hard_mstp(200),hard_msti(200),lme1,lme2,lv,llep1,llep2,lme1orig,lme2orig
  double precision hard_parp(200),hard_pari(200),hard_x,hard_y,hard_z1,hard_z2,hard_angle1,hard_angle2,getthetam
  common /PYPARS/ hard_mstp,hard_parp,hard_msti,hard_pari
@@ -583,7 +583,7 @@ program mediumprobe
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
     endif
    enddo
-  case('HARDINIT','MPIINIT')
+  case('HARDINIT','MPIINIT','SEQINIT')
    hard_mstp=0;hard_msti=0;hard_parp=0;hard_pari=0
    read(*,*)hard_pari(17),hard_x,hard_y,ftfac,ltime,aflag
    aofirstsplit=aflag/=0;mpifsr=.false.;collider='PPJJ';lme1=4;lme2=5
@@ -591,15 +591,26 @@ program mediumprobe
     read(*,*)aflag,hard_type1,hard_type2
     mpifsr=aflag/=0
    endif
-   n=6;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=0;thetad=0;qqbard=.false.;aoreq=.false.;starttime=-1d6
+   n=6
+   if(trim(op)=='SEQINIT')then
+    read(*,*)n,seq_count,aflag
+    if(n<2.or.n>23000.or.seq_count<1.or.seq_count>11500)stop 81
+    mpifsr=aflag/=0
+    do seq_i=1,seq_count
+     read(*,*)seq_pairs(:,seq_i)
+     if(any(seq_pairs(:,seq_i)<1).or.any(seq_pairs(:,seq_i)>n))stop 82
+    enddo
+    lme1=seq_pairs(1,1);lme2=seq_pairs(2,1)
+   endif
+   k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=0;thetad=0;qqbard=.false.;aoreq=.false.;starttime=-1d6
    mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0
-   do i=1,6
+   do i=1,n
     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
     qqbard(i)=qflag/=0;aoreq(i)=aflag/=0
    enddo
    type1='QQ';type2='QQ'
-   if(k(4,2)==21)type1='GC'
-   if(k(5,2)==21)type2='GC'
+   if(k(lme1,2)==21)type1='GC'
+   if(k(lme2,2)==21)type2='GC'
    if(trim(op)=='MPIINIT')then
     type1='QQ';type2='QQ'
     if(hard_type1==1)type1='GC'
@@ -614,8 +625,15 @@ program mediumprobe
    if(trim(op)=='HARDINIT')then
     hard_angle1=getthetam(4);hard_angle2=getthetam(5)
    endif
-   call findvirtualities(4,5,hard_x,hard_y,hard_z1,hard_z2,trim(op)=='MPIINIT')
-   write(*,*)cursor,hard_angle1,hard_angle2
+   if(trim(op)=='SEQINIT')then
+    do seq_i=1,seq_count
+     call findvirtualities(seq_pairs(1,seq_i),seq_pairs(2,seq_i),hard_x,hard_y,hard_z1,hard_z2,seq_i>1)
+    enddo
+    write(*,*)cursor
+   else
+    call findvirtualities(4,5,hard_x,hard_y,hard_z1,hard_z2,trim(op)=='MPIINIT')
+    write(*,*)cursor,hard_angle1,hard_angle2
+   endif
    do i=1,n
     write(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i)

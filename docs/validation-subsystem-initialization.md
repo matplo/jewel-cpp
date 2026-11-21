@@ -57,3 +57,7 @@ ctest --test-dir build -R '^(hard|mpi)-initialization-differential$' --output-on
 The [2,000-attempt diagnostic](validation-initialization-sample.md) now connects
 ISR timing, survivor preparation and this initialization sequence. It identifies
 junction colour-angle handling and non-QCD MPI pairs as concrete remaining gaps.
+
+The sequence now also has [full-record Fortran replay](validation-subsystem-reference.md)
+for the 1,898 supported events from that diagnostic. It does not resolve the
+junction, non-QCD, source-order or full-cascade gaps.

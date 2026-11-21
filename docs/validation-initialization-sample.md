@@ -61,3 +61,11 @@ python3 tests/subsystem_initialization_audit.py /tmp/initialized.jsonl /path/to/
 The last audit requires the matching Pythia8 snapshot capture, including
 subsystems, final-copy history and junctions; it verifies run-setting identity
 and a complete attempt ledger before classifying failures.
+
+## Follow-up reference replay
+
+The [full-record initialization replay](validation-subsystem-reference.md) now
+passes for all 1,898 initialized events. The maximum four-momentum residual in
+each seed is identical in the Fortran output; it is not a C++-only discrepancy.
+The initialization failures above remain unresolved and excluded from that
+replay, with their attempt ledger retained.
