@@ -8,6 +8,9 @@
 #include <cmath>
 #include <stdexcept>
 #include <limits>
+#include <cstdlib>
+#include <iostream>
+#include <iomanip>
 namespace jewel {
 namespace {
 void transform(ShowerParticle& a,double theta,double phi,std::array<double,3> beta={0,0,0}){
@@ -116,6 +119,14 @@ CollisionPair detail::scatter_pair_candidate(ShowerParticle projectile,ShowerPar
    if(p32<0||p42<0||e3<0||e4<0){
     p42=m42==0?1e-4:0.;e4=std::sqrt(p42+m42);e3=std::sqrt(shat)-e4;
     p32=std::fma(e4,e4,-m42);m32=squared(e3)-squared(e4)+m42;
+    // The fallback explicitly sets p42=0 and e4=sqrt(m42). Its exact
+    // p32=e4^2-m42 is zero; rounded sqrt followed by fused subtraction can
+    // instead give a tiny negative value and poison all subsequent boosts.
+    // Repair only this algebraically zero branch, not general negative p^2.
+    if(p42==0&&p32<0){
+     if(std::getenv("JEWEL_COLLISION_TRACE"))std::cerr<<std::setprecision(17)<<"COLLISION_ZERO_P2 "<<p32<<' '<<m42<<' '<<e4<<'\n';
+     p32=0;
+    }
     if(e3<0||e4<0){
      if(result.split_recoil){m42=sample_recoil(std::sqrt(m42));continue;}
      if(dm!=0){dm=0;continue;}
@@ -123,6 +134,9 @@ CollisionPair detail::scatter_pair_candidate(ShowerParticle projectile,ShowerPar
     }
    }
    break;
+  }
+  if((p32<0||p42<0)&&std::getenv("JEWEL_COLLISION_TRACE")){
+   std::cerr<<std::setprecision(17)<<"COLLISION_NEGATIVE_P2 "<<shat<<' '<<m32<<' '<<m42<<' '<<e3<<' '<<e4<<' '<<p32<<' '<<p42<<' '<<p3old<<'\n';
   }
   pc={std::sqrt(p32)*pc.px/p3old,std::sqrt(p32)*pc.py/p3old,std::sqrt(p32)*pc.pz/p3old,e3};
   pd={std::sqrt(p42)*pd.px/p3old,std::sqrt(p42)*pd.py/p3old,std::sqrt(p42)*pd.pz/p3old,e4};

@@ -15,6 +15,8 @@ struct CollisionPair {
 };
 // One transfer's kinematics in DOKINEMATICS, before colour/recoil-storage updates.
 // total_transfer and remaining_mass_change belong to the enclosing sequence.
+// The source zero-CM-momentum fallback repairs negative sqrt-roundoff residue
+// to its algebraic zero; other negative squared momenta are not clamped.
 CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,
  const TransferRecord&,double total_transfer,double remaining_mass_change,
  double target_mass,double total_mass_change,CollisionConfig,

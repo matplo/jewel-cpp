@@ -28,7 +28,22 @@ a,b=run(cpp),run(reference);failures=[];maximum=0.;scalars=0;coverage={};maxdraw
 for index,(info,actual,expected) in enumerate(zip(inputs,a,b)):
  if expected[0][-1]:
   nonfinite_reference.append(dict(case=index,input=info,cpp_rejected=bool(actual[0][-1])))
-  assert actual[0][-1]==1 and actual[0][9]==expected[0][9],(index,'nonfinite reference not rejected')
+  assert actual[0][9]==expected[0][9],(index,'changed draws at nonfinite reference case')
+  if not actual[0][-1]:
+   # An explicit zero-CM-momentum fallback may recover the source's negative
+   # sqrt-roundoff residue. Verify the physical limit independently, not NaN parity.
+   assert actual[0][7]==1 and actual[0][6]==0
+   assert all(math.isfinite(v) for record in actual for v in record)
+   c,d=actual[3],actual[4]
+   assert c[5]>0 and d[5]>0 and c[6]>0 and d[6]>0
+   for col in range(2,5):
+    assert math.isclose(c[col]/c[5],d[col]/d[5],rel_tol=2e-12,abs_tol=2e-13),(index,'not zero relative CM momentum')
+   for record in [c,d]:
+    shell=record[5]**2-sum(v*v for v in record[2:5])-record[6]**2
+    assert abs(shell)<1e-10,(index,'off-shell stabilized fallback',shell)
+   residual=[c[j+2]+d[j+2]-info['p'][j]-info['q'][j] for j in range(4)]
+   assert max(map(abs,residual))<1e-10,(index,'nonconserving stabilized fallback')
+   nonfinite_reference[-1]['zero_cm_fallback_verified']=True
   continue
  assert actual[0][-1]==0,(index,'unexpected C++ rejection')
  for i,(ar,br) in enumerate(zip(actual,expected)):

@@ -861,3 +861,8 @@ to cascade evolution. It is an explicit diagnostic mode with substantial open
 medium failures, not a validated full generator; the hadronized runner rejects
 this option. See the [smoke samples and Fortran replays](docs/validation-experimental-cascade.md)
 for acceptance/failure accounting and reproduction commands.
+
+The collision fallback now [resolves negative roundoff at an algebraically zero CM momentum](docs/validation-zero-cm-limit.md).
+This documented numerical extension recovers source-nonfinite cases; ordinary
+finite-source comparisons retain their original tolerances. The 20-event
+experimental medium smoke sample completes, but full jet validation is pending.

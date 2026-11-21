@@ -76,3 +76,8 @@ The original 2/20 medium result above used an incorrect imported fraction
 default. The [source event-start correction](validation-imported-fractions.md)
 raises completion to 16/20 for the same sample. Vacuum output is unchanged.
 The original results remain historical evidence, not the current failure rate.
+
+A subsequent [zero-CM-momentum roundoff correction](validation-zero-cm-limit.md)
+raises the same medium sample to 20/20 completion. This deliberately resolves
+a source-nonfinite algebraic limit; it does not convert historical Fortran
+failures into parity passes or establish jet-level agreement.
