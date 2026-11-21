@@ -767,3 +767,10 @@ with explicit untagged and out-of-range accounting. See the
 [definition and validation](docs/validation-substructure.md) and
 [selectable native sample report](docs/native-substructure-report.html).
 These remain native-only results; the matched Fortran ratio gate is outstanding.
+
+Fortran HepMC2 samples can enter the same analysis through the
+[native HepMC3 importer](docs/validation-reference-analysis.md). The
+[common event browser](docs/common-event-report.html) records generator identity
+and the distinction between native attempts and written reference events.
+The included Fortran sample is a smoke check with unmatched settings, not a
+passing physics comparison.
