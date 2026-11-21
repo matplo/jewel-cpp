@@ -57,7 +57,36 @@ massive nonpartons, and the final jet/substructure ratio requirement remain open
 
 The initialized state of attempt 217 was also run through the native and frozen
 Fortran cascade probes. The native cascade completes; the bounded Fortran
-reference reports a nonfinite cascade (guard reason 4), with a different record
+reference reports a nonfinite cascade (guard reason 1 after 29 branch calls), with a different record
 and draw count. This is not a parity pass. The passing initialization matrix
 above must not be read as a full-event agreement claim.
 [Failed cascade replay evidence](validation-mpi-photon-medium-replay.json).
+
+## First nonfinite operation identified
+
+The first 29 branch visits agree in selected-particle state within the unchanged
+comparison tolerance, and exactly in visit order, record counts and RNG cursor.
+This boundary trace is not a comparison of all state inside each branch.
+[Trace summary](validation-mpi-photon-branch-prefix.json).
+
+At branch 29, DOKINEMATICS takes the square root of p32=-8.456990869161364e-18
+GeV^2 after setting p42=0 and E4=sqrt(m42), where m42=0.2379884093376736 GeV^2.
+Thus p32=E4^2-m42 is algebraically zero; floating-point evaluation gives a tiny
+negative value. The existing native zero-boundary handling already restores
+zero only in this explicit fallback. This is the previously documented collision
+roundoff case, not an active photon scattering. Diagnostic writes reproduce
+identical stdout to the uninstrumented engines.
+[Instrumented evidence](validation-mpi-photon-roundoff.json).
+
+A separate temporary Fortran copy was modified to apply exactly that zero-boundary
+correction. The frozen reference and production implementations were not changed.
+This modified diagnostic completes and agrees with C++ on the full output header,
+including 639 records, 217 stored scattering centres and 628,994 random draws.
+It still has 28 strict scalar mismatches among 21,453 values, with maximum absolute
+difference 6.86384e-12. It is neither a stock-reference parity pass nor a strict
+modified-reference pass. [Explicit patch and result](validation-mpi-photon-modified-reference.json).
+
+Replay reports now parse GUARD_STATS into structured reason and branch-call
+fields. The final output-header field is a coherent-history index, not a guard
+reason; the earlier label of reason 4 was corrected to reason 1 after 29 calls.
+No numerical tolerance or acceptance gate was relaxed.

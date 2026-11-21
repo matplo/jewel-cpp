@@ -26,7 +26,16 @@ def execute(executable, fixture, directory, timeout):
         except subprocess.TimeoutExpired:
             result['timeout_seconds'] = timeout
     lines = prefix.with_suffix(prefix.suffix + '.out').read_text().splitlines()
-    result['stderr'] = prefix.with_suffix(prefix.suffix + '.err').read_text()[-2000:]
+    stderr_text = prefix.with_suffix(prefix.suffix + '.err').read_text()
+    result['stderr'] = stderr_text[-2000:]
+    # Header's final field is the coherent-history end, not a guard reason.
+    for line in stderr_text.splitlines():
+        fields = line.split()
+        if len(fields) == 3 and fields[0] == 'GUARD_STATS':
+            reason, calls = map(int, fields[1:])
+            result['guard'] = dict(reason=reason, branch_calls=calls,
+                description={0: 'no guard triggered', 1: 'nonfinite post-branch state',
+                             2: 'branch-call limit reached'}.get(reason, 'unknown'))
     if result.get('returncode') == 0:
         result['header'] = list(map(int, lines[0].split()))
     return result, lines
