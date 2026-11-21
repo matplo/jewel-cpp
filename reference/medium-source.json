@@ -165,6 +165,19 @@
       "DOCOHSCATTERING": [
         4644,
         5072
+      ],
+      "DOINSTATESCAT": [
+        4132,
+        4638
+      ]
+    },
+    "declaration_normalizations": {
+      "DOINSTATESCAT": [
+        {
+          "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+          "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+          "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+        }
       ]
     }
   },

@@ -15,5 +15,9 @@ for filename,item in manifest.items():
         declarations=sum(bool(re.match(r'\s*(?:(?:DOUBLE PRECISION|LOGICAL) FUNCTION|SUBROUTINE)\s+',line,re.I)) for line in unit)
         if declarations!=1: raise SystemExit('Reference span includes multiple routines: '+name)
         if not re.fullmatch(r'\s*(?:\d+\s*)?END\s*',unit[-1],re.I): raise SystemExit('Reference span misses END: '+name)
-        blocks.extend(unit)
+        text=''.join(unit)
+        for change in item.get('declaration_normalizations',{}).get(name,[]):
+            if text.count(change['from'])!=1: raise SystemExit('Declaration normalization mismatch: '+name)
+            text=text.replace(change['from'],change['to'])
+        blocks.append(text)
 output.write_text(''.join(blocks))

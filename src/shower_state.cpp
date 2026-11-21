@@ -21,7 +21,8 @@ void fields(const ShowerParticle& s){
  require(s.particle.colour>=0&&s.particle.anticolour>=0,"negative colour index");
 }
 }
-ParticleId ShowerState::append(ShowerParticle s){
+ParticleId ShowerState::append(ShowerParticle s,bool inherit_evolution_time){
+ if(inherit_evolution_time&&particles_.size()<retired_evolution_.size())s.evolution_time=retired_evolution_[particles_.size()];
  fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
  require(s.daughters[0]==0&&s.daughters[1]==0,"append requires unattached daughters");
  auto ancestry=origins(s);for(auto origin:ancestry)at(origin);
@@ -59,6 +60,7 @@ void ShowerState::connect_coherent(ParticleId first,ParticleId second,ParticleId
 void ShowerState::validate() const {
  require(std::isfinite(weight),"nonfinite event weight");require(colour_max>=0,"negative maximum colour");
  require(slots_.size()==particles_.size(),"shower index mismatch");
+ for(double value:retired_evolution_)require(std::isfinite(value),"nonfinite retired evolution time");
  // ISR can insert a new ancestor after its child; IDs do not encode genealogy order.
  std::unordered_map<ParticleId,int> visited;
  for(const auto& s:particles_){
@@ -94,9 +96,15 @@ void ShowerState::validate() const {
   }
  }
 }
-ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded};}
+ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded,retired_evolution_};}
+ShowerSnapshot ShowerState::snapshot_truncated(std::size_t count) const {
+ require(count<=particles_.size(),"invalid truncated shower size");
+ auto saved=snapshot();saved.retired_evolution.resize(std::max(saved.retired_evolution.size(),particles_.size()));
+ for(std::size_t i=count;i<particles_.size();++i)saved.retired_evolution[i]=particles_[i].evolution_time;
+ saved.particles.resize(count);return saved;
+}
 void ShowerState::restore(const ShowerSnapshot& snapshot){
- ShowerState candidate;candidate.particles_=snapshot.particles;candidate.colour_max=snapshot.colour_max;candidate.weight=snapshot.weight;candidate.discarded=snapshot.discarded;
+ ShowerState candidate;candidate.particles_=snapshot.particles;candidate.colour_max=snapshot.colour_max;candidate.weight=snapshot.weight;candidate.discarded=snapshot.discarded;candidate.retired_evolution_=snapshot.retired_evolution;
  ParticleId maximum=0;
  for(std::size_t i=0;i<candidate.particles_.size();++i){auto id=candidate.particles_[i].particle.id;require(id>0&&candidate.slots_.emplace(id,i).second,"invalid snapshot IDs");maximum=std::max(maximum,id);}
  require(maximum<std::numeric_limits<ParticleId>::max(),"snapshot ID space exhausted");candidate.next_=std::max(next_,maximum+1);candidate.validate();

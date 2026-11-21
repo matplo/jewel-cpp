@@ -68,7 +68,7 @@ CoherentResult evolve_coherent(ShowerState& state,ParticleId selected,ParticleId
    if(!pair.possible){
     // Stock removes only the latest two rows, retaining colour/storage side effects.
     if(state.particles().size()!=before_count+2)throw std::domain_error("coherent rollback without one appended collision pair");
-    auto saved=state.snapshot();saved.particles.resize(saved.particles.size()-2);
+    auto saved=state.snapshot_truncated(state.particles().size()-2);
     auto& previous=saved.particles.back();previous.particle.status=1;previous.daughters={};previous.decay_time=0;
     current=previous.particle.id;state.restore(saved);++result.undone_kicks;
    }else{

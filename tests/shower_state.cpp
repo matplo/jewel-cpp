@@ -4,9 +4,24 @@
 #include "jewel/shower.hpp"
 #include <cmath>
 #include <stdexcept>
+#include <limits>
 void check(bool b){if(!b)throw std::runtime_error("state/kinematics contract failed");}
 template<class F>void rejects(F f){bool threw=false;try{f();}catch(const std::exception&){threw=true;}check(threw);}
 int main(){
+ // Partial rollback retains physical-slot times without recycling particle IDs.
+ {
+  jewel::ShowerState slots;jewel::ShowerParticle p;slots.append(p);auto clean=slots.snapshot();
+  p.evolution_time=7;auto removed=slots.append(p);
+  slots.restore(slots.snapshot_truncated(1));p.evolution_time=0;
+  auto inherited=slots.append(p,true);check(inherited>removed&&slots.at(inherited).evolution_time==7);
+  slots.restore(slots.snapshot_truncated(1));p.evolution_time=42;
+  auto explicit_time=slots.append(p);check(slots.at(explicit_time).evolution_time==42);
+  auto corrupt=slots.snapshot();corrupt.retired_evolution[1]=std::numeric_limits<double>::quiet_NaN();
+  rejects([&]{slots.restore(corrupt);});check(slots.at(explicit_time).evolution_time==42);
+  slots.restore(clean);p.evolution_time=0;auto fresh=slots.append(p,true);check(slots.at(fresh).evolution_time==0);
+  rejects([&]{slots.snapshot_truncated(3);});slots.validate();
+ }
+
  jewel::ShowerState state;jewel::ShowerParticle root;root.particle.pdg=21;root.particle.status=1;
  root.particle.momentum={3,4,5,std::sqrt(54.)};root.record_mass=2;
  auto parent=state.append(root);auto before=state.snapshot();

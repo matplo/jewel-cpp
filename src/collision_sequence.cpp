@@ -35,7 +35,7 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
    state.at(line)=pair.incoming;state.at(scratch)=pair.centre;
    pair.recoil.coherent_partner=0;pair.recoil.parent=0;pair.recoil.collision_source=line;
    pair.outgoing.coherent_partner=0;pair.outgoing.parent=line;pair.outgoing.collision_source=0;
-   auto recoil=state.append(pair.recoil),outgoing=state.append(pair.outgoing);
+   auto recoil=state.append(pair.recoil,true),outgoing=state.append(pair.outgoing,true);
    state.connect_collision(line,recoil,outgoing);
    remaining-=state.at(outgoing).record_mass-state.at(line).record_mass;
    line=outgoing;result.outgoing=outgoing;last_mass=state.at(outgoing).record_mass;
@@ -58,7 +58,7 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
   if(request.energy_fraction!=1)result.retry_splitting=true;
   // Keep round-trip incoming/scratch arithmetic and the allocated recoil tail,
   // while removing rejected event nodes. Stable IDs are never reused.
-  auto rollback=state.snapshot();rollback.particles.resize(size);rollback.colour_max=baseline.colour_max;
+  auto rollback=state.snapshot_truncated(size);rollback.colour_max=baseline.colour_max;
   for(std::size_t i=0;i<size;++i)rollback.particles[i].daughters=baseline.particles[i].daughters;
   for(auto& p:rollback.particles)if(p.particle.id==projectile)p.particle.status=original_status;
   state.restore(rollback);ledger.used=stored;result.outgoing=projectile;

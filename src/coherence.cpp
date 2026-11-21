@@ -46,7 +46,7 @@ CoherentStart begin_coherent(ShowerState& state,ParticleId selected,bool enabled
  merged.particle.production=original.particle.production;
  merged.particle.colour=mother.particle.colour;merged.particle.anticolour=mother.particle.anticolour;
  merged.angle=mother.angle;merged.fraction=mother.fraction;merged.quark_pair=mother.quark_pair;
- r.coherent=state.append(merged);
+ r.coherent=state.append(merged,true);
  state.at(r.second)=second;
  state.at(r.first).decay_time=state.at(r.first).particle.production.t;
  state.at(r.second).decay_time=state.at(r.second).particle.production.t;

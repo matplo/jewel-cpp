@@ -288,3 +288,15 @@ if(BUILD_TESTING)
  target_link_libraries(coherent-evolution-test PRIVATE jewel_core)
  add_test(NAME coherent-evolution-contracts COMMAND coherent-evolution-test)
 endif()
+
+target_sources(jewel_core PRIVATE src/initial_evolution.cpp)
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME initial-evolution-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/initial_evolution_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/initial-evolution-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(initial-evolution-test tests/initial_evolution.cpp)
+ target_link_libraries(initial-evolution-test PRIVATE jewel_core)
+ add_test(NAME initial-evolution-contracts COMMAND initial-evolution-test)
+endif()

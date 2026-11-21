@@ -1,0 +1,1898 @@
+{
+  "radiating_cases": 12,
+  "flavour_changes": 4,
+  "maximum_trials": 353,
+  "coherence_reversions": 659,
+  "unresolved_rejections": 20,
+  "scope": "full DOINSTATESCAT replay",
+  "cases": 52,
+  "finite_cases": 52,
+  "values": 140556,
+  "max_absolute_error": 7.693845560652335e-14,
+  "max_draws": 41779,
+  "max_records": 16,
+  "cases_with_recoils": 11,
+  "invalid_cases": [],
+  "failures": [],
+  "settings": [
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 0,
+      "cross": 1,
+      "length": 1,
+      "seed": 260000,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260001,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260002,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 2,
+      "cross": 10,
+      "length": 1,
+      "seed": 260003,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 0,
+      "cross": 1,
+      "length": 1,
+      "seed": 260004,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260005,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260006,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 2,
+      "cross": 10,
+      "length": 1,
+      "seed": 260007,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 0,
+      "cross": 1,
+      "length": 1,
+      "seed": 260008,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260009,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260010,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 2,
+      "cross": 10,
+      "length": 1,
+      "seed": 260011,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0,
+      "cross": 1,
+      "length": 1,
+      "seed": 260012,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260013,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260014,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 2,
+      "cross": 10,
+      "length": 1,
+      "seed": 260015,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 0,
+      "cross": 1,
+      "length": 1,
+      "seed": 260016,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260017,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260018,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 2,
+      "cross": 10,
+      "length": 1,
+      "seed": 260019,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": -1,
+      "selected": 5,
+      "left": 0,
+      "cross": 1,
+      "length": 1,
+      "seed": 260020,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": -1
+    },
+    {
+      "pdg": -1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260021,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": -1
+    },
+    {
+      "pdg": -1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260022,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": -1
+    },
+    {
+      "pdg": -1,
+      "selected": 5,
+      "left": 2,
+      "cross": 10,
+      "length": 1,
+      "seed": 260023,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": -1
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260024,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260025,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260026,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260027,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260028,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260029,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260030,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260031,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260032,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": -1,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260033,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": -1,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260034,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": -1
+    },
+    {
+      "pdg": -1,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260035,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": -1
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260036,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": true,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260037,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": true,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260038,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": true,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260039,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": true,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260040,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": true,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260041,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": true,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260042,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": true,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 1,
+      "selected": 5,
+      "left": 0.5,
+      "cross": 1,
+      "length": 1,
+      "seed": 260043,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": true,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 1
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260044,
+      "kinmode": 0,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 2.6,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260045,
+      "kinmode": 1,
+      "history": 1,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0.8,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260046,
+      "kinmode": 2,
+      "history": 2,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 2.6,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260047,
+      "kinmode": 3,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0.8,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260048,
+      "kinmode": 0,
+      "history": 1,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 2.6,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260049,
+      "kinmode": 1,
+      "history": 2,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0.8,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 5,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260050,
+      "kinmode": 2,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 2.6,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 1,
+      "cross": 5,
+      "length": 1,
+      "seed": 260051,
+      "kinmode": 3,
+      "history": 1,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0.8,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 1,
+      "near_edge": false,
+      "nf": 5,
+      "boost": 1,
+      "retry": false,
+      "rejection": 1,
+      "force_radiation": false,
+      "selected_flavour": 21
+    }
+  ],
+  "cpp_diagnostics": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      142,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      10,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      353,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      50,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      75,
+      0,
+      0
+    ],
+    [
+      198,
+      0,
+      197
+    ],
+    [
+      8,
+      5,
+      2
+    ],
+    [
+      128,
+      0,
+      127
+    ],
+    [
+      7,
+      5,
+      1
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      4,
+      2,
+      1
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      10,
+      0,
+      9
+    ],
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      62,
+      0,
+      61
+    ],
+    [
+      16,
+      0,
+      15
+    ],
+    [
+      26,
+      0,
+      25
+    ],
+    [
+      23,
+      0,
+      22
+    ],
+    [
+      16,
+      0,
+      0
+    ],
+    [
+      97,
+      0,
+      96
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      83,
+      0,
+      82
+    ],
+    [
+      6,
+      0,
+      5
+    ],
+    [
+      3,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      6,
+      5,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      3,
+      1,
+      1
+    ],
+    [
+      15,
+      0,
+      14
+    ],
+    [
+      1,
+      0,
+      0
+    ]
+  ],
+  "input_sha256": "05ef7c2076cb92fb37e294e714a3e37c34af020b85a8b394bdd9a141f63bd39e",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ],
+        "GETPDF": [
+          6928,
+          7022
+        ],
+        "GETPDFXINTEXACT": [
+          7096,
+          7129
+        ],
+        "PDFINT": [
+          8082,
+          8135
+        ],
+        "GETPDFXINT": [
+          7027,
+          7090
+        ],
+        "PGQ": [
+          7938,
+          7942
+        ],
+        "XSECINT": [
+          8142,
+          8228
+        ],
+        "GETXSECINT": [
+          7135,
+          7241
+        ],
+        "GETSSCAT": [
+          7365,
+          7458
+        ],
+        "GETMASS": [
+          7465,
+          7625
+        ],
+        "GENERATEZ": [
+          7632,
+          7685
+        ],
+        "GETDELTAT": [
+          8423,
+          8554
+        ],
+        "REJECTSPLITTING": [
+          3688,
+          3865
+        ],
+        "MAKESPLITTING": [
+          3288,
+          3682
+        ],
+        "GETNEWMASS": [
+          5253,
+          5360
+        ],
+        "GETPNORAD1": [
+          5366,
+          5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "kinematics_sources": {
+    "pythia6425mod-lhapdf6.f": {
+      "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+      "routines": {
+        "PYANGL": [
+          74441,
+          74466
+        ],
+        "PYROBO": [
+          74638,
+          74735
+        ],
+        "PYP": [
+          76081,
+          76156
+        ]
+      }
+    },
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "GETPOSITION": [
+          8807,
+          8826
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "1c7590d2a1ccd1e7adf69b55206047184ca121eaacb4c29ccbf1732429b137e3",
+    "jewel-medium-reference": "c208b5f07d2f8561a77186de8daa6ee11aad6ad59e0e65c51e82f5aed7d86112"
+  }
+}

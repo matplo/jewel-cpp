@@ -20,16 +20,18 @@ struct ShowerSnapshot {
  int colour_max{};
  double weight{1};
  bool discarded{};
+ std::vector<double> retired_evolution; // Physical-slot metadata retained by partial rollback.
 };
 class ShowerState {
  std::vector<ShowerParticle> particles_;
  std::unordered_map<ParticleId,std::size_t> slots_;
  ParticleId next_{1};
+ std::vector<double> retired_evolution_;
 public:
  int colour_max{};
  double weight{1};
  bool discarded{};
- ParticleId append(ShowerParticle);
+ ParticleId append(ShowerParticle,bool inherit_evolution_time=false);
  const ShowerParticle& at(ParticleId) const;
  ShowerParticle& at(ParticleId);
  const auto& particles() const{return particles_;}
@@ -38,6 +40,8 @@ public:
  void connect_coherent(ParticleId first,ParticleId second,ParticleId coherent);
  void validate() const;
  ShowerSnapshot snapshot() const;
+ // Caller must repair links/statuses before restoring a truncated snapshot.
+ ShowerSnapshot snapshot_truncated(std::size_t active_count) const;
  void restore(const ShowerSnapshot&);
 };
 }

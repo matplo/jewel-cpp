@@ -6,6 +6,7 @@
 #include "jewel/evolution.hpp"
 #include "jewel/collision.hpp"
 #include "jewel/coherence.hpp"
+#include "jewel/initial_evolution.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -22,7 +23,7 @@ int main() {
  std::unique_ptr<jewel::ScatteringRates> rates;
  std::unique_ptr<jewel::BranchingSampler> branching;
  std::unique_ptr<jewel::TransferSampler> transfers;
- jewel::EvolutionConfig evolution_config;
+ jewel::EvolutionConfig evolution_config;jewel::Kernels evolution_kernels;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -137,14 +138,15 @@ int main() {
     }
     for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
      <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
-   } else if(op=="COHERENT") {
+   } else if(op=="COHERENT"||op=="ISTATE") {
     if(!rates||!transfers||!branching)throw std::runtime_error("coherent models required");
     jewel::CoherentConfig config;config.lifetime=evolution_config.lifetime;config.cross_section_scale=evolution_config.cross_section_scale;
     config.collision.cutoff=evolution_config.cutoff;config.collision.mass_scale=evolution_config.mass_scale;
     int enabled;std::size_t selected;double now,left,angle,split_time;
     jewel::ShowerState state;jewel::TransferHistory history;history.records.resize(100);
     std::cin>>selected>>enabled>>now>>left>>angle>>split_time>>config.length_factor>>config.collision.kinematic_mode>>state.colour_max>>state.weight>>history.last;
-    config.enabled=enabled;history.first=1;
+    config.enabled=enabled;history.first=1;int retry_initial=0;double coherence_rejection=1;
+    if(op=="ISTATE")std::cin>>retry_initial>>coherence_rejection;
     std::array<std::array<jewel::ParticleId,2>,5> links;
     for(int i=0;i<5;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,ao;
      std::cin>>p.status>>p.pdg>>s.parent>>links[i][0]>>links[i][1]>>p.momentum.px>>p.momentum.py>>p.momentum.pz>>p.momentum.energy>>s.record_mass
@@ -165,12 +167,24 @@ int main() {
     std::size_t count;std::cin>>count;if(count>100000)throw std::runtime_error("bad coherent tape");
     std::vector<double> tape(count);for(auto& v:tape)std::cin>>v;if(!std::cin)throw std::runtime_error("bad coherent input");
     jewel::ReplayRandom random(tape);jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
-    try{result=jewel::evolve_coherent(state,selected,1,history,ledger,now,left,angle,split_time,config,*rates,*transfers,*branching,*medium,random,&histograms);state.validate();}
-    catch(const std::domain_error& e){invalid=1;std::cerr<<"COH_ERROR "<<e.what()<<'\n';}
+    jewel::InitialScatteringResult initial_result;initial_result.selected=selected;
+    try{
+     if(op=="ISTATE"){
+      if(!pdf||!sudakov||!final_table)throw std::runtime_error("initial models required");
+      jewel::InitialEvolutionConfig initial_config{evolution_config,config,coherence_rejection};
+      jewel::InitialScatteringEvolution evolution(initial_config,evolution_kernels,*branching,*sudakov,*final_table,*pdf,*rates,*transfers,*medium);
+      initial_result=evolution.sample(state,selected,1,history,ledger,now,left,retry_initial,random,&histograms);result.selected=initial_result.selected;
+     }else result=jewel::evolve_coherent(state,selected,1,history,ledger,now,left,angle,split_time,config,*rates,*transfers,*branching,*medium,random,&histograms);
+     state.validate();
+    }
+    catch(const std::domain_error& e){invalid=1;std::cerr<<(op=="ISTATE"?"INI_ERROR ":"COH_ERROR ")<<e.what()<<'\n';}
     catch(const std::out_of_range& e){if(std::string(e.what())!="RNG tape exhausted")throw;invalid=3;}
-    std::cerr<<"COH_STATS "<<result.collision_calls<<' '<<result.kinematic_calls<<' '<<result.undone_kicks<<'\n';
+    if(op=="ISTATE")std::cerr<<"INI_STATS "<<initial_result.trials<<' '<<initial_result.unresolved_rejections<<' '<<initial_result.coherence_reversions<<'\n';
+    else std::cerr<<"COH_STATS "<<result.collision_calls<<' '<<result.kinematic_calls<<' '<<result.undone_kicks<<'\n';
     auto slot=[&](jewel::ParticleId id){if(!id)return std::size_t(0);for(std::size_t i=0;i<state.particles().size();++i)if(state.particles()[i].particle.id==id)return i+1;throw std::runtime_error("dangling coherent ID");};
-    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<random.checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last<<'\n';
+    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<random.checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
+    if(op=="ISTATE")std::cout<<' '<<initial_result.fraction<<' '<<initial_result.virtuality<<' '<<initial_result.elapsed<<' '<<initial_result.incoming_flavour<<' '<<initial_result.above_cutoff<<' '<<bool(initial_result.coherent);
+    std::cout<<'\n';
     for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(s.parent)<<' '<<slot(s.daughters[0])<<' '<<slot(s.daughters[1])<<' '
      <<p.momentum.px<<' '<<p.momentum.py<<' '<<p.momentum.pz<<' '<<p.momentum.energy<<' '<<s.record_mass<<' '
      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
@@ -336,7 +350,7 @@ int main() {
    } else if(op=="XCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>k.lambda_scattering>>emax>>scale>>boost))throw std::runtime_error("bad rate configuration");
-    rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);
+    evolution_kernels=k;rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);
    } else if(op=="XDUMP") {
     if(!rates)throw std::runtime_error("XCONFIG required");
     std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);

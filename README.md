@@ -14,7 +14,7 @@ ctest --test-dir build --output-on-failure
 cat build/validation.json
 ```
 
-The reference directory must contain `jewel-2.6.0.f.stock` (preferred) or `jewel-2.6.0.f` with the exact hash in `reference/source.json`. Configuration rejects patched or unknown source. Only the selected unchanged routine bodies are extracted into the build directory; the reference executable does not need Pythia6 or LHAPDF. Do not enable fast-math or change Fortran's default REAL size. Omit `JEWEL_REFERENCE_SOURCE` for a C++-only build; that build runs contract tests but makes no reference-parity claim.
+The reference directory must contain `jewel-2.6.0.f.stock` (preferred) or `jewel-2.6.0.f` with the exact hash in `reference/source.json`. Configuration rejects patched or unknown source. Only the selected unchanged routine bodies are extracted into the build directory; the reference executable does not need Pythia6 or LHAPDF. The duplicate WEIGHT declaration in DOINSTATESCAT is normalized exactly as recorded in the reference manifest; executable statements are unchanged. Do not enable fast-math or change Fortran's default REAL size. Omit `JEWEL_REFERENCE_SOURCE` for a C++-only build; that build runs contract tests but makes no reference-parity claim.
 
 ```sh
 printf 'PQQ 3 0.5 0 0\nALPHAS 5 100 0.2 0\n' | build/jewel-probe
@@ -564,4 +564,19 @@ for exceptions or the enclosing shower's separate coherence-reversion policy.
 finite JEWEL reference calls and explicitly records seven nonfinite subtraction
 cases. Stored transfer momenta have a separately documented numerical tolerance;
 discrete fields and random-draw counts agree exactly in the finite cases.
-Initial-state evolution and complete shower/Pythia8 integration remain pending.
+Initial-state evolution is covered below; complete shower/Pythia8 integration remains pending.
+
+## Milestone 2q: initial-state scattering evolution
+
+`InitialScatteringEvolution::sample()` in `jewel/initial_evolution.hpp` implements
+DOINSTATESCAT: radiation/flavour selection, transfer sampling and resolution,
+virtuality updates, formation-time weighting, coherent evolution/reversion and
+retry/fallback bookkeeping. The caller receives the selected leg, fraction,
+virtuality, flavour, elapsed time and cutoff state before constructing the split.
+
+[Full-routine validation](docs/validation-initial-evolution.md) checks 52 finite
+reference cases, including 659 coherent reversions. Partial rollback retains
+source evolution-time slot metadata while preserving stable particle IDs.
+The reference needs one documented duplicate-declaration normalization; its
+executable statements remain unchanged. Complete shower scheduling and Pythia8
+integration remain pending.

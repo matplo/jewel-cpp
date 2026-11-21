@@ -74,7 +74,8 @@ throws after one million trials instead of hanging.
 
 This completes the coherent-evolution component, including its internal failed-kick
 rollback. It does not implement the enclosing shower scheduler or its separate
-coherence-rejection/reversion policy. Initial-state evolution, complete shower
+coherence-rejection/reversion policy. Initial-state evolution now has
+[its own full-routine validation](validation-initial-evolution.md). Complete shower
 integration, Pythia8 adapters, custom exports and end-to-end jet/substructure
 validation remain open under the full project completion gates.
 
