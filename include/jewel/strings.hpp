@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #pragma once
 #include "jewel/compression.hpp"
+#include "jewel/branching.hpp"
 namespace jewel {
 struct StringBuildResult {
  std::size_t active{};
@@ -15,4 +16,8 @@ struct StringBuildResult {
 // Closed gluon loops can be left unconsumed by the stock routine: callers must
 // inspect unconsumed_sources before exporting, rather than silently losing them.
 StringBuildResult make_vacuum_strings(std::vector<CompressionRecord>&,std::size_t active,bool compress);
+// Literal HADROTYPE=1 boundary. Generated quark halves map to their original
+// gluon slot; artificial endpoints use size_t::max as their output source.
+StringBuildResult make_minimum_strings(std::vector<CompressionRecord>&,std::size_t active,
+ bool compress,double max_rapidity,const BranchingSampler&,Random&);
 }

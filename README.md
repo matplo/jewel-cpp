@@ -829,3 +829,7 @@ custom JEWEL straight-line geometric/hot-medium length estimates in native JSON.
 The common hepyy analysis now associates native geometry with final jets across
 the full phase space before applying jet cuts. Unmatched selected jets receive
 null geometry. [Matching rules and sample validation](docs/validation-native-jet-geometry.md).
+
+The HADROTYPE=1 minimum-invariant-mass string constructor is now ported and
+validated against the original Fortran routine. Its Pythia8 export and runner
+integration are still pending. [Evidence and source semantics](docs/validation-minimum-strings.md).

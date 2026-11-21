@@ -445,7 +445,7 @@ if(JEWEL_REFERENCE_SOURCE)
   --baseline --generated --native-input)
 endif()
 
-target_sources(jewel_core PRIVATE src/strings.cpp)
+target_sources(jewel_core PRIVATE src/strings.cpp src/strings_minimum.cpp)
 add_executable(jewel-strings-probe app/strings_probe.cpp)
 target_link_libraries(jewel-strings-probe PRIVATE jewel_core)
 if(BUILD_TESTING)
@@ -460,7 +460,7 @@ if(JEWEL_REFERENCE_SOURCE)
   message(FATAL_ERROR "String reference extraction failed")
  endif()
  add_executable(jewel-strings-reference ${CMAKE_BINARY_DIR}/strings-reference.f
-  ${CMAKE_BINARY_DIR}/compression-reference.f reference/strings_probe.f90 reference/record_listing_stub.f90)
+  ${CMAKE_BINARY_DIR}/compression-reference.f reference/strings_probe.f90 reference/minimum_strings_support.f90 reference/record_listing_stub.f90)
  target_compile_options(jewel-strings-reference PRIVATE -std=legacy -ffixed-line-length-none)
 endif()
 if(JEWEL_REFERENCE_SOURCE)
@@ -633,4 +633,10 @@ if(JEWEL_REFERENCE_SOURCE)
    ${CMAKE_SOURCE_DIR}/tests/geometry_native.py $<TARGET_FILE:jewel-run-partons>
    $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/geometry-native-validation.json)
  endif()
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME minimum-strings-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/minimum_strings_differential.py $<TARGET_FILE:jewel-strings-probe>
+  $<TARGET_FILE:jewel-strings-reference> ${CMAKE_BINARY_DIR}/minimum-strings-validation.json)
 endif()
