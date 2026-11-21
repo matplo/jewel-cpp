@@ -78,7 +78,7 @@ ctest --test-dir build-pythia8 -R '^pythia8-input-contracts$' --output-on-failur
 ```
 
 The probe refuses existing output paths. Mapping and timing failures stay in
-the JSON ledger; only successful systems produce replay fixtures. The next
-adapter work must attach these times to the correct surviving records, account
-for subsequent virtuality/record changes, and connect selection and evolution.
+the JSON ledger; only successful systems produce replay fixtures. Stable-ID [attachment to native records](validation-native-isr-timing.md) is now
+implemented separately. The next adapter work must account for subsequent
+virtuality/record changes and connect selection and evolution.
 The native event runner still rejects ISR/MPI snapshots pending that work.

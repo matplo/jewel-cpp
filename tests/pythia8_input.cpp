@@ -3,6 +3,7 @@
 #include "jewel/pythia8_isr.hpp"
 #include "jewel/pythia8_shower_input.hpp"
 #include <cmath>
+#include <algorithm>
 #include <stdexcept>
 void check(bool value){if(!value)throw std::runtime_error("Pythia8 input contract failed");}
 int main(){
@@ -25,16 +26,61 @@ int main(){
   }
   auto timing_chains=jewel::prepare_subsystem_isr_timing(*a,[&](int pdg){return first.nominal_mass(pdg);});
   check(timing_chains.size()==a->subsystems.size());unsigned timed_emissions=0;
+  std::map<jewel::ParticleId,jewel::IsrTimedLine> expected_times;std::vector<std::size_t> chain_draws;
   for(const auto& pair:timing_chains)for(const auto& chain:pair){
    jewel::ReplayRandom timing_random(std::vector<double>(2+2*chain.steps.size(),.5));
    auto times=jewel::assign_isr_emission_times(chain.hard,chain.steps,{},timing_random);
    check(times.size()==chain.emitted_final.size());timed_emissions+=times.size();
+   for(std::size_t j=0;j<times.size();++j)check(expected_times.emplace(chain.emitted_final[j],times[j]).second);
    for(const auto& time:times)check(std::isfinite(time.production.t)&&std::isfinite(time.end_time));
    std::size_t draws=1;
    for(const auto& step:chain.steps)draws+=(step.beam_side==0)+(step.emitted.record_mass!=step.emitted.nominal_mass);
-   check(timing_random.checkpoint()==draws);
+   check(timing_random.checkpoint()==draws);chain_draws.push_back(draws);
   }
   check(timed_emissions==a->isr_emissions.size());
+  jewel::ShowerState native(-1e6);std::map<jewel::ParticleId,jewel::ParticleId> sources;
+  jewel::ShowerParticle anchor;anchor.particle.status=17;native.append(anchor);
+  for(auto it=a->particles.rbegin();it!=a->particles.rend();++it)if(it->final){
+   jewel::ShowerParticle node;node.particle.pdg=it->pdg;node.particle.status=4;node.particle.momentum=it->momentum;node.record_mass=it->mass;
+   node.particle.colour=it->colour;node.particle.anticolour=it->anticolour;
+   node.particle.production={7,8,9,10};node.generator_vertex={1,2,3,4};node.decay_time=42;
+   native.colour_max=std::max({native.colour_max,it->colour,it->anticolour});
+   sources.emplace(native.append(node,true,true),it->id);
+  }
+  auto native_before=native;std::size_t expected_draws=0;for(auto draws:chain_draws)expected_draws+=draws;
+  auto incomplete=sources;incomplete.erase(incomplete.begin());jewel::ReplayRandom unused({.5});bool attachment_rejected=false;
+  try{jewel::attach_pythia_isr_times(native,incomplete,*a,timing_chains,{},unused);}catch(const std::domain_error&){attachment_rejected=true;}
+  check(attachment_rejected&&unused.checkpoint()==0);
+  auto changed_native=native;changed_native.at(sources.begin()->first).particle.momentum.energy+=1;
+  attachment_rejected=false;
+  try{jewel::attach_pythia_isr_times(changed_native,sources,*a,timing_chains,{},unused);}catch(const std::domain_error&){attachment_rejected=true;}
+  check(attachment_rejected&&unused.checkpoint()==0);
+  if(timed_emissions){
+   auto corrupted_timing=timing_chains;bool changed_id=false;
+   for(auto& pair:corrupted_timing)for(auto& chain:pair)if(!changed_id&&!chain.emitted_final.empty()){chain.emitted_final[0]=a->hard_final[0];changed_id=true;}
+   attachment_rejected=false;
+   try{jewel::attach_pythia_isr_times(native,sources,*a,corrupted_timing,{},unused);}catch(const std::domain_error&){attachment_rejected=true;}
+   check(attachment_rejected&&unused.checkpoint()==0);
+  }
+
+  jewel::ReplayRandom exhausted(std::vector<double>(chain_draws.front(),.5));attachment_rejected=false;
+  try{jewel::attach_pythia_isr_times(native,sources,*a,timing_chains,{},exhausted);}catch(const std::out_of_range&){attachment_rejected=true;}
+  check(attachment_rejected&&exhausted.checkpoint()==chain_draws.front());
+  for(const auto& entry:sources)check(native.at(entry.first).particle.production.t==10&&native.at(entry.first).decay_time==42);
+  jewel::ReplayRandom attach_rng(std::vector<double>(expected_draws,.5));
+  auto bindings=jewel::attach_pythia_isr_times(native,sources,*a,timing_chains,{},attach_rng);
+  check(bindings.size()==expected_times.size()&&attach_rng.checkpoint()==expected_draws);
+  for(const auto& [id,source]:sources){const auto& node=native.at(id);const auto& old=native_before.at(id);
+   check(node.particle.momentum.px==old.particle.momentum.px&&node.particle.momentum.py==old.particle.momentum.py&&node.particle.momentum.pz==old.particle.momentum.pz&&node.particle.momentum.energy==old.particle.momentum.energy);
+   check(node.record_mass==old.record_mass&&node.particle.status==old.particle.status&&node.evolution_time==old.evolution_time);
+   check(node.generator_vertex.x==1&&node.generator_vertex.y==2&&node.generator_vertex.z==3&&node.generator_vertex.t==4);
+   if(expected_times.count(source)){const auto& time=expected_times.at(source);
+    check(node.particle.production.x==time.production.x&&node.particle.production.y==time.production.y&&node.particle.production.z==time.production.z&&node.particle.production.t==time.production.t&&node.decay_time==time.end_time);
+   }else check(node.particle.production.x==7&&node.particle.production.y==8&&node.particle.production.z==9&&node.particle.production.t==10&&node.decay_time==42);
+  }
+  for(const auto& binding:bindings)check(sources.at(binding.native)==binding.source);
+  native.validate();
+
   bool invalid_mass=false;
   try{jewel::prepare_subsystem_isr_timing(*a,[](int){return -1.;});}catch(const std::domain_error&){invalid_mass=true;}
   check(invalid_mass);

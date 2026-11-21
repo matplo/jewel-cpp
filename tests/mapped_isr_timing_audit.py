@@ -18,12 +18,13 @@ for system in systems:
 assert next(lines,None) is None
 assert {r['attempt'] for r in rows if 'attempt' in r}==set(range(1,header['attempts']+1))
 assert rows[-1]['fixtures']==len(systems)
-seen_fixtures=set();kinematic_values=0;kinematic_max=0
+seen_fixtures=set();kinematic_values=0;kinematic_max=0;attachment_records=0
 for line in Path(snapshot).open():
  e=json.loads(line)
  if e['type']=='run':assert e['settings']==header['settings'];continue
  if e['type']!='event':continue
  p={v['id']:v for v in e['particles']}
+ native_for={v['id']:i for i,v in enumerate(reversed([v for v in e['particles'] if v['final']]),2)}
  def staged(i):return [*p[i]['momentum'][:3],p[i]['energy_before_beam_repair']]
  for system in by_event.get(e['attempt'],[]):
   assert system['fixture'] not in seen_fixtures;seen_fixtures.add(system['fixture'])
@@ -43,6 +44,10 @@ for line in Path(snapshot).open():
     expected[next_id]=[next_id+2 if j+1<len(branches) else 3+side]+incoming
     final=branch['emitted_final'];expected[next_id+1]=[next_id]+p[final]['momentum']+[p[final]['mass']]
     finals.append(final);next_id+=2
+  for emission in system['emissions']:
+   if 'native_id' in emission:
+    assert emission['native_id']==native_for[emission['final_id']]
+    attachment_records+=1
   n,actual=inputs[system['fixture']];assert n==next_id-1 and [v['final_id'] for v in system['emissions']]==finals
   for i,values in expected.items():
    for col,(x,y) in enumerate(zip(actual[i][:6],values)):
@@ -69,6 +74,7 @@ for system,(n,records) in zip(systems,inputs):
  cursor+=1+5*(n-104)
 assert cursor==len(a)
 report=dict(scope='Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence',
+ native_attachment_records=attachment_records,
  attempts=header['attempts'],systems_replayed=len(systems),emitted_values=values,max_timing_absolute_error=maximum,
  kinematic_values=kinematic_values,max_independent_kinematic_difference=kinematic_max,
  discarded_reference_nonfinite_values=discarded_nonfinite,failures=failures,

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_isr.hpp"
+#include "jewel/pythia8_shower_input.hpp"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -24,6 +25,26 @@ int main(int argc,char** argv){try{
   std::vector<std::array<jewel::IsrTimingChain,2>> systems;
   try{systems=jewel::prepare_subsystem_isr_timing(*e,[&](int pdg){return generator.nominal_mass(pdg);});}
   catch(const std::domain_error& error){out<<"{\"type\":\"mapping_failure\",\"attempt\":"<<attempt<<",\"reason\":"<<std::quoted(error.what())<<"}\n";continue;}
+  jewel::ShowerState native(-1e6);native.weight=e->weight;
+  std::map<jewel::ParticleId,jewel::ParticleId> sources,native_for;
+  jewel::ShowerParticle anchor;anchor.particle.status=17;native.append(anchor);
+  for(auto it=e->particles.rbegin();it!=e->particles.rend();++it)if(it->final){
+   jewel::ShowerParticle node;node.particle.pdg=it->pdg;node.particle.status=4;node.particle.momentum=it->momentum;node.record_mass=it->mass;
+   node.particle.colour=it->colour;node.particle.anticolour=it->anticolour;
+   node.particle.production={7,8,9,10};node.decay_time=42;
+   node.generator_vertex={it->vertex_mm[0]*1e12,it->vertex_mm[1]*1e12,it->vertex_mm[2]*1e12,it->vertex_mm[3]*1e12};
+   native.colour_max=std::max({native.colour_max,it->colour,it->anticolour});
+   auto id=native.append(node,true,true);sources.emplace(id,it->id);native_for.emplace(it->id,id);
+  }
+  std::size_t count_draws=2*systems.size();for(const auto& pair:systems)for(const auto& c:pair)count_draws+=2*c.steps.size();
+  jewel::ReplayRandom attach_random(std::vector<double>(count_draws,.5));jewel::IsrTimeConfig attach_config;attach_config.x=1.2;attach_config.y=-.7;attach_config.lifetime=20;
+  auto bindings=jewel::attach_pythia_isr_times(native,sources,*e,systems,attach_config,attach_random);
+  std::map<jewel::ParticleId,bool> attached;for(const auto& binding:bindings)attached.emplace(binding.source,true);
+  if(bindings.size()!=e->isr_final.size())throw std::runtime_error("incomplete native ISR attachment");
+  for(const auto& [id,source]:sources){const auto& node=native.at(id);const auto& original=e->particles[source-1];
+   if(node.particle.status!=4||node.record_mass!=original.mass||node.evolution_time!=-1e6)throw std::runtime_error("attachment changed shower metadata");
+   if(!attached.count(source)&&(node.particle.production.x!=7||node.particle.production.y!=8||node.particle.production.z!=9||node.particle.production.t!=10||node.decay_time!=42))throw std::runtime_error("attachment changed an unrelated record");
+  }
   for(std::size_t system=0;system<systems.size();++system){const auto& chains=systems[system];
    jewel::IsrTimeConfig timing;timing.x=1.2;timing.y=-.7;timing.lifetime=20;
    std::size_t branches=chains[0].steps.size()+chains[1].steps.size();std::vector<double> tape(2+2*branches,.5);jewel::ReplayRandom rng(tape);
@@ -39,7 +60,9 @@ int main(int argc,char** argv){try{
    if(!failure.empty()){out<<"null}\n";continue;}
    out<<fixture++<<",\"emissions\":[";bool first=true;
    for(int side=0;side<2;++side)for(std::size_t j=0;j<times[side].size();++j){const auto& t=times[side][j];if(!first)out<<',';first=false;
-    out<<"{\"final_id\":"<<chains[side].emitted_final[j]<<",\"production\":["<<t.production.x<<','<<t.production.y<<','<<t.production.z<<','<<t.production.t<<"],\"end_time\":"<<t.end_time<<'}';}
+    auto native_id=native_for.at(chains[side].emitted_final[j]);const auto& node=native.at(native_id);
+    if(node.particle.production.x!=t.production.x||node.particle.production.y!=t.production.y||node.particle.production.z!=t.production.z||node.particle.production.t!=t.production.t||node.decay_time!=t.end_time)throw std::runtime_error("native ISR timing differs from replay");
+    out<<"{\"final_id\":"<<chains[side].emitted_final[j]<<",\"native_id\":"<<native_id<<",\"production\":["<<t.production.x<<','<<t.production.y<<','<<t.production.z<<','<<t.production.t<<"],\"end_time\":"<<t.end_time<<'}';}
    out<<"]}\n";
    int next=107;std::array<int,2> roots{};
    for(int side=0;side<2;++side){roots[side]=chains[side].steps.empty()?3+side:next;next+=2*chains[side].steps.size();}
