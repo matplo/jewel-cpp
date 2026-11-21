@@ -52,4 +52,18 @@ IsrTimeResult assign_isr_times(const IsrKinematics& hard,const std::vector<IsrTi
  }
  return result;
 }
+std::vector<IsrTimedLine> assign_isr_emission_times(const IsrKinematics& hard,
+ const std::vector<IsrTimeStep>& steps,const IsrTimeConfig& config,Random& random){
+ if(!steps.empty())return assign_isr_times(hard,steps,config,random).emitted;
+ // Stock computes a hard incoming time even without an ISR branch, consumes
+ // one draw, then discards the incoming line when rebuilding the event record.
+ // Its zero-virtuality infinities have no surviving emitted-line output.
+ validate(hard,false);
+ require(hard.momentum.energy!=0,"undefined ISR incoming energy");
+ for(double x:{config.x,config.y,config.formation_factor,config.lifetime})require(std::isfinite(x),"nonfinite ISR configuration");
+ require(config.formation_factor>0,"invalid ISR formation factor");
+ double u=random.uniform();require(std::isfinite(u)&&u>0&&u<1,"invalid ISR random draw");
+ return {};
+}
+
 }

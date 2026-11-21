@@ -656,3 +656,9 @@ if(BUILD_TESTING AND Python3_Interpreter_FOUND)
  add_test(NAME native-hepmc3-contracts COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/native_hepmc3_contracts.py)
 endif()
+
+if(JEWEL_REFERENCE_SOURCE AND BUILD_TESTING)
+ add_test(NAME isr-emission-times-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/isr_emission_times_differential.py $<TARGET_FILE:jewel-isr-times-probe>
+  $<TARGET_FILE:jewel-isr-times-reference> ${CMAKE_BINARY_DIR}/isr-emission-times-validation.json)
+endif()

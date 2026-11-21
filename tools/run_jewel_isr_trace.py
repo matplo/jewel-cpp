@@ -63,7 +63,23 @@ for row in rows:
   if (start>end)!=(energy<0):raise AssertionError(('Incoming energy/time sign mismatch',row))
  if role==1:attempts[int(row['attempt'])].append(int(row['side']))
 if any(sorted(sides)!=[0,1] for sides in attempts.values()):raise AssertionError('Incomplete hard pair')
+stages={}
+for row in csv.DictReader((out/'trace/isr-stages.csv').open()):
+ stage=int(row['stage'])
+ if stage not in [1,2]:raise AssertionError(row)
+ g=stages.setdefault(str(stage),dict(records=0,active_records=0,nonfinite_records=0,
+   active_nonfinite_records=0,attempts=set(),nonfinite_examples=[]))
+ g['records']+=1;g['attempts'].add(int(row['attempt']))
+ active=int(row['status']) in [1,2];g['active_records']+=active
+ finite=all(math.isfinite(float(row[k])) for k in ['x','y','z','production_time','end_time'])
+ g['nonfinite_records']+=not finite;g['active_nonfinite_records']+=active and not finite
+ if not finite and len(g['nonfinite_examples'])<10:g['nonfinite_examples'].append(row)
+for g in stages.values():
+ if g['attempts']!=set(attempts):raise AssertionError('Missing downstream trace stage')
+ g['attempts']=len(g['attempts'])
+if set(stages)!={'1','2'}:raise AssertionError('Missing stage')
 report=dict(scope='Actual stock Pythia6 histories at JEWEL ISR timing; not Pythia8 equivalence',
+ downstream_stages=stages,stage_trace_sha256=sha(out/'trace/isr-stages.csv'),
  accepted_events=events,interpretation_attempts=len(attempts),trace_rows=len(rows),groups=groups,
  finite_incoming_energy_time_sign_agreement=True,finite_incoming_sign_checks=checked_incoming,
  nonfinite_time_records=nonfinite_times,baseline_byte_identity_sha256=identity,

@@ -47,4 +47,16 @@ int main(){
   try{jewel::assign_isr_times(h,steps,c,stream);}catch(const std::domain_error&){rejected=true;}
   check(rejected&&stream.checkpoint()==0);
  }
+ // Actual stock direct-beam records have zero virtuality. Their temporary
+ // incoming time is discarded; the surviving-emission API must keep the draw.
+ auto direct=hard;direct.record_mass=0;
+ jewel::ReplayRandom direct_random({.5,.25});
+ check(jewel::assign_isr_emission_times(direct,{},config,direct_random).empty());
+ check(direct_random.checkpoint()==1&&direct_random.uniform()==.25);
+ auto invalid_config=config;invalid_config.formation_factor=0;
+ jewel::ReplayRandom untouched({.5});bool rejected=false;
+ try{jewel::assign_isr_emission_times(direct,{},invalid_config,untouched);}
+ catch(const std::domain_error&){rejected=true;}
+ check(rejected&&untouched.checkpoint()==0);
+
 }

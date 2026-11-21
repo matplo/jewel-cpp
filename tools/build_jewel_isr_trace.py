@@ -31,6 +31,11 @@ needle='\t\t  lprev=l1'
 assert s.count(needle)==1
 s=s.replace(needle,'      CALL JISR_LINE(2,I,L1)\n      CALL JISR_LINE(3,I,L2)\n'+needle)
 assert s.count('CALL JISR_LINE')==3
+for needle,addition in [('\tcall interpretpythiaevent()', '\n      CALL JISR_STAGE(1)'),
+                        ('\t CALL MAKECASCADE', '\n      CALL JISR_STAGE(2)')]:
+ assert s.count(needle)==1
+ if addition.endswith('(1)'):s=s.replace(needle,needle+addition)
+ else:s=s.replace(needle,addition+'\n'+needle)
 s+='''
       SUBROUTINE JISR_BEGIN
       IMPLICIT NONE
@@ -58,6 +63,30 @@ s+='''
       WRITE(81,100)ATTEMPT,ROLE,SIDE,LINE,K(LINE,3),K(LINE,2),
      & (P(LINE,J),J=1,5),(MV(LINE,J),J=1,5)
  100  FORMAT(I0,5(',',I0),10(',',ES26.17E3))
+      END
+'''
+s+='''
+      SUBROUTINE JISR_STAGE(STAGE)
+      IMPLICIT NONE
+      INTEGER STAGE,ATTEMPT,N,NPAD,K,I,J
+      DOUBLE PRECISION P,V,MV
+      COMMON/JISR_COUNT/ATTEMPT
+      COMMON/PYJETS/N,NPAD,K(23000,5),P(23000,5),V(23000,5)
+      COMMON/TIME/MV(23000,5)
+      LOGICAL FIRST
+      SAVE FIRST
+      DATA FIRST/.TRUE./
+      IF(FIRST)THEN
+        OPEN(82,FILE='isr-stages.csv',STATUS='NEW')
+        WRITE(82,'(A)')
+     & 'attempt,stage,line,status,parent,pdg,mass,x,y,z,production_time,end_time'
+        FIRST=.FALSE.
+      ENDIF
+      DO I=1,N
+        WRITE(82,100)ATTEMPT,STAGE,I,K(I,1),K(I,3),K(I,2),
+     &   P(I,5),(MV(I,J),J=1,5)
+      ENDDO
+ 100  FORMAT(I0,5(',',I0),6(',',ES26.17E3))
       END
 '''
 (out/'jewel-2.6.0.f').write_text(s)

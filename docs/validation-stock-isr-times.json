@@ -1,5 +1,24 @@
 {
   "scope": "Actual stock Pythia6 histories at JEWEL ISR timing; not Pythia8 equivalence",
+  "downstream_stages": {
+    "1": {
+      "records": 18109,
+      "active_records": 10109,
+      "nonfinite_records": 0,
+      "active_nonfinite_records": 0,
+      "attempts": 1000,
+      "nonfinite_examples": []
+    },
+    "2": {
+      "records": 18109,
+      "active_records": 5652,
+      "nonfinite_records": 0,
+      "active_nonfinite_records": 0,
+      "attempts": 1000,
+      "nonfinite_examples": []
+    }
+  },
+  "stage_trace_sha256": "02e2d2a372e85f122fc98db8009db6f2bafff3721707c06a684895be3d559b8a",
   "accepted_events": 1000,
   "interpretation_attempts": 1000,
   "trace_rows": 11832,
@@ -2590,12 +2609,12 @@
       "subtraction.C": "5b84552df996799d9e1061d85fdddf9ee3add56aacc2e4a4655f8e7943d82d17"
     },
     "artifacts": {
-      "jewel-2.6.0.f": "23797b26897062fcdd9e187eb4aa7ae15c13d98040d130547f69565f636cd5f3",
+      "jewel-2.6.0.f": "782beba8ef866474a4a98180336fc613caad3491b7ed4eb8ebb18636902316e4",
       "baseline.f": "4b7e946bf4a35be16f77f9300c82f1c826a9985fda1763d3e5b6c7bdf82bc26c",
-      "jewel-vac-trace": "ed9cb0cf470958147edbf759b87e4ac8a5f09e699dbc33de8f32cc66b893b21d",
+      "jewel-vac-trace": "84bc9a143e37031d1685c89a0097794af9890a8180e00a464f4cbd35c03c7c6f",
       "jewel-vac-baseline": "16da11ba50fdea632fde6aae95d3f4768740b0b18b8f9e5e3c7b2526a7541004"
     },
-    "builder_sha256": "7788db1adf762b2adf3cb1c9bad59422a6efec3219bafdc82a13fe230fa484ea"
+    "builder_sha256": "4614b1a591feedb5ae7e33e5bce3df4a67b73dfd943daefdf836b5a200d78763"
   },
-  "runner_sha256": "d583114b650044eef1a35233566aefb5ced1557c8a2713a8617ad33f55f06fc4"
+  "runner_sha256": "b8a2a625a99808c1e130ecdb4d06fe9984f8c72ec70986ff9b04556eaa8c7a65"
 }

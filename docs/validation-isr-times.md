@@ -101,3 +101,9 @@ signed incoming energies and reversed intervals in actual JEWEL events. It also
 identifies a defined-domain limitation: zero-virtuality direct-beam hard lines
 produce infinite times in stock JEWEL and are rejected by this C++ API. The
 1,152-case finite-domain comparison does not cover that full-event behavior.
+
+
+`assign_isr_emission_times` now handles the surviving-output boundary, including
+empty zero-virtuality chains with the source random consumption. Its
+[separate validation](validation-isr-emission-times.md) does not change the
+full-record API's domain or claim to reproduce unused infinite coordinates.

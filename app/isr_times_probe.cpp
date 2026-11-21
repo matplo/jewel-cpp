@@ -4,7 +4,10 @@
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
-int main(){try{
+#include <string>
+int main(int argc,char** argv){try{
+ bool emissions_only=argc==2&&std::string(argv[1])=="--emissions-only";
+ if(argc!=1&&!emissions_only)throw std::domain_error("unknown probe option");
  int n,enabled,ntape;jewel::IsrTimeConfig c;std::cout<<std::setprecision(17);
  while(std::cin>>n>>c.formation_factor>>c.x>>c.y>>c.lifetime>>enabled>>ntape){
   if(n<106||n>23000||ntape<1||ntape>10000)throw std::domain_error("invalid probe dimensions");
@@ -19,6 +22,11 @@ int main(){try{
     if(!emitted||emitted==previous)throw std::domain_error("missing emitted sibling");
     int side=mother[incoming]==3?1:mother[incoming]==4?-1:0;
     steps.push_back({k[incoming],k[emitted],side});indices.push_back({incoming,emitted});previous=incoming;
+   }
+   if(emissions_only){
+    auto times=jewel::assign_isr_emission_times(k[hard],steps,c,random);
+    for(std::size_t i=0;i<indices.size();++i)output[indices[i][1]]=times[i];
+    continue;
    }
    auto times=jewel::assign_isr_times(k[hard],steps,c,random);output[hard]=times.hard;
    for(std::size_t i=0;i<indices.size();++i){output[indices[i][0]]=times.incoming[i];output[indices[i][1]]=times.emitted[i];}

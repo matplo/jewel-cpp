@@ -14,4 +14,10 @@ struct IsrTimeResult {IsrTimedLine hard;std::vector<IsrTimedLine> incoming,emitt
 // time intervals. This does not assert that such a history is physical.
 IsrTimeResult assign_isr_times(const IsrKinematics& hard,const std::vector<IsrTimeStep>&,
  const IsrTimeConfig&,Random&);
+// Final-record projection of ISR timing. Incoming bookkeeping lines are not
+// retained by interpretpythiaevent. An empty chain has no emitted lines but
+// still consumes its hard-line draw, including at zero recorded virtuality.
+// No nonfinite intermediate incoming coordinates are constructed in that case.
+std::vector<IsrTimedLine> assign_isr_emission_times(const IsrKinematics& hard,
+ const std::vector<IsrTimeStep>&,const IsrTimeConfig&,Random&);
 }

@@ -32,9 +32,8 @@ Infinity values preserved from the trace. No nonfinite kinematic input was found
 
 The C++ `assign_isr_times` currently rejects zero virtuality before consuming a
 random draw. Thus its defined-domain differential parity is not a claim of full
-behavioral equivalence for direct-beam lines. The adapter still needs an explicit
-representation and treatment of these lines, including their downstream use and
-RNG consumption. No cutoff, absolute-energy replacement or finite-time clamp was
+behavioral equivalence for direct-beam lines. The emitted-line timing API now supplies the surviving-output treatment described
+below; connecting it to the full Pythia8 adapter remains outstanding. No cutoff, absolute-energy replacement or finite-time clamp was
 introduced here.
 
 ## Instrumentation and validation
@@ -72,3 +71,23 @@ Both output directories must be new. The card's table and medium paths resolve
 relative to its original directory. The builder uses the supplied frozen stock
 vacuum medium, not an installed custom executable. The installed JEWEL and
 Pythia sources are unchanged.
+
+## Downstream record inspection
+
+The trace now also writes the complete record immediately after
+`interpretpythiaevent` and immediately before `MAKECASCADE`. A fresh paired
+1,000-event run remains byte-identical in HepMC output and final RNG state.
+Each stage contains 18,109 records across all events; **neither stage has any
+nonfinite production coordinate or time**. Status-1/2 active records number
+10,109 after interpretation and 5,652 before the cascade. This checks all
+records, not only the active subset.
+
+The source rebuilds its record from surviving final-state lines (the `309` loop
+in `interpretpythiaevent`); the temporary incoming lines are not retained there.
+The direct-beam lines with infinite temporary coordinates have no emitted ISR
+siblings. Their one random draw still affects later generation. This supports
+an emitted-line timing interface that consumes the draw but does not construct
+unused infinite incoming coordinates. See [implementation and differential
+validation](validation-isr-emission-times.md). This conclusion is restricted to
+the inspected PP vacuum path and the source record-rebuilding logic; it does not
+establish full Pythia8 integration or other process-channel behavior.
