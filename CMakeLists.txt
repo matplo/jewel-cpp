@@ -651,3 +651,8 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
  add_test(NAME runner-hadrotype-contracts COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/runner_hadrotype.py $<TARGET_FILE:jewel-run-events>)
 endif()
+
+if(BUILD_TESTING AND Python3_Interpreter_FOUND)
+ add_test(NAME native-hepmc3-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/native_hepmc3_contracts.py)
+endif()

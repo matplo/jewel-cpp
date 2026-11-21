@@ -835,3 +835,9 @@ validated against the original Fortran routine. The hadronized runner supports
 `--hadrotype 1`, with explicit synthetic-endpoint provenance and Pythia8 mass-field
 adaptation. [Constructor evidence](docs/validation-minimum-strings.md) and
 [runner/hadronization validation](docs/validation-minimum-hadronization.md).
+
+Export completed native hadron runs to HepMC3 with
+`python tools/export_native_hepmc3.py native.jsonl native.hepmc3` in the hepyy
+environment. The final-state export is readable by hepyy-utils and preserves
+weights plus the full attempt ledger in run attributes.
+[Output scope, normalization and validation](docs/validation-native-hepmc3.md).

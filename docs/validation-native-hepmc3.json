@@ -1,0 +1,10 @@
+{
+  "events": 18,
+  "attempts": 20,
+  "particles": 4920,
+  "geometry_events": 18,
+  "collection": "hadronized_particles",
+  "exact_particle_weight_metadata_roundtrip": true,
+  "native_sha256": "46412cb36510a211aa978c57dd77a3bb33c7e2b018439ee3ded3b4c9f7f1e52e",
+  "hepmc_sha256": "48274f36bcac040ee318c08bbb7578ba2c2b2c8c07679bb070c71fcbbe287873"
+}

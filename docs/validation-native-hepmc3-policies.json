@@ -1,0 +1,32 @@
+[
+  {
+    "events": 19,
+    "attempts": 20,
+    "particles": 3065,
+    "geometry_events": 0,
+    "collection": "subtracted_particles",
+    "exact_particle_weight_metadata_roundtrip": true,
+    "native_sha256": "d06aa72fd2a05ceb9ade3ba722c9904170774ef1e88366e0b400a0b857f72cce",
+    "hepmc_sha256": "c8703f8f17fbdfa3241e7bf9b015a21b07f266e6fdefdd3645da52f0ea72c981"
+  },
+  {
+    "events": 19,
+    "attempts": 20,
+    "particles": 3065,
+    "geometry_events": 0,
+    "collection": "projected_particles",
+    "exact_particle_weight_metadata_roundtrip": true,
+    "native_sha256": "293167041cbaa6532720fb7371122e9850a7d3f7c72e2093ff814bef9af68554",
+    "hepmc_sha256": "e791dcb6f904111525f69509eb82218f127ef933923a0dbd6faeedc4144b3e00"
+  },
+  {
+    "events": 19,
+    "attempts": 20,
+    "particles": 3065,
+    "geometry_events": 0,
+    "collection": "projected_particles",
+    "exact_particle_weight_metadata_roundtrip": true,
+    "native_sha256": "7a5f4d6250c225d379b6fc94669fdd9ab4bc6f893815c961182e34b87e9fd831",
+    "hepmc_sha256": "8881a07306af9d4416fe98d5e91c70eb48f1c6c2da4d23c2fb91476a85f9ccba"
+  }
+]
