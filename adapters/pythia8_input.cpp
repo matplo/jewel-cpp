@@ -28,7 +28,18 @@ ParticleId final_copy(const HardEventSnapshot& event,ParticleId root){
 std::string number(double value){std::ostringstream out;out<<std::setprecision(17)<<value;return out.str();}
 
 }
+// Observe parton-level output immediately before BeamSetup::boostAndVertex.
+// This hook never vetoes, changes records, or consumes random numbers.
+class EnergyStageCapture final : public Pythia8::UserHooks {
+public:
+ std::vector<Momentum> momenta;
+ bool canVetoPartonLevel() override{return true;}
+ bool doVetoPartonLevel(const Pythia8::Event& event) override{
+  momenta.clear();for(int i=0;i<event.size();++i){auto p=event[i].p();momenta.push_back({p.px(),p.py(),p.pz(),p.e()});}return false;
+ }
+};
 struct Pythia8Input::Impl {
+ std::shared_ptr<EnergyStageCapture> capture=std::make_shared<EnergyStageCapture>();
  Pythia8::Pythia engine;
  std::vector<std::string> settings;
  std::uint64_t attempts{},returned{};
@@ -49,6 +60,7 @@ struct Pythia8Input::Impl {
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
   if(c.hard_alpha_s){settings.push_back("SigmaProcess:alphaSvalue = "+number(*c.hard_alpha_s));settings.push_back("SigmaProcess:alphaSorder = "+std::to_string(*c.hard_alpha_s_order));}
   for(const auto& setting:settings)if(!engine.readString(setting))throw std::runtime_error("Pythia rejected setting: "+setting);
+  require(engine.setUserHooksPtr(capture),"cannot register energy-stage observer");
   if(!engine.init())throw std::runtime_error("Pythia input initialization failed");
   if(c.hard_alpha_s)require(engine.settings.parm("SigmaProcess:alphaSvalue")==*c.hard_alpha_s&&engine.settings.mode("SigmaProcess:alphaSorder")==*c.hard_alpha_s_order,"Pythia changed explicit hard coupling settings");
   if(!c.external_pdf.empty())require(engine.settings.word("PDF:pSet")=="LHAPDF6:"+c.external_pdf,"Pythia changed explicit external PDF");
@@ -60,6 +72,7 @@ int Pythia8Input::version(){return PYTHIA_VERSION_INTEGER;}
 const std::vector<std::string>& Pythia8Input::settings() const{return impl_->settings;}
 std::optional<HardEventSnapshot> Pythia8Input::next(){
  auto& p=impl_->engine;++impl_->attempts;
+ impl_->capture->momenta.clear();
  if(!p.next())return std::nullopt;
  HardEventSnapshot result;result.attempt=impl_->attempts;result.initial_state_radiation=impl_->initial_state_radiation;result.multiple_parton_interactions=impl_->multiple_parton_interactions;
  const auto& info=p.info;result.process_code=info.code();result.weight=info.weight();result.pt_hat=info.pTHat();
@@ -67,6 +80,11 @@ std::optional<HardEventSnapshot> Pythia8Input::next(){
  result.q_factorization=info.QFac();result.q_renormalization=info.QRen();
  std::vector<ParticleId> incoming,outgoing;
  result.particles=detail::capture_particles(p.event);
+ require(impl_->capture->momenta.size()==result.particles.size(),"missing pre-repair parton record");
+ for(std::size_t i=0;i<result.particles.size();++i){auto& node=result.particles[i];const auto& before=impl_->capture->momenta[i];
+  require(before.px==node.momentum.px&&before.py==node.momentum.py&&before.pz==node.momentum.pz,"unsupported post-parton spatial transformation");
+  node.energy_before_beam_repair=before.energy;
+ }
  for(const auto& node:result.particles){
   if(std::abs(node.status)==21)incoming.push_back(node.id);
   if(std::abs(node.status)==23)outgoing.push_back(node.id);
@@ -84,6 +102,11 @@ std::optional<HardEventSnapshot> Pythia8Input::next(){
   require(p.partonSystems.hasInAB(i)&&!p.partonSystems.hasInRes(i),"unsupported non-beam subsystem");
   system.incoming={static_cast<ParticleId>(p.partonSystems.getInA(i)+1),static_cast<ParticleId>(p.partonSystems.getInB(i)+1)};
   system.shat=p.partonSystems.getSHat(i);system.pt_hat=p.partonSystems.getPTHat(i);
+  require(i<p.beamA.size()&&i<p.beamB.size(),"missing subsystem beam slots");
+  require(p.beamA[i].isFromBeam()&&p.beamB[i].isFromBeam(),"rescattered subsystem beam capture unsupported");
+  require(p.beamA[i].iPos()+1==static_cast<int>(system.incoming[0])&&p.beamB[i].iPos()+1==static_cast<int>(system.incoming[1]),"subsystem beam slot identity mismatch");
+  auto target=[](const Pythia8::ResolvedParton& beam){auto v=beam.p();return Momentum{v.px(),v.py(),v.pz(),v.e()};};
+  system.primordial_targets=std::array<Momentum,2>{target(p.beamA[i]),target(p.beamB[i])};
   for(int j=0;j<p.partonSystems.sizeOut(i);++j){auto id=static_cast<ParticleId>(p.partonSystems.getOut(i,j)+1);system.outgoing.push_back(id);system.outgoing_final.push_back(final_copy(result,id));}
   for(const auto& node:result.particles)if(std::abs(node.status)==23||std::abs(node.status)==33){
    auto final=final_copy(result,node.id);
@@ -108,6 +131,7 @@ void validate_hard_snapshot(const HardEventSnapshot& event){
   require(p.id==i+1&&p.source_index==static_cast<int>(i),"snapshot identity mapping changed");
   require(p.colour>=0&&p.anticolour>=0,"negative input colour tag");
   for(double v:{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy,p.mass,p.scale})require(std::isfinite(v),"nonfinite input kinematics");
+  if(p.energy_before_beam_repair)require(std::isfinite(*p.energy_before_beam_repair),"nonfinite pre-repair energy");
   for(double v:p.vertex_mm)require(std::isfinite(v),"nonfinite input vertex");
   for(auto id:p.mothers){at(id);require(id!=p.id,"self-parent in snapshot");}
   for(auto id:p.daughters){at(id);require(id!=p.id,"self-daughter in snapshot");}
@@ -118,6 +142,7 @@ void validate_hard_snapshot(const HardEventSnapshot& event){
  std::unordered_set<ParticleId> subsystem_outputs,process_roots;
  for(std::size_t i=0;i<event.subsystems.size();++i){const auto& system=event.subsystems[i];
   require(system.index==static_cast<int>(i)&&std::isfinite(system.shat)&&system.shat>0&&std::isfinite(system.pt_hat)&&system.pt_hat>0,"invalid subsystem metadata");
+  if(system.primordial_targets)for(const auto& p:*system.primordial_targets)for(double v:{p.px,p.py,p.pz,p.energy})require(std::isfinite(v),"nonfinite subsystem target momentum");
   require(system.incoming[0]!=system.incoming[1],"duplicate subsystem incoming line");for(auto id:system.incoming)at(id);
   require(system.outgoing.size()==system.outgoing_final.size(),"incomplete subsystem final associations");
   for(std::size_t j=0;j<system.outgoing.size();++j){auto final=final_copy(event,system.outgoing[j]);

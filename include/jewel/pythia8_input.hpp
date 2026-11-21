@@ -22,6 +22,7 @@ struct GeneratorParticle {
  int source_index{},pdg{},status{},colour{},anticolour{};
  bool final{};
  Momentum momentum;
+ std::optional<double> energy_before_beam_repair;
  double mass{},scale{};
  std::array<double,4> vertex_mm{}; // Pythia units, NOT JEWEL production coordinates in fm.
  std::vector<ParticleId> mothers,daughters;
@@ -29,6 +30,9 @@ struct GeneratorParticle {
 struct GeneratorJunction {int kind{};std::array<int,3> colours{};};
 struct GeneratorSubsystem {
  int index{};double shat{},pt_hat{};
+ // BeamRemnants target momenta before applying Msys to event-record copies.
+ // They differ from the rounded status-61 outputs; retain source inputs.
+ std::optional<std::array<Momentum,2>> primordial_targets;
  std::array<ParticleId,2> incoming{}; // Current Pythia subsystem incoming records.
  std::vector<ParticleId> outgoing,outgoing_final,process_outgoing;
 };

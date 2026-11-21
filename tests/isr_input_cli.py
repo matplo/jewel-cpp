@@ -30,7 +30,7 @@ with tempfile.TemporaryDirectory() as directory:
     records=[json.loads(line) for line in output.read_text().splitlines()]
     events=[e for e in records if e['type']=='event']
     assert len(events)==records[-1]['returned']==100
-    assert any(e['primordial_subsystem_error'] for e in events)
+    assert all(e['primordial_subsystem_error'] is None for e in events)
     assert any(e['primordial_subsystem_frames'] for e in events)
     assert all((e['primordial_subsystem_frames'] is None)==(e['primordial_subsystem_error'] is not None) for e in events)
     for i,options in enumerate([['--mpi'],['--mpi','yes'],['--mpi','on','--mpi','off'],['--isr'],['--isr','yes'],['--isr','on','--isr','off']]):

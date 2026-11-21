@@ -1,44 +1,77 @@
 {
-  "scope": "partial MPI primordial reconstruction; failures retained",
+  "scope": "MPI primordial transforms at pre-energy-repair stage; failures retained",
   "reports": [
     {
-      "path": "/private/tmp/jewel-mpi-primordial-final-off-2600417.jsonl",
-      "sha256": "49ed8db02c07fcf7705d8b37ce9dc0ece7547805b24e93ccd0c917067949d7e5",
+      "path": "/private/tmp/jewel-stage-verified-off-2600417.jsonl",
+      "sha256": "0dad1cb7a13f6adf82723acb4ba5f5dbb9eb7f10a394342cfa477d987779aaed",
       "prior_sha256": "67d60bacbf0283217f2cd3e3b3863542897d98acf30b24fc81bee582c71a47e2",
       "counts": {
         "events": 1000,
-        "mapped_events": 984,
-        "frames": 7442,
-        "copies": 29768,
-        "rejected_events": 16
+        "mapped_events": 1000,
+        "frames": 7572,
+        "copies": 30288
       },
-      "rejection_reasons": {
-        "subsystem recoil reconstruction is numerically ill-conditioned": 16
-      },
-      "maximum_copy_residual_gev": 5.451131528388942e-07,
-      "maximum_metric_residual": 1.2229637832206208e-05,
-      "maximum_roundoff_allowance_gev": 0.0001480129030277018
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 3.0548790164175443e-09,
+      "maximum_metric_residual": 2.293326542712748e-05,
+      "maximum_energy_repair_residual_gev": 2.2737367544323206e-13
     },
     {
-      "path": "/private/tmp/jewel-mpi-primordial-final-on-2600417.jsonl",
-      "sha256": "365b97d501e60e9da516e4470a57c6c1c5af935f485dc76e262a32a3c72be78f",
+      "path": "/private/tmp/jewel-stage-verified-on-2600417.jsonl",
+      "sha256": "71607c9297328bded69811b75b02c39e4c8d38090511d3fd973ebe09bef73aae",
       "prior_sha256": "9e855629b5e11ec35363852c1c6a092c11f69dac3e91558efed0210ba475edae",
       "counts": {
         "events": 1000,
-        "mapped_events": 990,
-        "frames": 6692,
-        "copies": 39858,
-        "rejected_events": 10
+        "mapped_events": 1000,
+        "frames": 6767,
+        "copies": 40321
       },
-      "rejection_reasons": {
-        "subsystem primordial frame disagrees with recorded copy": 8,
-        "subsystem recoil reconstruction is numerically ill-conditioned": 2
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 1.004309524432756e-09,
+      "maximum_metric_residual": 6.037593266228214e-06,
+      "maximum_energy_repair_residual_gev": 4.547473508864641e-13
+    },
+    {
+      "path": "/private/tmp/jewel-stage-verified-off-2600418.jsonl",
+      "sha256": "b817cdf012dd7fea8eb333edf593831ea4ca43cdafcf21e39bee5bee8b94d6ec",
+      "prior_sha256": null,
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "frames": 7164,
+        "copies": 28656
       },
-      "maximum_copy_residual_gev": 6.894570105941966e-07,
-      "maximum_metric_residual": 2.4292877067733087e-06,
-      "maximum_roundoff_allowance_gev": 0.00013238904126983017
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 2.83296230918495e-09,
+      "maximum_metric_residual": 3.298131196061149e-05,
+      "maximum_energy_repair_residual_gev": 2.2737367544323206e-13
+    },
+    {
+      "path": "/private/tmp/jewel-stage-verified-on-2600418.jsonl",
+      "sha256": "7d5cc3b822e9ba535cca61f6d15b602f16a4ddc3fd63d075d46ca5f9f0938368",
+      "prior_sha256": null,
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "frames": 6997,
+        "copies": 41697
+      },
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 1.597982191015035e-09,
+      "maximum_metric_residual": 4.320057087170426e-06,
+      "maximum_energy_repair_residual_gev": 2.2737367544323206e-13
     }
   ],
-  "executable_sha256": "435a10b9af634e8f2ba0c72404fd67965efd9c2236fcddcfb0ae8c3a6d351a7c",
-  "audit_sha256": "1d87349e15dc7a50cf60281b1d97ded174a3687a2c597ae073558fb2b50b2a00"
+  "executable_sha256": "bfa4d8818b4f541f9be3b1d1bf8482754ccd5ee4b34d7a671a19fe986c8dac6f",
+  "audit_sha256": "10fa243a542a33bdad1d7693714d8b3dfd59190c807d3e7d72209fdc8b2da0f3",
+  "pythia_8317_source_sha256": {
+    "BeamRemnants.cc": "7a466ba004f96bb717027087ded4438e1bfc95ce64cc9135d43f71ea5b6edfb5",
+    "BeamSetup.cc": "ef91002427c2d34a073f82d0d5367c40132fc6dfbf6a7d634d786c977f931393",
+    "Pythia.cc": "ce92ebd30c439b68cc836f780c6dce249132ff9d9265a8a6fe8fba75dbdd88b9"
+  },
+  "copy_tolerance": {
+    "absolute_gev": 2e-09,
+    "relative": 2e-11,
+    "extra_conditioning_allowance": false
+  }
 }

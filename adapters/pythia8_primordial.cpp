@@ -5,7 +5,6 @@
 #include <cmath>
 #include <sstream>
 #include <iomanip>
-#include <limits>
 #include <stdexcept>
 #include <unordered_set>
 namespace jewel {
@@ -66,16 +65,16 @@ std::vector<PrimordialRecoilFrame> reconstruct_subsystem_primordial_frames(const
    frame.incoming_before[side]=before.id;frame.incoming_after[side]=after.id;
    frame.copies.push_back({before.id,after.id});
   }
-  auto vector=[&](ParticleId id){const auto& p=at(id).momentum;return Pythia8::Vec4(p.px,p.py,p.pz,p.energy);};
+  auto staged=[&](ParticleId id){const auto& node=at(id);require(node.energy_before_beam_repair.has_value()&&std::isfinite(*node.energy_before_beam_repair),"missing pre-repair energy");
+   auto p=node.momentum;p.energy=*node.energy_before_beam_repair;
+   double repaired=std::sqrt(std::max(0.,node.mass*node.mass+p.px*p.px+p.py*p.py+p.pz*p.pz));
+   require(std::abs(repaired-node.momentum.energy)<=2e-9+2e-11*std::abs(node.momentum.energy),"recorded energy disagrees with beam energy repair");return p;};
+  auto vector=[&](ParticleId id){const auto p=staged(id);return Pythia8::Vec4(p.px,p.py,p.pz,p.energy);};
   auto olda=vector(frame.incoming_before[0]),oldb=vector(frame.incoming_before[1]);
-  auto newa=vector(frame.incoming_after[0]),newb=vector(frame.incoming_after[1]);
+  require(system.primordial_targets.has_value(),"missing source primordial target momenta");
+  auto target=[](const Momentum& p){for(double v:{p.px,p.py,p.pz,p.energy})require(std::isfinite(v),"nonfinite primordial target momentum");return Pythia8::Vec4(p.px,p.py,p.pz,p.energy);};
+  auto newa=target((*system.primordial_targets)[0]),newb=target((*system.primordial_targets)[1]);
   require((olda+oldb).m2Calc()>0&&(newa+newb).m2Calc()>0,"non-timelike subsystem primordial system");
-  Pythia8::RotBstMatrix to_rest,from_rest;to_rest.toCMframe(olda,oldb);from_rest.fromCMframe(newa,newb);
-  auto norm=[](Pythia8::RotBstMatrix& m){double value=0;for(int i=0;i<4;++i){double row=0;for(int j=0;j<4;++j)row+=std::abs(m.value(i,j));value=std::max(value,row);}return value;};
-  // The after momenta are already rounded results of the source transform.
-  // Reconstructing two highly boosted rest-frame maps amplifies that rounding.
-  // Keep this conditioning allowance explicit and separate from the residual.
-  double conditioning=norm(to_rest)*norm(from_rest);
   Pythia8::RotBstMatrix matrix;matrix.toCMframe(olda,oldb);matrix.fromCMframe(newa,newb);
   for(int i=0;i<4;++i)for(int j=0;j<4;++j){frame.matrix[4*i+j]=matrix.value(i,j);require(std::isfinite(frame.matrix[4*i+j]),"nonfinite subsystem primordial matrix");}
   for(auto id:system.outgoing){const auto& after=at(id);
@@ -85,15 +84,10 @@ std::vector<PrimordialRecoilFrame> reconstruct_subsystem_primordial_frames(const
    frame.copies.push_back({before.id,after.id});
   }
   for(auto pair:frame.copies){require(mapped.insert(pair[1]).second,"duplicate subsystem recoil copy");
-   auto predicted=apply_primordial_frame(frame,at(pair[0]).momentum);const auto& actual=at(pair[1]).momentum;
-   const auto& original=at(pair[0]).momentum;
-   double scale=std::max({1.,std::abs(original.px),std::abs(original.py),std::abs(original.pz),std::abs(original.energy),std::abs(actual.energy)});
-   double roundoff=64*std::numeric_limits<double>::epsilon()*conditioning*scale;
-   frame.maximum_roundoff_allowance=std::max(frame.maximum_roundoff_allowance,roundoff);
-   require(roundoff<=1e-7*scale,"subsystem recoil reconstruction is numerically ill-conditioned");
+   auto predicted=apply_primordial_frame(frame,staged(pair[0]));const auto actual=staged(pair[1]);
    for(auto values:{std::array<double,2>{predicted.px,actual.px},{predicted.py,actual.py},{predicted.pz,actual.pz},{predicted.energy,actual.energy}}){
     double error=std::abs(values[0]-values[1]);frame.maximum_copy_error=std::max(frame.maximum_copy_error,error);
-    if(error>2e-9+2e-11*std::abs(values[1])+roundoff){std::ostringstream message;
+    if(error>2e-9+2e-11*std::abs(values[1]) ){std::ostringstream message;
      message<<std::setprecision(17)<<"subsystem primordial frame disagrees with recorded copy: system "<<system.index<<" before "<<pair[0]<<" after "<<pair[1]<<" predicted "<<values[0]<<" actual "<<values[1]<<" error "<<error;
      throw std::domain_error(message.str());}
    }

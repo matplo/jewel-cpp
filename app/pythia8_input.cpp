@@ -41,7 +41,8 @@ int main(int argc,char** argv){
    out<<",\"multiple_parton_interactions\":"<<e.multiple_parton_interactions<<",\"subsystems\":[";bool first_system=true;
    for(const auto& system:e.subsystems){if(!first_system)out<<',';first_system=false;
     out<<"{\"index\":"<<system.index<<",\"shat\":"<<system.shat<<",\"pt_hat\":"<<system.pt_hat<<",\"incoming\":";list(out,system.incoming);
-    out<<",\"outgoing\":";list(out,system.outgoing);out<<",\"outgoing_final\":";list(out,system.outgoing_final);out<<",\"process_outgoing\":";list(out,system.process_outgoing);out<<'}';}
+    out<<",\"outgoing\":";list(out,system.outgoing);out<<",\"outgoing_final\":";list(out,system.outgoing_final);out<<",\"process_outgoing\":";list(out,system.process_outgoing);out<<",\"primordial_targets_px_py_pz_energy\":";
+    if(!system.primordial_targets)out<<"null";else{out<<'[';bool first_target=true;for(const auto& target:*system.primordial_targets){if(!first_target)out<<',';first_target=false;list(out,std::array<double,4>{target.px,target.py,target.pz,target.energy});}out<<']';}out<<'}';}
    out<<']';
    if(e.multiple_parton_interactions){out<<",\"isr_chains\":null,\"isr_recoil_frames\":null,\"primordial_recoil_frame\":null";}
    else {
@@ -71,14 +72,14 @@ int main(int argc,char** argv){
    out<<",\"primordial_subsystem_frames\":";
    if(!subsystem_error.empty())out<<"null";else {out<<'[';bool first_frame=true;for(const auto& f:subsystem_frames){
     if(!first_frame)out<<',';first_frame=false;
-    out<<"{\"incoming_before\":";list(out,f.incoming_before);out<<",\"incoming_after\":";list(out,f.incoming_after);
-    out<<",\"maximum_roundoff_allowance_gev\":"<<f.maximum_roundoff_allowance;
+    out<<"{\"momentum_stage\":\"before_beam_energy_repair\",\"incoming_before\":";list(out,f.incoming_before);out<<",\"incoming_after\":";list(out,f.incoming_after);
     out<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);out<<",\"copies\":[";
     bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";
    }out<<']';}
    out<<",\"particles\":[";first=true;
    for(const auto& p:e.particles){if(!first)out<<',';first=false;
     out<<"{\"id\":"<<p.id<<",\"source_index\":"<<p.source_index<<",\"pdg\":"<<p.pdg<<",\"status\":"<<p.status<<",\"final\":"<<p.final<<",\"colour\":"<<p.colour<<",\"anticolour\":"<<p.anticolour<<",\"momentum\":";list(out,std::array<double,4>{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy});
+    out<<",\"energy_before_beam_repair\":";if(p.energy_before_beam_repair)out<<*p.energy_before_beam_repair;else out<<"null";
     out<<",\"mass\":"<<p.mass<<",\"scale\":"<<p.scale<<",\"vertex_mm\":";list(out,p.vertex_mm);out<<",\"mothers\":";list(out,p.mothers);out<<",\"daughters\":";list(out,p.daughters);out<<'}';
    }
    out<<"],\"junctions\":[";first=true;for(const auto& j:e.junctions){if(!first)out<<',';first=false;out<<"{\"kind\":"<<j.kind<<",\"colours\":";list(out,j.colours);out<<'}';}out<<"]}\n";

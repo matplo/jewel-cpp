@@ -1,66 +1,75 @@
-# MPI primordial recoil: partial reconstruction
+# MPI primordial recoil at the correct energy stage
 
-Recorded 2026-11-21, Pythia8 8.317. This implementation reconstructs a
-BeamRemnants-style primordial recoil matrix for each ordinary beam-initiated
-subsystem. It remains incomplete: 26 of the 2,000 audited events cannot yet
-supply a validated set of matrices. Do not use this result as evidence of
-complete MPI transport, formation-time assignment, or JEWEL equivalence.
+Updated 2026-11-21, Pythia8 8.317. All 4,000 audited events now provide complete
+subsystem primordial transforms. This resolves all 26 rejected events from the
+preceding implementation. MPI ISR transport and JEWEL evolution remain separate,
+unimplemented integration steps; these are adapter results, not final-jet parity.
 
-`reconstruct_subsystem_primordial_frames` uses the subsystem's status-61 incoming
-copies and their old daughters, then constructs `toCMframe(oldA,oldB)` followed
-by `fromCMframe(newA,newB)`. This follows the locally inspected Pythia8
-`BeamRemnants.cc` Msys construction and subsequent status-61/62 copies.
-Every original-to-copy momentum is checked. The implementation requires complete
-coverage and refuses rescattered incoming records and unsupported copy histories.
-Existing single-system APIs and their tolerances are unchanged.
+## Source finding and implementation
 
-## Numerical policy and failures
+Pythia8 constructs each subsystem's Msys in `BeamRemnants.cc` from original
+incoming momenta and the beam-slot target momenta. It applies that matrix to
+incoming status-61 and outgoing status-62 copies. Subsequently
+`BeamSetup::boostAndVertex` recalculates **every record's energy** as
+`sqrt(max(0, mass² + |p|²))`, including historical records. Consequently, final
+record energies are not the original before/after Lorentz-transform inputs.
+Trying to reconstruct the source transform from them caused the prior failures.
 
-Reconstruction uses already rounded transformed incoming momenta; low-mass,
-highly boosted systems amplify that rounding. The original single-system
-absolute/relative test alone failed, e.g. a 3.72e-8 GeV discrepancy for a
-549 GeV momentum component. The new subsystem API explicitly adds a conservative
-conditioning allowance:
+The adapter now captures two pieces of source-stage information:
 
-`64 * epsilon(double) * ||toCM||_inf * ||fromCM||_inf * momentum_scale`.
+- `primordial_targets_px_py_pz_energy` per subsystem, from Pythia's original
+  beam slots, checked against subsystem incoming IDs and beam-origin flags.
+- `energy_before_beam_repair` per particle, captured by a parton-level observer
+  before `boostAndVertex`. The observer never vetoes, edits records or consumes
+  random numbers. Spatial momenta must remain identical across that stage;
+  unsupported subsequent rotations/boosts fail explicitly.
 
-This is a numerical error estimate, not a rigorous bound or physics tolerance.
-The scale is the largest absolute old four-vector component, new energy, or
-1 GeV. Reconstruction is rejected if the allowance exceeds 1e-7 of this scale.
-Otherwise each component must agree within 2e-9 GeV + 2e-11 times its absolute
-value + this allowance. The largest allowance and actual residual are exported
-separately. No such allowance was added to the Fortran kernel comparisons.
+`reconstruct_subsystem_primordial_frames` uses those inputs with the source's
+`toCMframe(oldA,oldB)` / `fromCMframe(targetA,targetB)` prescription. Each exported
+frame declares `momentum_stage: before_beam_energy_repair`. To apply it to a
+captured momentum, use the particle's pre-repair energy with its stored spatial
+components. The final energy repair is checked independently. It is not a
+Lorentz transformation and must not be folded into a spacetime boost.
 
-Snapshot export retains raw events when reconstruction fails. It writes
-`primordial_subsystem_frames: null` and a non-null `primordial_subsystem_error`.
-Successful events contain one frame per subsystem, in subsystem-index order,
-and a null error. It never drops an event or substitutes an empty history.
-The old singular primordial field remains null for MPI snapshots.
+The previous extra conditioning allowance and rejection limit were removed.
+Every copied component now uses the original gate: 2e-9 GeV + 2e-11 times the
+absolute reference component. Missing source inputs and unsupported ancestry
+still fail explicitly. Export retains raw events and records an error/null
+frame set if reconstruction fails; none fail in the current audit. The existing
+single-system API and its output remain unchanged.
 
-## Audit
+## Validation
 
-The same seed/configurations as the MPI input audit were regenerated. Every
-pre-existing JSON field agrees exactly, including all momenta and weights.
+All samples are pp at 5020 GeV, pThat 20–100 GeV, MPI on, Pythia FSR and
+hadronization off, using the existing adapter PDF/tune configuration.
 
-| ISR | Events with all frames | Rejected events | Frames | Checked copies |
-|---|---:|---:|---:|---:|
-| off | 984 / 1000 | 16 | 7,442 | 29,768 |
-| on | 990 / 1000 | 10 | 6,692 | 39,858 |
+| Seed | ISR | Mapped events | Subsystem frames | Checked copies |
+|---|---|---:|---:|---:|
+| 2600417 | off | 1,000 / 1,000 | 7,572 | 30,288 |
+| 2600417 | on | 1,000 / 1,000 | 6,767 | 40,321 |
+| 2600418 | off | 1,000 / 1,000 | 7,164 | 28,656 |
+| 2600418 | on | 1,000 / 1,000 | 6,997 | 41,697 |
 
-Of the 26 rejected events, 18 exceed the conditioning limit and 8 fail the
-momentum-copy comparison. The latter are all ISR-on; their cause is not yet
-established. They must not be attributed to floating-point rounding without
-further evidence. The current event-level failure policy withholds all subsystem
-matrices if even one subsystem fails.
+The independent audit checks full copy coverage, staged matrix application and
+final energy repair. Its maximum copy residual is 3.06e-9 GeV, within the
+combined absolute/relative gate. Maximum final-energy repair residual is
+4.55e-13 GeV. The two seed-2600417 samples additionally reproduce **every
+pre-existing event field exactly**, excluding only the newly introduced
+metadata. This includes all momenta, weights, generation outcomes and summary
+statistics. The fresh-seed samples have no pre-change comparison files and are
+not included in that exact-reproduction claim.
 
-The independent audit checks full copy coverage, matrix application and the
-Lorentz metric. Maximum checked-copy residual is 6.90e-7 GeV. The largest
-reported conditioning allowance is 1.48e-4 GeV. Absolute metric residuals reach
-1.22e-5; the audit uses a norm-scaled gate of 1e-7 * max(1, ||M||_inf²),
-so this is not a claim of absolute 1e-7 metric accuracy for boosted matrices.
-[Detailed evidence](validation-mpi-primordial.json).
+Highly boosted source matrices still have finite-precision metric residuals:
+the largest absolute residual is 3.30e-5. The independent audit uses
+1e-7 * max(1, ||M||_inf²) for the Lorentz-metric check. This does not establish
+absolute 1e-7 metric accuracy, nor arbitrary spacetime-transport precision.
+[Evidence, executable/audit hashes and Pythia source hashes](validation-mpi-primordial.json).
 
-Native input/CLI/boundary/shower-output suites pass. Tests include deliberately
-corrupted copied momentum and a 100-event CLI sample requiring rejected mappings
-to remain in the output. Further work must resolve rejected mappings and map
-subsystem ISR before connecting these transforms to JEWEL time/evolution state.
+Four native regression suites pass: input, CLI, shower boundary and shower
+output. Tests reject absent beam targets, absent pre-repair energies and corrupted
+copied momenta. The CLI regression includes a 100-event sample containing formerly
+rejected events and now requires every subsystem reconstruction to succeed.
+
+No JEWEL Fortran physics routine or differential-test tolerance changed. This
+resolves the primordial-stage mapping issue; subsystem ISR history/frame mapping,
+physical timing, multi-pair evolution and final-state jet comparisons remain open.

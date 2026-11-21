@@ -96,6 +96,10 @@ int main(){
    auto frames=jewel::reconstruct_subsystem_primordial_frames(*event);check(frames.size()==event->subsystems.size());
    for(std::size_t j=0;j<frames.size();++j){check(frames[j].incoming_after==event->subsystems[j].incoming);
     check(frames[j].copies.size()==event->subsystems[j].outgoing.size()+2);}
+   auto missing=*event;missing.subsystems.back().primordial_targets.reset();bool no_targets=false;
+   try{jewel::reconstruct_subsystem_primordial_frames(missing);}catch(const std::domain_error&){no_targets=true;}check(no_targets);
+   missing=*event;missing.particles[event->subsystems.back().outgoing[0]-1].energy_before_beam_repair.reset();bool no_energy=false;
+   try{jewel::reconstruct_subsystem_primordial_frames(missing);}catch(const std::domain_error&){no_energy=true;}check(no_energy);
    auto bad_frame=*event;bad_frame.particles[event->subsystems.back().outgoing[0]-1].momentum.energy+=1;
    bool bad_recoil=false;try{jewel::reconstruct_subsystem_primordial_frames(bad_frame);}catch(const std::domain_error&){bad_recoil=true;}check(bad_recoil);
    std::array<double,4> total{};
