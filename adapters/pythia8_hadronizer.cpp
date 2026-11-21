@@ -33,6 +33,7 @@ struct Pythia8Hadronizer::Impl {
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
+  settings.push_back(std::string("111:mayDecay = ")+(c.pi0_decay?"on":"off"));
   if(c.fragmentation==FragmentationProfile::Jewel260Mapped){auto mapped=jewel260_fragmentation_settings();settings.insert(settings.end(),mapped.begin(),mapped.end());}
   else if(c.fragmentation!=FragmentationProfile::Monash14)throw std::domain_error("invalid fragmentation profile");
   for(const auto& setting:settings)if(!engine.readString(setting))throw std::runtime_error("Pythia rejected setting: "+setting);

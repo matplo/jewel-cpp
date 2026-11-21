@@ -23,4 +23,15 @@ int main(){
   auto result=hadronizer.hadronize({a,b});check(result.has_value());
  }
  check(hadronizer.statistics().attempts==20&&hadronizer.statistics().returned==20);
+ // JEWEL PI0DEC changes the neutral pion's final-state survival.
+ for(bool decay:{false,true}){
+  auto c=config;c.pi0_decay=decay;jewel::Pythia8Hadronizer h(c);
+  jewel::GeneratorParticle p;p.id=1;p.pdg=111;p.final=true;p.mass=h.nominal_mass(111);
+  p.momentum={0,0,0,p.mass};auto out=h.hadronize({p});check(out.has_value());
+  int final_pions=0,final_particles=0;double energy=0;
+  for(const auto& q:out->particles)if(q.final){final_pions+=q.pdg==111;++final_particles;energy+=q.momentum.energy;}
+  check(final_pions==(decay?0:1)&&final_particles>=(decay?2:1));
+  check(std::abs(energy-p.mass)<1e-12);
+ }
+
 }

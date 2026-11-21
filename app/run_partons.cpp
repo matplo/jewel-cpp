@@ -58,7 +58,7 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"&&mode!="zero-interaction"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -71,6 +71,7 @@ int main(int argc,char** argv){
   bool keep_recoils=true,recoil_option_seen=false;
   bool scatter_recoils=false,scatter_option_seen=false,cuts_option_seen=false;double soft_cut=0,hard_cut=0;
   std::optional<double> subtraction_radius;int projection_mode=0;bool projection_seen=false;
+  bool pi0_decay=true,pi0_option_seen=false;
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config,input_options))continue;
@@ -138,6 +139,11 @@ int main(int argc,char** argv){
     for(auto& value:range){std::string token=argv[++i];std::size_t used=0;value=std::stod(token,&used);if(used!=token.size()||!std::isfinite(value))throw std::invalid_argument("invalid centrality");}
     if(range[0]<0||range[1]>100||range[0]>=range[1])throw std::invalid_argument("centrality requires 0 <= MIN < MAX <= 100");centrality=range;
    }
+   else if(option=="--pi0-decay"){
+    if(!hadronize_run||pi0_option_seen||i+1>=argc)throw std::invalid_argument("pi0 decay requires jewel-run-events and one on/off value");
+    const std::string value=argv[++i];if(value!="on"&&value!="off")throw std::invalid_argument("pi0 decay requires on or off");
+    pi0_decay=value=="on";pi0_option_seen=true;
+   }
    else if(option=="--jewel-fragmentation"){if(!hadronize_run)throw std::invalid_argument("fragmentation option requires jewel-run-events");jewel_fragmentation=true;}
    else if(option.rfind("--",0)==0||!replay_directory.empty())throw std::invalid_argument("unknown or repeated runner option");
    else replay_directory=option;
@@ -149,7 +155,7 @@ int main(int argc,char** argv){
   if(!replay_directory.empty()&&!std::filesystem::create_directory(replay_directory))throw std::runtime_error("replay directory must be new");
   jewel::Pythia8Input input(input_config);
   std::unique_ptr<jewel::Pythia8Hadronizer> hadronizer;
-  if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14});
+  if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14,pi0_decay});
   jewel::Kernels kernels;jewel::MediumConfig medium_config;medium_config.max_rapidity=2;jewel::MediumModel medium=mode=="vacuum"?jewel::MediumModel{}:jewel::MediumModel(jewel::ExpandingMedium(medium_config));
   std::optional<jewel::GeometrySampler> geometry;double table_b=0;
   const auto geometry_seed=static_cast<std::uint64_t>(seed)+500000;

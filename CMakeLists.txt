@@ -736,3 +736,8 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/hard_initialization_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/mpi-passive-initialization-validation.json --passive)
 endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
+ add_test(NAME runner-pi0-decay-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_pi0_decay.py $<TARGET_FILE:jewel-run-events> $<TARGET_FILE:jewel-run-partons>)
+endif()

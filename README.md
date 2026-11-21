@@ -926,3 +926,9 @@ The [updated comparison](docs/inclusive-vacuum-comparison.html) includes all
 1500 native attempts and 2126 selected jets, versus 1357 Fortran jets. It keeps
 the earlier sample selectable. The [10% gate still fails](docs/validation-inclusive-vacuum.md);
 recovering previously excluded event types does not establish physics agreement.
+
+### Neutral-pion decay
+
+Use `--pi0-decay off` with `jewel-run-events` to retain final neutral pions,
+matching JEWEL PI0DEC=F. Default is on. [Validation](docs/validation-pi0-decay.md)
+covers both engines and records the next unresolved fragmentation mapping.

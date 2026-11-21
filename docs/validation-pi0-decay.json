@@ -1,0 +1,25 @@
+{
+  "scope": "PI0DEC stable/decayed behavior, not decay-distribution or generator equivalence",
+  "reference_results": [
+    {
+      "decay": 0,
+      "final_pions": 1,
+      "final_particles": 1,
+      "final_energy_gev": 1.0
+    },
+    {
+      "decay": 1,
+      "final_pions": 0,
+      "final_particles": 2,
+      "final_energy_gev": 0.9999999999999999
+    }
+  ],
+  "reference_source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "reference_object_sha256": "60d843ece5a839af4e45dcc41087a1b80fb2fecb5f6d683988048e88209c71e2",
+  "probe_sha256": "8ee5b15df2860aef4e125265c2f08574da4278f833c0f6ea2889b3481dd267a7",
+  "native_tests_passed": [
+    "pythia8-fragmentation-contracts",
+    "experimental-isr-mpi-contracts",
+    "runner-pi0-decay-contracts"
+  ]
+}

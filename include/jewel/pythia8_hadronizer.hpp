@@ -6,6 +6,7 @@ enum class FragmentationProfile {Monash14,Jewel260Mapped};
 struct HadronizerConfig {
  std::string xml_directory;int seed{260001};
  FragmentationProfile fragmentation{FragmentationProfile::Monash14};
+ bool pi0_decay{true};
 };
 // Mapped explicit INITPYTHIA overrides; not an equivalence claim for the two engines.
 std::vector<std::string> jewel260_fragmentation_settings();
