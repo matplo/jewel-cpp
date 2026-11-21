@@ -1,0 +1,273 @@
+{
+  "scope": "Coupling-value translation only; not shower algorithm or event equivalence",
+  "source_matched_alpha_at_pythia8_mz": 0.11754434294459773,
+  "pythia8_normalization_gev": 91.188,
+  "order": 1,
+  "maximum_flavours": 5,
+  "cmw": false,
+  "reference": [
+    [
+      1.0,
+      0.35824871943468295
+    ],
+    [
+      2.0,
+      0.26640431259991415
+    ],
+    [
+      5.0,
+      0.201424880954351
+    ],
+    [
+      10.0,
+      0.17210519758927992
+    ],
+    [
+      20.0,
+      0.15023655720035461
+    ],
+    [
+      50.0,
+      0.12863032681679706
+    ],
+    [
+      91.1876,
+      0.11754441689724156
+    ],
+    [
+      100.0,
+      0.11600946606781788
+    ],
+    [
+      200.0,
+      0.105643965132659
+    ],
+    [
+      1000.0,
+      0.08749233474917005
+    ]
+  ],
+  "translated_native": [
+    [
+      1.0,
+      0.35824871943468284
+    ],
+    [
+      2.0,
+      0.26640431259991415
+    ],
+    [
+      5.0,
+      0.20142488095435096
+    ],
+    [
+      10.0,
+      0.17210519758927986
+    ],
+    [
+      20.0,
+      0.1502365572003546
+    ],
+    [
+      50.0,
+      0.12863032681679706
+    ],
+    [
+      91.1876,
+      0.11754441689724154
+    ],
+    [
+      100.0,
+      0.11600946606781785
+    ],
+    [
+      200.0,
+      0.10564396513265899
+    ],
+    [
+      1000.0,
+      0.08749233474917005
+    ]
+  ],
+  "max_absolute_error": 1.1102230246251565e-16,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "native_current_configurations": [
+    {
+      "scope": "SigmaProcess",
+      "alpha_at_mz": 0.118,
+      "order": 2,
+      "nfmax": 6,
+      "cmw": false
+    },
+    {
+      "scope": "SpaceShower",
+      "alpha_at_mz": 0.1365,
+      "order": 1,
+      "nfmax": 6,
+      "cmw": false
+    },
+    {
+      "scope": "MultipartonInteractions",
+      "alpha_at_mz": 0.13,
+      "order": 1,
+      "nfmax": 6,
+      "cmw": false
+    }
+  ],
+  "native_current_curves": {
+    "SigmaProcess": [
+      [
+        1.0,
+        0.5304056368666688
+      ],
+      [
+        2.0,
+        0.30756155749540764
+      ],
+      [
+        5.0,
+        0.21345867923590156
+      ],
+      [
+        10.0,
+        0.17827850385132638
+      ],
+      [
+        20.0,
+        0.1534243680303008
+      ],
+      [
+        50.0,
+        0.1298091574596171
+      ],
+      [
+        91.1876,
+        0.11800007814914021
+      ],
+      [
+        100.0,
+        0.11637973618013321
+      ],
+      [
+        200.0,
+        0.10574050768191189
+      ],
+      [
+        1000.0,
+        0.08848891701500597
+      ]
+    ],
+    "SpaceShower": [
+      [
+        1.0,
+        0.6211425412687097
+      ],
+      [
+        2.0,
+        0.3887612835604251
+      ],
+      [
+        5.0,
+        0.2643258263783928
+      ],
+      [
+        10.0,
+        0.21603034203324506
+      ],
+      [
+        20.0,
+        0.18265676945882153
+      ],
+      [
+        50.0,
+        0.15168071221489812
+      ],
+      [
+        91.1876,
+        0.1365000997276502
+      ],
+      [
+        100.0,
+        0.13443451606103982
+      ],
+      [
+        200.0,
+        0.12095241565442794
+      ],
+      [
+        1000.0,
+        0.09939602839352454
+      ]
+    ],
+    "MultipartonInteractions": [
+      [
+        1.0,
+        0.5060122381489611
+      ],
+      [
+        2.0,
+        0.34030123104142923
+      ],
+      [
+        5.0,
+        0.24099231274566796
+      ],
+      [
+        10.0,
+        0.20018898832648335
+      ],
+      [
+        20.0,
+        0.17120210862168755
+      ],
+      [
+        50.0,
+        0.14369681644167928
+      ],
+      [
+        91.1876,
+        0.13000009045591543
+      ],
+      [
+        100.0,
+        0.12812519427091626
+      ],
+      [
+        200.0,
+        0.11582097720168079
+      ],
+      [
+        1000.0,
+        0.09590426889387764
+      ]
+    ]
+  },
+  "reference_config_line": "COUPLING_CONFIG           1           2           1           4           3           5           0  0.11799999999999999       0.11799999999999999        1.0000000000000000                2",
+  "reference_configuration": {
+    "MSTP2": 1,
+    "MSTP3": 2,
+    "MSTU111": 1,
+    "MSTU112": 4,
+    "MSTU113": 3,
+    "MSTU114": 5,
+    "MSTU115": 0,
+    "PARP1": 0.118,
+    "PARP61": 0.118,
+    "PARP64": 1,
+    "MSTP64": 2
+  },
+  "hashes": {
+    "/private/tmp/jewel-coupling-audit/core.f": "5fa7540223e65ac575d60a403fc856a3aae3efc6a536054a91c90591d7cb6108",
+    "/private/tmp/jewel-coupling-audit/probe": "80f0fcb4eaaa652b8f4c269d8e867aad53dcd3a0854856cdb83a5e5f8466168b",
+    "/private/tmp/jewel-coupling-audit/params.dat": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+    "/private/tmp/jewel-coupling-audit/medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "/private/tmp/jewel-coupling-audit/stdout.log": "5a6836a6357ccc10a3178deee6f7fb804a83ab2b27aebb102569d4afc1dcd7dd",
+    "/private/tmp/jewel-coupling-audit/native": "331fe30c40e2d6367c84396310a8bc2f2e1c3f0c0d63252547c98728408cdc4e",
+    "/private/tmp/jewel-coupling-audit/matched": "b6d6aeec62f623cd6deb5757b1647acc0f2d528c2d07eaafbbe71bca37230682",
+    "reference/coupling_probe.cpp": "f0d9be5c007c12bdc1f9779c42ec2ecb82d8f46c816b9dfc7b9cf3c7c7afd823",
+    "reference/coupling_probe.f90": "5b84472e232a88260c89ab19a3b00695dcf745bf0505d6c1d2148d8405a469dc",
+    "/private/tmp/jewel-stockvac-reference-build/jewel-2.6.0.f": "225ee87eaea28d4d965cba46c6cd34656feb96c48030679b10859a30bf92cb7b",
+    "/private/tmp/jewel-geometry-validation-final/source/pythia6425mod-lhapdf6.f": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9"
+  }
+}

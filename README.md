@@ -945,3 +945,10 @@ The [latest vacuum report](docs/lund-vacuum-comparison.html) compares the source
 derived diquark profile with both historical samples. All 1500 events complete,
 but [spectrum and substructure gates still fail](docs/validation-lund-vacuum.md).
 The effective Pythia6/Pythia8 hard and ISR couplings are the next audit priority.
+
+### Effective coupling audit
+
+The [initialized coupling audit](docs/validation-effective-couplings.md) confirms
+that the current hard/ISR settings are not equivalent between engines. A source-
+derived one-loop translation matches ten scales to 1.1e-16, but is not yet
+applied to production samples. Historical jet comparisons remain unvalidated.
