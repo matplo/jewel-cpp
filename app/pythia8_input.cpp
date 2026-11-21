@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+#include "jewel/pythia8_input.hpp"
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <stdexcept>
+namespace {
+template<class T>void list(std::ostream& out,const T& values){out<<'[';bool first=true;for(const auto& value:values){if(!first)out<<',';first=false;out<<value;}out<<']';}
+unsigned long argument(const char* value){std::string text=value;std::size_t used=0;auto n=std::stoul(text,&used);if(used!=text.size()||text.empty()||text[0]=='-')throw std::invalid_argument("invalid integer argument");return n;}
+}
+int main(int argc,char** argv){
+ try{
+  if(argc!=4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
+  auto count=argument(argv[2]),seed=argument(argv[3]);
+  if(count==0||count>10000000||seed==0||seed>900000000)throw std::invalid_argument("invalid attempts or seed");
+  if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
+  jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);jewel::Pythia8Input input(config);
+  std::ofstream out(argv[1]);if(!out)throw std::runtime_error("cannot create output");out<<std::setprecision(17)<<std::boolalpha;
+  out<<"{\"type\":\"run\",\"schema\":\"jewel-hard-input-v1\",\"scope\":\"adapter-only; no JEWEL shower\",\"pythia_version\":"<<input.version()<<",\"momentum_unit\":\"GeV\",\"vertex_unit\":\"mm\",\"attempts_requested\":"<<count<<",\"seed\":"<<seed<<",\"settings\":[";
+  bool first=true;for(const auto& setting:input.settings()){if(!first)out<<',';first=false;out<<std::quoted(setting);}out<<"]}\n";
+  for(unsigned long i=0;i<count;++i){auto event=input.next();
+   if(!event){out<<"{\"type\":\"generation_failure\",\"attempt\":"<<i+1<<"}\n";continue;}
+   const auto& e=*event;
+   out<<"{\"type\":\"event\",\"attempt\":"<<e.attempt<<",\"process_code\":"<<e.process_code<<",\"weight\":"<<e.weight<<",\"pt_hat\":"<<e.pt_hat<<",\"x1\":"<<e.x1<<",\"x2\":"<<e.x2<<",\"incoming_id1\":"<<e.incoming_id1<<",\"incoming_id2\":"<<e.incoming_id2<<",\"q_factorization\":"<<e.q_factorization<<",\"q_renormalization\":"<<e.q_renormalization<<",\"hard_incoming\":";list(out,e.hard_incoming);out<<",\"hard_outgoing\":";list(out,e.hard_outgoing);out<<",\"hard_final\":";list(out,e.hard_final);
+   out<<",\"particles\":[";first=true;
+   for(const auto& p:e.particles){if(!first)out<<',';first=false;
+    out<<"{\"id\":"<<p.id<<",\"source_index\":"<<p.source_index<<",\"pdg\":"<<p.pdg<<",\"status\":"<<p.status<<",\"final\":"<<p.final<<",\"colour\":"<<p.colour<<",\"anticolour\":"<<p.anticolour<<",\"momentum\":";list(out,std::array<double,4>{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy});
+    out<<",\"mass\":"<<p.mass<<",\"scale\":"<<p.scale<<",\"vertex_mm\":";list(out,p.vertex_mm);out<<",\"mothers\":";list(out,p.mothers);out<<",\"daughters\":";list(out,p.daughters);out<<'}';
+   }
+   out<<"],\"junctions\":[";first=true;for(const auto& j:e.junctions){if(!first)out<<',';first=false;out<<"{\"kind\":"<<j.kind<<",\"colours\":";list(out,j.colours);out<<'}';}out<<"]}\n";
+  }
+  auto s=input.statistics();out<<"{\"type\":\"summary\",\"attempts\":"<<s.attempts<<",\"returned\":"<<s.returned<<",\"failed\":"<<s.failed<<",\"pythia_accepted\":"<<s.pythia_accepted<<",\"sigma_mb\":"<<s.sigma_mb<<",\"sigma_error_mb\":"<<s.sigma_error_mb<<",\"weight_sum\":"<<s.weight_sum<<"}\n";
+  out.close();if(!out)throw std::runtime_error("failed to finish output");
+  std::cout<<"Saved "<<s.returned<<" hard snapshots from "<<s.attempts<<" attempts to "<<argv[1]<<'\n';return 0;
+ }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
+}

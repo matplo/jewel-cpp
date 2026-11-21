@@ -604,3 +604,14 @@ physics follows separate source scheduling links. Enable scheduler integration
 with `CascadeConfig::compress_records=true`. Vacuum, threshold and one medium
 cascade comparison pass; another medium fixture retains four stored-transfer
 discrepancies. Full compression-mode and generator validation remain open.
+
+## Optional native Pythia8 boundary
+
+`Pythia8Input` imports hard-event snapshots and maps hard roles to final
+beam-recoil copies through ancestry. `Pythia8Hadronizer` uses a separate
+instance for a complete colour-connected input state. A native
+`jewel-pythia8-input` executable writes snapshots without Python or Fortran.
+[Build instructions and validation](docs/validation-pythia8.md) cover a
+1,000-event input/hadronization round trip. JEWEL shower insertion, its
+initialization and string construction are still pending; this is not yet
+a complete event generator.
