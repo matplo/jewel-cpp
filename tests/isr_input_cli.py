@@ -24,6 +24,15 @@ with tempfile.TemporaryDirectory() as directory:
         events=[json.loads(line) for line in output.read_text().splitlines() if json.loads(line)['type']=='event']
         assert len(events)==5 and any(len(e['subsystems'])>1 for e in events)
         assert all(e['multiple_parton_interactions'] and e['isr_chains'] is None and e['isr_recoil_frames'] is None and e['primordial_recoil_frame'] is None for e in events)
+    output=directory/'mpi-retained.jsonl'
+    run=subprocess.run([exe,str(output),'100','2600417','--mpi','on'],capture_output=True,text=True)
+    assert run.returncode==0,run.stderr
+    records=[json.loads(line) for line in output.read_text().splitlines()]
+    events=[e for e in records if e['type']=='event']
+    assert len(events)==records[-1]['returned']==100
+    assert any(e['primordial_subsystem_error'] for e in events)
+    assert any(e['primordial_subsystem_frames'] for e in events)
+    assert all((e['primordial_subsystem_frames'] is None)==(e['primordial_subsystem_error'] is not None) for e in events)
     for i,options in enumerate([['--mpi'],['--mpi','yes'],['--mpi','on','--mpi','off'],['--isr'],['--isr','yes'],['--isr','on','--isr','off']]):
         output=directory/f'bad{i}.jsonl'
         run=subprocess.run([exe,str(output),'1','2600317',*options],capture_output=True,text=True)

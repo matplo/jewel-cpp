@@ -93,6 +93,11 @@ int main(){
   for(int i=0;i<20;++i){auto event=input.next();if(!event)continue;
    check(event->multiple_parton_interactions);
    secondary+=event->subsystems.size()-1;
+   auto frames=jewel::reconstruct_subsystem_primordial_frames(*event);check(frames.size()==event->subsystems.size());
+   for(std::size_t j=0;j<frames.size();++j){check(frames[j].incoming_after==event->subsystems[j].incoming);
+    check(frames[j].copies.size()==event->subsystems[j].outgoing.size()+2);}
+   auto bad_frame=*event;bad_frame.particles[event->subsystems.back().outgoing[0]-1].momentum.energy+=1;
+   bool bad_recoil=false;try{jewel::reconstruct_subsystem_primordial_frames(bad_frame);}catch(const std::domain_error&){bad_recoil=true;}check(bad_recoil);
    std::array<double,4> total{};
    for(const auto& p:event->particles)if(p.final){total[0]+=p.momentum.px;total[1]+=p.momentum.py;total[2]+=p.momentum.pz;total[3]+=p.momentum.energy;}
    for(int j=0;j<4;++j)check(std::abs(total[j]-(j==3?config.ecm:0))<1e-8*config.ecm);

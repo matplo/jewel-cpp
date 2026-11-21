@@ -1,0 +1,44 @@
+{
+  "scope": "partial MPI primordial reconstruction; failures retained",
+  "reports": [
+    {
+      "path": "/private/tmp/jewel-mpi-primordial-final-off-2600417.jsonl",
+      "sha256": "49ed8db02c07fcf7705d8b37ce9dc0ece7547805b24e93ccd0c917067949d7e5",
+      "prior_sha256": "67d60bacbf0283217f2cd3e3b3863542897d98acf30b24fc81bee582c71a47e2",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 984,
+        "frames": 7442,
+        "copies": 29768,
+        "rejected_events": 16
+      },
+      "rejection_reasons": {
+        "subsystem recoil reconstruction is numerically ill-conditioned": 16
+      },
+      "maximum_copy_residual_gev": 5.451131528388942e-07,
+      "maximum_metric_residual": 1.2229637832206208e-05,
+      "maximum_roundoff_allowance_gev": 0.0001480129030277018
+    },
+    {
+      "path": "/private/tmp/jewel-mpi-primordial-final-on-2600417.jsonl",
+      "sha256": "365b97d501e60e9da516e4470a57c6c1c5af935f485dc76e262a32a3c72be78f",
+      "prior_sha256": "9e855629b5e11ec35363852c1c6a092c11f69dac3e91558efed0210ba475edae",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 990,
+        "frames": 6692,
+        "copies": 39858,
+        "rejected_events": 10
+      },
+      "rejection_reasons": {
+        "subsystem primordial frame disagrees with recorded copy": 8,
+        "subsystem recoil reconstruction is numerically ill-conditioned": 2
+      },
+      "maximum_copy_residual_gev": 6.894570105941966e-07,
+      "maximum_metric_residual": 2.4292877067733087e-06,
+      "maximum_roundoff_allowance_gev": 0.00013238904126983017
+    }
+  ],
+  "executable_sha256": "435a10b9af634e8f2ba0c72404fd67965efd9c2236fcddcfb0ae8c3a6d351a7c",
+  "audit_sha256": "1d87349e15dc7a50cf60281b1d97ded174a3687a2c597ae073558fb2b50b2a00"
+}

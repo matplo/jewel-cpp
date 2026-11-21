@@ -35,6 +35,7 @@ Momentum apply_isr_frame(const IsrRecoilFrame&,Momentum);
 // Does not choose that origin or assign a production time.
 SpaceTime apply_isr_frame_displacement(const IsrRecoilFrame&,SpaceTime);
 struct PrimordialRecoilFrame {
+ double maximum_roundoff_allowance{}; // Subsystem reconstruction conditioning diagnostic.
  std::array<ParticleId,2> incoming_before{},incoming_after{};
  std::array<double,16> matrix{}; // Same (energy,px,py,pz) convention.
  std::vector<std::array<ParticleId,2>> copies; // Includes incoming 61 and outgoing 62.
@@ -43,6 +44,9 @@ struct PrimordialRecoilFrame {
 // Single pp hard system only; reconstructs BeamRemnants' toCM/fromCM mapping.
 // Additional rescattering mismatch corrections are unsupported and fail closure.
 PrimordialRecoilFrame reconstruct_primordial_recoil_frame(const HardEventSnapshot&);
+// One frame per Pythia subsystem, in subsystem-index order. Ordinary
+// beam-initiated systems only; rescattering is rejected. Does not assign times.
+std::vector<PrimordialRecoilFrame> reconstruct_subsystem_primordial_frames(const HardEventSnapshot&);
 Momentum apply_primordial_frame(const PrimordialRecoilFrame&,Momentum);
 SpaceTime apply_primordial_frame_displacement(const PrimordialRecoilFrame&,SpaceTime);
 }
