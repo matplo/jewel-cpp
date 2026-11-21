@@ -38,6 +38,9 @@ ScatteringRates::ScatteringRates(Kernels k,double q0,double emax,double scale,Ex
   }
  }
 }
+ScatteringRates ScatteringRates::with_event_impact_parameter(double b) const {
+ auto medium=medium_.with_impact_parameter(b);auto copy=*this;copy.medium_=std::move(medium);return copy;
+}
 double ScatteringRates::integral(double t,double md,RateChannel channel) const {
  check(std::isfinite(t)&&t>0&&std::isfinite(md)&&md>=0,"invalid scattering table query");
  int c=static_cast<int>(channel);check(c>=0&&c<4,"invalid rate channel");

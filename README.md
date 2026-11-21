@@ -671,3 +671,9 @@ with explicit `--hard-alpha-s VALUE --hard-alpha-s-order ORDER`. These options
 work in the hard-input, parton and hadronized runners. [CT14nlo validation and
 runtime setup](docs/validation-external-pdf.md) record deterministic hard-event
 checks, plugin/grid provenance and the remaining coupling-comparison limits.
+
+Use `--centrality MIN MAX` on native parton/hadron runners to sample an optical
+centrality interval in percent. Event records carry their impact parameter,
+centrality fraction and lifetime. [Geometry validation](docs/validation-event-geometry.md)
+checks event-local medium/rate updates against Fortran while retaining the
+initialized numerical tables. Omit the option to retain fixed b=0 behavior.

@@ -44,7 +44,12 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="ECONFIG") {
+   if(op=="EVENTB") {
+    double b;if(!(std::cin>>b))throw std::runtime_error("bad event impact parameter");
+    *medium=medium->with_impact_parameter(b);
+    if(rates)*rates=rates->with_event_impact_parameter(b);
+    if(transfers)*transfers=transfers->with_event_impact_parameter(b);
+   } else if(op=="ECONFIG") {
     std::cin>>evolution_config.cutoff>>evolution_config.mass_scale>>evolution_config.formation_factor
      >>evolution_config.lifetime>>evolution_config.cross_section_scale;
    } else if(op=="PAIR"||op=="HIT") {

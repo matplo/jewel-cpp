@@ -16,6 +16,9 @@ class TransferSampler {
  Kernels kernels_; ExpandingMedium medium_; bool boost_;
 public:
  TransferSampler(Kernels,ExpandingMedium,bool longitudinal_boost=true);
+ TransferSampler with_event_impact_parameter(double b) const {
+  auto copy=*this;copy.medium_=medium_.with_impact_parameter(b);return copy;
+ }
  // slot is zero-based and corresponds to stock J=NEND. scratch is the
  // dedicated temporary event record (stock line 1), never the projectile.
  void sample(ShowerState&,ParticleId projectile,ParticleId scratch,

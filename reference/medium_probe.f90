@@ -137,6 +137,8 @@ program mediumprobe
    read(*,*) mass,nf,woodflag,taui,ti,tc,n0,d,sigmann,breal,etamax2,mdfactor,mdscalefac
    woods=woodflag/=0
    call calcta
+  case('EVENTB')
+   read(*,*)breal
   case('EVENT')
    read(*,*) centrmin,centrmax
    read(*,*) count

@@ -79,7 +79,7 @@ option 13 as **NNPDF2.3 QCD+QED LO**, not the same set.
 | ISR | INITPYTHIA forces MSTP(61)=1 | Disabled | Port ISR histories; a reduced ISR-off reference must be labelled an explicit benchmark variant |
 | ISRSCAT | Controls whether ISR partons interact | No ISR histories | Setting ISRSCAT=F does not disable Pythia6 ISR |
 | MPI | Off by default | Off | Reduced setting aligns; MPI functionality remains unimplemented |
-| Geometry | Centrality sampled, default 0–10% | Fixed b=0 | Expose shared geometry settings; fixed b=0 is not the 0–10% ensemble |
+| Geometry | Centrality sampled, default 0–10% | Fixed b=0 by default; optional sampled interval now available | [Sampled-geometry validation](validation-event-geometry.md); large existing samples remain fixed-b |
 | Medium boost | Default on | Off | Match explicitly |
 | Shower cutoff/couplings | Defaults Q0=1.5, LambdaPS=LambdaQCD=0.4 | Q0=1, both Lambdas=0.2 | Match via explicit Fortran cards/native configuration |
 | Angular ordering | Default mode 1 | Mode 0 | Match explicitly; cover all requested modes separately |

@@ -483,3 +483,8 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
   add_test(NAME pythia8-external-pdf-contracts COMMAND pythia8-external-pdf-test ${JEWEL_TEST_EXTERNAL_PDF})
  endif()
 endif()
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME event-geometry-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/event_geometry_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/event-geometry-validation.json)
+endif()

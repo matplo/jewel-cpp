@@ -33,7 +33,7 @@ def audit(path):
             record = json.loads(raw)
             finite(record)
             records.append(record if record['type'] in ('run', 'summary') else
-                           {key: record[key] for key in ('type', 'attempt', 'weight', 'stage', 'reason') if key in record})
+                           {key: record[key] for key in ('type', 'attempt', 'weight', 'stage', 'reason', 'impact_parameter_fm', 'centrality_fraction') if key in record})
     header, summary = records[0], records[-1]
     check(header['type'] == 'run' and summary['type'] == 'summary', 'incomplete run')
     check(header['schema'] in ('jewel-parton-development-v1', 'jewel-hadron-development-v1'), 'unknown schema')
@@ -92,11 +92,24 @@ def audit(path):
 
     check(final_count == summary['final_records'], 'final-record count mismatch')
     failures = Counter((r['stage'], r['reason']) for r in outcomes if r['type'] == 'evolution_failure')
-    return dict(input=str(path), sha256=digest.hexdigest(),
+    report = dict(input=str(path), sha256=digest.hexdigest(),
                 mode=header['mode'], summary=summary, hadronized_final_particles=hadron_count,
                 max_hadronization_momentum_residual_GeV=max_hadronization_residual,
                 failure_reasons=[dict(stage=s, reason=r, count=n) for (s, r), n in failures.items()],
                 audit='passed; accounting and record integrity only')
+    if 'centrality_percent' in header:
+        selected = [r for r in outcomes if r['type'] != 'generation_failure']
+        for record in selected:
+            check(record['impact_parameter_fm'] >= 0, 'negative event impact parameter')
+            if header['centrality_percent'] is None:
+                check(record['centrality_fraction'] is None and record['impact_parameter_fm'] == 0, 'unexpected fixed geometry')
+            else:
+                lo, hi = header['centrality_percent']
+                check(record['centrality_fraction'] is not None and lo/100 <= record['centrality_fraction'] <= hi/100, 'centrality outside requested range')
+        report['geometry'] = dict(centrality_percent=header['centrality_percent'],
+            table_impact_parameter_fm=header['table_impact_parameter_fm'],
+            event_impact_parameter_range_fm=[min(r['impact_parameter_fm'] for r in selected), max(r['impact_parameter_fm'] for r in selected)] if selected else None)
+    return report
 
 
 if __name__ == '__main__':
