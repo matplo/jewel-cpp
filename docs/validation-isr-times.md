@@ -94,3 +94,10 @@ The [frame diagnostic](validation-isr-energy-frames.md) shows that transporting
 to the final event frame does not generally make reconstructed incoming energies
 positive. A physical Pythia8-to-JEWEL timing prescription therefore remains
 separate from this correction to the literal numerical translation.
+
+
+The later [stock-event timing trace](validation-stock-isr-times.md) confirms
+signed incoming energies and reversed intervals in actual JEWEL events. It also
+identifies a defined-domain limitation: zero-virtuality direct-beam hard lines
+produce infinite times in stock JEWEL and are rejected by this C++ API. The
+1,152-case finite-domain comparison does not cover that full-event behavior.

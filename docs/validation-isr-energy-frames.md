@@ -39,3 +39,14 @@ python tools/audit_isr_energy_frames.py primordial.jsonl --output energy-audit.j
 The next integration must reconcile this history/energy representation with
 JEWEL's virtuality and formation-time assumptions. The event runner remains
 ISR-off, and the full matched Fortran/native jet comparison is still incomplete.
+
+
+## Stock-history evidence
+
+A subsequent [actual Pythia6/JEWEL timing trace](validation-stock-isr-times.md)
+finds 116 negative-energy incoming lines with reversed intervals in 1,000 stock
+vacuum events. Thus the sign alone is not a reason to reject a mapped history.
+It also exposes 135 zero-virtuality direct-beam hard lines with nonfinite source
+times. The remaining integration questions are history/virtuality correspondence
+and treatment of those direct-beam lines; a generic demand for positive incoming
+energies would contradict the observed stock implementation.
