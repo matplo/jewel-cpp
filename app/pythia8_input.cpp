@@ -13,17 +13,20 @@ unsigned long argument(const char* value){std::string text=value;std::size_t use
 }
 int main(int argc,char** argv){
  try{
-  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--isr on|off] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
+  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--isr on|off] [--mpi on|off] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
   auto count=argument(argv[2]),seed=argument(argv[3]);
   if(count==0||count>10000000||seed==0||seed>900000000)throw std::invalid_argument("invalid attempts or seed");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
-  jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);bool isr_seen=false;
+  jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);bool isr_seen=false,mpi_seen=false;
   for(int i=4;i<argc;++i){
    if(std::string(argv[i])=="--isr"){
     if(isr_seen||i+1>=argc)throw std::invalid_argument("--isr requires one on/off value");
     isr_seen=true;std::string value=argv[++i];
     if(value!="on"&&value!="off")throw std::invalid_argument("--isr requires on/off");
     config.initial_state_radiation=value=="on";
+   }else if(std::string(argv[i])=="--mpi"){
+    if(mpi_seen||i+1>=argc)throw std::invalid_argument("--mpi requires one on/off value");
+    mpi_seen=true;std::string value=argv[++i];if(value!="on"&&value!="off")throw std::invalid_argument("--mpi requires on/off");config.multiple_parton_interactions=value=="on";
    }else if(!input_option(argc,argv,i,config))throw std::invalid_argument("unknown hard-input option");
   }
   jewel::Pythia8Input input(config);
@@ -35,6 +38,13 @@ int main(int argc,char** argv){
    const auto& e=*event;
    out<<"{\"type\":\"event\",\"attempt\":"<<e.attempt<<",\"process_code\":"<<e.process_code<<",\"weight\":"<<e.weight<<",\"pt_hat\":"<<e.pt_hat<<",\"x1\":"<<e.x1<<",\"x2\":"<<e.x2<<",\"incoming_id1\":"<<e.incoming_id1<<",\"incoming_id2\":"<<e.incoming_id2<<",\"q_factorization\":"<<e.q_factorization<<",\"q_renormalization\":"<<e.q_renormalization<<",\"hard_incoming\":";list(out,e.hard_incoming);out<<",\"hard_outgoing\":";list(out,e.hard_outgoing);out<<",\"hard_final\":";list(out,e.hard_final);
    out<<",\"initial_state_radiation\":"<<e.initial_state_radiation<<",\"isr_emissions\":";list(out,e.isr_emissions);out<<",\"isr_final\":";list(out,e.isr_final);
+   out<<",\"multiple_parton_interactions\":"<<e.multiple_parton_interactions<<",\"subsystems\":[";bool first_system=true;
+   for(const auto& system:e.subsystems){if(!first_system)out<<',';first_system=false;
+    out<<"{\"index\":"<<system.index<<",\"shat\":"<<system.shat<<",\"pt_hat\":"<<system.pt_hat<<",\"incoming\":";list(out,system.incoming);
+    out<<",\"outgoing\":";list(out,system.outgoing);out<<",\"outgoing_final\":";list(out,system.outgoing_final);out<<",\"process_outgoing\":";list(out,system.process_outgoing);out<<'}';}
+   out<<']';
+   if(e.multiple_parton_interactions){out<<",\"isr_chains\":null,\"isr_recoil_frames\":null,\"primordial_recoil_frame\":null";}
+   else {
    out<<",\"isr_chains\":[";
    if(e.initial_state_radiation){auto chains=jewel::map_pythia_isr_ancestry(e);bool first_chain=true;
     for(const auto& chain:chains){if(!first_chain)out<<',';first_chain=false;
@@ -54,6 +64,7 @@ int main(int argc,char** argv){
     out<<",\"primordial_recoil_frame\":{\"incoming_before\":";list(out,f.incoming_before);out<<",\"incoming_after\":";list(out,f.incoming_after);
     out<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);out<<",\"copies\":[";
     bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";}
+   }
    out<<",\"particles\":[";first=true;
    for(const auto& p:e.particles){if(!first)out<<',';first=false;
     out<<"{\"id\":"<<p.id<<",\"source_index\":"<<p.source_index<<",\"pdg\":"<<p.pdg<<",\"status\":"<<p.status<<",\"final\":"<<p.final<<",\"colour\":"<<p.colour<<",\"anticolour\":"<<p.anticolour<<",\"momentum\":";list(out,std::array<double,4>{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy});

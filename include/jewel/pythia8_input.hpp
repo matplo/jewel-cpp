@@ -10,6 +10,7 @@ struct PythiaInputConfig {
  std::string xml_directory;
  double ecm{5020},pt_min{20},pt_max{100};
  int seed{260000},pdf_set{13},pp_tune{14};
+ bool multiple_parton_interactions{false};
  bool initial_state_radiation{false}; // Adapter-only until ISR transport is mapped.
  // External set/member, e.g. CT14nlo/0. Requires an explicit hard coupling policy.
  std::string external_pdf;
@@ -26,8 +27,15 @@ struct GeneratorParticle {
  std::vector<ParticleId> mothers,daughters;
 };
 struct GeneratorJunction {int kind{};std::array<int,3> colours{};};
+struct GeneratorSubsystem {
+ int index{};double shat{},pt_hat{};
+ std::array<ParticleId,2> incoming{}; // Current Pythia subsystem incoming records.
+ std::vector<ParticleId> outgoing,outgoing_final,process_outgoing;
+};
 struct HardEventSnapshot {
  std::uint64_t attempt{};
+ bool multiple_parton_interactions{false};
+ std::vector<GeneratorSubsystem> subsystems;
  bool initial_state_radiation{false};
  std::vector<ParticleId> isr_emissions,isr_final;
  int process_code{},incoming_id1{},incoming_id2{};
@@ -43,7 +51,8 @@ struct GeneratorStatistics {
 };
 // Reduced hard-dijet input only. Does not initialize JEWEL virtualities or run
 // its shower. ISR snapshots include emission/final-copy associations; their
-// JEWEL transport interpretation remains separate. MPI is disabled.
+// JEWEL transport interpretation remains separate. Optional MPI snapshots
+// preserve Pythia subsystem membership; JEWEL MPI evolution is not connected.
 class Pythia8Input {
  struct Impl;
  std::unique_ptr<Impl> impl_;

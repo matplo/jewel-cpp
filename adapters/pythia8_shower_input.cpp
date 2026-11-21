@@ -6,6 +6,7 @@ namespace jewel {
 PreparedDijet prepare_pythia_dijet(const HardEventSnapshot& input,HardInitializationConfig config,
  const BranchingSampler& sampler,Random& random){
  validate_hard_snapshot(input);
+ if(input.multiple_parton_interactions)throw std::domain_error("MPI snapshot requires subsystem evolution; reduced dijet adapter cannot discard it");
  if(input.initial_state_radiation)throw std::domain_error("ISR snapshot requires ISR transport initialization; reduced dijet adapter cannot discard it");
  if(config.first_angle_ordering)throw std::domain_error("Pythia first-angle ordering requires mapped hard ancestry");
  PreparedDijet result;result.weight=input.weight;result.state.weight=input.weight;

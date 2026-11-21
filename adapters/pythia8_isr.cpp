@@ -7,7 +7,7 @@
 namespace jewel {
 namespace {void require(bool b,const char* message){if(!b)throw std::domain_error(message);}}
 std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot& input){
- validate_hard_snapshot(input);
+ validate_hard_snapshot(input);require(!input.multiple_parton_interactions,"single-system recoil mapping does not support MPI snapshots");
  require(input.initial_state_radiation,"ISR ancestry mapping requires an ISR-enabled snapshot");
  auto at=[&](ParticleId id)->const GeneratorParticle&{
   require(id>0&&id<=input.particles.size(),"missing ISR ancestry line");return input.particles[id-1];};

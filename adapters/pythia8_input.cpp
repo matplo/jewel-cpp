@@ -32,8 +32,8 @@ struct Pythia8Input::Impl {
  Pythia8::Pythia engine;
  std::vector<std::string> settings;
  std::uint64_t attempts{},returned{};
- bool initial_state_radiation{};
- explicit Impl(const PythiaInputConfig& c):engine(c.xml_directory.empty()?JEWEL_PYTHIA8_XML:c.xml_directory,false),initial_state_radiation(c.initial_state_radiation){
+ bool initial_state_radiation{},multiple_parton_interactions{};
+ explicit Impl(const PythiaInputConfig& c):engine(c.xml_directory.empty()?JEWEL_PYTHIA8_XML:c.xml_directory,false),initial_state_radiation(c.initial_state_radiation),multiple_parton_interactions(c.multiple_parton_interactions){
   require(std::isfinite(c.ecm)&&std::isfinite(c.pt_min)&&std::isfinite(c.pt_max)&&c.ecm>0&&c.pt_min>0&&c.pt_max>c.pt_min&&2*c.pt_min<c.ecm,"invalid hard-process energy range");
   require(c.seed>0&&c.seed<=900000000,"Pythia seed must be between 1 and 900000000");
   require(c.pdf_set==13&&c.pp_tune==14,"base tune 14 and internal PDF 13 are required; use external_pdf for an LHAPDF override");
@@ -43,7 +43,7 @@ struct Pythia8Input::Impl {
   if(c.hard_alpha_s)require(std::isfinite(*c.hard_alpha_s)&&*c.hard_alpha_s>=.06&&*c.hard_alpha_s<=.25&&*c.hard_alpha_s_order>=0&&*c.hard_alpha_s_order<=3,"invalid hard alpha_s policy");
   settings={"Tune:pp = 14","Beams:idA = 2212","Beams:idB = 2212","Beams:eCM = "+number(c.ecm),
    "HardQCD:all = on","PhaseSpace:pTHatMin = "+number(c.pt_min),"PhaseSpace:pTHatMax = "+number(c.pt_max),
-   "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off",std::string("PartonLevel:ISR = ")+(c.initial_state_radiation?"on":"off"),"PartonLevel:MPI = off",
+   "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off",std::string("PartonLevel:ISR = ")+(c.initial_state_radiation?"on":"off"),std::string("PartonLevel:MPI = ")+(c.multiple_parton_interactions?"on":"off"),
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
@@ -61,7 +61,7 @@ const std::vector<std::string>& Pythia8Input::settings() const{return impl_->set
 std::optional<HardEventSnapshot> Pythia8Input::next(){
  auto& p=impl_->engine;++impl_->attempts;
  if(!p.next())return std::nullopt;
- HardEventSnapshot result;result.attempt=impl_->attempts;result.initial_state_radiation=impl_->initial_state_radiation;
+ HardEventSnapshot result;result.attempt=impl_->attempts;result.initial_state_radiation=impl_->initial_state_radiation;result.multiple_parton_interactions=impl_->multiple_parton_interactions;
  const auto& info=p.info;result.process_code=info.code();result.weight=info.weight();result.pt_hat=info.pTHat();
  result.incoming_id1=info.id1();result.incoming_id2=info.id2();result.x1=info.x1();result.x2=info.x2();
  result.q_factorization=info.QFac();result.q_renormalization=info.QRen();
@@ -79,6 +79,18 @@ std::optional<HardEventSnapshot> Pythia8Input::next(){
  // Cross-check the explicit, reciprocal copy walk against Pythia's own record navigation.
  for(std::size_t i=0;i<2;++i)require(result.hard_final[i]==static_cast<ParticleId>(p.event[result.hard_outgoing[i]-1].iBotCopy()+1),"Pythia hard-copy navigation disagrees");
  for(std::size_t i=0;i<result.isr_emissions.size();++i)require(result.isr_final[i]==static_cast<ParticleId>(p.event[result.isr_emissions[i]-1].iBotCopy()+1),"Pythia ISR-copy navigation disagrees");
+ // Capture Pythia's subsystem identity rather than inferring pairs from pT.
+ for(int i=0;i<p.partonSystems.sizeSys();++i){GeneratorSubsystem system;system.index=i;
+  require(p.partonSystems.hasInAB(i)&&!p.partonSystems.hasInRes(i),"unsupported non-beam subsystem");
+  system.incoming={static_cast<ParticleId>(p.partonSystems.getInA(i)+1),static_cast<ParticleId>(p.partonSystems.getInB(i)+1)};
+  system.shat=p.partonSystems.getSHat(i);system.pt_hat=p.partonSystems.getPTHat(i);
+  for(int j=0;j<p.partonSystems.sizeOut(i);++j){auto id=static_cast<ParticleId>(p.partonSystems.getOut(i,j)+1);system.outgoing.push_back(id);system.outgoing_final.push_back(final_copy(result,id));}
+  for(const auto& node:result.particles)if(std::abs(node.status)==23||std::abs(node.status)==33){
+   auto final=final_copy(result,node.id);
+   if(std::find(system.outgoing_final.begin(),system.outgoing_final.end(),final)!=system.outgoing_final.end())system.process_outgoing.push_back(node.id);
+  }
+  result.subsystems.push_back(std::move(system));
+ }
  for(int i=0;i<p.event.sizeJunction();++i)result.junctions.push_back({p.event.kindJunction(i),{p.event.colJunction(i,0),p.event.colJunction(i,1),p.event.colJunction(i,2)}});
  validate_hard_snapshot(result);++impl_->returned;return result;
 }
@@ -101,6 +113,36 @@ void validate_hard_snapshot(const HardEventSnapshot& event){
   for(auto id:p.daughters){at(id);require(id!=p.id,"self-daughter in snapshot");}
  }
  require(at(event.hard_incoming[0]).pdg==event.incoming_id1&&at(event.hard_incoming[1]).pdg==event.incoming_id2,"incoming flavour metadata mismatch");
+ require(!event.subsystems.empty(),"missing Pythia subsystem ledger");
+ require(event.multiple_parton_interactions||event.subsystems.size()==1,"multiple systems in MPI-off snapshot");
+ std::unordered_set<ParticleId> subsystem_outputs,process_roots;
+ for(std::size_t i=0;i<event.subsystems.size();++i){const auto& system=event.subsystems[i];
+  require(system.index==static_cast<int>(i)&&std::isfinite(system.shat)&&system.shat>0&&std::isfinite(system.pt_hat)&&system.pt_hat>0,"invalid subsystem metadata");
+  require(system.incoming[0]!=system.incoming[1],"duplicate subsystem incoming line");for(auto id:system.incoming)at(id);
+  require(system.outgoing.size()==system.outgoing_final.size(),"incomplete subsystem final associations");
+  for(std::size_t j=0;j<system.outgoing.size();++j){auto final=final_copy(event,system.outgoing[j]);
+   require(final==system.outgoing_final[j]&&subsystem_outputs.insert(final).second,"duplicate or invalid subsystem final membership");}
+  require(system.process_outgoing.size()==2,"subsystem is not a mapped two-body scattering");
+  const auto& first=at(system.process_outgoing[0]);const auto& second=at(system.process_outgoing[1]);
+  require(first.mothers.size()==2&&first.mothers==second.mothers,"scattering pair has inconsistent incoming ancestry");
+  require(first.mothers[0]!=first.mothers[1],"duplicate scattering incoming root");
+  std::array<double,4> pair_balance{};double pair_energy=0;
+  for(int side=0;side<2;++side)for(auto id:side?system.process_outgoing:first.mothers){const auto& node=at(id);
+   if(!side)require(std::abs(node.status)==(i==0?21:31),"incorrect scattering incoming root status");
+   double sign=side?-1:1;const auto& v=node.momentum;
+   pair_balance[0]+=sign*v.px;pair_balance[1]+=sign*v.py;pair_balance[2]+=sign*v.pz;pair_balance[3]+=sign*v.energy;
+   pair_energy+=std::abs(v.energy);
+  }
+  for(double v:pair_balance)require(std::abs(v)<=1e-8*std::max(1.,pair_energy),"scattering root four-momentum does not close");
+  for(auto id:system.process_outgoing){const auto& node=at(id);
+   require(std::abs(node.status)==(i==0?23:33)&&process_roots.insert(id).second,"incorrect subsystem process role");
+   auto final=final_copy(event,id);require(std::find(system.outgoing_final.begin(),system.outgoing_final.end(),final)!=system.outgoing_final.end(),"process root outside its subsystem");}
+ }
+ for(const auto& node:event.particles)if(std::abs(node.status)==23||std::abs(node.status)==33)require(process_roots.count(node.id)==1,"unmapped scattering root");
+ std::unordered_set<ParticleId> expected_outputs;
+ for(const auto& node:event.particles)if(std::abs(node.status)==23||std::abs(node.status)==33||std::abs(node.status)==43)
+  require(expected_outputs.insert(final_copy(event,node.id)).second,"duplicate scattering/emission final copy");
+ require(expected_outputs==subsystem_outputs,"subsystem membership omits radiation or includes unrelated particles");
  require(event.hard_final[0]!=event.hard_final[1],"duplicate final hard leg");
  require(event.isr_emissions.size()==event.isr_final.size(),"incomplete ISR final-copy associations");
  require(event.initial_state_radiation||event.isr_emissions.empty(),"ISR emissions in ISR-off snapshot");

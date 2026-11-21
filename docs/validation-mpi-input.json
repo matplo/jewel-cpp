@@ -1,0 +1,36 @@
+{
+  "scope": "MPI input mapping only; no JEWEL evolution",
+  "reports": [
+    {
+      "path": "/private/tmp/jewel-mpi-final-off-2600417.jsonl",
+      "sha256": "67d60bacbf0283217f2cd3e3b3863542897d98acf30b24fc81bee582c71a47e2",
+      "seed": 2600417,
+      "pythia_version": 8317,
+      "events": 1000,
+      "subsystems": 7572,
+      "secondary_pairs": 6572,
+      "isr_emissions": 0,
+      "max_root_pair_closure_error_gev": 1.2755663192365319e-10,
+      "max_whole_event_closure_error_gev": 1.3287377320647664e-06,
+      "max_final_subsystem_closure_error_gev_diagnostic_only": 6.6700067691272125e-09
+    },
+    {
+      "path": "/private/tmp/jewel-mpi-final-on-2600417.jsonl",
+      "sha256": "9e855629b5e11ec35363852c1c6a092c11f69dac3e91558efed0210ba475edae",
+      "seed": 2600417,
+      "pythia_version": 8317,
+      "events": 1000,
+      "subsystems": 6767,
+      "secondary_pairs": 5767,
+      "isr_emissions": 13253,
+      "max_root_pair_closure_error_gev": 7.753442332614213e-11,
+      "max_whole_event_closure_error_gev": 2.6969610457783233e-05,
+      "max_final_subsystem_closure_error_gev_diagnostic_only": 2.6971357442562294e-05
+    }
+  ],
+  "executable_sha256": "41b6071d71291cbc893833607a15dc5d3e305fd519971d3c8421637f242283a4",
+  "audit_sha256": "63c001973324b28cb1e3ce97908a196c5c16c53455675713214d7494f3dedd57",
+  "pair_closure_tolerance": "1e-8 * max(1, sum absolute incoming and outgoing energies)",
+  "whole_event_closure_tolerance": "1e-8 * beam energy",
+  "subsystem_final_closure": "diagnostic only; no acceptance gate"
+}

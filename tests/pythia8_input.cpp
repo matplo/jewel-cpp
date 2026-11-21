@@ -86,4 +86,32 @@ int main(){
  check(isr?emission_count>0:emission_count==0);
  if(isr)check(negative_energy_count>0);
  }
+ for(bool isr:{false,true}){
+  jewel::PythiaInputConfig config;config.seed=2600317;
+  config.multiple_parton_interactions=true;config.initial_state_radiation=isr;
+  jewel::Pythia8Input input(config);unsigned secondary=0;
+  for(int i=0;i<20;++i){auto event=input.next();if(!event)continue;
+   check(event->multiple_parton_interactions);
+   secondary+=event->subsystems.size()-1;
+   std::array<double,4> total{};
+   for(const auto& p:event->particles)if(p.final){total[0]+=p.momentum.px;total[1]+=p.momentum.py;total[2]+=p.momentum.pz;total[3]+=p.momentum.energy;}
+   for(int j=0;j<4;++j)check(std::abs(total[j]-(j==3?config.ecm:0))<1e-8*config.ecm);
+   auto rejects=[](const jewel::HardEventSnapshot& broken){bool rejected=false;
+    try{jewel::validate_hard_snapshot(broken);}catch(const std::domain_error&){rejected=true;}check(rejected);};
+   auto broken=*event;broken.subsystems.clear();rejects(broken);
+   broken=*event;broken.particles[broken.subsystems.back().process_outgoing[0]-1].momentum.energy+=1;rejects(broken);
+   broken=*event;broken.particles[broken.subsystems.back().process_outgoing[0]-1].mothers.clear();rejects(broken);
+   broken=*event;broken.subsystems[0].process_outgoing[1]=broken.subsystems[0].process_outgoing[0];rejects(broken);
+   broken=*event;broken.subsystems[0].outgoing_final[0]=0;rejects(broken);
+   if(event->subsystems.size()>1){broken=*event;broken.multiple_parton_interactions=false;rejects(broken);
+    broken=*event;broken.subsystems[1].process_outgoing=broken.subsystems[0].process_outgoing;rejects(broken);}
+   jewel::BranchingSampler sampler({},1,1,0);jewel::SplitMixRandom stream(2600100+i);bool rejected=false;
+   try{jewel::prepare_pythia_dijet(*event,{},sampler,stream);}catch(const std::domain_error&){rejected=true;}
+   check(rejected&&stream.checkpoint()==0);
+   rejected=false;try{jewel::map_pythia_isr_ancestry(*event);}catch(const std::domain_error&){rejected=true;}check(rejected);
+   rejected=false;try{jewel::reconstruct_primordial_recoil_frame(*event);}catch(const std::domain_error&){rejected=true;}check(rejected);
+  }
+  check(secondary>0);
+ }
+
 }

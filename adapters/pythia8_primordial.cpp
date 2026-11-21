@@ -10,7 +10,7 @@ namespace {void require(bool value,const char* message){if(!value)throw std::dom
 Momentum apply_primordial_frame(const PrimordialRecoilFrame& frame,Momentum p){IsrRecoilFrame view;view.matrix=frame.matrix;return apply_isr_frame(view,p);}
 SpaceTime apply_primordial_frame_displacement(const PrimordialRecoilFrame& frame,SpaceTime v){IsrRecoilFrame view;view.matrix=frame.matrix;return apply_isr_frame_displacement(view,v);}
 PrimordialRecoilFrame reconstruct_primordial_recoil_frame(const HardEventSnapshot& input){
- validate_hard_snapshot(input);PrimordialRecoilFrame result;
+ validate_hard_snapshot(input);require(!input.multiple_parton_interactions,"single-system recoil mapping does not support MPI snapshots");PrimordialRecoilFrame result;
  auto at=[&](ParticleId id)->const GeneratorParticle&{require(id>0&&id<=input.particles.size(),"missing primordial recoil line");return input.particles[id-1];};
  std::unordered_set<ParticleId> visited,beams;
  for(std::size_t side=0;side<2;++side){auto id=input.hard_incoming[side];
