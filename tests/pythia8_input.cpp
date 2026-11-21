@@ -12,7 +12,8 @@ int main(){
  try{jewel::Pythia8Input input(bad);}catch(const std::domain_error&){invalid=true;}check(invalid);
  bad.external_pdf="";bad.hard_alpha_s_order=4;invalid=false;
  try{jewel::Pythia8Input input(bad);}catch(const std::domain_error&){invalid=true;}check(invalid);
- jewel::PythiaInputConfig config;config.seed=2600317;
+ for(bool isr:{false,true}){
+ jewel::PythiaInputConfig config;config.seed=2600317;config.initial_state_radiation=isr;unsigned emission_count=0;
  jewel::Pythia8Input first(config),second(config);unsigned accepted=0;
  for(int i=0;i<20;++i){auto a=first.next(),b=second.next();check(a.has_value()==b.has_value());if(!a)continue;++accepted;
   check(a->process_code==b->process_code&&a->weight==b->weight&&a->particles.size()==b->particles.size());
@@ -20,6 +21,24 @@ int main(){
   for(std::size_t j=0;j<a->particles.size();++j){const auto& x=a->particles[j];const auto& y=b->particles[j];
    check(x.status==y.status&&x.pdg==y.pdg&&x.mothers==y.mothers&&x.daughters==y.daughters&&x.colour==y.colour&&x.anticolour==y.anticolour);
    check(x.momentum.px==y.momentum.px&&x.momentum.py==y.momentum.py&&x.momentum.pz==y.momentum.pz&&x.momentum.energy==y.momentum.energy);
+  }
+  check(a->initial_state_radiation==isr&&b->initial_state_radiation==isr);
+  check(a->isr_emissions==b->isr_emissions&&a->isr_final==b->isr_final);
+  emission_count+=a->isr_emissions.size();
+  if(isr){
+   std::array<double,4> total{};
+   for(const auto& p:a->particles)if(p.final){total[0]+=p.momentum.px;total[1]+=p.momentum.py;total[2]+=p.momentum.pz;total[3]+=p.momentum.energy;}
+   for(int j=0;j<3;++j)check(std::abs(total[j])<1e-8*config.ecm);
+   check(std::abs(total[3]-config.ecm)<1e-8*config.ecm);
+   if(!a->isr_emissions.empty()){
+    auto broken=*a;broken.isr_final[0]=a->hard_final[0];bool rejected=false;
+    try{jewel::validate_hard_snapshot(broken);}catch(const std::domain_error&){rejected=true;}check(rejected);
+    broken=*a;broken.isr_emissions.pop_back();broken.isr_final.pop_back();rejected=false;
+    try{jewel::validate_hard_snapshot(broken);}catch(const std::domain_error&){rejected=true;}check(rejected);
+   }
+   jewel::BranchingSampler sampler({},1,1,0);jewel::SplitMixRandom stream(2600100+i);bool rejected=false;
+   try{jewel::prepare_pythia_dijet(*a,{},sampler,stream);}catch(const std::domain_error&){rejected=true;}
+   check(rejected&&stream.checkpoint()==0);continue;
   }
   jewel::BranchingSampler sampler({},1,1,0);jewel::SplitMixRandom stream(2600100+i);
   jewel::HardInitializationConfig hard;hard.x=1.2;hard.y=-.7;
@@ -37,4 +56,6 @@ int main(){
  }
  auto s=first.statistics();check(accepted>0&&s.attempts==20&&s.returned==accepted&&s.failed==20-accepted);
  check(s.sigma_mb>0&&std::isfinite(s.sigma_error_mb));
+ check(isr?emission_count>0:emission_count==0);
+ }
 }

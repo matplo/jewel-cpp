@@ -774,3 +774,11 @@ Fortran HepMC2 samples can enter the same analysis through the
 and the distinction between native attempts and written reference events.
 The included Fortran sample is a smoke check with unmatched settings, not a
 passing physics comparison.
+
+## ISR input milestone
+
+The hard-input adapter accepts `--isr on|off` and exports validated emission
+and final-copy ancestry. See [ISR input validation](docs/validation-isr-input.md).
+The reduced JEWEL transport adapter rejects ISR snapshots until their production
+times, virtualities and medium evolution are mapped; the event runner remains
+ISR-off.

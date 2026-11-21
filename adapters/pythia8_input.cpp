@@ -20,7 +20,7 @@ ParticleId final_copy(const HardEventSnapshot& event,ParticleId root){
   require(p.daughters.size()==1,"unsupported branching hard-leg history");
   auto next=p.daughters.front();require(next>0&&next<=event.particles.size(),"missing hard-leg copy");
   const auto& copy=event.particles[next-1];
-  require(copy.pdg==p.pdg&&(std::abs(copy.status)==62||std::abs(copy.status)==64),"unsupported hard-leg copy status/flavour");
+  require(copy.pdg==p.pdg&&(std::abs(copy.status)==62||std::abs(copy.status)==64||(event.initial_state_radiation&&std::abs(copy.status)==44)),"unsupported hard-leg copy status/flavour");
   require(std::find(copy.mothers.begin(),copy.mothers.end(),id)!=copy.mothers.end(),"nonreciprocal hard-leg copy");
   id=next;
  }
@@ -32,7 +32,8 @@ struct Pythia8Input::Impl {
  Pythia8::Pythia engine;
  std::vector<std::string> settings;
  std::uint64_t attempts{},returned{};
- explicit Impl(const PythiaInputConfig& c):engine(c.xml_directory.empty()?JEWEL_PYTHIA8_XML:c.xml_directory,false){
+ bool initial_state_radiation{};
+ explicit Impl(const PythiaInputConfig& c):engine(c.xml_directory.empty()?JEWEL_PYTHIA8_XML:c.xml_directory,false),initial_state_radiation(c.initial_state_radiation){
   require(std::isfinite(c.ecm)&&std::isfinite(c.pt_min)&&std::isfinite(c.pt_max)&&c.ecm>0&&c.pt_min>0&&c.pt_max>c.pt_min&&2*c.pt_min<c.ecm,"invalid hard-process energy range");
   require(c.seed>0&&c.seed<=900000000,"Pythia seed must be between 1 and 900000000");
   require(c.pdf_set==13&&c.pp_tune==14,"base tune 14 and internal PDF 13 are required; use external_pdf for an LHAPDF override");
@@ -42,7 +43,7 @@ struct Pythia8Input::Impl {
   if(c.hard_alpha_s)require(std::isfinite(*c.hard_alpha_s)&&*c.hard_alpha_s>=.06&&*c.hard_alpha_s<=.25&&*c.hard_alpha_s_order>=0&&*c.hard_alpha_s_order<=3,"invalid hard alpha_s policy");
   settings={"Tune:pp = 14","Beams:idA = 2212","Beams:idB = 2212","Beams:eCM = "+number(c.ecm),
    "HardQCD:all = on","PhaseSpace:pTHatMin = "+number(c.pt_min),"PhaseSpace:pTHatMax = "+number(c.pt_max),
-   "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off","PartonLevel:ISR = off","PartonLevel:MPI = off",
+   "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off",std::string("PartonLevel:ISR = ")+(c.initial_state_radiation?"on":"off"),"PartonLevel:MPI = off",
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
@@ -60,7 +61,7 @@ const std::vector<std::string>& Pythia8Input::settings() const{return impl_->set
 std::optional<HardEventSnapshot> Pythia8Input::next(){
  auto& p=impl_->engine;++impl_->attempts;
  if(!p.next())return std::nullopt;
- HardEventSnapshot result;result.attempt=impl_->attempts;
+ HardEventSnapshot result;result.attempt=impl_->attempts;result.initial_state_radiation=impl_->initial_state_radiation;
  const auto& info=p.info;result.process_code=info.code();result.weight=info.weight();result.pt_hat=info.pTHat();
  result.incoming_id1=info.id1();result.incoming_id2=info.id2();result.x1=info.x1();result.x2=info.x2();
  result.q_factorization=info.QFac();result.q_renormalization=info.QRen();
@@ -69,10 +70,15 @@ std::optional<HardEventSnapshot> Pythia8Input::next(){
  for(const auto& node:result.particles){
   if(std::abs(node.status)==21)incoming.push_back(node.id);
   if(std::abs(node.status)==23)outgoing.push_back(node.id);
+  if(std::abs(node.status)==43)result.isr_emissions.push_back(node.id);
  }
  require(incoming.size()==2&&outgoing.size()==2,"unsupported hard-event topology: expected two incoming and two outgoing process roles");
  std::copy(incoming.begin(),incoming.end(),result.hard_incoming.begin());std::copy(outgoing.begin(),outgoing.end(),result.hard_outgoing.begin());
  for(std::size_t i=0;i<2;++i)result.hard_final[i]=final_copy(result,result.hard_outgoing[i]);
+ for(auto id:result.isr_emissions)result.isr_final.push_back(final_copy(result,id));
+ // Cross-check the explicit, reciprocal copy walk against Pythia's own record navigation.
+ for(std::size_t i=0;i<2;++i)require(result.hard_final[i]==static_cast<ParticleId>(p.event[result.hard_outgoing[i]-1].iBotCopy()+1),"Pythia hard-copy navigation disagrees");
+ for(std::size_t i=0;i<result.isr_emissions.size();++i)require(result.isr_final[i]==static_cast<ParticleId>(p.event[result.isr_emissions[i]-1].iBotCopy()+1),"Pythia ISR-copy navigation disagrees");
  for(int i=0;i<p.event.sizeJunction();++i)result.junctions.push_back({p.event.kindJunction(i),{p.event.colJunction(i,0),p.event.colJunction(i,1),p.event.colJunction(i,2)}});
  validate_hard_snapshot(result);++impl_->returned;return result;
 }
@@ -96,6 +102,16 @@ void validate_hard_snapshot(const HardEventSnapshot& event){
  }
  require(at(event.hard_incoming[0]).pdg==event.incoming_id1&&at(event.hard_incoming[1]).pdg==event.incoming_id2,"incoming flavour metadata mismatch");
  require(event.hard_final[0]!=event.hard_final[1],"duplicate final hard leg");
+ require(event.isr_emissions.size()==event.isr_final.size(),"incomplete ISR final-copy associations");
+ require(event.initial_state_radiation||event.isr_emissions.empty(),"ISR emissions in ISR-off snapshot");
+ std::vector<ParticleId> emissions;
+ for(const auto& p:event.particles)if(std::abs(p.status)==43)emissions.push_back(p.id);
+ require(emissions==event.isr_emissions,"missing or duplicated ISR emission roots");
+ std::unordered_set<ParticleId> final_roles(event.hard_final.begin(),event.hard_final.end());
+ for(std::size_t i=0;i<event.isr_emissions.size();++i){
+  require(event.isr_final[i]==final_copy(event,event.isr_emissions[i]),"incorrect ISR final-copy association");
+  require(final_roles.insert(event.isr_final[i]).second,"duplicate final ISR/hard role");
+ }
  for(std::size_t i=0;i<2;++i)require(event.hard_final[i]==final_copy(event,event.hard_outgoing[i]),"incorrect final hard-leg association");
  std::array<double,4> balance{};double energy=0;
  std::unordered_set<ParticleId> roles;

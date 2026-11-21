@@ -10,6 +10,7 @@ struct PythiaInputConfig {
  std::string xml_directory;
  double ecm{5020},pt_min{20},pt_max{100};
  int seed{260000},pdf_set{13},pp_tune{14};
+ bool initial_state_radiation{false}; // Adapter-only until ISR transport is mapped.
  // External set/member, e.g. CT14nlo/0. Requires an explicit hard coupling policy.
  std::string external_pdf;
  std::optional<double> hard_alpha_s;
@@ -27,6 +28,8 @@ struct GeneratorParticle {
 struct GeneratorJunction {int kind{};std::array<int,3> colours{};};
 struct HardEventSnapshot {
  std::uint64_t attempt{};
+ bool initial_state_radiation{false};
+ std::vector<ParticleId> isr_emissions,isr_final;
  int process_code{},incoming_id1{},incoming_id2{};
  double weight{},pt_hat{},x1{},x2{},q_factorization{},q_renormalization{};
  std::array<ParticleId,2> hard_incoming{},hard_outgoing{},hard_final{};
@@ -39,7 +42,8 @@ struct GeneratorStatistics {
  double sigma_mb{},sigma_error_mb{},weight_sum{};
 };
 // Reduced hard-dijet input only. Does not initialize JEWEL virtualities or run
-// its shower. ISR/MPI histories need a separately validated interpretation.
+// its shower. ISR snapshots include emission/final-copy associations; their
+// JEWEL transport interpretation remains separate. MPI is disabled.
 class Pythia8Input {
  struct Impl;
  std::unique_ptr<Impl> impl_;
