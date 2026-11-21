@@ -782,3 +782,7 @@ and final-copy ancestry. See [ISR input validation](docs/validation-isr-input.md
 The reduced JEWEL transport adapter rejects ISR snapshots until their production
 times, virtualities and medium evolution are mapped; the event runner remains
 ISR-off.
+
+The core now includes the [backward ISR production-time calculation](docs/validation-isr-times.md),
+validated against the unedited JEWEL timing block. Connecting actual Pythia8
+ancestry and non-hard-parton virtualities remains outstanding.

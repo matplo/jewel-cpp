@@ -577,3 +577,28 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
   ${CMAKE_SOURCE_DIR}/tests/runner_projection.py $<TARGET_FILE:jewel-run-events>
   $<TARGET_FILE:jewel-run-partons>)
 endif()
+
+# Backward ISR timing: production core is C++ only; frozen block is test-only.
+target_sources(jewel_core PRIVATE src/isr_times.cpp)
+add_executable(jewel-isr-times-probe app/isr_times_probe.cpp)
+target_link_libraries(jewel-isr-times-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_isr_times.py
+  ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/isr-times-reference.f RESULT_VARIABLE isr_times_extracted)
+ if(NOT isr_times_extracted EQUAL 0)
+  message(FATAL_ERROR "ISR timing reference verification failed")
+ endif()
+ add_executable(jewel-isr-times-reference ${CMAKE_BINARY_DIR}/isr-times-reference.f reference/isr_times_probe.f90)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-isr-times-reference PRIVATE -std=legacy -ffixed-line-length-none -ffree-line-length-none)
+ endif()
+ add_test(NAME isr-times-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/isr_times_differential.py $<TARGET_FILE:jewel-isr-times-probe>
+  $<TARGET_FILE:jewel-isr-times-reference> ${CMAKE_BINARY_DIR}/isr-times-validation.json)
+endif()
+
+if(BUILD_TESTING)
+ add_executable(isr-times-test tests/isr_times.cpp)
+ target_link_libraries(isr-times-test PRIVATE jewel_core)
+ add_test(NAME isr-times-contracts COMMAND isr-times-test)
+endif()
