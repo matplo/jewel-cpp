@@ -612,3 +612,9 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/hard_initialization_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/mpi-initialization-validation.json --mpi)
 endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
+ add_test(NAME hard-range-cli COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/hard_range_cli.py $<TARGET_FILE:jewel-pythia8-input>
+  $<TARGET_FILE:jewel-run-partons> ${CMAKE_BINARY_DIR}/hard-range-validation.json)
+endif()

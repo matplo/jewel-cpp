@@ -55,12 +55,12 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium [new-replay-directory] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
   std::filesystem::path replay_directory;
-  jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
+  InputOptionState input_options;jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
   double table_energy=100;std::optional<std::string> table_energy_option;
   bool longitudinal_boost=false,boost_option_seen=false;
   int angular_ordering=0;bool angular_option_seen=false;
@@ -69,7 +69,7 @@ int main(int argc,char** argv){
   std::optional<double> subtraction_radius;int projection_mode=0;bool projection_seen=false;
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
-   if(input_option(argc,argv,i,input_config))continue;
+   if(input_option(argc,argv,i,input_config,input_options))continue;
    if(option=="--table-energy"){
     if(table_energy_option||i+1>=argc)throw std::invalid_argument("table energy requires one GEV or jewel value");
     table_energy_option=argv[++i];

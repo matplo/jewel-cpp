@@ -13,11 +13,11 @@ unsigned long argument(const char* value){std::string text=value;std::size_t use
 }
 int main(int argc,char** argv){
  try{
-  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--isr on|off] [--mpi on|off] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
+  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--isr on|off] [--mpi on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
   auto count=argument(argv[2]),seed=argument(argv[3]);
   if(count==0||count>10000000||seed==0||seed>900000000)throw std::invalid_argument("invalid attempts or seed");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
-  jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);bool isr_seen=false,mpi_seen=false;
+  InputOptionState input_options;jewel::PythiaInputConfig config;config.seed=static_cast<int>(seed);bool isr_seen=false,mpi_seen=false;
   for(int i=4;i<argc;++i){
    if(std::string(argv[i])=="--isr"){
     if(isr_seen||i+1>=argc)throw std::invalid_argument("--isr requires one on/off value");
@@ -27,7 +27,7 @@ int main(int argc,char** argv){
    }else if(std::string(argv[i])=="--mpi"){
     if(mpi_seen||i+1>=argc)throw std::invalid_argument("--mpi requires one on/off value");
     mpi_seen=true;std::string value=argv[++i];if(value!="on"&&value!="off")throw std::invalid_argument("--mpi requires on/off");config.multiple_parton_interactions=value=="on";
-   }else if(!input_option(argc,argv,i,config))throw std::invalid_argument("unknown hard-input option");
+   }else if(!input_option(argc,argv,i,config,input_options))throw std::invalid_argument("unknown hard-input option");
   }
   jewel::Pythia8Input input(config);
   std::ofstream out(argv[1]);if(!out)throw std::runtime_error("cannot create output");out<<std::setprecision(17)<<std::boolalpha;

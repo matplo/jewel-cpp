@@ -817,3 +817,7 @@ The [comparison browser](docs/jet-comparison.html) adds selectable distributions
 native/Fortran ratios, the ±10% band and a 1,000-selected-jet gate for each sample.
 The current example uses unmatched smoke samples and does not establish physics
 agreement. [Commands, statistical treatment and limitations](docs/jet-comparison.md).
+
+Hard-input and native runners now accept `--ecm GEV --pt-min GEV --pt-max GEV`.
+`--table-energy jewel` derives the table scale from those inputs. Defaults remain
+5020 GeV and pThat 20–100 GeV. See [hard-range validation](docs/validation-hard-range.md).
