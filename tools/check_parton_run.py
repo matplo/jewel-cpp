@@ -28,7 +28,7 @@ def audit(path):
     finite(records)
     header, summary = records[0], records[-1]
     check(header['type'] == 'run' and summary['type'] == 'summary', 'incomplete run')
-    check(header['schema'] == 'jewel-parton-development-v1', 'unknown schema')
+    check(header['schema'] in ('jewel-parton-development-v1', 'jewel-hadron-development-v1'), 'unknown schema')
     outcomes = records[1:-1]
     check([r['attempt'] for r in outcomes] == list(range(1, header['attempts_requested'] + 1)),
           'missing, duplicate or unordered attempt')
@@ -44,6 +44,8 @@ def audit(path):
     check(math.isclose(summary['accepted_weight'] + summary['failed_weight'],
                        summary['generator_weight_sum'], rel_tol=1e-12, abs_tol=1e-12), 'lost weight')
     final_count = 0
+    hadron_count = 0
+    max_hadronization_residual = 0.
     for event in outcomes:
         if event['type'] != 'event':
             continue
@@ -61,10 +63,24 @@ def audit(path):
         for p in event['initial_hard']:
             check(p['id'] in mapped, 'hard role missing from source mapping')
         final_count += sum(p['status'] in (3, 4, 5) for p in event['particles'])
+        if header['schema'] == 'jewel-hadron-development-v1':
+            inputs, products = event['hadronization_input'], event['hadronized_particles']
+            check([p['id'] for p in inputs] == event['hadronization_sources'], 'hadronization source order')
+            check(set(event['hadronization_sources']) <= ids, 'unknown hadronization source')
+            finals = [p for p in products if p['final']]
+            check(finals and all(p['colour'] == p['anticolour'] == 0 for p in finals), 'coloured hadronization output')
+            total = [math.fsum(p['momentum'][j] for p in inputs) for j in range(4)]
+            output = [math.fsum(p['momentum'][j] for p in finals) for j in range(4)]
+            residual = max(abs(a-b) for a,b in zip(total, output))
+            check(residual <= 1e-8 * max(1., total[3]), 'hadronization momentum mismatch')
+            max_hadronization_residual = max(max_hadronization_residual, residual)
+            hadron_count += len(finals)
+
     check(final_count == summary['final_records'], 'final-record count mismatch')
     failures = Counter((r['stage'], r['reason']) for r in outcomes if r['type'] == 'evolution_failure')
     return dict(input=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-                mode=header['mode'], summary=summary,
+                mode=header['mode'], summary=summary, hadronized_final_particles=hadron_count,
+                max_hadronization_momentum_residual_GeV=max_hadronization_residual,
                 failure_reasons=[dict(stage=s, reason=r, count=n) for (s, r), n in failures.items()],
                 audit='passed; accounting and record integrity only')
 

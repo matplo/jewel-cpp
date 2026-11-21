@@ -1,6 +1,6 @@
 # jewel-cpp
 
-An experimental standalone C++17 port of JEWEL 2.6.0, starting with a frozen-source numerical reference harness. This is not an official JEWEL release or a working event generator. GPL-2.0-or-later; see NOTICE, LICENSE and GUIDELINES.
+An experimental standalone C++17 port of JEWEL 2.6.0, starting with a frozen-source numerical reference harness. This is not an official JEWEL release or a complete, physics-validated event generator. GPL-2.0-or-later; see NOTICE, LICENSE and GUIDELINES.
 
 ## Build and validate
 
@@ -588,7 +588,7 @@ integration remain pending.
 ported routines into branch and cascade evolution. Validation is incomplete:
 the expanded cascade replay currently fails. See the [development checkpoint](docs/scheduler-progress.md)
 for the passing baseline, the first traced numerical divergence, and remaining
-work. This is not yet a standalone event generator.
+work. The reduced native event runner is available below; complete generator validation remains open.
 
 The [interactive cascade comparison](docs/cascade-ensemble-report.html) shows
 1,000 attempted showers per engine with coherence on/off, jet spectra, girth,
@@ -614,8 +614,9 @@ instance for a complete colour-connected input state. A native
 `jewel-pythia8-input` executable writes snapshots without Python or Fortran.
 [Build instructions and validation](docs/validation-pythia8.md) cover a
 1,000-event input/hadronization round trip. Reduced PPJJ shower insertion and hard initialization are now available
-through `jewel-run-partons`; string construction and full-generator validation
-remain pending. This is not yet a complete event generator.
+through `jewel-run-partons`; `jewel-run-events` also performs HADROTYPE=0
+string construction and Pythia8 hadronization. Full-generator validation
+remains pending. This is not yet a complete event generator.
 
 ## Hard initialization and native parton runner
 
@@ -624,7 +625,8 @@ GETTHETAM with 288 passing Fortran comparisons. `prepare_pythia_dijet()` maps
 Pythia final hard copies into the cascade while retaining frozen beam remnants.
 The development `jewel-run-partons` executable produces explicit accepted and
 failed-event records, with production coordinates, ancestry, momenta and thermal
-references. It does not yet hadronize the evolved state.
+references. The separate `jewel-run-events` executable also hadronizes the
+evolved state, as described below.
 
 [Validation and reproduction instructions](docs/validation-hard-initialization.md)
 record 20/20 accepted vacuum attempts and 16/20 medium attempts. The four medium
@@ -637,3 +639,17 @@ Exact initialized-state replay exposed and fixed a zero-invariant branch in
 GETPNORAD1. The same 20-attempt medium sample now accepts 18 events. The two
 remaining failures also produce nonfinite states in guarded Fortran replay;
 other cascade mismatches remain open. See [replay evidence and limitations](docs/validation-native-replay.md).
+
+## Native hadronized development runner
+
+`jewel-run-events output.jsonl attempts seed vacuum|medium` connects Pythia8
+hard input, JEWEL virtuality initialization and cascade, HADROTYPE=0 string
+construction, and a separate Pythia8 hadronizer. It preserves input IDs and
+thermal references and records failures without replacing failed attempts.
+The output includes the native parton event, hadronization inputs and complete
+Pythia8 hadronization history. This is development JSONL, not HepMC.
+
+[Validation](docs/validation-strings.md) covers 292 exact Fortran string-routine
+comparisons and small native samples: 20/20 vacuum and 18/20 medium attempts
+produce hadronized output. HADROTYPE=1, junction mapping, ISR/MPI and the
+full-generator physics comparison remain incomplete.

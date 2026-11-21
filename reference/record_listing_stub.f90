@@ -3,6 +3,6 @@
 subroutine pylist(mode)
  implicit none
  integer mode
- if(mode/=3)stop 74
+ if(mode/=2.and.mode/=3)stop 74
  write(0,*) 'REFERENCE_RECORD_LISTING ',mode
 end subroutine
