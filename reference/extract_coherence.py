@@ -37,3 +37,21 @@ output.write_text(header+blocks['gate']+'''        resolved=.true.
 '''+blocks['daughters']+'''      endif
       end
 ''')
+start_header='''      subroutine coherent_start_reference(l,cohscat,tstart,tsum,
+     & splitangle,mv,trip,anti,zd,thetad,qqbard,didcohscat,deltat,
+     & tleft,z,phisplit,quark,qqbar,dir)
+      implicit none
+      integer n,npad,k(23000,5),l,trip(23000),anti(23000)
+      common /PYJETS/ n,npad,k,p,v
+      double precision p(23000,5),v(23000,5),mv(23000,5)
+      double precision zd(23000),thetad(23000)
+      logical qqbard(23000),cohscat,didcohscat,quark,qqbar
+      double precision tstart,tsum,splitangle,deltat,tleft,z
+      double precision phisplit,tnow,decaytl,decaytsib,decayt1,decayt2
+      double precision mom1(4),mom2(4),pos1(4),pos2(4),pyp
+      double precision thetam,phim
+      integer count2,nscatl,mother,sib,sib1,sib2,dir,logfid
+      integer nbef,lbef,lsib,klbef1,klsib1,i,lcohorig
+      logfid=0
+'''
+with output.open('a') as f:f.write(start_header+blocks['start']+'      end\n')

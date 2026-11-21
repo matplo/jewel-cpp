@@ -158,11 +158,18 @@
           4927
         ],
         "sha256": "a3ececbd23d445eea3bfe473593adc8454ace3ec8da131b6b9c964fd457b6b5d"
+      },
+      "start": {
+        "lines": [
+          4724,
+          4835
+        ],
+        "sha256": "32d3f081c2f27286e7251d5fbd478a56a251cc2d9c0e302ae8f28c4d9aeaf411"
       }
     }
   },
   "executables": {
-    "jewel-coherence-probe": "f554c526455c5a278da88bd6f3e7f88ef3da5222cb6f8176fd4b941981049aa6",
-    "jewel-coherence-reference": "76fb5db9291c2a5f5ff0c2615213925336a8eff4e4a0e2d97f6969a4c8170abe"
+    "jewel-coherence-probe": "96147ee5f66fa1b237bb37b53b6e70373560a7e23d5d2774e86a1fa044589411",
+    "jewel-coherence-reference": "4aeca33b4c71d6806f1eab96480e84e44988d84fca8a1a51931ce98f8e3e38c1"
   }
 }

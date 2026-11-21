@@ -264,3 +264,15 @@ if(BUILD_TESTING)
  target_link_libraries(coherence-test PRIVATE jewel_core)
  add_test(NAME coherence-contracts COMMAND coherence-test)
 endif()
+add_executable(jewel-coherent-start-probe app/coherent_start_probe.cpp)
+target_link_libraries(jewel-coherent-start-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ add_executable(jewel-coherent-start-reference ${CMAKE_BINARY_DIR}/coherence-reference.f
+  ${CMAKE_BINARY_DIR}/kinematics-reference.f reference/coherent_start_probe.f90 reference/pythia_probe_stubs.f90)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-coherent-start-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME coherent-start-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/coherent_start_differential.py $<TARGET_FILE:jewel-coherent-start-probe>
+  $<TARGET_FILE:jewel-coherent-start-reference> ${CMAKE_BINARY_DIR}/coherent-start-validation.json)
+endif()

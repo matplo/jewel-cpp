@@ -7,6 +7,14 @@
 namespace jewel {
 namespace {
 void require(bool b,const char* why){if(!b)throw std::domain_error(why);}
+std::vector<ParticleId> origins(const ShowerParticle& s){
+ require(!(s.parent&&s.collision_source),"ambiguous primary/collision ancestry");
+ require(!s.coherent_partner||(s.parent&&s.coherent_partner!=s.parent&&!s.collision_source),"invalid coherent ancestry");
+ std::vector<ParticleId> result;
+ if(auto origin=s.parent?s.parent:s.collision_source)result.push_back(origin);
+ if(s.coherent_partner)result.push_back(s.coherent_partner);
+ return result;
+}
 void fields(const ShowerParticle& s){
  auto p=s.particle.momentum;auto x=s.particle.production;auto v=s.generator_vertex;
  for(double value:{p.px,p.py,p.pz,p.energy,x.x,x.y,x.z,x.t,v.x,v.y,v.z,v.t,s.record_mass,s.decay_time,s.evolution_time,s.fraction,s.angle})require(std::isfinite(value),"nonfinite shower record");
@@ -16,11 +24,9 @@ void fields(const ShowerParticle& s){
 ParticleId ShowerState::append(ShowerParticle s){
  fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
  require(s.daughters[0]==0&&s.daughters[1]==0,"append requires unattached daughters");
- require(!(s.parent&&s.collision_source),"ambiguous primary/collision ancestry");
- if(s.parent||s.collision_source)at(s.parent?s.parent:s.collision_source);
+ auto ancestry=origins(s);for(auto origin:ancestry)at(origin);
  auto id=next_;s.particle.id=id;
- auto origin=s.parent?s.parent:s.collision_source;
- s.particle.parents=origin?std::vector<ParticleId>{origin}:std::vector<ParticleId>{};
+ s.particle.parents=std::move(ancestry);
  auto inserted=slots_.emplace(id,particles_.size());
  try{particles_.push_back(std::move(s));}catch(...){slots_.erase(inserted.first);throw;}
  ++next_;return id;
@@ -42,26 +48,49 @@ void ShowerState::connect_collision(ParticleId incoming,ParticleId recoil,Partic
  require(b.parent==0&&b.collision_source==incoming&&c.parent==incoming&&c.collision_source==0,"collision ancestry mismatch");
  a.daughters={recoil,outgoing};
 }
+void ShowerState::connect_coherent(ParticleId first,ParticleId second,ParticleId coherent){
+ require(first!=second&&first!=coherent&&second!=coherent,"invalid coherent IDs");
+ auto& a=at(first);auto& b=at(second);const auto& c=at(coherent);
+ require(a.parent&&a.parent==b.parent,"coherent inputs are not siblings");
+ require(c.parent==first&&c.coherent_partner==second&&!c.collision_source,"coherent ancestry mismatch");
+ a.particle.status=20;b.particle.status=20;
+ a.daughters={coherent,coherent};b.daughters={coherent,coherent};
+}
 void ShowerState::validate() const {
  require(std::isfinite(weight),"nonfinite event weight");require(colour_max>=0,"negative maximum colour");
  require(slots_.size()==particles_.size(),"shower index mismatch");
  // ISR can insert a new ancestor after its child; IDs do not encode genealogy order.
  std::unordered_map<ParticleId,int> visited;
  for(const auto& s:particles_){
-  std::vector<ParticleId> path;auto id=s.particle.id;
-  while(id&&visited[id]!=2){require(visited[id]!=1,"cyclic shower ancestry");visited[id]=1;path.push_back(id);const auto& node=at(id);id=node.parent?node.parent:node.collision_source;}
-  for(auto entry:path)visited[entry]=2;
+  // Iterative DFS visits BOTH merge inputs, including ancestors inserted by ISR.
+  std::vector<std::pair<ParticleId,bool>> pending{{s.particle.id,false}};
+  while(!pending.empty()){
+   auto [id,leaving]=pending.back();pending.pop_back();
+   if(leaving){visited[id]=2;continue;}
+   if(visited[id]==2)continue;
+   require(visited[id]!=1,"cyclic shower ancestry");visited[id]=1;
+   pending.emplace_back(id,true);
+   for(auto origin:origins(at(id)))pending.emplace_back(origin,false);
+  }
  }
  for(const auto& s:particles_){
   fields(s);auto id=s.particle.id;require(&at(id)==&s,"particle ID changed");
   require(s.particle.colour<=colour_max&&s.particle.anticolour<=colour_max,"colour exceeds allocated maximum");
-  require(!(s.parent&&s.collision_source),"ambiguous primary/collision ancestry");
-  auto origin=s.parent?s.parent:s.collision_source;if(origin)at(origin);
-  require(s.particle.parents==(origin?std::vector<ParticleId>{origin}:std::vector<ParticleId>{}),"parent metadata mismatch");
+  auto ancestry=origins(s);for(auto origin:ancestry)at(origin);
+  require(s.particle.parents==ancestry,"parent metadata mismatch");
+  if(s.coherent_partner){
+   const auto& a=at(s.parent);const auto& b=at(s.coherent_partner);
+   require(a.parent&&a.parent==b.parent,"coherent inputs are not siblings");
+   for(const auto* incoming:{&a,&b})require(incoming->particle.status==20&&incoming->daughters==std::array<ParticleId,2>{id,id},"incomplete coherent merge");
+  }
   require((s.daughters[0]==0)==(s.daughters[1]==0),"incomplete daughter pair");
   if(s.daughters[0]){
-   require(s.daughters[0]!=s.daughters[1],"duplicate daughters");
-   for(auto daughter:s.daughters)require(at(daughter).parent==id||at(daughter).collision_source==id,"nonreciprocal daughter link");
+   if(s.daughters[0]==s.daughters[1]){
+    const auto& child=at(s.daughters[0]);
+    require(s.particle.status==20&&child.coherent_partner&&(child.parent==id||child.coherent_partner==id),"invalid shared coherent daughter");
+   }
+   for(auto daughter:s.daughters){const auto& child=at(daughter);require(child.parent==id||child.collision_source==id||child.coherent_partner==id,"nonreciprocal daughter link");}
+
   }
  }
 }

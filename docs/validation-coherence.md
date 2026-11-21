@@ -51,8 +51,8 @@ that rollback; this helper does not modify an event graph.
 
 ## Remaining integration
 
-The coherent merge requires two incoming siblings to share one intermediate
-record. That genealogy, collision loop, source-specific partial rollback,
+The coherent merge and its two-input genealogy are now covered by
+[initialization validation](validation-coherent-start.md). The collision loop, source-specific partial rollback,
 position updates, final resplitting metadata/colours and histograms remain to
 be connected and validated as full DOCOHSCATTERING calls. No complete shower,
 Pythia8 event or final-jet validation is claimed here.

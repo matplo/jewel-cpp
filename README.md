@@ -536,3 +536,17 @@ possible daughters and kinematic rejection state without mutating an event.
 reference cases, with another 109 undefined reference cases explicitly rejected
 by C++. Coherent event merging, loop orchestration and rollback remain pending;
 these helpers do not yet implement full coherent shower evolution.
+
+## Milestone 2o: coherent initialization and two-input genealogy
+
+`begin_coherent()` implements DOCOHSCATTERING eligibility, sibling ordering,
+interval adjustment, saved pre-merge records, angle extraction and the initial
+coherent event record. `ShowerParticle::coherent_partner` records its second
+incoming leg while retaining the stock primary-parent field. Both incoming
+records point to the same intermediate record; snapshots preserve this graph,
+and validation follows both ancestry edges.
+
+[Initialization validation](docs/validation-coherent-start.md) checks 330
+reference cases and all 36,270 output values. Collision descendants explicitly
+clear the second-input field, retaining their immediate origin. The coherent
+scattering loop, partial rollback and final resplitting still need integration.

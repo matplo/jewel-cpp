@@ -33,8 +33,8 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
     request.quark_pair,request.coherent,j==result.last};
    finish_collision(pair,state.colour_max,ledger,finish,timing,medium,random);
    state.at(line)=pair.incoming;state.at(scratch)=pair.centre;
-   pair.recoil.parent=0;pair.recoil.collision_source=line;
-   pair.outgoing.parent=line;pair.outgoing.collision_source=0;
+   pair.recoil.coherent_partner=0;pair.recoil.parent=0;pair.recoil.collision_source=line;
+   pair.outgoing.coherent_partner=0;pair.outgoing.parent=line;pair.outgoing.collision_source=0;
    auto recoil=state.append(pair.recoil),outgoing=state.append(pair.outgoing);
    state.connect_collision(line,recoil,outgoing);
    remaining-=state.at(outgoing).record_mass-state.at(line).record_mass;

@@ -2,6 +2,18 @@
 #pragma once
 #include "jewel/transfer.hpp"
 namespace jewel {
+struct CoherentStart {
+ bool active{},quark{},quark_pair{};
+ int colour_direction{};
+ ParticleId selected{},first{},second{},mother{},coherent{};
+ std::size_t original_size{};
+ double duration{},remaining{},fraction{},azimuth{};
+ ShowerParticle first_before,second_before;
+};
+// DOCOHSCATTERING eligibility and initial merge. Caller owns rollback snapshot.
+// remaining intentionally retains the requested interval when duration is shortened.
+CoherentStart begin_coherent(ShowerState&,ParticleId selected,bool enabled,
+ double start_time,double duration,double split_angle);
 struct CoherentResolution {
  double transverse_transfer{}, separation{}, threshold{};
  bool resolved{};

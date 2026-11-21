@@ -35,6 +35,23 @@ int main(){
  auto no_kick=jewel::apply_collisions(state,id,tmp,history,ledger,request,{},finish,sampler,medium,empty);
  check(no_kick.retries==2&&state.particles().size()==2&&empty.checkpoint()==0);
  state.validate();
+ // A coherent projectile has two incoming ancestors; outgoing collision records
+ // must descend only from that projectile, never inherit its second input.
+ {
+  jewel::ShowerState coherent;coherent.colour_max=20;
+  auto scratch_id=coherent.append(scratch);auto root_id=coherent.append(leg);
+  auto sibling=leg;sibling.parent=root_id;
+  auto a=coherent.append(sibling),b=coherent.append(sibling);coherent.connect(root_id,a,b);
+  auto merged_leg=leg;merged_leg.parent=a;merged_leg.coherent_partner=b;
+  auto merged_id=coherent.append(merged_leg);coherent.connect_coherent(a,b,merged_id);
+  jewel::TransferHistory kicks=history;for(auto& r:kicks.records)r.invariant=-.2;
+  jewel::RecoilStorage storage;jewel::ReplayRandom tape({.3,.4});
+  auto coherent_request=request;coherent_request.coherent=true;coherent_request.time=4;
+  auto answer=jewel::apply_collisions(coherent,merged_id,scratch_id,kicks,storage,coherent_request,{},finish,sampler,medium,tape);
+  coherent.validate();check(answer.outgoing!=merged_id&&coherent.at(answer.outgoing).decay_time==4);
+  for(const auto& node:coherent.particles())if(node.particle.id>merged_id)check(!node.coherent_partner&&node.particle.parents.size()==1);
+  check(coherent.at(merged_id).coherent_partner==b);
+ }
  // Capacity guard occurs before consuming a random number or adding records.
  while(state.particles().size()<22990)state.append(scratch);
  auto capped=jewel::apply_collisions(state,id,tmp,history,ledger,request,{},finish,sampler,medium,empty);
