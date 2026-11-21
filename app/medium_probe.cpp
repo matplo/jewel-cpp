@@ -8,6 +8,7 @@
 #include "jewel/coherence.hpp"
 #include "jewel/initial_evolution.hpp"
 #include "jewel/cascade.hpp"
+#include "jewel/hard_initialization.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -349,6 +350,33 @@ int main() {
     jewel::ReplayRandom random(tape);
     auto value=rates->next_collision(p,mass,pdg,v,start,dt,lifetime,scale,elastic!=0,random);
     std::cout<<int(value.collision)<<' '<<value.elapsed<<' '<<random.checkpoint()<<'\n';
+   } else if(op=="HARDINIT") {
+    if(!branching)throw std::runtime_error("BCONFIG required");
+    jewel::HardInitializationConfig config;int ao;
+    std::cin>>config.pt_hat>>config.x>>config.y>>config.formation_factor>>config.lifetime>>ao;config.first_angle_ordering=ao;
+    jewel::ShowerState state(-1e6);state.colour_max=1000;
+    std::array<std::array<jewel::ParticleId,2>,6> links;
+    for(int i=0;i<6;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,order;
+     std::cin>>p.status>>p.pdg>>s.parent>>links[i][0]>>links[i][1]>>p.momentum.px>>p.momentum.py>>p.momentum.pz>>p.momentum.energy>>s.record_mass
+      >>s.generator_vertex.x>>s.generator_vertex.y>>s.generator_vertex.z>>s.generator_vertex.t>>p.production.x>>p.production.y>>p.production.z>>p.production.t>>s.decay_time
+      >>s.fraction>>s.angle>>qp>>order>>p.colour>>p.anticolour>>s.evolution_time;
+     s.quark_pair=qp;s.angular_required=order;state.append(s);
+    }
+    for(int i=0;i<6;++i)state.at(i+1).daughters=links[i];
+    std::int64_t count;std::uint64_t seed=0;std::cin>>count;if(count< -1||count>2000000)throw std::runtime_error("bad hard-initialization tape");
+    std::vector<double> tape;if(count==-1)std::cin>>seed;else{tape.resize(count);for(auto& u:tape)std::cin>>u;}
+    if(!std::cin)throw std::runtime_error("incomplete hard-initialization input");
+    jewel::ReplayRandom replay(tape);jewel::SplitMixRandom generated(seed);jewel::Random& random=count==-1?static_cast<jewel::Random&>(generated):static_cast<jewel::Random&>(replay);
+    auto result=jewel::initialize_hard_dijet(state,4,5,config,*branching,random);
+    std::cout<<(count==-1?generated.checkpoint():replay.checkpoint())<<' '<<result.colour_angles[0]<<' '<<result.colour_angles[1]<<'\n';
+    std::cerr<<"HARD_INIT_TRIALS "<<result.trials<<'\n';
+    for(const auto& s:state.particles()){const auto& p=s.particle;
+     std::cout<<p.status<<' '<<p.pdg<<' '<<s.parent<<' '<<s.daughters[0]<<' '<<s.daughters[1]<<' '
+      <<p.momentum.px<<' '<<p.momentum.py<<' '<<p.momentum.pz<<' '<<p.momentum.energy<<' '<<s.record_mass<<' '
+      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
+      <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '
+      <<s.fraction<<' '<<s.angle<<' '<<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time<<'\n';
+    }
    } else if(op=="BCONFIG") {
     jewel::Kernels k;double q0,pt;int angular;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>pt>>angular))throw std::runtime_error("invalid branching config");

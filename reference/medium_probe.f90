@@ -4,6 +4,16 @@ program mediumprobe
  use, intrinsic :: ieee_arithmetic
  use iso_c_binding, only: c_int64_t
  implicit none
+ integer hard_mstp(200),hard_msti(200),lme1,lme2,lv,llep1,llep2,lme1orig,lme2orig
+ double precision hard_parp(200),hard_pari(200),hard_x,hard_y,hard_z1,hard_z2,hard_angle1,hard_angle2,getthetam
+ common /PYPARS/ hard_mstp,hard_parp,hard_msti,hard_pari
+ character(2) type1,type2,isochannel
+ common /SPECLINES/ lme1,lme2,lv,llep1,llep2,lme1orig,lme2orig,type1,type2
+ integer nsim,npart_hard,offset,hadrotype
+ double precision sqrts
+ character(4) collider,event_channel
+ logical hadro,shorthepmc,isrscat
+ common /EVRECORD/ nsim,npart_hard,offset,hadrotype,sqrts,collider,hadro,shorthepmc,isrscat,event_channel,isochannel
  double precision centrmin,centrmax,breal,centr,rau
  integer nf
  common /MEDPARAM/ centrmin,centrmax,breal,centr,rau,nf
@@ -553,6 +563,31 @@ program mediumprobe
     write(*,'(5I8,17ES26.17E3,2I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i), &
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
     endif
+   enddo
+  case('HARDINIT')
+   hard_mstp=0;hard_msti=0;hard_parp=0;hard_pari=0
+   read(*,*)hard_pari(17),hard_x,hard_y,ftfac,ltime,aflag
+   aofirstsplit=aflag/=0;mpifsr=.false.;collider='PPJJ';lme1=4;lme2=5
+   n=6;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=0;thetad=0;qqbard=.false.;aoreq=.false.;starttime=-1d6
+   mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0
+   do i=1,6
+    read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
+    qqbard(i)=qflag/=0;aoreq(i)=aflag/=0
+   enddo
+   type1='QQ';type2='QQ'
+   if(k(4,2)==21)type1='GC'
+   if(k(5,2)==21)type2='GC'
+   read(*,*)count
+   if(count< -1.or.count>2000000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   if(count==-1)read(*,*)generated_seed
+   cursor=0;hard_z1=0;hard_z2=0
+   hard_angle1=getthetam(4);hard_angle2=getthetam(5)
+   call findvirtualities(4,5,hard_x,hard_y,hard_z1,hard_z2,.false.)
+   write(*,*)cursor,hard_angle1,hard_angle2
+   do i=1,n
+    write(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
+     merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i)
    enddo
   case('BCONFIG')
    read(*,*) knf,q0,lps,ptfac,angord

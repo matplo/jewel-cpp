@@ -177,6 +177,22 @@
       "MAKEBRANCH": [
         2948,
         3282
+      ],
+      "FINDVIRTUALITIES": [
+        1893,
+        2239
+      ],
+      "GETTHETAM": [
+        2303,
+        2365
+      ],
+      "ISPARTON": [
+        8690,
+        8700
+      ],
+      "ISDIQUARK": [
+        8658,
+        8671
       ]
     },
     "declaration_normalizations": {

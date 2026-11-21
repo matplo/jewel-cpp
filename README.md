@@ -44,7 +44,7 @@ python3 reference/freeze.py --variant stock --output validation-output/stock-001
 
 The full stages 0 and 1 remain open. The numerical grids are implemented below; next implement the run configuration and evolution state machine. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
 
-Pythia8 hard-event import and separate hadronization adapters follow core evolution validation. No Pythia8, TGlauberMC or JETSCAPE dependency is introduced here. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
+Pythia8 hard-event import and a separate hadronization adapter are optional components described below. The core remains independent of Pythia8, TGlauberMC and JETSCAPE. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
 
 ## Milestone 1b: expanding medium and numerical tables
 
@@ -612,6 +612,20 @@ beam-recoil copies through ancestry. `Pythia8Hadronizer` uses a separate
 instance for a complete colour-connected input state. A native
 `jewel-pythia8-input` executable writes snapshots without Python or Fortran.
 [Build instructions and validation](docs/validation-pythia8.md) cover a
-1,000-event input/hadronization round trip. JEWEL shower insertion, its
-initialization and string construction are still pending; this is not yet
-a complete event generator.
+1,000-event input/hadronization round trip. Reduced PPJJ shower insertion and hard initialization are now available
+through `jewel-run-partons`; string construction and full-generator validation
+remain pending. This is not yet a complete event generator.
+
+## Hard initialization and native parton runner
+
+`initialize_hard_dijet()` implements the PPJJ FINDVIRTUALITIES branch and
+GETTHETAM with 288 passing Fortran comparisons. `prepare_pythia_dijet()` maps
+Pythia final hard copies into the cascade while retaining frozen beam remnants.
+The development `jewel-run-partons` executable produces explicit accepted and
+failed-event records, with production coordinates, ancestry, momenta and thermal
+references. It does not yet hadronize the evolved state.
+
+[Validation and reproduction instructions](docs/validation-hard-initialization.md)
+record 20/20 accepted vacuum attempts and 16/20 medium attempts. The four medium
+failures remain unresolved and are counted explicitly; these smoke tests are
+not a passing full-event comparison with JEWEL.
