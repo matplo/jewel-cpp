@@ -1,0 +1,16 @@
+{
+  "scope": "PYSIGH ISTSB=9 screened common factor only; matrix elements and PDFs excluded",
+  "cases": 8100,
+  "maximum_absolute_error": 0.0,
+  "maximum_relative_error": 0.0,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "failures": [],
+  "invalid_cases": 12,
+  "input_sha256": "9eb96fce8c540f9027308acb3a82edb62a78ec6916759d0222beb80c855faaf2",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-factor-probe": "438da66c7eb7509f29a7c5d70ca7d9e5a11e9903fca2707fc81925ea8a045789",
+    "jewel-legacy-mpi-factor-reference": "a18731e8d6d2e225ce06568437c02f4d811533f2fb3e85e734531b1528fa4aa1"
+  }
+}

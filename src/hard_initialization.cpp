@@ -43,8 +43,8 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  for(auto* leg:{&a,&b}){
   const auto& p=leg->particle;
   bool photon=config.mpi_pair&&p.pdg==22&&p.status==4&&leg->record_mass==0&&p.colour==0&&p.anticolour==0;
-  bool passive=config.mpi_pair&&config.inactive_nonparton_lifetime&&std::abs(p.pdg)>21&&p.status==4&&leg->record_mass>=0&&p.colour==0&&p.anticolour==0;
-  require((parton(p.pdg)&&(p.status==1||p.status==4))||photon||passive,"hard pair requires quarks/gluons or an inactive massless MPI photon");
+  bool passive=config.mpi_pair&&config.inactive_nonparton_lifetime&&std::abs(p.pdg)>21&&p.status==4&&leg->record_mass>=0&&((p.colour==0&&p.anticolour==0)||inactive_octet_onium(p));
+  require((parton(p.pdg)&&(p.status==1||p.status==4))||photon||passive,"hard pair requires quarks/gluons or a supported inactive MPI nonparton");
  }
  require(config.mpi_pair||config.evaluate_colour_angles||!config.first_angle_ordering,"first-angle ordering requires evaluated colour angles");
  HardInitializationResult result;result.colour_angles_evaluated=!config.mpi_pair&&config.evaluate_colour_angles;

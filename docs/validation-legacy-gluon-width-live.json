@@ -1,0 +1,84 @@
+{
+  "scope": "live gluon-width replay with captured decay data; resonance fudge policy supplied",
+  "calls": 200,
+  "initialization_calls": 100,
+  "production_calls": 100,
+  "scalar_comparisons": 3400,
+  "maximum_absolute_error": 0,
+  "failures": [],
+  "observed_decay_configurations": [
+    {
+      "fudge": 1.0,
+      "decays": [
+        [
+          0.33,
+          0.33,
+          1.0,
+          1
+        ],
+        [
+          0.33,
+          0.33,
+          1.0,
+          1
+        ],
+        [
+          0.5,
+          0.5,
+          1.0,
+          1
+        ],
+        [
+          1.5,
+          1.5,
+          1.0,
+          1
+        ],
+        [
+          4.8,
+          4.8,
+          1.0,
+          1
+        ],
+        [
+          175.0,
+          175.0,
+          0.9999999999999998,
+          0
+        ],
+        [
+          400.0,
+          400.0,
+          1.0,
+          -1
+        ],
+        [
+          400.0,
+          400.0,
+          1.0,
+          -1
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          1
+        ]
+      ]
+    }
+  ],
+  "hepmc_byte_identical": true,
+  "baseline_hepmc_sha256": "64a5289388223a4fb5e1b272007a431c773b5125cb3277e66d6718733e275ca3",
+  "input_sha256": "9a0427b414c2ac91c004094a8c5be3ccb9ff8eb70112762e7a4a0ca524513b9b",
+  "cpp_sha256": "e01819ef6579a0b49d4cf52caef39c00124ad01d5627518e809c7a240a33a34c",
+  "artifacts": {
+    "pythia.f": "49d5ed130c16e44d610d1daee3ab374a91ae12c1ba78dbd2f27255d0c298af90",
+    "core.f": "839bcf329ad45db42e58b9b5a6696fa517a4c6de2a17e899a47f797ceeaa0c3c",
+    "trace.f90": "a2bccbaee225782b5c7afe557ad091f57a89e1a0d576dab9285ffd8a5be7e122",
+    "reference": "f4f6212d2bbc03201541275c43f506c48c6f77fefb317f6b4492dac9e5f3f84e",
+    "params.dat": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+    "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "run.log": "456bf6bff1fbf2c1acb2aeaae8d68bc4412e26516c497148730f8ec8eefe1c0b",
+    "instrumentation.patch": "378721d562b9db95b97ab6037daaca86feb6de36c0aa4153d172682de2224297"
+  }
+}

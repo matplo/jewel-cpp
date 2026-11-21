@@ -117,6 +117,24 @@ for eta_max in rapidity_limits:
      for eta in [edge-sign*1e-8,math.nextafter(edge,-math.inf),edge,math.nextafter(edge,math.inf),edge+sign*1e-8]:
       commands.append(f'POINT\n1 1 {tau*math.sinh(eta):.17g} {tau*math.cosh(eta):.17g}\n')
       labels.append('varied-rapidity-transition')
+# Follow prescribed massless straight rays through the evolving medium. These
+# are local-field probes, not shower trajectories or traversed-length estimates.
+# Start at positive time so every point is inside the supported light cone.
+trajectory_config={'impact_parameters_fm':[0,7,12],
+ 'vertices_fm':[[0,0],[2,1]],'momentum_rapidities':[-1.5,0,1.5],
+ 'azimuths':[0,math.pi/2,math.pi,3*math.pi/2],
+ 'start_time_fm':.05,'step_lab_time_fm':.5,'steps':61}
+for woods in [0,1]:
+ for impact in trajectory_config['impact_parameters_fm']:
+  commands.append(f'CONFIG\n208 3 {woods} .4 .59 .17 .17 .54 6.199999809265137 {impact} 2 .45 1\n')
+  for x0,y0 in trajectory_config['vertices_fm']:
+   for eta in trajectory_config['momentum_rapidities']:
+    for phi in trajectory_config['azimuths']:
+     vx,vy,vz=math.cos(phi)/math.cosh(eta),math.sin(phi)/math.cosh(eta),math.tanh(eta)
+     for step in range(trajectory_config['steps']):
+      dt=step*trajectory_config['step_lab_time_fm']
+      commands.append(f"POINT\n{x0+vx*dt:.17g} {y0+vy*dt:.17g} {vz*dt:.17g} {trajectory_config['start_time_fm']+dt:.17g}\n")
+      labels.append('expanding-ray-sample')
 payload=''.join(commands)
 def run(exe):
  result=subprocess.run([exe],input=payload,text=True,capture_output=True)
@@ -132,9 +150,12 @@ for i,(label,a,b) in enumerate(zip(labels,actual,expected)):
  for col,(x,y) in enumerate(zip(a,b)):
   error=abs(x-y);rel=error/max(abs(y),1e-300)
   group['values']+=1;group['max_absolute_error']=max(group['max_absolute_error'],error);group['max_relative_error']=max(group['max_relative_error'],rel)
-  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition','varied-optical-medium','screening-transition','varied-rapidity-transition'] and col in [0,3] and ((x==0)!=(y==0))
+  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition','varied-optical-medium','screening-transition','varied-rapidity-transition','expanding-ray-sample'] and col in [0,3] and ((x==0)!=(y==0))
   if activity_mismatch or not math.isfinite(x) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13): failures.append({'row':i,'column':col,'label':label,'cpp':x,'fortran':y})
 report={'scope':'optical medium and numerical tables, not full events','input_sha256':hashlib.sha256(payload.encode()).hexdigest(),
+ 'prescribed_ray_config':trajectory_config,
+ 'prescribed_ray_activity':{'active':sum(b[0]>0 for label,b in zip(labels,expected) if label=='expanding-ray-sample'),
+ 'inactive':sum(b[0]==0 for label,b in zip(labels,expected) if label=='expanding-ray-sample')},
  'rapidity_limits':rapidity_limits,
  'optical_configs_mass_density_skin_sigma':optical_configs,
  'screening_configs_floor_scale':screening_configs,

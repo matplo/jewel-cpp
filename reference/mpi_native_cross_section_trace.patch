@@ -1,0 +1,70 @@
+--- pythia6425mod-lhapdf6.f
++++ pythia6425mod-lhapdf6.f
+@@ -29923,6 +29923,8 @@
+      7    2,  2,  2,  2,  2,  2,  2,  2,  2,  0,
+      8    7,  7,  18*0/ 
+  
++      INTEGER AUDITACTIVE
++      COMMON/MPICHANNELAUDIT/ AUDITACTIVE
+ C...Reset number of channels and cross-section
+       NCHN=0
+       SIGS=0D0
+@@ -30621,6 +30623,14 @@
+           SIGS=SIGS+SIGH(ICHN)
+   180   CONTINUE
+       ENDIF
++      IF(ISUB.EQ.96.AND.AUDITACTIVE.EQ.1) THEN
++       WRITE(*,*) 'CHANNEL_TOTAL',NCHN,SIGS
++       DO 902 J=1,NCHN
++        WRITE(*,*) 'CHANNEL_WEIGHTED',SIGH(J)
++  902  CONTINUE
++       AUDITACTIVE=0
++      ENDIF
++
+  
+       RETURN
+       END
+@@ -30660,6 +30670,12 @@
+ C...Local arrays
+       DIMENSION WDTP(0:400),WDTE(0:400,0:5)
+  
++      INTEGER AUDITPHASE,AUDITACTIVE,AUDITCOUNTS(0:1)
++      COMMON/MPIAUDIT/ AUDITPHASE
++      COMMON/MPICHANNELAUDIT/ AUDITACTIVE
++      SAVE AUDITCOUNTS
++      DATA AUDITCOUNTS/2*0/
++      AUDITACTIVE=0
+ C...Differential cross section expressions.
+  
+       IF(ISUB.LE.20) THEN
+@@ -31231,6 +31247,30 @@
+           ISIG(NCHN,2)=21
+           ISIG(NCHN,3)=683
+           SIGH(NCHN)=0.5D0*FACGG3
++      IF(AUDITCOUNTS(AUDITPHASE).LT.100) THEN
++       AUDITCOUNTS(AUDITPHASE)=AUDITCOUNTS(AUDITPHASE)+1
++       AUDITACTIVE=1
++       WRITE(*,*) 'CHANNEL_CONTEXT',AUDITPHASE,MINT(35)
++       WRITE(*,*) 'CHANNEL_INPUT',SH,TH,UH,CTH,COMFAC,AS,FACA,
++     & (WDTE(0,1)+WDTE(0,2)+WDTE(0,3)+WDTE(0,4)),MSTP(34),
++     & (PMAS(J,1),J=1,5),
++     & (MIN(1,MAX(0,MDME(IDC0+J,1))),J=1,5),
++     & (XSFX(1,J),J=-5,-1),XSFX(1,21),(XSFX(1,J),J=1,5),
++     & (XSFX(2,J),J=-5,-1),XSFX(2,21),(XSFX(2,J),J=1,5)
++       WRITE(*,*) 'CHANNEL_PDF_CONTEXT',MINT(11),MINT(12),
++     & X(1),X(2),VINT(143),VINT(144),VINT(54),MSTP(58),
++     & PMAS(4,1),PMAS(5,1),VINT(231),MSTP(51),MSTP(52),
++     & MSTP(57),MINT(31)
++       WRITE(*,*) 'CHANNEL_NATIVE_CONTEXT',VINT(1),VINT(149),
++     & (PARP(82)*(VINT(1)/PARP(89))**PARP(90))**2,PARP(34),
++     & PARU(5),FACK,VINT(25),VINT(21),VINT(22),
++     & COEF(96,1),COEF(96,2),COEF(96,8),COEF(96,9),COEF(96,10),
++     & MSTP(32),MSTP(33),VINT(71)
++       DO 901 J=1,NCHN
++        WRITE(*,*) 'CHANNEL_RAW',ISIG(J,:),SIGH(J)
++  901  CONTINUE
++      ENDIF
++
+  
+         ELSEIF(ISUB.EQ.99) THEN
+ C...f + gamma* -> f.

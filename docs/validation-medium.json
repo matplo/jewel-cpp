@@ -1,6 +1,41 @@
 {
   "scope": "optical medium and numerical tables, not full events",
-  "input_sha256": "77463540976c84020d9ad4626a894c36754ead8dab06ea1c6c6c2b0a87c126ec",
+  "input_sha256": "676f6aaa583fb1cbe933afd3ac8e8f44d5e82807d0b7a9453fac7518ca016738",
+  "prescribed_ray_config": {
+    "impact_parameters_fm": [
+      0,
+      7,
+      12
+    ],
+    "vertices_fm": [
+      [
+        0,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "momentum_rapidities": [
+      -1.5,
+      0,
+      1.5
+    ],
+    "azimuths": [
+      0,
+      1.5707963267948966,
+      3.141592653589793,
+      4.71238898038469
+    ],
+    "start_time_fm": 0.05,
+    "step_lab_time_fm": 0.5,
+    "steps": 61
+  },
+  "prescribed_ray_activity": {
+    "active": 4073,
+    "inactive": 4711
+  },
   "rapidity_limits": [
     0.5,
     1.0,
@@ -170,6 +205,11 @@
     },
     "varied-rapidity-transition": {
       "values": 2560,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "expanding-ray-sample": {
+      "values": 35136,
       "max_absolute_error": 0.0,
       "max_relative_error": 0.0
     }
@@ -482,7 +522,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "7cd7c2fb36c90e318a4c4f3f605113a3bb0e37dee4d02f6318c8af76f3bf873c",
-    "jewel-medium-reference": "0d5f2871ffb692e3d40d0ce392e2a447dd6a4d758fc70bf0aed0da592568afaa"
+    "jewel-medium-probe": "4f9d23bd7f3fe084e3cb89874d06205dc3dc5f41606096ed5112fe3c52ff9ec9",
+    "jewel-medium-reference": "37bc6273115ba5693ee85cfe3a9125f37a2704de3fab6d73ef51a6ec992845cc"
   }
 }

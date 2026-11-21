@@ -1,247 +1,252 @@
 {
-  "scope": "actual source ISR matrices versus reconstructed matrices; fixed composition gate still fails",
-  "reports": [
+  "scope": "Diagnostic comparison of source and reconstructed ISR recoil matrices; no tolerance change",
+  "identical_source_instrumentation": true,
+  "identical_double_instrumentation": true,
+  "failures": [
     {
-      "scope": "actual Pythia source matrices; composition uses validated primordial reconstruction",
-      "reports": [
+      "attempt": 385,
+      "error": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 27 before 21 after 25 predicted -22.919831793803954 actual -22.919831797741345 error 3.9373908577999828e-09",
+      "branches": [
         {
-          "prior_sha256": "e56e2a48f565abe77fac460d847693a1c4b44e31c7d5431523495a25e6a1c8c1",
-          "counts": {
-            "events": 1000,
-            "mapped_events": 1000,
-            "frames": 13253,
-            "copies": 41229,
-            "composed_final_partons": 26787
+          "emitted": 27,
+          "source": {
+            "m2": 13.972846138194692,
+            "pt2": 1.871271605845837,
+            "z": 5.157166562246628e-05,
+            "q2": 1.8713681154165416,
+            "phi": 2.8082446094265965,
+            "matrix": [
+              31229.378937595255,
+              221.77192078165191,
+              -76.79296836000154,
+              31228.497048098274,
+              251.47359338441396,
+              0.9999999999755214,
+              8.476223808567976e-12,
+              251.47359338441404,
+              -87.07776724880591,
+              8.475557674753201e-12,
+              0.9999999999970651,
+              -87.07776724880594,
+              -31228.245008680835,
+              -221.771920781652,
+              76.79296836000157,
+              -31227.36311918383
+            ]
           },
-          "rejected_events": [],
-          "composition_failures": [
+          "reconstructed": {
+            "m2": 13.972846138194692,
+            "z": 5.157166562246628e-05,
+            "q2": 1.8713681154165414,
+            "phi": 2.8082446094626734,
+            "matrix": [
+              31229.378937595186,
+              221.77192078442206,
+              -76.79296835200059,
+              31228.497048098176,
+              251.4735933882507,
+              0.9999999999804488,
+              6.770013839953087e-12,
+              251.47359338825078,
+              -87.07776723997317,
+              6.771179574128944e-12,
+              0.9999999999976553,
+              -87.0777672399732,
+              -31228.245008680737,
+              -221.77192078442218,
+              76.79296835200063,
+              -31227.36311918376
+            ]
+          },
+          "max_matrix_entry": 31229.378937595255,
+          "max_matrix_difference": 8.83274253737909e-09,
+          "copies": [
             {
-              "attempt": 109,
-              "subsystem": 1,
-              "root": 36,
-              "final": 95,
-              "max_absolute_error_gev": 2.648309305186558e-08
+              "before": 21,
+              "after": 25,
+              "source_max_error": 9.313225746154785e-10,
+              "native_max_error": 1.0874465772303665e-08,
+              "source_outside_tolerance": false,
+              "native_outside_tolerance": true
             },
             {
-              "attempt": 364,
-              "subsystem": 2,
-              "root": 24,
-              "final": 97,
-              "max_absolute_error_gev": 4.044818524562288e-07
-            },
-            {
-              "attempt": 364,
-              "subsystem": 2,
-              "root": 25,
-              "final": 98,
-              "max_absolute_error_gev": 2.6018574317276943e-07
-            },
-            {
-              "attempt": 627,
-              "subsystem": 3,
-              "root": 56,
-              "final": 95,
-              "max_absolute_error_gev": 5.4643692237732466e-08
-            },
-            {
-              "attempt": 700,
-              "subsystem": 5,
-              "root": 86,
-              "final": 140,
-              "max_absolute_error_gev": 3.559765104910184e-08
-            },
-            {
-              "attempt": 749,
-              "subsystem": 3,
-              "root": 37,
-              "final": 275,
-              "max_absolute_error_gev": 5.8679518133430975e-08
-            },
-            {
-              "attempt": 785,
-              "subsystem": 3,
-              "root": 76,
-              "final": 106,
-              "max_absolute_error_gev": 2.0583433979481924e-07
-            },
-            {
-              "attempt": 791,
-              "subsystem": 8,
-              "root": 134,
-              "final": 200,
-              "max_absolute_error_gev": 5.106227263240726e-08
-            },
-            {
-              "attempt": 832,
-              "subsystem": 2,
-              "root": 20,
-              "final": 158,
-              "max_absolute_error_gev": 8.380041549571615e-08
-            },
-            {
-              "attempt": 845,
-              "subsystem": 6,
-              "root": 91,
-              "final": 192,
-              "max_absolute_error_gev": 6.7123608005204e-08
-            },
-            {
-              "attempt": 887,
-              "subsystem": 4,
-              "root": 116,
-              "final": 158,
-              "max_absolute_error_gev": 3.7162544685998e-07
+              "before": 22,
+              "after": 26,
+              "source_max_error": 7.450580596923828e-09,
+              "native_max_error": 2.7843952921102755e-08,
+              "source_outside_tolerance": false,
+              "native_outside_tolerance": false
             }
-          ],
-          "max_copy_residual_gev": 3.099444256804418e-09,
-          "max_composed_residual_gev": 4.044818524562288e-07,
-          "max_metric_residual": 1.2057862477377057e-06
+          ]
         }
-      ],
-      "reconstructed_parameter_errors": {
-        "Q2": {
-          "max_absolute_error": 1.0707594810810406e-09,
-          "max_relative_error": 9.381196806615214e-10
-        },
-        "z": {
-          "max_absolute_error": 1.7044532452104022e-11,
-          "max_relative_error": 5.372727380089202e-11
-        },
-        "m2II": {
-          "max_absolute_error": 1.015618909150362e-05,
-          "max_relative_error": 2.165057625456714e-11
-        }
-      },
-      "events_with_identical_particles": 1000,
-      "accepted_source_branches": 13253,
-      "composition_audit_returncode": 1,
-      "trace_sha256": "48e8363ad0e90f628e5b6a62be324ac58022e882c72ca5f69616ca050684af3e",
-      "snapshots_sha256": "e56e2a48f565abe77fac460d847693a1c4b44e31c7d5431523495a25e6a1c8c1"
+      ]
     },
     {
-      "scope": "actual Pythia source matrices; composition uses validated primordial reconstruction",
-      "reports": [
+      "attempt": 1089,
+      "error": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 43 before 29 after 42 predicted -134.63509136925697 actual -134.63509136366903 error 5.5879354476928711e-09",
+      "branches": [
         {
-          "prior_sha256": "1d9611ba5393b9111d8303d9050f8f59398bb6d1d3b806d89d9671d425aeb6f7",
-          "counts": {
-            "events": 1000,
-            "mapped_events": 1000,
-            "frames": 13709,
-            "copies": 42716,
-            "composed_final_partons": 27703
+          "emitted": 43,
+          "source": {
+            "m2": 11.670800006132545,
+            "pt2": 1.6729700046068574,
+            "z": 3.847927456846376e-05,
+            "q2": 1.6730343817561955,
+            "phi": 4.982856582012603,
+            "matrix": [
+              2643.9037458806274,
+              -18.16654053026342,
+              65.52129579686998,
+              2643.029124713512,
+              -20.77075334262403,
+              1.0000000000009737,
+              -3.5116355076518096e-12,
+              -20.770753342623983,
+              74.91391503069924,
+              -3.511913063407966e-12,
+              1.0000000000126665,
+              74.91391503069907,
+              -2642.7603937213003,
+              18.166540530263358,
+              -65.52129579686977,
+              -2641.8857725541848
+            ]
           },
-          "rejected_events": [],
-          "composition_failures": [
+          "reconstructed": {
+            "m2": 11.670800006132545,
+            "z": 3.847927456846376e-05,
+            "q2": 1.6730343817561952,
+            "phi": 4.982856582072786,
+            "matrix": [
+              2643.9037458806274,
+              -18.166540534206682,
+              65.52129579577667,
+              2643.029124713512,
+              -20.770753347132672,
+              1.0000000000009739,
+              -3.5122306720578e-12,
+              -20.770753347132626,
+              74.91391502944909,
+              -3.511620049394256e-12,
+              1.0000000000126654,
+              74.91391502944892,
+              -2642.7603937213003,
+              18.16654053420662,
+              -65.52129579577644,
+              -2641.8857725541848
+            ]
+          },
+          "max_matrix_entry": 2643.9037458806274,
+          "max_matrix_difference": 4.508642348355352e-09,
+          "copies": [
             {
-              "attempt": 23,
-              "subsystem": 1,
-              "root": 15,
-              "final": 70,
-              "max_absolute_error_gev": 2.301495101164619e-07
+              "before": 28,
+              "after": 41,
+              "source_max_error": 4.547473508864641e-13,
+              "native_max_error": 5.413312464952469e-09,
+              "source_outside_tolerance": false,
+              "native_outside_tolerance": false
             },
             {
-              "attempt": 289,
-              "subsystem": 1,
-              "root": 21,
-              "final": 54,
-              "max_absolute_error_gev": 9.80994627752807e-08
-            },
-            {
-              "attempt": 289,
-              "subsystem": 1,
-              "root": 22,
-              "final": 55,
-              "max_absolute_error_gev": 2.534977738832822e-07
-            },
-            {
-              "attempt": 355,
-              "subsystem": 7,
-              "root": 56,
-              "final": 163,
-              "max_absolute_error_gev": 1.8807089219308182e-08
-            },
-            {
-              "attempt": 413,
-              "subsystem": 12,
-              "root": 109,
-              "final": 253,
-              "max_absolute_error_gev": 3.918515290024516e-08
-            },
-            {
-              "attempt": 413,
-              "subsystem": 12,
-              "root": 110,
-              "final": 254,
-              "max_absolute_error_gev": 6.813252184656449e-08
-            },
-            {
-              "attempt": 488,
-              "subsystem": 8,
-              "root": 133,
-              "final": 210,
-              "max_absolute_error_gev": 5.107386868985486e-08
-            },
-            {
-              "attempt": 488,
-              "subsystem": 8,
-              "root": 134,
-              "final": 211,
-              "max_absolute_error_gev": 8.523437600160833e-08
+              "before": 29,
+              "after": 42,
+              "source_max_error": 1.1641532182693481e-10,
+              "native_max_error": 5.587935447692871e-09,
+              "source_outside_tolerance": false,
+              "native_outside_tolerance": true
             }
-          ],
-          "max_copy_residual_gev": 1.83541715159663e-09,
-          "max_composed_residual_gev": 2.534977738832822e-07,
-          "max_metric_residual": 1.1762972462747712e-06
+          ]
         }
-      ],
-      "reconstructed_parameter_errors": {
-        "Q2": {
-          "max_absolute_error": 1.1328040727676125e-09,
-          "max_relative_error": 8.590492225682363e-10
-        },
-        "z": {
-          "max_absolute_error": 1.8924639633155493e-11,
-          "max_relative_error": 2.486728709226268e-11
-        },
-        "m2II": {
-          "max_absolute_error": 5.372639861889184e-07,
-          "max_relative_error": 3.0876175752980524e-11
+      ]
+    },
+    {
+      "attempt": 1355,
+      "error": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 39 before 29 after 37 predicted 1507.5761942818501 actual 1507.5761942101383 error 7.1711838245391846e-08",
+      "branches": [
+        {
+          "emitted": 39,
+          "source": {
+            "m2": 37.86216825521137,
+            "pt2": 1.8099746505568974,
+            "z": 6.874648021493034e-06,
+            "q2": 1.8099870935810893,
+            "phi": 5.794405275608618,
+            "matrix": [
+              5599.915902874816,
+              -91.27280782728019,
+              48.54089741792672,
+              -5598.9615264885915,
+              -95.63607099131045,
+              0.9999999999687478,
+              1.662061363079136e-11,
+              95.63607099131077,
+              50.861377248604434,
+              1.6619891985825354e-11,
+              0.9999999999911612,
+              -50.86137724860461,
+              5598.868098240919,
+              -91.27280782728053,
+              48.54089741792691,
+              -5597.913721854696
+            ]
+          },
+          "reconstructed": {
+            "m2": 37.86216825521137,
+            "z": 6.874648021493034e-06,
+            "q2": 1.8099870935810893,
+            "phi": 5.794405274530882,
+            "matrix": [
+              5599.915902874816,
+              -91.27280777496593,
+              48.54089751629473,
+              -5598.9615264885915,
+              -95.63607093649499,
+              0.9999999999687507,
+              1.6619127010815574e-11,
+              95.63607093649532,
+              50.861377351675,
+              1.6618738432756955e-11,
+              0.9999999999911618,
+              -50.86137735167518,
+              5598.868098240919,
+              -91.27280777496627,
+              48.540897516294905,
+              -5597.913721854696
+            ]
+          },
+          "max_matrix_entry": 5599.915902874816,
+          "max_matrix_difference": 1.0307056896863287e-07,
+          "copies": [
+            {
+              "before": 29,
+              "after": 37,
+              "source_max_error": 2.9103830456733704e-11,
+              "native_max_error": 7.171183824539185e-08,
+              "source_outside_tolerance": false,
+              "native_outside_tolerance": true
+            },
+            {
+              "before": 30,
+              "after": 38,
+              "source_max_error": 5.820766091346741e-11,
+              "native_max_error": 7.118796929717064e-08,
+              "source_outside_tolerance": false,
+              "native_outside_tolerance": true
+            }
+          ]
         }
-      },
-      "events_with_identical_particles": 1000,
-      "accepted_source_branches": 13709,
-      "composition_audit_returncode": 1,
-      "trace_sha256": "5cff69c7de59e9883b18f69c19f27ed92d9976d319dd2dff48cdb354219cb3c0",
-      "snapshots_sha256": "1d9611ba5393b9111d8303d9050f8f59398bb6d1d3b806d89d9671d425aeb6f7"
+      ]
     }
   ],
-  "build": {
-    "source_hashes": {
-      "src/SimpleSpaceShower.cc": "953dd8b8fee0a75b9a297f9c6e854586aed42ed66576e6a3ddb61b568b4d696f",
-      "include/Pythia8/SimpleSpaceShower.h": "b145926773ead27097376a45b4881dceb86f74e4f3104b978b583ce89822c5d7"
-    },
-    "command": [
-      "c++",
-      "-O3",
-      "-std=c++17",
-      "/private/tmp/jewel-isr-trace-repro/TraceSpaceShower.cc",
-      "/Users/ploskon/devel/jewel-cpp/reference/pythia_isr_trace.cpp",
-      "-I/private/tmp/jewel-isr-trace-repro",
-      "-I/Users/ploskon/devel/jewel-cpp/reference",
-      "-I/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/include",
-      "-L/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/lib",
-      "-Wl,-rpath,/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/lib",
-      "-lpythia8",
-      "-o",
-      "/private/tmp/jewel-isr-trace-repro/probe"
-    ],
-    "generated_source_sha256": "3c0a7f877fe1c12833046bc5ffcde57f0dcedd6e200a497ef80c8a0c375a70f3",
-    "executable_sha256": "135a34f7de7c6296e3d87834199ae554048f10b18781a04003c3d6f195be5e42"
-  },
-  "tool_hashes": {
-    "tools/build_pythia_isr_trace.py": "7f0348b8fc9a18f7aae2d0ad409e8464df9d4eba51d7844b913b923b73b79838",
-    "tools/audit_pythia_isr_trace.py": "fa95cb72c38e61839e1d3391fb359ab4b16bfd4302e06052b6a2aa7e8e7e0484",
-    "reference/pythia_isr_trace.cpp": "41d138b130afc63e562575b0093798b0c2e10147f3386d7d714c1061078a939a",
-    "reference/pythia_isr_trace.hpp": "b5fd8b8572889b6f44b91495e9fd737432288642279bda621eb09e7cf178022c"
+  "files_sha256": {
+    "SimpleSpaceShower.cc": "90a27cc3951fa419d6ec6ecdd72aa40e6b8d3cc007f799db6f672a0da3c18ce0",
+    "native_frames.cpp": "a73cfc2a3da05b7a59feb5527540d1522645cec5ebde58a51f6528ff69ba2f4e",
+    "libpythia8.dylib": "893a9a9e78c415362edfc30a0c7773c98865efa8cd1e23505fa9630169934ee0",
+    "both": "e570dc6d198895673d05dd7fa95ede31e3e28f6da494a4ef73590706604dacf4",
+    "both1500.err": "24dda002fb5f980ffd98666e6c169807b0423c2746385cccee755f5b3b571b31",
+    "both1500.jsonl": "63e4dc73a110b912895de4c8a787ebee56479025686dc51893643026245a80d5",
+    "baseline1500.jsonl": "63e4dc73a110b912895de4c8a787ebee56479025686dc51893643026245a80d5",
+    "apply.cpp": "2a6987cab70bc17259c68d02849a9fc13c34a014d1a1a8ec55dff551876d78b5",
+    "apply": "f4492e3641cfe0c2366c6b4688d4c4b54a7a61916b3d81413aec2ca85236aa49"
   }
 }

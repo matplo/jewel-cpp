@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pythia6 and Pythia8 on the same parton events</title>
+<style>
+body{font:17px/1.55 system-ui;color:#182738;background:#f6f8fb;margin:0}
+main{max-width:52rem;margin:auto;padding:2.5rem 1rem} h1{line-height:1.15}
+table{width:100%;border-collapse:collapse;background:white}
+th,td{padding:.7rem;border-bottom:1px solid #ccd5df;text-align:left}
+a{color:#125384} section{margin:2rem 0}
+</style>
+<main>
+<h1>Pythia6 and Pythia8 on the same parton events</h1>
+<p>Hadronization and decays can account for a substantial part of the 8–12 GeV jet-mass deficit. The paired sample does not resolve shifts in the 6–8 GeV mass or 0.6–0.7 pTD bins.</p>
+<section>
+<h2>Shared input and settings</h2>
+<p>Both hadronizers processed 12,499 identical outgoing parton records, with the same flavours, four-momenta and colour connections. The jet selection found 20,477 jets before hadronization, 17,526 after Pythia6 and 17,460 after Pythia8.</p>
+<p>The Pythia8 profile translates JEWEL’s explicit Pythia6 Lund and flavour settings. The vector-meson probabilities become vector-to-pseudoscalar ratios. Other engine defaults and fragmentation and decay algorithms can still differ.</p>
+</section>
+<section>
+<h2>Selected bin yields</h2>
+<table>
+<thead><tr><th>Bin</th><th>Full C++ vs. JEWEL</th><th>Paired Pythia8 vs. Pythia6</th></tr></thead>
+<tbody>
+<tr><td>Mass 6–8 GeV</td><td>−7.8%</td><td>−2.1 ± 2.3 percentage points</td></tr>
+<tr><td>Mass 8–12 GeV</td><td>−10.5%</td><td>−12.1 ± 3.2 percentage points</td></tr>
+<tr><td>pTD 0.6–0.7</td><td>+14.2%</td><td>+4.2 ± 4.9 percentage points</td></tr>
+</tbody>
+</table>
+<p>Uncertainties are one paired standard error. The full comparison uses separate hard-event ensembles, while the control conditions on the native parton ensemble.</p>
+</section>
+<p><a href="validation-paired-hadronization.md">Methods and paired results</a> · <a href="jewel-million-comparison.html">Million-jet distributions</a></p>
+</main>
+</html>

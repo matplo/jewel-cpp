@@ -61,3 +61,16 @@ scattering and final scattering, plus their selected C++ contract checks:
 ```sh
 ctest --test-dir build -R '(medium|sampling|radiation|final-splitting|pdf|scattering|event-geometry)-(differential|contracts)$' --output-on-failure -j 4
 ```
+
+## Expanded thermodynamic coverage
+
+The subsequent [medium/table matrix](validation-scattering-thermodynamics.md)
+adds changed temperatures, formation time, screening scale and table energies.
+All 2,620,056 comparisons pass, including exact zero/nonzero rate agreement.
+
+## Cross sections along prescribed trajectories
+
+The [trajectory extension](validation-scattering-rays.md) adds 49,248 passing
+comparisons through the expanding medium and 12 byte-identical table-preservation
+checks. All 13 selected medium/table regression suites pass. These cross sections
+require density and evolution-time factors before they become collision probabilities.

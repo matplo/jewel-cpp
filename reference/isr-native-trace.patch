@@ -1,0 +1,18 @@
+--- native_frames.cpp
++++ native_frames.cpp
+@@ -1,3 +1,4 @@
++#include <iostream>
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ #include "jewel/pythia8_isr.hpp"
+ #include <Pythia8/Basics.h>
+@@ -65,6 +66,10 @@
+   Pythia8::RotBstMatrix matrix;matrix.bst(0,0,(eb-ea)/(ea+eb));matrix.rot(0,-phi);matrix.rotbst(from_rest(phi));
+   IsrRecoilFrame frame;frame.emitted=sister.id;frame.mother=mother.id;frame.recoiler=recoiler.id;frame.old_recoiler=old.id;
+   for(int i=0;i<4;++i)for(int j=0;j<4;++j){frame.matrix[4*i+j]=matrix.value(i,j);require(std::isfinite(frame.matrix[4*i+j]),"nonfinite reconstructed ISR matrix");}
++  std::cerr << std::setprecision(17) << "ISR_NATIVE " << mother.id << " " << sister.id
++    << " " << ea << " " << eb << " " << ena << " " << enb << " " << m2 << " " << z << " " << q2 << " " << phi;
++  for(double v:frame.matrix)std::cerr << " " << v;
++  std::cerr << "\n";
+   for(auto id=std::max(mother.id,recoiler.id)+1;id<sister.id;++id){const auto& after=at(id);
+    require(std::abs(after.status)==44&&after.mothers.size()==1,"unsupported ISR final-state recoil record");const auto& before=at(after.mothers[0]);
+    require(before.id<std::min(mother.id,recoiler.id)&&before.pdg==after.pdg,"invalid ISR recoil-copy provenance");

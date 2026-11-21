@@ -51,6 +51,7 @@ std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,co
   // Massive threshold branches have a different prescription; retain their
   // independently checked spacelike reconstruction until that mode is mapped.
   if(captured&&(sister.mass==0||std::abs(sister.pdg)<=3)){require(std::isfinite(sister.scale)&&sister.scale>0,"missing ISR evolution scale");q2=sister.scale*sister.scale/(1-z);}
+  auto build_frame=[&](double q2,bool recoil_azimuth){
   double pt2=q2-z*(m2+q2)*(q2+ms2)/m2;require(pt2>0&&std::isfinite(pt2),"invalid reconstructed ISR transverse scale");
   double sign=side==0?1.:-1.,er=.5*(m2+q2)/m,pzr=-sign*er;
   double pt=std::sqrt(pt2)*m2/(z*(m2+q2)),pzm=sign*.5*m*((m2-q2)/(z*(m2+q2))+(q2+ms2)/m2);
@@ -61,6 +62,22 @@ std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,co
    matrix.rot(-theta,phi);matrix.bst(0,0,(ena-enb)/(ena+enb));return matrix;};
   auto base=ps;base.rotbst(from_rest(0));
   double phi=std::atan2(sister.momentum.py,sister.momentum.px)-base.phi();
+  if(recoil_azimuth){
+   // An II recoil changes transverse momenta along the emission azimuth.
+   // Use the largest displacement to avoid subtracting nearly equal vectors.
+   double best=0,dx=0,dy=0;
+   for(auto id=std::max(mother.id,recoiler.id)+1;id<sister.id;++id){
+    const auto& after=at(id);
+    require(std::abs(after.status)==44&&after.mothers.size()==1,"unsupported ISR final-state recoil record");
+    const auto& before=at(after.mothers[0]);
+    require(before.id<std::min(mother.id,recoiler.id)&&before.pdg==after.pdg,"invalid ISR recoil-copy provenance");
+    double x=after.momentum.px-before.momentum.px,y=after.momentum.py-before.momentum.py;
+    if(std::hypot(x,y)>best){best=std::hypot(x,y);dx=x;dy=y;}
+   }
+   require(best>0,"cannot resolve ISR recoil azimuth");
+   if(dx*sister.momentum.px+dy*sister.momentum.py<0){dx=-dx;dy=-dy;}
+   phi=std::atan2(dy,dx)-base.phi();
+  }
   if(captured){phi=std::fmod(phi,2*pi);if(phi<0)phi+=2*pi;} // Source samples phi in [0,2pi).
   Pythia8::RotBstMatrix matrix;matrix.bst(0,0,(eb-ea)/(ea+eb));matrix.rot(0,-phi);matrix.rotbst(from_rest(phi));
   IsrRecoilFrame frame;frame.emitted=sister.id;frame.mother=mother.id;frame.recoiler=recoiler.id;frame.old_recoiler=old.id;
@@ -75,7 +92,27 @@ std::vector<IsrRecoilFrame> reconstruct_frames(const HardEventSnapshot& input,co
      <<"reconstructed ISR frame disagrees with recorded recoil copy: emitted "<<sister.id<<" before "<<before.id<<" after "<<after.id<<" predicted "<<pair[0]<<" actual "<<pair[1]<<" error "<<error;throw std::domain_error(message.str());}}
    frame.copies.push_back({before.id,after.id});
   }
-  require(frame.copies.size()>=2,"missing ISR final-state recoil copies");frames.push_back(frame);
+  require(frame.copies.size()>=2,"missing ISR final-state recoil copies");return frame;
+  };
+  try{frames.push_back(build_frame(q2,false));}
+  catch(const std::domain_error&){
+   // sqrt(pT2) in the event record is not a lossless encoding of source pT2.
+   // A bounded inverse-rounding search is allowed only for the mapped light
+   // II branch, after ordinary reconstruction fails. Every candidate must
+   // reproduce ALL recoil copies with the unchanged component tolerance.
+   if(!captured||!(sister.mass==0||std::abs(sister.pdg)<=3))throw;
+   double squared=sister.scale*sister.scale;
+   std::array<double,5> candidates{squared,std::nextafter(squared,INFINITY),std::nextafter(squared,0.),
+    std::nextafter(std::nextafter(squared,INFINITY),INFINITY),std::nextafter(std::nextafter(squared,0.),0.)};
+   bool recovered=false;
+   for(double candidate:candidates){
+    if(!(candidate>0)||!std::isfinite(candidate)||std::sqrt(candidate)!=sister.scale)continue;
+    try{auto frame=build_frame(candidate/(1-z),true);frame.source_rounding_recovered=true;frame.recovered_scale_squared=candidate;
+     frames.push_back(frame);recovered=true;break;
+    }catch(const std::domain_error&){}
+   }
+   if(!recovered)throw;
+  }
  }
  std::sort(frames.begin(),frames.end(),[](const auto& a,const auto& b){return a.emitted<b.emitted;});return frames;
 }

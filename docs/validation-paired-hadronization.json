@@ -1,0 +1,323 @@
+{
+  "audit": {
+    "native_event_sha256": "8ae0ace968d76e8be29e85197b2d45948c569cd9e9499d03071ed6e778237b83",
+    "pyexec_sha256": "5a25365d2051056b9968c1c6df73596ac5b5532c7f26d0f02e88fc0e7c2dbcb2",
+    "packed_input_sha256": "610342864a5d1c90e18264b079b73457971eb0f3946b697e9d83c77900e01002",
+    "source_events": 12499,
+    "shared_events": 12499,
+    "excluded": {},
+    "max_component_residual_gev": {
+      "pythia6": 1.5360283214249648e-06,
+      "pythia8": 7.415327672788408e-06
+    }
+  },
+  "selection": {
+    "algorithm": "anti-kt",
+    "R": 0.4,
+    "min_pt_GeV": 10,
+    "max_abs_eta": 2,
+    "particles": "per-sample particle_level: native partons use status 3/4/5; hadron samples use final flag; exclude neutrino PDG 12/14/16",
+    "soft_drop": {
+      "algorithm": "Soft Drop",
+      "reclustering": "Cambridge/Aachen",
+      "recombination": "E scheme",
+      "zcut": 0.1,
+      "beta": 0.0,
+      "R0": 0.4,
+      "reclustering_R": 1000.0,
+      "condition": "z > zcut (delta_R/R0)^beta",
+      "untagged": "null zg and groomed_mass; counted separately"
+    },
+    "mass": "FastJet signed invariant mass in GeV; negative values retained",
+    "order": "full-phase-space clustering before jet cuts",
+    "geometry_matching": {
+      "max_delta_r": 0.3,
+      "coordinates": "pseudorapidity and azimuth",
+      "assignment": "hepyy_utils.match_hard_legs: maximize matches then minimize total distance",
+      "order": "all positive-pT jets before analysis cuts",
+      "unmatched_jet_geometry": null
+    },
+    "recoils": "per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles"
+  },
+  "input_sha256": {
+    "before": "59e04ffe05b5a9238abb24762481f020bc1fbf82d1589601f386700a13adea1b",
+    "pythia6": "485459596c0c0dd2dc9003ea30facab7f98b3c1fd4d05cbf13de15fc294ae719",
+    "pythia8": "74379d13f3aeaec058ded8b475f1ba3c1c9832346e2ace79ce51346bdf188551"
+  },
+  "selected_jets": {
+    "before": 20477,
+    "pythia6": 17526,
+    "pythia8": 17460
+  },
+  "pythia8_minus_pythia6_yield_per_event": {
+    "mean": -0.005280422433794703,
+    "standard_error": 0.004160231139441621
+  },
+  "selected_jet_means": {
+    "before": {
+      "mass": 1.7285029842588069,
+      "ptd": 0.8199137389537418
+    },
+    "pythia6": {
+      "mass": 4.810871551132346,
+      "ptd": 0.437897734401401
+    },
+    "pythia8": {
+      "mass": 4.716782863157004,
+      "ptd": 0.4380534967865905
+    }
+  },
+  "bins": {
+    "mass": [
+      {
+        "low": -50,
+        "high": 0,
+        "weighted_counts": {
+          "before": 3414,
+          "pythia6": 0,
+          "pythia8": 0
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0,
+          "standard_error": 0.0
+        }
+      },
+      {
+        "low": 0,
+        "high": 1,
+        "weighted_counts": {
+          "before": 4397,
+          "pythia6": 63,
+          "pythia8": 52
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.0008800704056324506,
+          "standard_error": 0.0008352876650764312
+        }
+      },
+      {
+        "low": 1,
+        "high": 2,
+        "weighted_counts": {
+          "before": 4352,
+          "pythia6": 632,
+          "pythia8": 696
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.005120409632770622,
+          "standard_error": 0.0027387045669179343
+        }
+      },
+      {
+        "low": 2,
+        "high": 4,
+        "weighted_counts": {
+          "before": 6413,
+          "pythia6": 6225,
+          "pythia8": 6440
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.017201376110088807,
+          "standard_error": 0.006845989959488227
+        }
+      },
+      {
+        "low": 4,
+        "high": 6,
+        "weighted_counts": {
+          "before": 1536,
+          "pythia6": 6522,
+          "pythia8": 6414
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.008640691255300424,
+          "standard_error": 0.0070458740806752535
+        }
+      },
+      {
+        "low": 6,
+        "high": 8,
+        "weighted_counts": {
+          "before": 272,
+          "pythia6": 2749,
+          "pythia8": 2692
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.004560364829186335,
+          "standard_error": 0.005058189055164215
+        }
+      },
+      {
+        "low": 8,
+        "high": 12,
+        "weighted_counts": {
+          "before": 82,
+          "pythia6": 1206,
+          "pythia8": 1060
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.01168093447475798,
+          "standard_error": 0.0030949287669344325
+        }
+      },
+      {
+        "low": 12,
+        "high": 20,
+        "weighted_counts": {
+          "before": 11,
+          "pythia6": 127,
+          "pythia8": 105
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.0017601408112649013,
+          "standard_error": 0.0009991955631506678
+        }
+      },
+      {
+        "low": 20,
+        "high": 40,
+        "weighted_counts": {
+          "before": 0,
+          "pythia6": 2,
+          "pythia8": 1
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -8.000640051204096e-05,
+          "standard_error": 0.00013857884649697236
+        }
+      },
+      {
+        "low": 40,
+        "high": 80,
+        "weighted_counts": {
+          "before": 0,
+          "pythia6": 0,
+          "pythia8": 0
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0,
+          "standard_error": 0.0
+        }
+      }
+    ],
+    "ptd": [
+      {
+        "low": 0,
+        "high": 0.2,
+        "weighted_counts": {
+          "before": 0,
+          "pythia6": 0,
+          "pythia8": 0
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0,
+          "standard_error": 0.0
+        }
+      },
+      {
+        "low": 0.2,
+        "high": 0.3,
+        "weighted_counts": {
+          "before": 0,
+          "pythia6": 549,
+          "pythia8": 600
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.004080326426114089,
+          "standard_error": 0.0024331232864406734
+        }
+      },
+      {
+        "low": 0.3,
+        "high": 0.4,
+        "weighted_counts": {
+          "before": 10,
+          "pythia6": 6500,
+          "pythia8": 6387
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.00904072325786063,
+          "standard_error": 0.006849110863841954
+        }
+      },
+      {
+        "low": 0.4,
+        "high": 0.5,
+        "weighted_counts": {
+          "before": 438,
+          "pythia6": 6621,
+          "pythia8": 6661
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.0032002560204816384,
+          "standard_error": 0.007375597325150191
+        }
+      },
+      {
+        "low": 0.5,
+        "high": 0.6,
+        "weighted_counts": {
+          "before": 1950,
+          "pythia6": 2750,
+          "pythia8": 2657
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.00744059524761981,
+          "standard_error": 0.005381683936489255
+        }
+      },
+      {
+        "low": 0.6,
+        "high": 0.7,
+        "weighted_counts": {
+          "before": 3052,
+          "pythia6": 765,
+          "pythia8": 797
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.002560204816385311,
+          "standard_error": 0.0030149058146819664
+        }
+      },
+      {
+        "low": 0.7,
+        "high": 0.8,
+        "weighted_counts": {
+          "before": 3950,
+          "pythia6": 230,
+          "pythia8": 226
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": -0.00032002560204816386,
+          "standard_error": 0.0016744744545626475
+        }
+      },
+      {
+        "low": 0.8,
+        "high": 0.9,
+        "weighted_counts": {
+          "before": 2615,
+          "pythia6": 73,
+          "pythia8": 90
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.0013601088087046964,
+          "standard_error": 0.0010088093250144536
+        }
+      },
+      {
+        "low": 0.9,
+        "high": 1.0000001,
+        "weighted_counts": {
+          "before": 8462,
+          "pythia6": 38,
+          "pythia8": 42
+        },
+        "pythia8_minus_pythia6_per_event": {
+          "mean": 0.00032002560204816386,
+          "standard_error": 0.0006597698635723567
+        }
+      }
+    ]
+  }
+}

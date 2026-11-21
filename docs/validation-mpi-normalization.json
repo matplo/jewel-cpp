@@ -1,0 +1,42 @@
+{
+  "scope": "Full reference initialization and isolated shifted-PDF diagnostic; not full MPI equivalence",
+  "reference_pp": {
+    "total_mb": 86.02411039756225,
+    "elastic_mb": 18.134526869997554,
+    "single_diffraction_A_mb": 6.688963321660803,
+    "single_diffraction_B_mb": 6.688963321660803,
+    "double_diffraction_mb": 8.777766821555387,
+    "nondiffractive_mb": 45.733890062687706,
+    "secondary_initializer_integral_mb": 58.70212391679503,
+    "effective_pt0ref_gev": 1.8,
+    "effective_pt0_gev": 2.3261103201581284
+  },
+  "native": {
+    "total_mb": 86.02411039756225,
+    "elastic_mb": 18.43829376934893,
+    "single_diffraction_A_mb": 6.064702432911807,
+    "single_diffraction_B_mb": 6.064702432911807,
+    "double_diffraction_mb": 7.733015670408496,
+    "central_diffraction_mb": 0.0,
+    "nondiffractive_mb": 47.72339609198121
+  },
+  "phased_reference_events_identical": true,
+  "production_pdf_scale": "pt2 + effective_pt0_squared",
+  "standard_native_pdf_scale": "pt2",
+  "diagnostic_native_pdf_scale": "pt2 + pt0_squared",
+  "diagnostic_initialization": [
+    "|    pT0 =  2.33 gives sigmaInteraction =   149.42 mb: accepted    |"
+  ],
+  "files_sha256": {
+    "/private/tmp/jewel-mpi-normalization/full-reference.log": "dbcb97fded35acdfbf699ba7202c881a5e184a713f138818cc094289d2f6a8cf",
+    "/private/tmp/jewel-mpi-normalization/native.log": "b1276e04bce841e76d5b13aeba5737c897da5248c9585533ce18814c4869bc2c",
+    "/private/tmp/jewel-mpi-normalization/native.cpp": "34ce76785c41ca4dad7df65c25be5921aa0debc0cbcef698f5f4689694aad71f",
+    "/private/tmp/jewel-mpi-phased-trace/run.log": "18344ee0731ce8d952950a1aba9802e1b8edfbd97f7e0e924978704497eb0645",
+    "/private/tmp/jewel-mpi-shifted-pdf/MultipartonInteractions.cc": "1c72ca4aa948f357e8f01bbe9c78f3c27dd23a6250e85e1859990bc693f43bc8",
+    "/private/tmp/jewel-mpi-shifted-pdf/libpythia8.dylib": "b4fd1345fbca2b873e75ff12845138f0d7578fee2299a86484bc3c70e0595ac8",
+    "/private/tmp/jewel-mpi-shifted-pdf/events": "abebc8d5252d7f9c288644794b905c8c58ab8b231e67e5e471e146d2cdc13487",
+    "/private/tmp/jewel-mpi-shifted-pdf/run.log": "e388982e30185bfddd5ff275398b83eecce708827eb4fe22a0d4047688006c1d",
+    "/private/tmp/jewel-mpi-shifted-pdf/events1500.jsonl": "36d4622dfc10e0b3611f7629b4488c0febde1ef352fbb255b51efa648ed7f189",
+    "/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/src/pythia8-8.317-src/src/MultipartonInteractions.cc": "41e27d7247b40884f235323e76c18b573da3dc7af546403b34253a14dec10c75"
+  }
+}

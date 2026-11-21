@@ -1,0 +1,73 @@
+{
+  "scope": "native legacy MPI cross section from proposal/settings with Pythia8 AlphaStrong and LHAPDF; captured proposals, no native event distribution",
+  "calls": 200,
+  "initialization_calls": 100,
+  "production_calls": 100,
+  "groups": {
+    "kinematics": {
+      "values": 800,
+      "maximum_absolute_error": 1.7763568394002505e-15,
+      "maximum_relative_error": 1.8576225673137626e-16
+    },
+    "alpha_s": {
+      "values": 200,
+      "maximum_absolute_error": 8.326672684688674e-17,
+      "maximum_relative_error": 3.499985797930142e-16
+    },
+    "common-factor": {
+      "values": 200,
+      "maximum_absolute_error": 0.0,
+      "maximum_relative_error": 0.0
+    },
+    "gluon-width": {
+      "values": 200,
+      "maximum_absolute_error": 0.0,
+      "maximum_relative_error": 0.0
+    },
+    "pdfs": {
+      "values": 4400,
+      "maximum_absolute_error": 3.552713678800501e-15,
+      "maximum_relative_error": 3.0001622248929637e-16
+    },
+    "channel-totals": {
+      "values": 200,
+      "maximum_absolute_error": 1.3642420526593924e-12,
+      "maximum_relative_error": 9.891197425295553e-16
+    },
+    "raw-channel-weights": {
+      "values": 37580,
+      "maximum_absolute_error": 7.105427357601002e-15,
+      "maximum_relative_error": 9.633314185910672e-16
+    },
+    "pdf-weighted-channels": {
+      "values": 37580,
+      "maximum_absolute_error": 3.979039320256561e-13,
+      "maximum_relative_error": 1.1961566329438752e-15
+    }
+  },
+  "failures": [],
+  "hepmc_byte_identical": true,
+  "baseline_hepmc_sha256": "64a5289388223a4fb5e1b272007a431c773b5125cb3277e66d6718733e275ca3",
+  "pdf_set": "CT14nlo/0",
+  "q2_floor": 0.0,
+  "alpha_s_mz": 0.11754434294459773,
+  "alpha_s_order": 1,
+  "alpha_s_nfmax": 5,
+  "cmw": false,
+  "input_sha256": "fd8583de55197f6062dda01637dc5d37390078d79160ce37b8c185d5268c79a6",
+  "cpp_sha256": "cc5f1a6fd0d919b2a893d4d26f699d58df97b2ded4ac07e09819c01ebdca3077",
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "tool_sha256": "af60e791baa8ab1927a6b0477be2aacbe22545328fe0ea92c934380c07335e6d",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "artifacts": {
+    "pythia.f": "3ecc2c6406ea882c52459f393a5ca06e1ada97569d3f991c94ea2d9e26c3cb8b",
+    "core.f": "839bcf329ad45db42e58b9b5a6696fa517a4c6de2a17e899a47f797ceeaa0c3c",
+    "trace.f90": "a2bccbaee225782b5c7afe557ad091f57a89e1a0d576dab9285ffd8a5be7e122",
+    "reference": "8893e8027347280ac59d8270f6a8a8ede90eba60f3d5d649f13b9b5f2f4ef3bd",
+    "params.dat": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+    "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "run.log": "712e6975a78ce0e978966324946894a9aa5780ce82c7306ee0bab03efb9dbf78",
+    "instrumentation.patch": "c80e32325ee58a53f33f74da74787679217e56460166a1eb8877390ef7b4bde4"
+  }
+}

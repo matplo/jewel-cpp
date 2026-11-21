@@ -31,6 +31,8 @@ struct IsrRecoilFrame {
  std::array<double,16> matrix{};
  std::vector<std::array<ParticleId,2>> copies; // before, after
  double maximum_copy_error{};
+ bool source_rounding_recovered{};
+ double recovered_scale_squared{};
 };
 // Source-prescription reconstruction for ordinary initial-initial recoil only.
 // Frames are chronological. Primordial kT and IF/secondary-scattering recoil

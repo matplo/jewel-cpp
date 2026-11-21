@@ -1,0 +1,14 @@
+{
+  "scope": "complete outgoing MPI string graph to Pythia8 tags and hadronization; no incoming legs, remnants or Fortran hadron comparison",
+  "cases": 80,
+  "pairs_per_case": 2,
+  "final_particles": 6151,
+  "invalid_cases": 11,
+  "max_four_momentum_residual_GeV": 6.176503752897133e-12,
+  "artifacts": {
+    "tests/legacy_mpi_colour_boundary.cpp": "96c4a2782a844a095d0573e3d986d0c56ab2033650e9ecc2f020f769eb109e85",
+    "src/legacy_mpi.cpp": "1c315a1da020f4b4386854a93c6e278288cf789c262cee87aeda8e1389d30015",
+    "adapters/pythia8_hadronizer.cpp": "32e19107ec1c3b1bf458798f36f5a049303b0c0391d12c85bed8d4096c5c2672",
+    "build-pythia8/legacy-mpi-colour-boundary-test": "4bc17275f73a4ae39c18132bced94d748797df8f85cdbb098a08b340480a4579"
+  }
+}

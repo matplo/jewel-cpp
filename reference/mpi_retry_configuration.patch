@@ -1,0 +1,24 @@
+--- jewel-2.6.0.f
++++ jewel-2.6.0.f
+@@ -1083,17 +1083,21 @@
+ C--initialisation call
+ 	 IF(COLLIDER.EQ.'EEJJ')THEN
+ 	  OFFSET=9
++      PARP(82)=4D0
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 ELSEIF((COLLIDER.EQ.'PPJJ').OR.(COLLIDER.EQ.'PPYJ').OR.
+      & 		(COLLIDER.EQ.'PPYG').OR.(COLLIDER.EQ.'PPYQ'))THEN
+ 	  OFFSET=8
++      PARP(82)=4D0
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 ELSEIF((COLLIDER.EQ.'PPWJ').OR.(COLLIDER.EQ.'PPZJ').or.
+      &	(COLLIDER.EQ.'PPWQ').OR.(COLLIDER.EQ.'PPZQ').or.
+      &	(COLLIDER.EQ.'PPWG').OR.(COLLIDER.EQ.'PPZG'))THEN
+ 	  OFFSET=10
++      PARP(82)=4D0
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 elseif (collider.eq.'PPDY') then
++      PARP(82)=4D0
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 ENDIF
+ 

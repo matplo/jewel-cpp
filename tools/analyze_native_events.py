@@ -13,6 +13,7 @@ from native_geometry_analysis import associate_geometry, match_hard_legs
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('inputs',nargs='+',type=Path)
 parser.add_argument('--output',required=True,type=Path)
+parser.add_argument('--summary-only',action='store_true',help='Accumulate histograms without retaining individual events')
 parser.add_argument('--generator',type=Path,help='Executable used to produce the supplied files')
 args=parser.parse_args()
 from hepyy_utils.fastjet import require_fastjet
@@ -38,6 +39,10 @@ def histogram(values,edges):
 def analyze(path):
     events=[];failures=Counter();summary=None;header=None
     digest=hashlib.sha256()
+    attempts=accepted_count=selected=0
+    total_weight=0.
+    moments={k:[[0.,0.] for _ in e[1:]] for k,e in bins.items()}
+    counts={k:Counter() for k in bins};weighted={k:Counter() for k in bins}
     with path.open('rb') as source:
         for raw in source:
             digest.update(raw);record=json.loads(raw)
@@ -50,7 +55,8 @@ def analyze(path):
                 summary=record
             else:
                 assert header is not None and summary is None
-                assert record['attempt']==len(events)+1
+                attempts+=1
+                assert record['attempt']==attempts
                 geometry_matches=None
                 jets=[];accepted=record['type']=='event';weight=record.get('weight',0.)
                 if accepted:
@@ -83,34 +89,37 @@ def analyze(path):
                                 dict(matched_leg_id=None,matching_delta_r=None,matching_ambiguous=None,geometry=None)))
                 else:
                     failures[record.get('stage','generation')+': '+record.get('reason','generation failure')]+=1
-                events.append(dict(attempt=record['attempt'],accepted=accepted,weight=weight,jets=jets,
-                    histograms={key:histogram([j[key] for j in jets],edges) for key,edges in bins.items()}))
-                if geometry_matches is not None:events[-1]['hard_leg_matches']=geometry_matches
-    assert summary is not None and summary['attempts']==len(events)==header['attempts_requested']
-    assert summary['accepted']==sum(e['accepted'] for e in events)
-    assert math.isclose(sum(e['weight'] for e in events),summary['generator_weight_sum'],rel_tol=1e-12)
-    distributions={}
+                histograms={key:histogram([j[key] for j in jets],edges) for key,edges in bins.items()}
+                accepted_count+=accepted
+                total_weight+=weight
+                selected+=len(jets)
+                for key,edges in bins.items():
+                    for i,count in enumerate(histograms[key]):
+                        value=weight*count
+                        moments[key][i][0]+=value
+                        moments[key][i][1]+=value*value
+                    for jet in jets:
+                        v=jet[key]
+                        category='undefined' if v is None else 'underflow' if v<edges[0] else 'overflow' if v>=edges[-1] else 'in_range'
+                        counts[key][category]+=1;weighted[key][category]+=weight
+                if not args.summary_only:
+                    events.append(dict(attempt=record['attempt'],accepted=accepted,weight=weight,jets=jets,histograms=histograms))
+                    if geometry_matches is not None:events[-1]['hard_leg_matches']=geometry_matches
+    assert summary is not None and summary['attempts']==attempts==header['attempts_requested']
+    assert summary['accepted']==accepted_count
+    assert math.isclose(total_weight,summary['generator_weight_sum'],rel_tol=1e-12)
+    distributions={};accounting={}
     for key,edges in bins.items():
         distributions[key]=[]
-        for i in range(len(edges)-1):
-            values=[e['weight']*e['histograms'][key][i] for e in events]
-            mean=math.fsum(values)/len(events)
-            error=math.sqrt(math.fsum((v-mean)**2 for v in values)/(len(events)-1)/len(events)) if len(events)>1 else None
-            distributions[key].append(dict(low=edges[i],high=edges[i+1],weighted_count=math.fsum(values),
+        for i,(total,squared) in enumerate(moments[key]):
+            mean=total/attempts
+            error=math.sqrt(max(0.,squared-total*mean)/(attempts-1)/attempts) if attempts>1 else None
+            distributions[key].append(dict(low=edges[i],high=edges[i+1],weighted_count=total,
                 jets_per_attempt=mean,event_standard_error=error))
-    # Account explicitly for untagged and out-of-range entries, including weights.
-    accounting={}
-    for key,edges in bins.items():
-        counts=Counter();weighted=Counter()
-        for event in events:
-            for jet in event['jets']:
-                v=jet[key]
-                category='undefined' if v is None else 'underflow' if v<edges[0] else 'overflow' if v>=edges[-1] else 'in_range'
-                counts[category]+=1;weighted[category]+=event['weight']
-        accounting[key]={category:dict(jets=counts[category],weighted_count=weighted[category])
+        accounting[key]={category:dict(jets=counts[key][category],weighted_count=weighted[key][category])
                          for category in ['in_range','underflow','overflow','undefined']}
     return dict(particle_level='parton' if header['schema']=='jewel-parton-development-v1' else 'hadron',denominator_scope=header.get('denominator_scope','attempted-events'),observable_accounting=accounting,input=str(path),input_sha256=digest.hexdigest(),run=header,summary=summary,
-        selected_jets=sum(len(e['jets']) for e in events),failure_reasons=dict(failures),distributions=distributions,events=events)
+        selected_jets=selected,failure_reasons=dict(failures),distributions=distributions,events=events)
 
 samples=[analyze(path) for path in args.inputs]
 for sample in samples:

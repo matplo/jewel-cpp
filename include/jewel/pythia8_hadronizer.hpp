@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #pragma once
 #include "jewel/pythia8_input.hpp"
+#include "jewel/legacy_mpi.hpp"
 namespace jewel {
 enum class FragmentationProfile {Monash14,Jewel260Mapped};
 struct HadronizerConfig {
@@ -29,6 +30,10 @@ public:
  // string repair, reconnection, hard generation or showering is done here.
  std::optional<HadronizedSnapshot> hadronize(const std::vector<GeneratorParticle>&,
   const std::vector<GeneratorJunction>& = {});
+ // Assign tags to a complete outgoing string graph, then use the same
+ // hadronization boundary. No remnant construction or incoming-leg crossing.
+ std::optional<HadronizedSnapshot> hadronize_string_pieces(
+  const std::vector<GeneratorParticle>&,const std::vector<LegacyMpiStringPiece>&);
  // Nominal ParticleData mass, without a random resonance-mass draw.
  double nominal_mass(int pdg) const;
  HadronizationStatistics statistics() const;

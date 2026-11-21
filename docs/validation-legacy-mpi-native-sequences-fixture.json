@@ -1,0 +1,48 @@
+{
+  "scope": "full native screened MPI component sequences with Pythia8 coupling and LHAPDF; captured initial state/draws; MPI showers disabled",
+  "sequences": 10,
+  "steps": 759,
+  "accepted_pairs": 42,
+  "random_draws": 5264,
+  "groups": {
+    "draw-checkpoints": {
+      "values": 769,
+      "maximum_absolute_error": 0.0,
+      "maximum_relative_error": 0.0
+    },
+    "state-scalars": {
+      "values": 411291,
+      "maximum_absolute_error": 0.0,
+      "maximum_relative_error": 0.0
+    },
+    "state-integers": {
+      "values": 117630,
+      "maximum_absolute_error": 0.0,
+      "maximum_relative_error": 0.0
+    },
+    "cross-sections": {
+      "values": 678,
+      "maximum_absolute_error": 4.547473508864641e-13,
+      "maximum_relative_error": 9.891197425295553e-16
+    }
+  },
+  "failures": [],
+  "hepmc_byte_identical": true,
+  "baseline_hepmc_sha256": "82a59da5d494adef57a28e12385340ffe82a1f36a9347b0f3083c0124d2904a6",
+  "reference_evidence": "archived-reference-fixture",
+  "cpp_sha256": "d1dee3e4f2bdabe31657cdab9b255760603a88a0f42d6c977f1549fe3862a91e",
+  "input_sha256": "8b7bbe23ae5a7a07e453e1f71b837a5bc088cea76452e948a25b193f44c60303",
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "alpha_s_mz": 0.11754434294459773,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "artifacts": {
+    "pythia.f": "b60fc2471e9b47d50c599eb221bf86956a18eefbb56e49b82ee4bb334ae7ddfa",
+    "trace.f90": "a41d7862ac5980e1aee10428be45091fd0c7c19236541eaa6bebf22be02ac3ea",
+    "reference": "0b1c4cdae76457a574c2aef11230926106c3775aebfbfdd6dc9732993840937b",
+    "params.dat": "1782d057e1d1287f003612ee1616d6b8b8711932a351ff202e0f6baf5a4e535a",
+    "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "run.log": "7881f06e6f53d691624c770ec0b6e7171b019961bd19b5e8f7dbdd28e4933456",
+    "instrumentation.patch": "7194c2ead0dec7b2eceb633dcb1c3429324ec6e565d94f0358b476bea3e76dea"
+  }
+}

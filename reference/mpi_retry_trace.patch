@@ -1,0 +1,77 @@
+--- pythia6425mod-lhapdf6.f
++++ pythia6425mod-lhapdf6.f
+@@ -19580,6 +19580,9 @@
+      &CQ2I,CQ2R,PIK,BDIV,B,PLOWB,PHIGHB,PALLB,S4A,S4B,S4C,POWIP,
+      &RPWIP,B2RPDV,B2RPMX,BAVG,VNT145,VNT146,VNT147
+  
++      INTEGER IINITACTIVE
++      COMMON/INITAUDIT/ IINITACTIVE
++      COMMON/PYDAT3/MDCY(500,3),MDME(8000,2),BRAT(8000),KFDP(8000,5)
+ C...Initialization of multiple interaction treatment.
+       IF(MMUL.EQ.1) THEN
+         IF(MSTP(122).GE.1) WRITE(MSTU(11),5000) MSTP(82)
+@@ -19592,6 +19595,17 @@
+  
+ C...Loop over phase space points: xT2 choice in 20 bins.
+   100   SIGSUM=0D0
++        IINITACTIVE=1
++        WRITE(*,*) 'INIT_BEGIN',MSTP(83),MSTP(82),MSTP(32),
++     & MSTP(33),MSTP(51),MSTP(52),MSTP(57),MINT(35)
++        WRITE(*,*) 'INIT_CONFIG',VINT(1),VINT(149),PARP(83),
++     & PARP(84),SIGT(0,0,5),
++     & (PARP(82)*(VINT(1)/PARP(89))**PARP(90))**2,PARP(34),
++     & PARU(5),MSTP(34),MSTP(58),MINT(11),MINT(12),
++     & (PMAS(J,1),J=1,5),(MIN(1,MAX(0,MDME(MDCY(21,2)-1+J,1))),
++     & J=1,5),COEF(96,1),COEF(96,2),COEF(96,8),COEF(96,9),
++     & COEF(96,10),VINT(231),PARP(82),PARP(89),PARP(90)
++
+         DO 120 IXT2=1,20
+           NMUL(IXT2)=MSTP(83)
+           SIGM(IXT2)=0D0
+@@ -19620,11 +19634,18 @@
+ C...Calculate differential cross-section.
+             VINT(71)=0.5D0*VINT(1)*SQRT(XT2)
+             CALL PYSIGH(NCHN,SIGS)
++            WRITE(*,*) 'INIT_SAMPLE',XT2,TAU,VINT(22),VINT(23),SIGS
+             SIGM(IXT2)=SIGM(IXT2)+SIGS
+   110     CONTINUE
+           SIGSUM=SIGSUM+SIGM(IXT2)
+   120   CONTINUE
+         SIGSUM=SIGSUM/(20D0*MSTP(83))
++        IINITACTIVE=0
++        DO J=1,20
++         WRITE(*,*) 'INIT_BIN',J,NMUL(J),SIGM(J)
++        ENDDO
++        WRITE(*,*) 'INIT_INTEGRAL',SIGSUM
++
+  
+ C...Reject result if sigma(parton-parton) is smaller than hadronic one.
+         IF(SIGSUM.LT.1.1D0*SIGT(0,0,5)) THEN
+@@ -19727,6 +19748,10 @@
+         VNT147=VINT(147)
+ C...PIK = PARU(1)*XK = (VINT(146)/VINT(147))*sigma_jet/sigma_nondiffr.
+         PIK=(VNT146/VNT147)*YKE
++        WRITE(*,*) 'INIT_OVERLAP',VNT145,VNT146,VNT147,
++     & BAVG,BDIV,PIK
++        WRITE(*,*) 'INIT_END'
++
+ 
+ C...Find relative weight for low and high impact parameter.
+       PLOWB=PARU(1)*BDIV**2
+@@ -74485,6 +74510,8 @@
+      &(MRPY4,MRPY(4)),(MRPY5,MRPY(5)),(MRPY6,MRPY(6)),
+      &(RRPY98,RRPY(98)),(RRPY99,RRPY(99)),(RRPY00,RRPY(100))
+  
++      INTEGER IINITACTIVE
++      COMMON/INITAUDIT/ IINITACTIVE
+ C...Initialize generation from given seed.
+       IF(MRPY2.EQ.0) THEN
+         IJ=MOD(MRPY1/30082,31329)
+@@ -74541,6 +74568,7 @@
+         MRPY3=0
+       ENDIF
+       PYR=RUNI
++      IF(IINITACTIVE.EQ.1)WRITE(*,*) 'INIT_DRAW',RUNI
+  
+       RETURN
+       END

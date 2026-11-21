@@ -1,0 +1,56 @@
+{
+  "replay_tool_sha256": "fea9d4ec0726cd6f599d91022c5072723013cac6304ee140b089af19af346061",
+  "scope": "live ISUB=96 factors/PDF multiplication; native width if width_config_sha256 is present; native PDF evaluation if pdf_evaluation is present",
+  "pdf_evaluation": {
+    "scalar_comparisons": 4400,
+    "maximum_absolute_error": 0.0,
+    "failures": [],
+    "q2_floor": 0.0,
+    "set": "CT14nlo/0",
+    "cpp_sha256": "db8aa25b02f9d539fef5a609e41139a4eb66a9eeed06a58c965a4887ac54b4d4",
+    "input_sha256": "28007ee05f33536726bdff121d83044954a14069c0f3d68e2c3027047caa5979",
+    "evolution_stages": [
+      0,
+      1
+    ],
+    "interaction_counters": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "q2_range": [
+      6.121391367869842,
+      3250.3115998026565
+    ],
+    "remaining_fraction_range": [
+      0.5190760159042944,
+      1.0
+    ]
+  },
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "calls": 200,
+  "initialization_calls": 100,
+  "production_calls": 100,
+  "channels": 37580,
+  "numeric_comparisons": 75360,
+  "maximum_absolute_error": 0.0,
+  "failures": [],
+  "hepmc_byte_identical": true,
+  "baseline_hepmc_sha256": "64a5289388223a4fb5e1b272007a431c773b5125cb3277e66d6718733e275ca3",
+  "input_sha256": "07c7819903b91edae1754b79f21fd0938a21f907a3410bda33a2ec7b37adc94a",
+  "cpp_sha256": "758b4628d077b852706887b526f46ffa38678ee777214dc2419f5b3856977fff",
+  "artifacts": {
+    "pythia.f": "2af68a0087d6f8d75d2df5ec5ac4406ca416b6fd77f63e1f4e5aa765e67b7065",
+    "core.f": "839bcf329ad45db42e58b9b5a6696fa517a4c6de2a17e899a47f797ceeaa0c3c",
+    "trace.f90": "a2bccbaee225782b5c7afe557ad091f57a89e1a0d576dab9285ffd8a5be7e122",
+    "reference": "f3047cfd8cfa56bca5b1ad4729e02ed18507649c22c49666e09ed144ffef6734",
+    "params.dat": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+    "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "run.log": "9894ec7f52403fc2f5474e343b9d6964b219794461b9735fb00edbf7f493c6b1",
+    "instrumentation.patch": "5afa4c1f7fbeeef20b9b4f6ce855967925883cb77cd6b394f312bd84fe866bba"
+  }
+}

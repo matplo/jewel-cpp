@@ -39,7 +39,7 @@ with tempfile.TemporaryDirectory() as directory:
     records=[json.loads(line) for line in output.read_text().splitlines()]
     events=[e for e in records if e['type']=='event']
     assert len(events)==records[-1]['returned']==300
-    assert any(e['subsystem_isr_frame_error'] for e in events)
+    assert any(f.get('source_rounding_recovery') for e in events for fs in e['subsystem_isr_frames'] or [] for f in fs)
     assert any(e['subsystem_isr_frames'] for e in events)
     assert all((e['subsystem_isr_frames'] is None)==(e['subsystem_isr_frame_error'] is not None) for e in events)
     for i,options in enumerate([['--mpi'],['--mpi','yes'],['--mpi','on','--mpi','off'],['--isr'],['--isr','yes'],['--isr','on','--isr','off']]):

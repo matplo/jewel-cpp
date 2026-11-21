@@ -48,8 +48,10 @@ and the high-scale region where allowing a sixth flavour would differ.
 
 This is a coupling-function comparison only, for these source cards and thresholds.
 It does not validate low-scale freezing below the tested range, ISR ordering,
-MPI regularization or the full generator. The translated coupling is not yet
-wired into production runs. Existing spectrum/substructure results remain
+MPI regularization or the full generator. The translated hard/ISR coupling is now exposed through explicit runner
+options; see [runner validation](validation-input-coupling.md). Existing spectrum/substructure results remain
 historical comparisons with mismatched couplings; their 10% gate failures are
-unchanged. The next implementation must expose hard/ISR/MPI controls and the
-flavour cap explicitly, then rerun matched samples without fitting to ratios.
+unchanged. The hard/ISR translation is being tested in fresh samples without fitting to
+ratios. The subsequent [MPI audit](validation-mpi-coupling.md) adds explicit MPI
+controls and verifies its common-scale coupling translation, while identifying
+automatic native screening reduction and remaining model differences.

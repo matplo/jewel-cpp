@@ -4,6 +4,9 @@
 #include "jewel/subtraction.hpp"
 #include "jewel/projection.hpp"
 #include "input_options.hpp"
+#ifdef JEWEL_NATIVE_MPI_RUNNER
+#include "native_mpi_runner.hpp"
+#endif
 #include "jewel/geometry.hpp"
 #include "jewel/pythia8_shower_output.hpp"
 #include "jewel/pythia8_hadronizer.hpp"
@@ -58,7 +61,7 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"&&mode!="zero-interaction"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -66,6 +69,10 @@ int main(int argc,char** argv){
   InputOptionState input_options;jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
   std::optional<double> geometry_step;double table_energy=100;std::optional<std::string> table_energy_option;
   bool experimental_isr_mpi=false;
+  bool compact_hadrons=false;
+  [[maybe_unused]] bool native_mpi=false;
+  bool mpi_isr_only=false;
+  [[maybe_unused]] bool mpi_longitudinal_recoil=false;
   bool longitudinal_boost=false,boost_option_seen=false;
   int hadrotype=0;bool hadrotype_seen=false;int angular_ordering=0;bool angular_option_seen=false;
   bool keep_recoils=true,recoil_option_seen=false;
@@ -75,6 +82,22 @@ int main(int argc,char** argv){
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config,input_options))continue;
+#ifdef JEWEL_NATIVE_MPI_RUNNER
+   if(option=="--native-mpi"){
+    if(native_mpi||experimental_isr_mpi)throw std::invalid_argument("choose one MPI mode");
+    native_mpi=true;experimental_isr_mpi=true;input_config.initial_state_radiation=true;continue;
+   }
+#endif
+   if(option=="--compact-hadrons"){compact_hadrons=true;continue;}
+   if(option=="--isr-only"){
+    if(experimental_isr_mpi)throw std::invalid_argument("choose one ISR/MPI mode");
+    mpi_isr_only=true;experimental_isr_mpi=true;input_config.initial_state_radiation=true;continue;
+   }
+#ifdef JEWEL_NATIVE_MPI_RUNNER
+   if(option=="--mpi-longitudinal-recoil"){
+    mpi_longitudinal_recoil=true;continue;
+   }
+#endif
    if(option=="--experimental-isr-mpi"){
     if(experimental_isr_mpi)throw std::invalid_argument("experimental ISR/MPI option repeated");
     experimental_isr_mpi=true;input_config.initial_state_radiation=true;input_config.multiple_parton_interactions=true;continue;
@@ -148,11 +171,22 @@ int main(int argc,char** argv){
    else if(option.rfind("--",0)==0||!replay_directory.empty())throw std::invalid_argument("unknown or repeated runner option");
    else replay_directory=option;
   }
+  if(mpi_longitudinal_recoil&&!native_mpi)throw std::invalid_argument("longitudinal recoil requires native MPI");
+  if(compact_hadrons&&(!hadronize_run||geometry_step||subtraction_radius||!replay_directory.empty()))
+   throw std::invalid_argument("compact hadrons requires the hadron runner without geometry, subtraction or replay export");
   if(mode=="vacuum"&&centrality)throw std::invalid_argument("vacuum has no centrality; use zero-interaction for a noninteracting expanding background");
   if(experimental_isr_mpi&&hadronize_run&&hadrotype!=0)throw std::invalid_argument("experimental ISR/MPI hadronization currently requires HADROTYPE 0");
   if(projection_seen&&!subtraction_radius)throw std::invalid_argument("projection requires --subtraction-radius");
   if(subtraction_radius&&!keep_recoils)throw std::invalid_argument("thermal subtraction requires retained recoils");
   if(!replay_directory.empty()&&!std::filesystem::create_directory(replay_directory))throw std::runtime_error("replay directory must be new");
+#ifdef JEWEL_NATIVE_MPI_RUNNER
+  std::unique_ptr<jewel::NativeMpiRunner> native;
+  if(native_mpi){
+   if(input_config.ecm!=5020||input_config.pt_min!=20||input_config.pt_max!=100)
+    throw std::invalid_argument("native MPI currently requires the audited 5020 GeV, 20–100 GeV hard window");
+   native=std::make_unique<jewel::NativeMpiRunner>(seed);
+  }
+#endif
   jewel::Pythia8Input input(input_config);
   std::unique_ptr<jewel::Pythia8Hadronizer> hadronizer;
   if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14,pi0_decay});
@@ -177,6 +211,17 @@ int main(int argc,char** argv){
   bool comma=false;for(const auto& s:input.settings()){if(comma)out<<',';comma=true;out<<std::quoted(s);}out<<"],\"hadronization\":"<<(hadronize_run?"true":"false")<<",\"hadrotype\":"<<hadrotype<<",\"hadronizer_settings\":[";
   if(hadronizer){comma=false;for(const auto& setting:hadronizer->settings()){if(comma)out<<',';comma=true;out<<std::quoted(setting);}}out<<"],\"centrality_percent\":";
   if(centrality)out<<'['<<(*centrality)[0]<<','<<(*centrality)[1]<<']';else out<<"null";
+#ifdef JEWEL_NATIVE_MPI_RUNNER
+  if(native){
+   const auto& mpi=native->initialization();
+   out<<",\"mpi_legacy_integral_mb\":"<<mpi.legacy.back().table.integral
+      <<",\"mpi_production_pt0_gev\":"<<std::sqrt(mpi.secondary.back().scale_shift);
+  }
+#endif
+  if(compact_hadrons)out<<",\"compact_hadrons\":true";
+  if(native_mpi)out<<",\"native_mpi\":true,\"mpi_remnant_policy\":"<<std::quoted(
+   mpi_longitudinal_recoil?"longitudinal-rest-frame-recoil":"pythia8-remnants-with-system-recoil");
+  if(mpi_isr_only)out<<",\"isr_only\":true";
   if(hadrotype==1)out<<",\"minimum_string_policy\":{\"input_ids\":\"ordered-string-local\",\"native_sources\":\"parallel stable IDs; null for synthetic endpoints\",\"generated_quark_mass\":\"parent mass scaled with daughter four-momentum\",\"endpoint_energy_gev\":10,\"max_rapidity\":"<<medium_config.max_rapidity<<",\"rapidity_margin\":1}";
   if(geometry_step)out<<",\"geometry_estimator\":{\"schema\":\"geometry-v1-native\",\"step_fm\":"<<*geometry_step<<",\"radius_fm\":"<<(mode=="medium"?medium.thickness_table().back()[0]:0)<<",\"trajectory\":\"straight-line from shower-start momentum; not traversed shower history\"}";
   if(subtraction_radius)out<<",\"subtraction\":{\"algorithm\":\"jewel260-kernel-zero-offset\",\"radius\":"<<*subtraction_radius<<",\"put_on_shell\":"<<projection_mode<<",\"mass_policy\":\"signed-invariant-mass\",\"rng\":\"splitmix64-open52-v1\",\"seed_base\":"<<static_cast<std::uint64_t>(seed)+2000000<<",\"seed_stride\":100,\"input\":\"all-final-hadronized\",\"thermal_input\":\"stored-centres\",\"positive_thermal_residuals\":true}";
@@ -200,12 +245,19 @@ int main(int argc,char** argv){
     auto vertex=event_medium.sample_vertex(random);stage="hard initialization";
     jewel::HardInitializationConfig hard_config;hard_config.x=vertex.x;hard_config.y=vertex.y;hard_config.lifetime=event_lifetime;
     jewel::PreparedDijet prepared;
+    unsigned native_pairs=0;
     if(experimental_isr_mpi){
      stage="ISR mapping";
      auto chains=jewel::prepare_subsystem_isr_timing(*hard,[&](int pdg){return input.nominal_mass(pdg);});
      auto imported=jewel::import_pythia_final_record(*hard,vertex.x,vertex.y,event_lifetime);
      stage="ISR timing";jewel::IsrTimeConfig timing;timing.x=vertex.x;timing.y=vertex.y;timing.lifetime=event_lifetime;
      jewel::attach_pythia_isr_times(imported.state,imported.input_sources,*hard,chains,timing,random);
+#ifdef JEWEL_NATIVE_MPI_RUNNER
+     if(native){
+      stage="native MPI and remnant recoil";
+      native_pairs=native->add(imported,*hard,vertex,event_lifetime,random,mpi_longitudinal_recoil);
+     }
+#endif
      stage="survivor preparation";
      jewel::prepare_imported_partons(imported,[&](int pdg){return input.nominal_mass(pdg);},medium_config.max_rapidity);
      stage="subsystem initialization";
@@ -250,8 +302,20 @@ int main(int argc,char** argv){
      for(const auto& p:projected->particles){projection_after.px+=p.momentum.px;projection_after.py+=p.momentum.py;projection_after.pz+=p.momentum.pz;projection_after.energy+=p.momentum.energy;}
     }
     ++accepted;accepted_weight+=hard->weight;
+    if(compact_hadrons){
+     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"weight\":"<<hard->weight<<",\"hadronized_particles\":[";
+     bool first=true;
+     for(const auto& p:hadrons->particles)if(p.final){
+      if(!first)out<<',';first=false;
+      out<<"{\"pdg\":"<<p.pdg<<",\"final\":true,\"momentum\":";
+      momentum(out,p.momentum);out<<'}';
+     }
+     out<<"]}\n";
+     for(const auto& p:prepared.state.particles())if(p.particle.status==3||p.particle.status==4||p.particle.status==5)++final_count;
+     continue;
+    }
     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"impact_parameter_fm\":"<<event_b<<",\"centrality_fraction\":";if(event_centrality)out<<*event_centrality;else out<<"null";out<<",\"event_lifetime_fm\":"<<event_lifetime<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"shower_seed\":"<<shower_seed<<",\"draws\":"<<cascade_draws<<",\"branch_calls\":"<<evolved.branch_calls<<",\"initial_hard\":[";
-    particle(out,initial_hard[0]);out<<',';particle(out,initial_hard[1]);out<<"],\"input_sources\":[";comma=false;
+    particle(out,initial_hard[0]);out<<',';particle(out,initial_hard[1]);out<<']';if(native_mpi)out<<",\"native_mpi_pairs\":"<<native_pairs;out<<",\"input_sources\":[";comma=false;
     for(const auto& entry:prepared.input_sources){if(comma)out<<',';comma=true;out<<'['<<entry.first<<','<<entry.second<<']';}
     out<<']';
     if(geometry_step){out<<",\"geometry\":[";

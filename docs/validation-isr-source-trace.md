@@ -1,92 +1,83 @@
-# Source ISR matrices separate reconstruction errors from rounding
+# ISR recoil reconstruction: source-matrix diagnosis
 
-Recorded 2026-11-21, Pythia8 8.317. The new diagnostic harness records the
-actual Mtot matrices and branching inputs inside SimpleSpaceShower. It identifies
-two distinct problems in the failed subsystem transport audit: reconstructing
-kinematics introduces additional error, and even the original source matrices
-can exceed the fixed composition tolerance after further boosts.
+The three remaining frame failures in the translated-coupling sample are
+attempts 385, 1089 and 1355. This diagnostic traces the actual Pythia8 8.317
+SimpleSpaceShower matrix immediately after `Mtot.rotbst(MfromRest)` and the
+native reconstructed matrix before its recoil-copy check.
 
-## Isolated source observer
+Only temporary source copies and a temporary library/executable were built.
+The installed Pythia library and production reconstruction code were unchanged.
+Both the source-only trace and the combined source/native trace reproduce the
+baseline 1500-event hard-input JSONL **byte for byte**, including failures.
+The same seed, PDF, coupling options and ISR/MPI settings were used.
 
-`tools/build_pythia_isr_trace.py` verifies SHA-256 hashes of the unmodified
-8.317 source and header, generates an independently named shower class in a
-**new diagnostic directory**, and compiles a standalone probe against the
-installed Pythia library. It retains the upstream source license/comments.
-No installed file or production adapter is modified. Generated upstream source
-is not included in this repository.
+| Attempt | Largest source matrix entry | Largest matrix reconstruction difference | Recovered azimuth minus source (radians) |
+|---|---:|---:|---:|
+| 385 | 31229.38 | 8.83e-9 | 3.61e-11 |
+| 1089 | 2643.90 | 4.51e-9 | 6.02e-11 |
+| 1355 | 5599.92 | 1.03e-7 | -1.08e-9 |
 
-The only branching-code additions copy Mtot and record it after a successful
-branch. No random draws or decision expressions are added. The driver selects
-the diagnostic shower through Pythia's public ShowerModel interface and filters
-trace records against the final emission history. The audit refuses duplicate,
-missing or unmatched trace records.
+The matrices act on highly boosted momenta, so cancellation amplifies small
+input differences. In attempt 385, incoming x values are approximately
+1.024e-6 and 0.5415. Squaring the stored evolution scale also differs from
+Pythia's original pT-squared by one representable step. Thus particle output
+is not a lossless record of the source's intermediate variables.
 
-For both seeds 2600417 and 2600418, **every particle's PDG ID, status and four-
-momentum in all 2,000 events equals the existing adapter snapshots exactly**.
-All 26,962 accepted source emission branches are accounted for. Event weights
-and cross sections are not independently exported by this diagnostic driver;
-its exact-reproduction claim covers the particle fields listed above.
+Applying the captured source matrix through the **compiled native
+apply_isr_frame function** passes the existing component tolerance for every
+recoil copy in all three offending branches. Reconstructed matrices fail that
+same check. Maximum copy errors per branch for reconstructed matrices are
+2.78e-8, 5.59e-9 and 7.17e-8 GeV respectively; the gate is component-dependent,
+so the largest absolute error need not be the component that fails.
+The detailed JSON includes all source/native matrices, per-copy errors,
+component-gate results and file hashes.
 
-## Source-matrix composition results
+This identifies a precision loss in recovering source kinematics. It does not
+yet prove a replacement reconstruction or justify relaxing the production
+check. The three attempts remain rejected, and full-generator agreement is
+still unproven. The next implementation should preserve source information or
+use a demonstrably stable reconstruction, retaining independent recoil-copy,
+Lorentz-metric and frame-composition checks.
 
-The audit substitutes actual source ISR matrices into the existing staged
-transport audit, retaining the validated primordial reconstruction. It uses the
-same initial records, energy stage, copy associations and fixed tolerance.
+## Diagnostic artifacts and reproduction
 
-| Seed | Actual source branches | Source-matrix composed failures | Events affected | Maximum error (GeV) |
-|---|---:|---:|---:|---:|
-| 2600417 | 13,253 | 11 partons | 10 | 4.04482e-7 |
-| 2600418 | 13,709 | 8 partons | 5 | 2.53498e-7 |
+- [Source trace patch](../reference/isr-source-trace.patch): add logging only to
+  a copy of Pythia8 SimpleSpaceShower.cc.
+- [Native trace patch](../reference/isr-native-trace.patch): add logging only to
+  a copy of adapters/pythia8_isr_frames.cpp.
+- [Compiled matrix evaluator](../reference/isr_matrix_apply.cpp): link with the
+  current native adapter/core libraries and installed Pythia8 library.
+- [Trace analyzer](../tools/analyze_isr_source_trace.py): accepts the diagnostic
+  directory and writes report.json after requiring byte-identical output.
+- [Saved results](validation-isr-source-trace.json).
 
-All individual source-matrix copy comparisons pass. The **composition audit
-still fails** its fixed 1e-8 GeV + 1e-10 |p| gate. Neither tolerance nor
-production implementation changed. Source replay covers every event, including
-the twelve events that the reconstruction API rejects.
+The temporary directory is `/private/tmp/jewel-isr-source-audit`. Source object
+compilation uses `-O2 -std=c++11 -fPIC`, matching the Pythia build configuration;
+the native diagnostic uses `-O3 -std=c++17`. The temporary Pythia library reuses
+all original source objects except the instrumented SimpleSpaceShower.o.
+The diagnostic runner links the existing hard-input application object and
+native libraries, with the instrumented native-frames object preceding them.
+The installed Pythia library directory remains in the runtime search path for
+the LHAPDF plugin. No physics expression, random draw or veto was added.
 
-The prior reconstructed-matrix audit had 107 composed-parton failures, plus
-12 rejected events, and a maximum error of 2.52802e-5 GeV. Actual source matrices
-reduce, but do not eliminate, discrepancies. This is evidence for separating
-reconstruction error from finite-precision transport behavior, not permission
-to dismiss either. The largest source-based residual includes primordial
-reconstruction and repeated floating-point application; it is not a bound on
-all possible kinematics or spacetime transport.
-
-For the worst prior case (seed 2600417, attempt 785, subsystem 3), the first
-ISR transform has infinity norm about 2,973 and introduces a 1.24e-8 GeV copy
-residual. The following primordial transform has norm about 5,249; composition
-then differs by 2.53e-5 GeV. Amplification is directly observed in this chain.
-
-The recorded source inputs also differ slightly from values reconstructed from
-stored vectors. Across both samples, maximum absolute discrepancies are
-1.14e-9 GeV² in Q², 1.90e-11 in z, and 1.02e-5 GeV² in m²II. Their maximum
-relative discrepancies are below 9.4e-10, 5.4e-11 and 3.1e-11, respectively.
-These small input errors can matter in strongly boosted transforms.
-
-A separate direct CM-frame reconstruction from recorded spacelike vectors was
-experimentally rejected: it produced more individual-copy failures and did not
-resolve composition. It was not added to production code.
-
-[Detailed source replay results, failures and hashes](validation-isr-source-trace.json).
-
-## Reproduction
-
-Build in a directory that does not already exist:
+Generate baseline1500.jsonl with the installed library, events1500.jsonl with
+the source-only diagnostic, and both1500.jsonl with the combined diagnostic.
+Use 1500 attempts, seed 2600421, ISR/MPI on, CT14nlo/0, hard/ISR alpha_s
+0.11754434294459773 with order 1, nfmax 5 and CMW off. Redirect combined stderr
+to both1500.err. Store the evaluator as `apply`, with its source as apply.cpp.
+Then run:
 
 ```sh
-python3 tools/build_pythia_isr_trace.py PYTHIA_SOURCE PYTHIA_PREFIX NEW_BUILD_DIR
+python3 tools/analyze_isr_source_trace.py /private/tmp/jewel-isr-source-audit
 ```
 
-Supply exactly the adapter snapshot header's `settings`, one string per line,
-then run the generated probe:
+The analyzer matches branches by mother/emission IDs and both before/after
+beam fractions, avoiding accidental association with rolled-back candidates.
+The Fortran JEWEL physics engine is not involved in this Pythia8 adapter check;
+its existing component validations and unresolved full-cascade comparisons
+remain separate.
 
-```sh
-NEW_BUILD_DIR/probe settings.txt trace.jsonl 1000 PYTHIA_PREFIX/share/Pythia8/xmldoc
-python3 tools/audit_pythia_isr_trace.py trace.jsonl matching-ancestry-snapshots.jsonl audit.json
-```
-
-The audit exits nonzero when composition fails, after recording evidence. That
-is the expected outcome of the current samples, not a passing test.
-
-Next work should preserve source branching inputs accurately and evaluate a
-source-based numerical error budget. Physical timing and MPI evolution remain
-open; this diagnostic does not validate JEWEL 2.6.0 jets or alter Fortran kernels.
+The subsequent [bounded reconstruction implementation](validation-isr-recovery.md)
+recovers the three cases with unchanged recoil tolerances. This diagnostic
+records the preceding implementation; its native trace patch applies to
+`adapters/pythia8_isr_frames.cpp` at commit ecd7c7c.

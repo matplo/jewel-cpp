@@ -1,0 +1,56 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-native-mpi-runner-counts-100.jsonl",
+  "input_sha256": "1cd2ef952cd4cb66ad39439fd32f02309758a644fe6923ad3fbd6c88b6f5064d",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 100,
+    "accepted": 100,
+    "evolution_failures": 0,
+    "generation_failures": 0,
+    "accepted_weight": 100,
+    "failed_weight": 0,
+    "generator_weight_sum": 100,
+    "generator_sigma_mb": 0.12230112630814002,
+    "generator_sigma_error_mb": 0.006004544604536388,
+    "final_records": 3073
+  },
+  "junction_events": 0,
+  "failures": {},
+  "max_momentum_component_residual_gev": 4.192379492451437e-07,
+  "max_momentum_residual_over_total_energy": 8.35135357062039e-11,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": [
+      {
+        "attempt": 1,
+        "component": 2,
+        "residual_gev": -1.6309746003057013e-07
+      },
+      {
+        "attempt": 47,
+        "component": 2,
+        "residual_gev": 1.1129202508348979e-07
+      },
+      {
+        "attempt": 76,
+        "component": 2,
+        "residual_gev": -1.518918574631989e-07
+      },
+      {
+        "attempt": 85,
+        "component": 2,
+        "residual_gev": 4.19236895970055e-07
+      },
+      {
+        "attempt": 95,
+        "component": 2,
+        "residual_gev": -2.1532233214450677e-07
+      }
+    ]
+  },
+  "boundary_invariants_pass": true
+}

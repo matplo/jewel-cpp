@@ -1,0 +1,18 @@
+{
+  "scope": "ordered PYMULT KSTR topology only; no packed colour pointers or Pythia8 tag assignment",
+  "cases": 2180,
+  "integer_comparisons": 44956,
+  "branches": {
+    "quark-string": 310,
+    "insert": 870,
+    "gluon-loop": 1000
+  },
+  "failures": [],
+  "invalid_cases": 7,
+  "input_sha256": "c11a25d03fe0664228c7d03c3aa8b49c01351cdc9d575d6c183ff91ff6040cbb",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-strings-probe": "b600de79a2f4ead5ddba902a4ac7fe09658a6d3a005d75d91512c53e1ec84b4e",
+    "jewel-legacy-mpi-strings-reference": "cf804932e091a401c2a2af1a400fd5769b92a75c21d2cbd3903de2650f4c219a"
+  }
+}

@@ -1,0 +1,28 @@
+--- jewel-2.6.0.f
++++ jewel-2.6.0.f
+@@ -1083,20 +1083,25 @@
+ C--initialisation call
+ 	 IF(COLLIDER.EQ.'EEJJ')THEN
+ 	  OFFSET=9
++      call mpi_audit_begin
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 ELSEIF((COLLIDER.EQ.'PPJJ').OR.(COLLIDER.EQ.'PPYJ').OR.
+      & 		(COLLIDER.EQ.'PPYG').OR.(COLLIDER.EQ.'PPYQ'))THEN
+ 	  OFFSET=8
++      call mpi_audit_begin
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 ELSEIF((COLLIDER.EQ.'PPWJ').OR.(COLLIDER.EQ.'PPZJ').or.
+      &	(COLLIDER.EQ.'PPWQ').OR.(COLLIDER.EQ.'PPZQ').or.
+      &	(COLLIDER.EQ.'PPWG').OR.(COLLIDER.EQ.'PPZG'))THEN
+ 	  OFFSET=10
++      call mpi_audit_begin
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 elseif (collider.eq.'PPDY') then
++      call mpi_audit_begin
+ 	  CALL PYINIT('CMS',beam1,beam2,sqrts)
+ 	 ENDIF
+ 
++      call coupling_probe
+ 	end
+ 
+ 

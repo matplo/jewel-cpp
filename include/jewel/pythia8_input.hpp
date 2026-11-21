@@ -16,6 +16,15 @@ struct PythiaInputConfig {
  std::string external_pdf;
  std::optional<double> hard_alpha_s;
  std::optional<int> hard_alpha_s_order;
+ std::optional<double> isr_alpha_s;
+ std::optional<int> isr_alpha_s_order,alpha_s_nfmax;
+ std::optional<bool> isr_alpha_s_cmw;
+ std::optional<double> mpi_alpha_s;
+ std::optional<int> mpi_alpha_s_order;
+ // Power-law pT0Ref [GeV], ecmRef [GeV], energy exponent.
+ std::optional<std::array<double,3>> mpi_screening;
+ // Double-Gaussian matter core fraction and core/outer radius ratio.
+ std::optional<std::array<double,2>> mpi_double_gaussian;
 };
 struct GeneratorParticle {
  ParticleId id{};

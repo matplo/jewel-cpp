@@ -229,6 +229,11 @@ and channel queries, including distinct coupling scales, medium boosts,
 non-unit SCALEFACM and a constant Debye-mass grid. Full transport evolution,
 colour/recoil bookkeeping and Pythia8 event integration remain outstanding.
 
+The [expanding-medium trajectory comparison](docs/validation-scattering-rays.md)
+checks 49,248 additional cross sections against JEWEL 2.6.0 and verifies that
+queries preserve initialized tables. All 13 selected medium/table suites pass;
+complete-cascade and jet-level agreement remain separate validation requirements.
+
 ## Milestone 2a: branch candidate sampling
 
 `include/jewel/branching.hpp` provides `BranchingSampler`, translating GETMASS
@@ -952,3 +957,147 @@ The [initialized coupling audit](docs/validation-effective-couplings.md) confirm
 that the current hard/ISR settings are not equivalent between engines. A source-
 derived one-loop translation matches ten scales to 1.1e-16, but is not yet
 applied to production samples. Historical jet comparisons remain unvalidated.
+
+### Expanded medium/table validation
+
+The [thermodynamic scattering-table matrix](docs/validation-scattering-thermodynamics.md)
+checks six configurations against frozen JEWEL 2.6.0 routines: changed initial
+and cutoff temperatures, formation time, screening scale, profile and table
+energy. All 2,620,056 comparisons pass; complete grids and boundary queries
+agree exactly. This is component validation, not full-generator jet agreement.
+
+### Explicit input coupling policy
+
+Hard-input and full runners now accept `--isr-alpha-s VALUE` with
+`--isr-alpha-s-order ORDER`, `--alpha-s-nfmax 5|6`, and
+`--isr-alpha-s-cmw on|off`. These preserve defaults unless requested and verify
+explicit values after Pythia initialization. See the
+[reference-derived policy and integration checks](docs/validation-input-coupling.md).
+
+The [translated-coupling vacuum comparison](docs/validation-translated-vacuum.md)
+contains 2090 native and 1357 Fortran selected jets, with historical samples
+available in its interactive report. The 10% physics target remains unmet;
+four native failed attempts remain counted in normalization.
+
+The [octet-onium MPI extension](docs/validation-mpi-octets.md) recovers
+attempt 511 of the translated-coupling sample while preserving all preceding
+event records. Its retained-mass initialization passes 1440 Fortran comparison
+cases; this does not establish quarkonium production or full-generator parity.
+
+The [ISR source-matrix diagnostic](docs/validation-isr-source-trace.md) traces
+the three translated-sample frame failures to loss of precision when recovering
+source variables from particle output. Captured source matrices pass the
+existing copy checks; production tolerances and rejection behavior are unchanged.
+
+The [bounded ISR recovery](docs/validation-isr-recovery.md) now accepts the
+complete 1500-attempt translated-coupling sample. Its interactive comparison
+contains 2070 native and 1357 Fortran jets. The 10% target remains unmet, and
+four baseline frame-composition residuals remain explicitly recorded.
+
+The [MPI coupling/screening audit](docs/validation-mpi-coupling.md) adds explicit
+`--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER` and
+`--mpi-screening PT0REF ECMREF POWER` controls. Common-scale couplings match
+60 Fortran evaluations, but Pythia8 automatically lowers the requested screening
+scale. The fresh 1981-versus-1357-jet comparison is not fully MPI-matched and
+still fails the 10% target.
+
+The [phase-aware MPI audit](docs/validation-mpi-normalization.md) corrects the
+initialization-only interpretation: both screening scales reach 2.326 GeV,
+but production MPI PDF scales differ. An isolated shifted-scale Pythia8
+diagnostic yields 2075 native versus 1357 Fortran jets and still fails the
+10% target. It is not integrated into the standard build.
+
+The [expanding-medium reference checks](docs/validation-medium.md) also follow
+144 prescribed rays through central and peripheral media: all 35,136 additional
+field values agree with JEWEL 2.6.0, bringing that suite to 59,848 comparisons.
+These validate local fields along supplied coordinates, not interacting-jet
+trajectories or full-generator agreement.
+
+The optional `--mpi-double-gaussian .5 .4` selects the frozen reference's MPI
+core profile. Its [source-expression and event validation](docs/validation-mpi-overlap.md)
+passes the overlap check but still fails the requested jet/substructure ratios.
+See the [interactive comparison](docs/mpi-overlap-vacuum-comparison.html).
+
+The [legacy MPI saved-state audit](docs/validation-mpi-saved-state.md) confirms
+that the reference retains its original sampling tables after another initializer
+lowers the live screening scale. The diagnostic reproduces all 1,000 reference
+attempts byte for byte; a native equivalent of this initialization remains open.
+
+The [native legacy MPI hard-overlap component](docs/validation-legacy-mpi-weight.md)
+now separates saved tables from live screening. It passes 7,216 differential
+comparisons and exactly replays 1,000 full-reference weight evaluations. It is
+not yet connected to native event generation; initialization and sampling remain.
+
+The [legacy MPI overlap normalization and hard-impact sampler](docs/validation-legacy-mpi-overlap.md)
+now pass 16,330 Fortran comparisons, including exact random-draw counts.
+Cross-section table construction and full MPI generation remain unconnected.
+
+The [legacy MPI scale sampler](docs/validation-legacy-mpi-scale.md) now matches
+6,484 Fortran outputs exactly, including eight terminating proposal sequences
+and random draw counts. Differential acceptance and table/bound initialization
+remain required before selecting this path in the event runner.
+
+The [legacy MPI massless phase-space proposal](docs/validation-legacy-mpi-phase.md)
+passes 17,115 exact Fortran comparisons, including momentum-availability
+boundaries and five-draw consumption. Cross-section evaluation and event
+construction remain to be connected before replacing the current MPI backend.
+
+The [legacy MPI differential common factor](docs/validation-legacy-mpi-factor.md)
+passes 8,100 exact Fortran comparisons. Subprocess matrix elements, PDF weighting
+and heavy-flavour thresholds remain necessary to complete the acceptance evaluator.
+
+The [legacy MPI channel evaluator](docs/validation-legacy-mpi-channels.md) now
+passes 313,640 synthetic-reference comparisons and 75,360 values from actual
+initialization/production calls, all exactly on this host. Native PDF and
+annihilation-width evaluation remain external inputs before backend integration.
+
+The [native gluon annihilation width](docs/validation-legacy-gluon-width.md)
+passes 37,932 constructed and 3,400 live-reference comparisons. Substituting it
+into the prior channel replay preserves all 75,360 exact values; native PDF
+evaluation and full MPI backend integration remain outstanding.
+
+## Native legacy MPI beam PDF validation
+
+The optional LHAPDF-backed `LegacyMpiPdf` adapter reproduces the audited nucleon
+PDF policy and heavy-flavour suppression. Its [reference comparison](docs/validation-legacy-mpi-pdf.md)
+passes 96,096 values, explicitly distinguishing the linked Fortran scale floor
+from the PDF-metadata floor. It is not yet integrated into complete native MPI
+event generation; final-state jet agreement remains open.
+
+The native [accepted MPI pair component](docs/validation-legacy-mpi-pair.md)
+preserves PYMULT's separate flavour prescription and random-draw order;
+65,625 comparisons pass against extracted Fortran statements. Colour attachment
+and full native MPI event-loop integration remain unfinished.
+
+The [native MPI string-piece update](docs/validation-legacy-mpi-strings.md)
+preserves sequential attachment and reference tie handling: 44,956 endpoint/count
+comparisons agree exactly. Complete Pythia8 colour-tag integration remains open.
+
+`LegacyMpiEvolution` now [composes the MPI components into persistent state](docs/validation-legacy-mpi-evolution.md).
+All 710,092 compared state values pass against source-extracted Fortran sequences
+with identical supplied cross sections. Colour tags, remnants and event-runner integration remain unfinished.
+
+The [native MPI cross-section provider](docs/validation-legacy-mpi-cross-section.md)
+now implements the evolution callback using LHAPDF and an explicit running-coupling
+policy. With Pythia8 AlphaStrong, 81,160 live-reference comparisons pass. Complete
+native MPI event integration and final jet agreement remain unfinished.
+
+The [connected native MPI sequence replay](docs/validation-legacy-mpi-native-sequences.md)
+now calculates its own cross sections and reproduces 759 reference steps and
+42 accepted pairs with identical state and random consumption. A compressed
+reference fixture is included as a Pythia8/LHAPDF CTest. MPI showers and complete
+collision-event integration remain unfinished.
+
+A [Pythia8 boundary for complete outgoing MPI string graphs](docs/validation-legacy-mpi-colour-boundary.md)
+now assigns and validates colour tags before hadronization. All 80 constructed
+cases pass closure, including gluon loops and diquark endpoints. Hard-event
+history projection and beam-remnant reconstruction remain unfinished.
+
+The [native MPI initializer](docs/validation-legacy-mpi-initializer.md) now
+constructs twenty-bin cross-section tables and double-Gaussian normalization.
+All four pp/pn/np/nn reference passes agree over 8,000 sampled points. The complete initialization lifecycle remains unfinished.
+
+The [adaptive MPI screening initializer](docs/validation-legacy-mpi-retries.md)
+now reproduces rejected and accepted passes for pp/pn/np/nn, validated over
+32,000 points and 192,000 random draws. Phase-space optimization and the secondary
+initializer/shared-state lifecycle still need integration.

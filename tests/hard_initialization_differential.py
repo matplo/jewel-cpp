@@ -2,7 +2,8 @@
 import hashlib,json,math,subprocess,sys
 from pathlib import Path
 cpp,reference,output=sys.argv[1:4]
-passive_mode="--passive" in sys.argv[4:]
+octet_mode="--octets" in sys.argv[4:]
+passive_mode="--passive" in sys.argv[4:] or octet_mode
 photon_mode="--photons" in sys.argv[4:]
 mpi_mode="--mpi" in sys.argv[4:] or photon_mode or passive_mode
 def row(values):return ' '.join(format(v,'.17g') for v in values)+'\n'
@@ -13,7 +14,7 @@ def boost(p,beta):
 def record(status,pdg,parent,daughters,p,mass,colour,anti):
  return [status,pdg,parent,*daughters,*p,mass,.1,-.2,.3,.4,9,8,7,6,5,.4,.3,0,1,colour,anti,-1e6]
 commands=[];settings=[]
-for pdg1,pdg2 in ([(10441,21),(21,445),(20443,1),(-3,10441),(10441,445)] if passive_mode else [(22,21),(21,22),(22,1),(-3,22),(22,22)] if photon_mode else [(21,21),(1,-1),(1,21),(-3,21)]):
+for pdg1,pdg2 in ([(9942003,21),(21,9952003),(9942003,1),(-3,9952003),(9942003,9952003)] if octet_mode else [(10441,21),(21,445),(20443,1),(-3,10441),(10441,445)] if passive_mode else [(22,21),(21,22),(22,1),(-3,22),(22,22)] if photon_mode else [(21,21),(1,-1),(1,21),(-3,21)]):
  for rapidity in [0,.8,2.5]:
   for maximum in [.1,1,5,20,100,500]:
    for angular in [0,1]:
@@ -40,7 +41,7 @@ for pdg1,pdg2 in ([(10441,21),(21,445),(20443,1),(-3,10441),(10441,445)] if pass
        for record_index,pdg in [(3,pdg1),(4,pdg2)]:
         if pdg==22 or (passive_mode and abs(pdg)>21):
          records[record_index][0]=4
-         records[record_index][23:25]=[0,0]
+         records[record_index][23:25]=[101+record_index,201+record_index] if octet_mode else [0,0]
        sampling_types=[int(pdg1==21)^channel_swap,int(pdg2==21)^channel_swap]
        seed=2601000+len(commands)
        commands.append('BCONFIG\n3 1 .2 1 0\n'+('MPIPASSIVE\n' if passive_mode else 'MPIINIT\n' if mpi_mode else 'HARDINIT\n')+row([maximum,1.2,-.7,1.3,20,angular])+(row([mpi_fsr,*sampling_types]) if mpi_mode else '')+''.join(row(r) for r in records)+'-1\n'+str(seed)+'\n')
@@ -70,7 +71,7 @@ for case,(actual,expected) in enumerate(zip(a,b)):
    if not math.isfinite(x) or not math.isfinite(y) or not (x==y if discrete else math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13)):
     failures.append(dict(case=case,row=i,column=j,cpp=x,reference=y))
 trials=[int(line.split()[1]) for line in stderr.splitlines() if line.startswith('HARD_INIT_TRIALS ')]
-report=dict(scope='Finite MPI retained-mass kinematics; inactive times are an explicit native convention, not parity' if passive_mode else 'MPI-pair FINDVIRTUALITIES with explicit TYPE1/2 including mismatched pair flavours, no pair discovery' if mpi_mode else 'PPJJ FINDVIRTUALITIES and GETTHETAM, no MPI/EE/V+jet branches',photon_mode=photon_mode,inactive_lifetime_convention=passive_mode,inactive_time_checks=inactive_times,cases=len(commands),values=values,
+report=dict(scope='Finite MPI retained-mass kinematics; inactive times are an explicit native convention, not parity' if passive_mode else 'MPI-pair FINDVIRTUALITIES with explicit TYPE1/2 including mismatched pair flavours, no pair discovery' if mpi_mode else 'PPJJ FINDVIRTUALITIES and GETTHETAM, no MPI/EE/V+jet branches',octet_mode=octet_mode,photon_mode=photon_mode,inactive_lifetime_convention=passive_mode,inactive_time_checks=inactive_times,cases=len(commands),values=values,
  max_absolute_error=maximum,max_draws=max(e[0][0] for e in b),retried_cases=sum(x>1 for x in trials),max_trials=max(trials),failures=failures,settings=settings,
  input_sha256=hashlib.sha256(payload.encode()).hexdigest(),reference_input_sha256=hashlib.sha256(payload.replace('MPIPASSIVE\n','MPIINIT\n').encode()).hexdigest(),sources=json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),
  executables={Path(exe).name:hashlib.sha256(Path(exe).read_bytes()).hexdigest() for exe in [cpp,reference]})

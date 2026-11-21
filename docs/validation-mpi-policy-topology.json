@@ -1,0 +1,131 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-mpi-aligned-vac1500.jsonl",
+  "input_sha256": "0a87bb3c5c70d43f4d46d42370420d6379d4b5a79271f06f1a19b9a448e58f92",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 1500,
+    "accepted": 1500,
+    "evolution_failures": 0,
+    "generation_failures": 0,
+    "accepted_weight": 1500,
+    "failed_weight": 0,
+    "generator_weight_sum": 1500,
+    "generator_sigma_mb": 0.13475557392268547,
+    "generator_sigma_error_mb": 0.0017898889274637556,
+    "final_records": 33865
+  },
+  "junction_events": 41,
+  "failures": {},
+  "max_momentum_component_residual_gev": 2.462693373672664e-07,
+  "max_momentum_residual_over_total_energy": 4.905763692575027e-11,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": [
+      {
+        "attempt": 287,
+        "component": 2,
+        "residual_gev": 1.0083012608381493e-07
+      },
+      {
+        "attempt": 329,
+        "component": 2,
+        "residual_gev": -2.082752431583658e-07
+      },
+      {
+        "attempt": 354,
+        "component": 2,
+        "residual_gev": 2.0386104186915013e-07
+      },
+      {
+        "attempt": 365,
+        "component": 2,
+        "residual_gev": -1.0402054135562853e-07
+      },
+      {
+        "attempt": 490,
+        "component": 2,
+        "residual_gev": -1.4872760403794594e-07
+      },
+      {
+        "attempt": 528,
+        "component": 2,
+        "residual_gev": 2.107879548563646e-07
+      },
+      {
+        "attempt": 610,
+        "component": 2,
+        "residual_gev": 2.0211667488626017e-07
+      },
+      {
+        "attempt": 682,
+        "component": 2,
+        "residual_gev": -2.462692538438005e-07
+      },
+      {
+        "attempt": 775,
+        "component": 2,
+        "residual_gev": -1.21327676168596e-07
+      },
+      {
+        "attempt": 786,
+        "component": 2,
+        "residual_gev": -2.4573651901012294e-07
+      },
+      {
+        "attempt": 795,
+        "component": 2,
+        "residual_gev": -1.4074211990072402e-07
+      },
+      {
+        "attempt": 829,
+        "component": 2,
+        "residual_gev": 1.32030994724492e-07
+      },
+      {
+        "attempt": 965,
+        "component": 2,
+        "residual_gev": -1.6823641134713907e-07
+      },
+      {
+        "attempt": 1100,
+        "component": 2,
+        "residual_gev": -1.3885535937599794e-07
+      },
+      {
+        "attempt": 1257,
+        "component": 2,
+        "residual_gev": 1.272511139516208e-07
+      },
+      {
+        "attempt": 1305,
+        "component": 2,
+        "residual_gev": -1.6468754821842568e-07
+      },
+      {
+        "attempt": 1364,
+        "component": 2,
+        "residual_gev": 1.325866260887612e-07
+      },
+      {
+        "attempt": 1417,
+        "component": 2,
+        "residual_gev": 1.6243338262248927e-07
+      },
+      {
+        "attempt": 1461,
+        "component": 2,
+        "residual_gev": 1.1046373934488207e-07
+      },
+      {
+        "attempt": 1468,
+        "component": 2,
+        "residual_gev": -1.0426650781311664e-07
+      }
+    ]
+  },
+  "boundary_invariants_pass": true
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "massless ISUB=96 hadron/hadron MPI phase-space proposal only",
+  "cases": 2445,
+  "scalar_comparisons": 17115,
+  "maximum_absolute_errors": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "draws_per_proposal": 5,
+  "availability_decisions_exact": true,
+  "available": 1496,
+  "unavailable": 949,
+  "invalid_cases": 9,
+  "input_sha256": "9627fd062102f963cc093ac5382bfdd6007ade62c70336efe118e5c1aa3cf2ad",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-phase-probe": "07064f5468f157c6873dacefa102a81c24dae03c38263398048b46aaaeb3237d",
+    "jewel-legacy-mpi-phase-reference": "d4123cb40b15f8e5dd4257990c300ff7fe6f9153f5ea9ef502ced69f08197772"
+  }
+}

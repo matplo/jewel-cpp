@@ -106,4 +106,25 @@ int main(){
  check(std::abs(state.at(first).particle.momentum.energy+state.at(second).particle.momentum.energy-passive_total)<1e-12);
  state.validate();
 
+ // Native octet-onium precursors retain both colour tags and their mass.
+ state.restore(passive_baseline);auto& octet=state.at(first).particle;
+ octet.pdg=9942003;octet.colour=107;octet.anticolour=108;state.colour_max=108;
+ auto octet_baseline=state.snapshot();jewel::ReplayRandom octet_draws({.5,.7});
+ jewel::initialize_hard_dijet(state,first,second,photon_config,sampler,octet_draws);
+ check(octet_draws.checkpoint()==2&&state.at(first).record_mass==3.5);
+ check(state.at(first).particle.colour==107&&state.at(first).particle.anticolour==108);
+ check(state.at(first).particle.status==4&&state.at(first).decay_time==photon_config.lifetime);
+ for(int invalid=0;invalid<6;++invalid){
+  state.restore(octet_baseline);auto cfg=photon_config;auto& p=state.at(first).particle;
+  if(invalid==0)p.pdg=10441; // Do not admit arbitrary coloured hadrons.
+  if(invalid==1)p.anticolour=0;
+  if(invalid==2)p.anticolour=p.colour;
+  if(invalid==3)p.status=1;
+  if(invalid==4)cfg.inactive_nonparton_lifetime=false;
+  if(invalid==5)cfg.mpi_pair=false;
+  jewel::ReplayRandom untouched({});bool failed=false;
+  try{jewel::initialize_hard_dijet(state,first,second,cfg,sampler,untouched);}catch(const std::domain_error&){failed=true;}
+  check(failed&&untouched.checkpoint()==0);
+ }
+
 }

@@ -1,0 +1,65 @@
+{
+  "scope": "partial subsystem ISR reconstruction and staged primordial composition",
+  "reports": [
+    {
+      "path": "/private/tmp/jewel-isr-source-audit/baseline1500.jsonl",
+      "sha256": "63e4dc73a110b912895de4c8a787ebee56479025686dc51893643026245a80d5",
+      "prior_sha256": "90303beba87eaf45c61a11caaf6fd41a797a38a475e8fb77eab515a83bc8c929",
+      "counts": {
+        "events": 1500,
+        "mapped_events": 1497,
+        "frames": 11156,
+        "copies": 33932,
+        "composed_final_partons": 22296,
+        "rejected_events": 3
+      },
+      "rejected_events": [
+        {
+          "attempt": 385,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 27 before 21 after 25 predicted -22.919831793803954 actual -22.919831797741345 error 3.9373908577999828e-09"
+        },
+        {
+          "attempt": 1089,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 43 before 29 after 42 predicted -134.63509136925697 actual -134.63509136366903 error 5.5879354476928711e-09"
+        },
+        {
+          "attempt": 1355,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 39 before 29 after 37 predicted 1507.5761942818501 actual 1507.5761942101383 error 7.1711838245391846e-08"
+        }
+      ],
+      "composition_failures": [
+        {
+          "attempt": 72,
+          "subsystem": 1,
+          "root": 21,
+          "final": 55,
+          "max_absolute_error_gev": 8.577064818382496e-07
+        },
+        {
+          "attempt": 72,
+          "subsystem": 1,
+          "root": 22,
+          "final": 56,
+          "max_absolute_error_gev": 1.5026071054080603e-08
+        },
+        {
+          "attempt": 302,
+          "subsystem": 1,
+          "root": 21,
+          "final": 42,
+          "max_absolute_error_gev": 7.937171631056117e-08
+        },
+        {
+          "attempt": 302,
+          "subsystem": 1,
+          "root": 22,
+          "final": 43,
+          "max_absolute_error_gev": 4.082341220623675e-08
+        }
+      ],
+      "max_copy_residual_gev": 2.6162751964875497e-09,
+      "max_composed_residual_gev": 8.577064818382496e-07,
+      "max_metric_residual": 8.557753972127102e-08
+    }
+  ]
+}

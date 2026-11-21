@@ -1,7 +1,7 @@
 # Expanding medium and table validation
 
 Updated on 2026-11-21, macOS arm64, Release build with AppleClang 21 and
-GNU Fortran 16.2. The medium differential suite passes **24,712 scalar
+GNU Fortran 16.2. The medium differential suite passes **59,848 scalar
 comparisons** against unchanged, hash-verified JEWEL 2.6.0 routines.
 [Machine-readable results](validation-medium.json) include source and executable
 hashes, input hash, tolerances and all comparison groups.
@@ -33,6 +33,7 @@ hashes, input hash, tolerances and all comparison groups.
 | screening-bounds | 56 | 1.4211e-14 |
 | screening-transition | 960 | 0 |
 | varied-rapidity-transition | 2,560 | 0 |
+| expanding-ray-sample | 35,136 | 0 |
 
 Acceptance uses relative tolerance 2e-12 and absolute tolerance 2e-13.
 Temperature and density must additionally agree exactly on zero versus nonzero:
@@ -171,3 +172,28 @@ The full splitting tables retain exact agreement for 9,006,000 values and
 scattering grids for 1,203,300 values. Event geometry/rates pass all 143,220
 comparisons with maximum absolute error 1.42109e-14. These remain component
 checks, not evidence of full-generator jet-level agreement.
+
+## Fields along prescribed rays
+
+The next extension follows 144 prescribed massless straight rays, each sampled
+at 61 lab times from 0.05 to 30.05 fm. It crosses flat and Woods-Saxon profiles,
+impact parameters 0, 7 and 12 fm, transverse starting points (0, 0) and (2, 1) fm,
+momentum rapidities -1.5, 0 and 1.5, and four transverse directions. The initial
+longitudinal coordinate is zero. The positive starting time keeps every query
+strictly inside the light cone.
+
+Both engines receive the same Cartesian coordinates and independently evaluate
+temperature, Debye mass, scatterer mass and density. All 35,136 added values agree
+exactly on this platform, including 4,073 active and 4,711 inactive spacetime
+samples. Temperature and density zero/nonzero decisions are checked separately
+from the unchanged numerical tolerances. This brings the medium suite to 59,848
+scalar comparisons. The saved JSON records the ray configuration and input hash.
+
+These are local-field probes along prescribed paths, not propagated interacting
+partons. No jet path length or complete-event agreement is inferred. No production
+physics code or tolerance changed.
+
+After adding the ray probes, all 13 related medium/table CTest suites passed
+again (50.65 seconds wall time). This includes the six-configuration scattering
+comparison, full final-splitting tables, event geometry, geometry lengths, PDF,
+radiation and sampling checks.

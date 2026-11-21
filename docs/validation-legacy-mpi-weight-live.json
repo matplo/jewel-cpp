@@ -1,0 +1,24 @@
+{
+  "scope": "first 1000 PYMULT hard-overlap evaluations replayed through C++; not native event generation",
+  "evaluations": 1000,
+  "scalar_comparisons": 4000,
+  "maximum_absolute_errors": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "failures": [],
+  "hepmc_byte_identical": true,
+  "input_sha256": "c3394ee48d19622b6efe2b05b80b330923ab2b5439b3aa42d0d7a6ec70a2e0d9",
+  "baseline_hepmc_sha256": "64a5289388223a4fb5e1b272007a431c773b5125cb3277e66d6718733e275ca3",
+  "cpp_sha256": "7c11d2208e6aa8b8534a98096ef2e19f2cce484872fc019ed5185c3235c8a368",
+  "artifacts": {
+    "pythia.f": "cf125aa93f09e1b953df4a554fa38380736898fedade735f86fe695858100628",
+    "reference": "c5f8f7356bcb66186380d54e66a74fdcd22c239b61329027d211392348ee1fee",
+    "params.dat": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+    "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "run.log": "e5343459966ab38289198b8e0d42a8704c0e7e558c40f20da894ed606bf60d09",
+    "instrumentation.patch": "4eb344c1c496cbfc0c6c06da93a45699d58398b6f72b027627c50136651ba0a7"
+  }
+}

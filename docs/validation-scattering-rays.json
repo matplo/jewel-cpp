@@ -1,0 +1,1205 @@
+{
+  "scope": "scattering grids and channel cross sections, not transport events",
+  "groups": {
+    "full-grids": {
+      "values": 2406600,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "outside_tolerance": 0
+    },
+    "integrals-and-cross-sections": {
+      "values": 3324,
+      "max_absolute_error": 2.220446049250313e-16,
+      "max_relative_error": 1.9305177272837634e-15,
+      "outside_tolerance": 0
+    },
+    "expanding-ray-cross-sections": {
+      "values": 49248,
+      "max_absolute_error": 8.881784197001252e-15,
+      "max_relative_error": 4.7630731062311694e-15,
+      "outside_tolerance": 0
+    },
+    "grid-boundaries-and-extrapolation": {
+      "values": 210132,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "outside_tolerance": 0
+    }
+  },
+  "failures": [],
+  "records": [
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 20,
+      "scale": 1,
+      "boost": 0,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "query_sha256": "4e52ace3cc293f00b9571952afebe0b6bb6f39bc721fc46dbc49b6bb109d6d66",
+      "seconds": 1.6921538750175387,
+      "table_sha256": "174148819670e7a3b700ca110b97b632efb69aee73164a47f92b809ec9e3327f"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 20,
+      "scale": 1,
+      "boost": 0,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "query_sha256": "4e52ace3cc293f00b9571952afebe0b6bb6f39bc721fc46dbc49b6bb109d6d66",
+      "seconds": 1.6492186670657247,
+      "table_sha256": "174148819670e7a3b700ca110b97b632efb69aee73164a47f92b809ec9e3327f"
+    },
+    {
+      "scope": "expanding-ray-cross-sections",
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 20,
+      "boost": 0,
+      "rays": 36,
+      "samples_per_ray": 38,
+      "lab_times_fm": [
+        0.05,
+        0.1,
+        0.15000000000000002,
+        0.2,
+        0.3,
+        0.39999999999999997,
+        0.6000000000000001,
+        0.8,
+        1.05,
+        2.05,
+        3.05,
+        4.05,
+        5.05,
+        6.05,
+        7.05,
+        8.05,
+        9.05,
+        10.05,
+        11.05,
+        12.05,
+        13.05,
+        14.05,
+        15.05,
+        16.05,
+        17.05,
+        18.05,
+        19.05,
+        20.05,
+        21.05,
+        22.05,
+        23.05,
+        24.05,
+        25.05,
+        26.05,
+        27.05,
+        28.05,
+        29.05,
+        30.05
+      ],
+      "by_mode": {
+        "0": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "1": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "2": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        }
+      },
+      "queries": 8208,
+      "reference_zero_values": 0,
+      "reference_nonzero_values": 8208,
+      "input_sha256": "7e9e5e0b98152b4e24bde7ba766f88608b2c3c8b80b6f752967acfd3cb9caa01"
+    },
+    {
+      "scope": "grid-boundaries-and-extrapolation",
+      "nf": 3,
+      "boost": 0,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 20,
+      "queries": 39616,
+      "input_sha256": "71275486d0be87a97a2739725606a9aa5fa2678e1678a047811c91640578911f"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 5,
+      "q0": 1.5,
+      "lambda_shower": 0.25,
+      "lambda_scattering": 0.18,
+      "emax": 50,
+      "scale": 1.2,
+      "boost": 1,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "query_sha256": "25a4cac6a8c347c47cdf47b2cef97fb84918a962334d333a64bafd8bcaab4dad",
+      "seconds": 2.463133583078161,
+      "table_sha256": "44df917375fb1f74908e441137c5bed72eede22bbe18938e9a180d0a5b071eff"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 5,
+      "q0": 1.5,
+      "lambda_shower": 0.25,
+      "lambda_scattering": 0.18,
+      "emax": 50,
+      "scale": 1.2,
+      "boost": 1,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "query_sha256": "25a4cac6a8c347c47cdf47b2cef97fb84918a962334d333a64bafd8bcaab4dad",
+      "seconds": 2.4834625418297946,
+      "table_sha256": "44df917375fb1f74908e441137c5bed72eede22bbe18938e9a180d0a5b071eff"
+    },
+    {
+      "scope": "expanding-ray-cross-sections",
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 50,
+      "boost": 1,
+      "rays": 36,
+      "samples_per_ray": 38,
+      "lab_times_fm": [
+        0.05,
+        0.1,
+        0.15000000000000002,
+        0.2,
+        0.3,
+        0.39999999999999997,
+        0.6000000000000001,
+        0.8,
+        1.05,
+        2.05,
+        3.05,
+        4.05,
+        5.05,
+        6.05,
+        7.05,
+        8.05,
+        9.05,
+        10.05,
+        11.05,
+        12.05,
+        13.05,
+        14.05,
+        15.05,
+        16.05,
+        17.05,
+        18.05,
+        19.05,
+        20.05,
+        21.05,
+        22.05,
+        23.05,
+        24.05,
+        25.05,
+        26.05,
+        27.05,
+        28.05,
+        29.05,
+        30.05
+      ],
+      "by_mode": {
+        "0": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "1": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "2": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        }
+      },
+      "queries": 8208,
+      "reference_zero_values": 0,
+      "reference_nonzero_values": 8208,
+      "input_sha256": "5224584cedcca30e3853a3749c741bed9d595ff6a12af72c7dd6f514b0245336"
+    },
+    {
+      "scope": "grid-boundaries-and-extrapolation",
+      "nf": 5,
+      "boost": 1,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 50,
+      "queries": 39616,
+      "input_sha256": "53ec4c902cbcc35b1294b655effb492928e5ac571e3675bb395d1fc05378b7d7"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 20,
+      "scale": 1,
+      "boost": 0,
+      "debye_floor": 2.0,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "query_sha256": "96d8f1fce6fb1f9df97e92dfa8807da327495a524d0f6b413c7bd306b419bef6",
+      "seconds": 1.5366719590965658,
+      "table_sha256": "4ecdf8b459b21c3f5c5bb4ba66f94a435e7500df5dfbbd819bee7818f0adaee4"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 20,
+      "scale": 1,
+      "boost": 0,
+      "debye_floor": 2.0,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "query_sha256": "96d8f1fce6fb1f9df97e92dfa8807da327495a524d0f6b413c7bd306b419bef6",
+      "seconds": 1.4814222499262542,
+      "table_sha256": "4ecdf8b459b21c3f5c5bb4ba66f94a435e7500df5dfbbd819bee7818f0adaee4"
+    },
+    {
+      "scope": "expanding-ray-cross-sections",
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 20,
+      "boost": 0,
+      "rays": 36,
+      "samples_per_ray": 38,
+      "lab_times_fm": [
+        0.05,
+        0.1,
+        0.15000000000000002,
+        0.2,
+        0.3,
+        0.39999999999999997,
+        0.6000000000000001,
+        0.8,
+        1.05,
+        2.05,
+        3.05,
+        4.05,
+        5.05,
+        6.05,
+        7.05,
+        8.05,
+        9.05,
+        10.05,
+        11.05,
+        12.05,
+        13.05,
+        14.05,
+        15.05,
+        16.05,
+        17.05,
+        18.05,
+        19.05,
+        20.05,
+        21.05,
+        22.05,
+        23.05,
+        24.05,
+        25.05,
+        26.05,
+        27.05,
+        28.05,
+        29.05,
+        30.05
+      ],
+      "by_mode": {
+        "0": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "1": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "2": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        }
+      },
+      "queries": 8208,
+      "reference_zero_values": 0,
+      "reference_nonzero_values": 8208,
+      "input_sha256": "b00ef8c93303dd7178160c7a4992e1eedd571bd0a475fbe20484186f8d1c9f71"
+    },
+    {
+      "scope": "grid-boundaries-and-extrapolation",
+      "nf": 3,
+      "boost": 0,
+      "debye_floor": 2.0,
+      "medium": {
+        "tau_initial_fm": 0.4,
+        "temperature_initial_gev": 0.59,
+        "temperature_cutoff_gev": 0.17,
+        "screening_scale": 1,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 20,
+      "queries": 12052,
+      "input_sha256": "5bca9227314a581b7ca4999c60573bf8706032e6953f529fc993c865c831249b"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 100,
+      "scale": 1,
+      "boost": 0,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 0.6,
+        "woods_saxon": false
+      },
+      "query_sha256": "2cd3f7fc7fa392ce36b5d1a9ace430dd7a7a8cc6958e2c7310a14b35c3613f90",
+      "seconds": 1.8466768749058247,
+      "table_sha256": "ac4a95d125b34258ebcd96e173576132e2bd211359d1ccf1dc4b924b1df4b9f5"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 100,
+      "scale": 1,
+      "boost": 0,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 0.6,
+        "woods_saxon": false
+      },
+      "query_sha256": "2cd3f7fc7fa392ce36b5d1a9ace430dd7a7a8cc6958e2c7310a14b35c3613f90",
+      "seconds": 1.819170834030956,
+      "table_sha256": "ac4a95d125b34258ebcd96e173576132e2bd211359d1ccf1dc4b924b1df4b9f5"
+    },
+    {
+      "scope": "expanding-ray-cross-sections",
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 0.6,
+        "woods_saxon": false
+      },
+      "table_energy_gev": 100,
+      "boost": 0,
+      "rays": 36,
+      "samples_per_ray": 38,
+      "lab_times_fm": [
+        0.05,
+        0.1,
+        0.15000000000000002,
+        0.2,
+        0.3,
+        0.39999999999999997,
+        0.6000000000000001,
+        0.8,
+        1.05,
+        2.05,
+        3.05,
+        4.05,
+        5.05,
+        6.05,
+        7.05,
+        8.05,
+        9.05,
+        10.05,
+        11.05,
+        12.05,
+        13.05,
+        14.05,
+        15.05,
+        16.05,
+        17.05,
+        18.05,
+        19.05,
+        20.05,
+        21.05,
+        22.05,
+        23.05,
+        24.05,
+        25.05,
+        26.05,
+        27.05,
+        28.05,
+        29.05,
+        30.05
+      ],
+      "by_mode": {
+        "0": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "1": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "2": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        }
+      },
+      "queries": 8208,
+      "reference_zero_values": 0,
+      "reference_nonzero_values": 8208,
+      "input_sha256": "125475994b10fe796a453284520f0f6272a109b3fbf949b8d0bd0827a05ae672"
+    },
+    {
+      "scope": "grid-boundaries-and-extrapolation",
+      "nf": 3,
+      "boost": 0,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 0.6,
+        "woods_saxon": false
+      },
+      "table_energy_gev": 100,
+      "queries": 39616,
+      "input_sha256": "05c6b79660afa6a3b3751508f1b5a67009caea11ab977d319bc26629ccabb072"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 846.494030493817,
+      "scale": 1,
+      "boost": 1,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.3,
+        "temperature_initial_gev": 0.7,
+        "temperature_cutoff_gev": 0.12,
+        "screening_scale": 1.2,
+        "woods_saxon": true
+      },
+      "query_sha256": "882d3173270ff4a286d8403b712abe375c785fcd23b9af0818d2bbdbf0d5fb73",
+      "seconds": 2.1829364579170942,
+      "table_sha256": "e847e2f34ebebd4570fb631c02ae5df0043e085bab81259c3309bc28946b841d"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "lambda_scattering": 0.2,
+      "emax": 846.494030493817,
+      "scale": 1,
+      "boost": 1,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.3,
+        "temperature_initial_gev": 0.7,
+        "temperature_cutoff_gev": 0.12,
+        "screening_scale": 1.2,
+        "woods_saxon": true
+      },
+      "query_sha256": "882d3173270ff4a286d8403b712abe375c785fcd23b9af0818d2bbdbf0d5fb73",
+      "seconds": 2.1709769589360803,
+      "table_sha256": "e847e2f34ebebd4570fb631c02ae5df0043e085bab81259c3309bc28946b841d"
+    },
+    {
+      "scope": "expanding-ray-cross-sections",
+      "medium": {
+        "tau_initial_fm": 0.3,
+        "temperature_initial_gev": 0.7,
+        "temperature_cutoff_gev": 0.12,
+        "screening_scale": 1.2,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 846.494030493817,
+      "boost": 1,
+      "rays": 36,
+      "samples_per_ray": 38,
+      "lab_times_fm": [
+        0.05,
+        0.1,
+        0.15000000000000002,
+        0.2,
+        0.3,
+        0.39999999999999997,
+        0.6000000000000001,
+        0.8,
+        1.05,
+        2.05,
+        3.05,
+        4.05,
+        5.05,
+        6.05,
+        7.05,
+        8.05,
+        9.05,
+        10.05,
+        11.05,
+        12.05,
+        13.05,
+        14.05,
+        15.05,
+        16.05,
+        17.05,
+        18.05,
+        19.05,
+        20.05,
+        21.05,
+        22.05,
+        23.05,
+        24.05,
+        25.05,
+        26.05,
+        27.05,
+        28.05,
+        29.05,
+        30.05
+      ],
+      "by_mode": {
+        "0": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "1": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "2": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        }
+      },
+      "queries": 8208,
+      "reference_zero_values": 0,
+      "reference_nonzero_values": 8208,
+      "input_sha256": "b2c2a89a9a0e4cf5e4ddbea02f7c3b7cf096c361cbcd5c588615dc7119ffb93e"
+    },
+    {
+      "scope": "grid-boundaries-and-extrapolation",
+      "nf": 3,
+      "boost": 1,
+      "debye_floor": 0.45,
+      "medium": {
+        "tau_initial_fm": 0.3,
+        "temperature_initial_gev": 0.7,
+        "temperature_cutoff_gev": 0.12,
+        "screening_scale": 1.2,
+        "woods_saxon": true
+      },
+      "table_energy_gev": 846.494030493817,
+      "queries": 39616,
+      "input_sha256": "4a5cbc12c2eb8ca2c6005a4155541976c75b6a34b6d614a527b9a1dfe3e937bc"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 5,
+      "q0": 1.5,
+      "lambda_shower": 0.25,
+      "lambda_scattering": 0.18,
+      "emax": 2510,
+      "scale": 1.2,
+      "boost": 1,
+      "debye_floor": 0.9,
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 1.2,
+        "woods_saxon": false
+      },
+      "query_sha256": "1addad2bc26eeef7f646d4b7710ebbd632a2d0d9c7d5f05b283a764ad8ea4540",
+      "seconds": 2.606271625030786,
+      "table_sha256": "1a7e165a00084acb9abe1af743c0dd2fb89a49bcda1bd5bc0eb4382f5763e63b"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 5,
+      "q0": 1.5,
+      "lambda_shower": 0.25,
+      "lambda_scattering": 0.18,
+      "emax": 2510,
+      "scale": 1.2,
+      "boost": 1,
+      "debye_floor": 0.9,
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 1.2,
+        "woods_saxon": false
+      },
+      "query_sha256": "1addad2bc26eeef7f646d4b7710ebbd632a2d0d9c7d5f05b283a764ad8ea4540",
+      "seconds": 2.6012390828691423,
+      "table_sha256": "1a7e165a00084acb9abe1af743c0dd2fb89a49bcda1bd5bc0eb4382f5763e63b"
+    },
+    {
+      "scope": "expanding-ray-cross-sections",
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 1.2,
+        "woods_saxon": false
+      },
+      "table_energy_gev": 2510,
+      "boost": 1,
+      "rays": 36,
+      "samples_per_ray": 38,
+      "lab_times_fm": [
+        0.05,
+        0.1,
+        0.15000000000000002,
+        0.2,
+        0.3,
+        0.39999999999999997,
+        0.6000000000000001,
+        0.8,
+        1.05,
+        2.05,
+        3.05,
+        4.05,
+        5.05,
+        6.05,
+        7.05,
+        8.05,
+        9.05,
+        10.05,
+        11.05,
+        12.05,
+        13.05,
+        14.05,
+        15.05,
+        16.05,
+        17.05,
+        18.05,
+        19.05,
+        20.05,
+        21.05,
+        22.05,
+        23.05,
+        24.05,
+        25.05,
+        26.05,
+        27.05,
+        28.05,
+        29.05,
+        30.05
+      ],
+      "by_mode": {
+        "0": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "1": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        },
+        "2": {
+          "queries": 2736,
+          "reference_zero_values": 0,
+          "reference_nonzero_values": 2736
+        }
+      },
+      "queries": 8208,
+      "reference_zero_values": 0,
+      "reference_nonzero_values": 8208,
+      "input_sha256": "23a6fa2ad6bf554d8043f6747b54052a20929b9afc2a2735a1bdf7fca3f72987"
+    },
+    {
+      "scope": "grid-boundaries-and-extrapolation",
+      "nf": 5,
+      "boost": 1,
+      "debye_floor": 0.9,
+      "medium": {
+        "tau_initial_fm": 0.6,
+        "temperature_initial_gev": 0.45,
+        "temperature_cutoff_gev": 0.15,
+        "screening_scale": 1.2,
+        "woods_saxon": false
+      },
+      "table_energy_gev": 2510,
+      "queries": 39616,
+      "input_sha256": "8da57ecde3142adadb4018ba0e1c245a4c0af84cc2cd3f647880c1d9e3e177ef"
+    }
+  ],
+  "table_preservation": [
+    {
+      "executable": "jewel-medium-probe",
+      "configuration_index": 0,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "configuration_index": 0,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "configuration_index": 1,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "configuration_index": 1,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "configuration_index": 2,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "configuration_index": 2,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "configuration_index": 3,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "configuration_index": 3,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "configuration_index": 4,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "configuration_index": 4,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "configuration_index": 5,
+      "unchanged": true
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "configuration_index": 5,
+      "unchanged": true
+    }
+  ],
+  "zero_nonzero_agreement_required": true,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ],
+        "GETPDF": [
+          6928,
+          7022
+        ],
+        "GETPDFXINTEXACT": [
+          7096,
+          7129
+        ],
+        "PDFINT": [
+          8082,
+          8135
+        ],
+        "GETPDFXINT": [
+          7027,
+          7090
+        ],
+        "PGQ": [
+          7938,
+          7942
+        ],
+        "XSECINT": [
+          8142,
+          8228
+        ],
+        "GETXSECINT": [
+          7135,
+          7241
+        ],
+        "GETSSCAT": [
+          7365,
+          7458
+        ],
+        "GETMASS": [
+          7465,
+          7625
+        ],
+        "GENERATEZ": [
+          7632,
+          7685
+        ],
+        "GETDELTAT": [
+          8423,
+          8554
+        ],
+        "REJECTSPLITTING": [
+          3688,
+          3865
+        ],
+        "MAKESPLITTING": [
+          3288,
+          3682
+        ],
+        "GETNEWMASS": [
+          5253,
+          5360
+        ],
+        "GETPNORAD1": [
+          5366,
+          5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ],
+        "MAKECASCADE": [
+          2902,
+          2942
+        ],
+        "MAKEBRANCH": [
+          2948,
+          3282
+        ],
+        "FINDVIRTUALITIES": [
+          1893,
+          2239
+        ],
+        "GETTHETAM": [
+          2303,
+          2365
+        ],
+        "ISPARTON": [
+          8690,
+          8700
+        ],
+        "ISDIQUARK": [
+          8658,
+          8671
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "4f9d23bd7f3fe084e3cb89874d06205dc3dc5f41606096ed5112fe3c52ff9ec9",
+    "jewel-medium-reference": "37bc6273115ba5693ee85cfe3a9125f37a2704de3fab6d73ef51a6ec992845cc"
+  }
+}

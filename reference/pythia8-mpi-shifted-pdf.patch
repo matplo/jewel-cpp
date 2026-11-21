@@ -1,0 +1,11 @@
+--- MultipartonInteractions.cc
++++ MultipartonInteractions.cc
+@@ -275,7 +275,7 @@
+ 
+ // Factorization scale pT2 by default, but could be shifted to pT2 + pT02.
+ // (A priori possible, but problems for flavour threshold interpretation.)
+-const bool   MultipartonInteractions::SHIFTFACSCALE = false;
++const bool   MultipartonInteractions::SHIFTFACSCALE = true;
+ 
+ // Pick one parton to represent rescattering cross section to speed up.
+ const bool   MultipartonInteractions::PREPICKRESCATTER = true;

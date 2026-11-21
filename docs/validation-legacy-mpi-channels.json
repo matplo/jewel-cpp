@@ -1,0 +1,19 @@
+{
+  "scope": "PYSGQC ISUB=96 channel factors and supplied PDF multiplication; PYWIDT/PDF evaluation excluded",
+  "cases": 840,
+  "channel_comparisons": 156400,
+  "numeric_comparisons": 313640,
+  "maximum_absolute_error": 0.0,
+  "maximum_relative_error": 0.0,
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "channel_counts_and_order_exact": true,
+  "invalid_cases": 11,
+  "input_sha256": "4813e8a6db3c03d147e644fab5e1c528044c1f7325a6b26d3b0fb62fc5516a43",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-channels-probe": "ee576151214a70e4b339ccbcd25b0e039fb448d5ccf82d0b9e02096f62eb8af5",
+    "jewel-legacy-mpi-channels-reference": "4bf9ba1f60dc968e430d3816ad9206bcdffdfbeb9029533693c4236e4ffb5080"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "scope": "native PYMULT integration passes and double-Gaussian normalization from recorded settings/randomness; no adaptive retries or secondary initializer",
+  "passes": 4,
+  "sampled_points": 8000,
+  "random_draws": 48000,
+  "integrals": [
+    124.73191966455613,
+    147.32364488230098,
+    146.96764844489297,
+    155.6085797570541
+  ],
+  "configurations": [
+    {
+      "beams": [
+        2212.0,
+        2212.0
+      ],
+      "screening_squared": 1.060298518002389e-06,
+      "scale_shift": 6.6799866932668515,
+      "core_fraction": 0.5,
+      "core_radius": 0.4,
+      "sigma_nd": 45.733890062687706,
+      "samples_per_bin": 100,
+      "coefficients": [
+        0.3639930512053955,
+        0.6360069487946046,
+        0.375389347702182,
+        0.375389347702182,
+        0.24922130459563596
+      ]
+    },
+    {
+      "beams": [
+        2212.0,
+        2112.0
+      ],
+      "screening_squared": 8.588417995819353e-07,
+      "scale_shift": 5.410789221546151,
+      "core_fraction": 0.5,
+      "core_radius": 0.4,
+      "sigma_nd": 45.733890062687706,
+      "samples_per_bin": 100,
+      "coefficients": [
+        0.3816045229953609,
+        0.6183954770046391,
+        0.37820153617096597,
+        0.37820153617096597,
+        0.24359692765806812
+      ]
+    },
+    {
+      "beams": [
+        2112.0,
+        2212.0
+      ],
+      "screening_squared": 8.588417995819353e-07,
+      "scale_shift": 5.410789221546151,
+      "core_fraction": 0.5,
+      "core_radius": 0.4,
+      "sigma_nd": 45.733890062687706,
+      "samples_per_bin": 100,
+      "coefficients": [
+        0.3816045229953609,
+        0.6183954770046391,
+        0.37820153617096597,
+        0.37820153617096597,
+        0.24359692765806812
+      ]
+    },
+    {
+      "beams": [
+        2112.0,
+        2112.0
+      ],
+      "screening_squared": 8.588417995819353e-07,
+      "scale_shift": 5.410789221546151,
+      "core_fraction": 0.5,
+      "core_radius": 0.4,
+      "sigma_nd": 45.733890062687706,
+      "samples_per_bin": 100,
+      "coefficients": [
+        0.38160423435584484,
+        0.6183957656441552,
+        0.3782013579508494,
+        0.37820135795084936,
+        0.24359728409830123
+      ]
+    }
+  ],
+  "groups": {
+    "sampled-kinematics": {
+      "values": 32000,
+      "max_absolute_error": 4.440892098500626e-15,
+      "max_relative_error": 3.3294458297303116e-14
+    },
+    "cross-sections": {
+      "values": 8000,
+      "max_absolute_error": 1.1482370609883219e-11,
+      "max_relative_error": 1.4791578163733868e-13
+    },
+    "bin-counts": {
+      "values": 160,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "bin-sums": {
+      "values": 80,
+      "max_absolute_error": 1.4551915228366852e-11,
+      "max_relative_error": 7.682589466252188e-16
+    },
+    "integral": {
+      "values": 4,
+      "max_absolute_error": 7.105427357601002e-14,
+      "max_relative_error": 5.696558969596359e-16
+    },
+    "draw-count": {
+      "values": 4,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "overlap-normalization": {
+      "values": 24,
+      "max_absolute_error": 7.105427357601002e-14,
+      "max_relative_error": 7.154650928970394e-16
+    }
+  },
+  "failures": [],
+  "reference_evidence": "archived-reference-fixture",
+  "provenance": {
+    "hepmc_byte_identical": true,
+    "baseline_hepmc_sha256": "82a59da5d494adef57a28e12385340ffe82a1f36a9347b0f3083c0124d2904a6",
+    "artifacts": {
+      "pythia.f": "b577d00bbdddf9e5cad255dd96bdf63074e0c4b3c955d4a2bb93d612699ff81f",
+      "trace.f90": "11b6d5c3691d7f6c3278716b0efac7ab700fdd17477ba71b5f3c3757e40e162c",
+      "reference": "b4695085eb7f036cb28d06544cb08c320b8efefe196051c644d9b32e854e69b7",
+      "params.dat": "1782d057e1d1287f003612ee1616d6b8b8711932a351ff202e0f6baf5a4e535a",
+      "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+      "run.log": "629831a74377812f3b18023ded5a6fd1ec26cde0fe516eb891ba4b8518b37b66",
+      "instrumentation.patch": "f2e507d342156d0f4211030bd676b99f7d0f95bfd0fa1e8627f4b1b5f0f884eb"
+    }
+  },
+  "input_sha256": "5054419381448a9967ae70a7c859d8619009b5efa25625858316c7bd84abcc40",
+  "cpp_sha256": "7e0f43565bb32a34328c9ddb651a542075f9f975a584f5bad529385b4b1537dd",
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "alpha_s_mz": 0.11754434294459773,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13
+}

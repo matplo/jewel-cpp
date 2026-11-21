@@ -1,0 +1,17 @@
+{
+  "scope": "PYWIDT gluon branch with explicit decay data and fudge; general resonance logic excluded",
+  "cases": 2349,
+  "scalar_comparisons": 37932,
+  "maximum_absolute_error": 0.0,
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "zero_decisions_exact": true,
+  "invalid_cases": 6,
+  "input_sha256": "5d4f489240b671f3482465732dc5be225cd6ddab8544dd40b5388f6230110b1e",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-gluon-width-probe": "e01819ef6579a0b49d4cf52caef39c00124ad01d5627518e809c7a240a33a34c",
+    "jewel-legacy-gluon-width-reference": "4750873b1bda5a65bbc212d78d64cc5afe6fc2c543b3b3d846e76a89359f21c0"
+  }
+}

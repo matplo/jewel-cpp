@@ -1,0 +1,16 @@
+{
+  "scope": "Effective native screening inferred from initialization trace and installed Pythia8 algorithm",
+  "requested_gev": 2.5845670223979202,
+  "effective_inferred_gev": 2.3261103201581284,
+  "reduction_steps": 1,
+  "pt0_step": 0.9,
+  "initialization_lines": [
+    "|    pT0 =  2.58 gives sigmaInteraction =    51.84 mb: rejected    |",
+    "|    pT0 =  2.33 gives sigmaInteraction =    64.53 mb: accepted    |"
+  ],
+  "log_sha256": "002905448519c4ca414840bf00b63986c7869f9cb01832e24070b35db8245963",
+  "source_sha256": "41e27d7247b40884f235323e76c18b573da3dc7af546403b34253a14dec10c75",
+  "settings_alone_do_not_report_effective_screening": true,
+  "reference_effective_gev_confirmed": 2.3261103201581284,
+  "reference_evidence": "validation-mpi-normalization.json"
+}

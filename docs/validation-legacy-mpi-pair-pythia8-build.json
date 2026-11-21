@@ -1,0 +1,22 @@
+{
+  "scope": "legacy PYMULT mode-6 proposal acceptance and pair flavour/kinematics; no colour attachment or showers",
+  "cases": 4375,
+  "scalar_comparisons": 65625,
+  "maximum_absolute_error": 1.4210854715202004e-14,
+  "maximum_energy_scaled_closure_error": 2.842170943040401e-16,
+  "draw_counts": {
+    "1": 1468,
+    "3": 1711,
+    "4": 1196
+  },
+  "failures": [],
+  "invalid_cases": 13,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "ba19641bd3494e43d8d8b4c21ac71cd8858a47d159143d75a56f9ebd9b128091",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-pair-probe": "5cafac34900111a2c04e8ce44340b3c0bf13ec6094e06cdd9489d02c0c92a8cb",
+    "jewel-legacy-mpi-pair-reference": "9ae5af405620b6fb3012e3c89e8dd9a388feea9bb86a8b53fa73834e2832cfb8"
+  }
+}

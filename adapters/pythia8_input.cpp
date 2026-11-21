@@ -86,6 +86,15 @@ struct Pythia8Input::Impl {
   require(c.hard_alpha_s.has_value()==c.hard_alpha_s_order.has_value(),"hard alpha_s value and order must be specified together");
   require(c.external_pdf.empty()||c.hard_alpha_s.has_value(),"external PDF requires explicit hard alpha_s and running order");
   if(c.hard_alpha_s)require(std::isfinite(*c.hard_alpha_s)&&*c.hard_alpha_s>=.06&&*c.hard_alpha_s<=.25&&*c.hard_alpha_s_order>=0&&*c.hard_alpha_s_order<=3,"invalid hard alpha_s policy");
+  require(c.isr_alpha_s.has_value()==c.isr_alpha_s_order.has_value(),"ISR alpha_s value and order must be specified together");
+  if(c.isr_alpha_s)require(std::isfinite(*c.isr_alpha_s)&&*c.isr_alpha_s>=.06&&*c.isr_alpha_s<=.25&&*c.isr_alpha_s_order>=0&&*c.isr_alpha_s_order<=3,"invalid ISR alpha_s policy");
+  if(c.alpha_s_nfmax)require(*c.alpha_s_nfmax==5||*c.alpha_s_nfmax==6,"alpha_s maximum flavours must be 5 or 6");
+  require(c.mpi_alpha_s.has_value()==c.mpi_alpha_s_order.has_value(),"MPI alpha_s value and order must be specified together");
+  if(c.mpi_alpha_s)require(std::isfinite(*c.mpi_alpha_s)&&*c.mpi_alpha_s>=.06&&*c.mpi_alpha_s<=.25&&*c.mpi_alpha_s_order>=0&&*c.mpi_alpha_s_order<=3,"invalid MPI alpha_s policy");
+  if(c.mpi_screening){const auto& v=*c.mpi_screening;
+   require(std::isfinite(v[0])&&std::isfinite(v[1])&&std::isfinite(v[2])&&v[0]>=.5&&v[0]<=10&&v[1]>=1&&v[2]>=0&&v[2]<=.5,"invalid MPI screening policy");}
+  if(c.mpi_double_gaussian){const auto& v=*c.mpi_double_gaussian;
+   require(std::isfinite(v[0])&&std::isfinite(v[1])&&v[0]>=0&&v[0]<=1&&v[1]>=.1&&v[1]<=1,"invalid MPI double-Gaussian profile");}
   settings={"Tune:pp = 14","Beams:idA = 2212","Beams:idB = 2212","Beams:eCM = "+number(c.ecm),
    "HardQCD:all = on","PhaseSpace:pTHatMin = "+number(c.pt_min),"PhaseSpace:pTHatMax = "+number(c.pt_max),
    "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off",std::string("PartonLevel:ISR = ")+(c.initial_state_radiation?"on":"off"),std::string("PartonLevel:MPI = ")+(c.multiple_parton_interactions?"on":"off"),
@@ -93,10 +102,31 @@ struct Pythia8Input::Impl {
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
   if(c.hard_alpha_s){settings.push_back("SigmaProcess:alphaSvalue = "+number(*c.hard_alpha_s));settings.push_back("SigmaProcess:alphaSorder = "+std::to_string(*c.hard_alpha_s_order));}
+  if(c.isr_alpha_s){settings.push_back("SpaceShower:alphaSvalue = "+number(*c.isr_alpha_s));settings.push_back("SpaceShower:alphaSorder = "+std::to_string(*c.isr_alpha_s_order));}
+  if(c.alpha_s_nfmax)settings.push_back("StandardModel:alphaSnfmax = "+std::to_string(*c.alpha_s_nfmax));
+  if(c.isr_alpha_s_cmw)settings.push_back(std::string("SpaceShower:alphaSuseCMW = ")+(*c.isr_alpha_s_cmw?"on":"off"));
+  if(c.mpi_alpha_s){settings.push_back("MultipartonInteractions:alphaSvalue = "+number(*c.mpi_alpha_s));settings.push_back("MultipartonInteractions:alphaSorder = "+std::to_string(*c.mpi_alpha_s_order));}
+  if(c.mpi_screening){const auto& v=*c.mpi_screening;
+   settings.push_back("MultipartonInteractions:pT0parametrization = 0");
+   settings.push_back("MultipartonInteractions:pT0Ref = "+number(v[0]));
+   settings.push_back("MultipartonInteractions:ecmRef = "+number(v[1]));
+   settings.push_back("MultipartonInteractions:ecmPow = "+number(v[2]));}
+  if(c.mpi_double_gaussian){const auto& v=*c.mpi_double_gaussian;
+   settings.push_back("MultipartonInteractions:bProfile = 2");
+   settings.push_back("MultipartonInteractions:coreFraction = "+number(v[0]));
+   settings.push_back("MultipartonInteractions:coreRadius = "+number(v[1]));}
   for(const auto& setting:settings)if(!engine.readString(setting))throw std::runtime_error("Pythia rejected setting: "+setting);
   require(engine.setUserHooksPtr(capture),"cannot register energy-stage observer");
   if(!engine.init())throw std::runtime_error("Pythia input initialization failed");
   if(c.hard_alpha_s)require(engine.settings.parm("SigmaProcess:alphaSvalue")==*c.hard_alpha_s&&engine.settings.mode("SigmaProcess:alphaSorder")==*c.hard_alpha_s_order,"Pythia changed explicit hard coupling settings");
+  if(c.isr_alpha_s)require(engine.settings.parm("SpaceShower:alphaSvalue")==*c.isr_alpha_s&&engine.settings.mode("SpaceShower:alphaSorder")==*c.isr_alpha_s_order,"Pythia changed explicit ISR coupling settings");
+  if(c.alpha_s_nfmax)require(engine.settings.mode("StandardModel:alphaSnfmax")==*c.alpha_s_nfmax,"Pythia changed explicit flavour cap");
+  if(c.isr_alpha_s_cmw)require(engine.settings.flag("SpaceShower:alphaSuseCMW")==*c.isr_alpha_s_cmw,"Pythia changed explicit ISR CMW setting");
+  if(c.mpi_alpha_s)require(engine.settings.parm("MultipartonInteractions:alphaSvalue")==*c.mpi_alpha_s&&engine.settings.mode("MultipartonInteractions:alphaSorder")==*c.mpi_alpha_s_order,"Pythia changed explicit MPI coupling settings");
+  if(c.mpi_screening){const auto& v=*c.mpi_screening;
+   require(engine.settings.mode("MultipartonInteractions:pT0parametrization")==0&&engine.settings.parm("MultipartonInteractions:pT0Ref")==v[0]&&engine.settings.parm("MultipartonInteractions:ecmRef")==v[1]&&engine.settings.parm("MultipartonInteractions:ecmPow")==v[2],"Pythia changed explicit MPI screening settings");}
+  if(c.mpi_double_gaussian){const auto& v=*c.mpi_double_gaussian;
+   require(engine.settings.mode("MultipartonInteractions:bProfile")==2&&engine.settings.parm("MultipartonInteractions:coreFraction")==v[0]&&engine.settings.parm("MultipartonInteractions:coreRadius")==v[1],"Pythia changed explicit MPI overlap settings");}
   if(!c.external_pdf.empty())require(engine.settings.word("PDF:pSet")=="LHAPDF6:"+c.external_pdf,"Pythia changed explicit external PDF");
  }
 };

@@ -13,7 +13,7 @@ unsigned long argument(const char* value){std::string text=value;std::size_t use
 }
 int main(int argc,char** argv){
  try{
-  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--isr on|off] [--mpi on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
+  if(argc<4){std::cerr<<"Usage: jewel-pythia8-input output.jsonl attempts seed [--isr on|off] [--mpi on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nControlled Pythia8 hard input only; no JEWEL evolution or hadronization.\n";return 2;}
   auto count=argument(argv[2]),seed=argument(argv[3]);
   if(count==0||count>10000000||seed==0||seed>900000000)throw std::invalid_argument("invalid attempts or seed");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -88,6 +88,7 @@ int main(int argc,char** argv){
     for(const auto& frames:subsystem_isr_frames){if(!first_system)out<<',';first_system=false;out<<'[';bool first_frame=true;
      for(const auto& f:frames){if(!first_frame)out<<',';first_frame=false;
       out<<"{\"momentum_stage\":\"before_beam_energy_repair\",\"emitted\":"<<f.emitted<<",\"mother\":"<<f.mother<<",\"recoiler\":"<<f.recoiler<<",\"old_recoiler\":"<<f.old_recoiler;
+      if(f.source_rounding_recovered)out<<",\"source_rounding_recovery\":{\"azimuth\":\"largest-transverse-recoil\",\"scale_squared_gev2\":"<<f.recovered_scale_squared<<'}';
       out<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);out<<",\"copies\":[";
       bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";
      }out<<']';

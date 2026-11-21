@@ -1,0 +1,122 @@
+{
+  "scope": "paired PYMULT/PYMIGN stages with native calculated tables",
+  "channels": [
+    {
+      "beams": [
+        2212.0,
+        2212.0
+      ],
+      "passes": 3,
+      "final_pt0_reference": 1.8,
+      "final_integral": 58.702123916795024
+    },
+    {
+      "beams": [
+        2212.0,
+        2112.0
+      ],
+      "passes": 2,
+      "final_pt0_reference": 1.8,
+      "final_integral": 59.37316880685247
+    },
+    {
+      "beams": [
+        2112.0,
+        2212.0
+      ],
+      "passes": 2,
+      "final_pt0_reference": 1.8,
+      "final_integral": 60.06005977911251
+    },
+    {
+      "beams": [
+        2112.0,
+        2112.0
+      ],
+      "passes": 2,
+      "final_pt0_reference": 1.8,
+      "final_integral": 59.61043698711387
+    }
+  ],
+  "sampled_points": 18000,
+  "random_draws": 108000,
+  "groups": {
+    "pass-count": {
+      "values": 4,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "draw-count": {
+      "values": 4,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "screening-parameters": {
+      "values": 27,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "sampled-kinematics": {
+      "values": 72000,
+      "max_absolute_error": 7.993605777301127e-15,
+      "max_relative_error": 4.5016629533052323e-14
+    },
+    "cross-sections": {
+      "values": 18000,
+      "max_absolute_error": 1.1482370609883219e-11,
+      "max_relative_error": 1.561157512317626e-12
+    },
+    "bin-counts": {
+      "values": 360,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "bin-sums": {
+      "values": 180,
+      "max_absolute_error": 1.4551915228366852e-11,
+      "max_relative_error": 1.2301316051364126e-15
+    },
+    "integral": {
+      "values": 9,
+      "max_absolute_error": 7.105427357601002e-14,
+      "max_relative_error": 5.696558969596359e-16
+    },
+    "acceptance": {
+      "values": 9,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "saved-legacy-overlap": {
+      "values": 24,
+      "max_absolute_error": 7.105427357601002e-14,
+      "max_relative_error": 7.154650928970394e-16
+    },
+    "overlap-normalization": {
+      "values": 24,
+      "max_absolute_error": 2.1316282072803006e-14,
+      "max_relative_error": 2.3035036621015982e-15
+    }
+  },
+  "failures": [],
+  "reference_evidence": "live-reference-trace",
+  "provenance": {
+    "hepmc_byte_identical": true,
+    "baseline_hepmc_sha256": "82a59da5d494adef57a28e12385340ffe82a1f36a9347b0f3083c0124d2904a6",
+    "artifacts": {
+      "pythia.f": "11f24bc7dfe4f067babea5e60faefac814b0bc0eccf2143bf8bcef5b33b76b6a",
+      "core.f": "225ee87eaea28d4d965cba46c6cd34656feb96c48030679b10859a30bf92cb7b",
+      "trace.f90": "11b6d5c3691d7f6c3278716b0efac7ab700fdd17477ba71b5f3c3757e40e162c",
+      "reference": "0d86e170456050bf1eb3a3cbecc95c24632c34b1bb779d7e17bf371999b18838",
+      "params.dat": "1782d057e1d1287f003612ee1616d6b8b8711932a351ff202e0f6baf5a4e535a",
+      "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+      "run.log": "ef0ca708a36baf663aeae052ed722820ee04589ff5a92873e48797031934c722",
+      "instrumentation.patch": "bde2c4da1f9423e83e7d0e5f037a4ac11bb471bdb12a6f3b8761519f313d60b6",
+      "configuration.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "input_sha256": "b0270cdad04486fb288a9463957edbb575cf616f56746b8256ad245298dad809",
+  "cpp_sha256": "c1e4a768481d94ccd85a9b918e7fcd615af6a15f28e83b2bde1067a7cb756189",
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13
+}

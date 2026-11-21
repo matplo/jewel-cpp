@@ -1,0 +1,117 @@
+{
+  "scope": "adaptive PYMULT screening with native calculated tables/normalization; controlled initial pT0Ref=4 GeV",
+  "channels": [
+    {
+      "beams": [
+        2212.0,
+        2212.0
+      ],
+      "passes": 4,
+      "final_pt0_reference": 2.9160000000000004,
+      "final_integral": 56.708985020845645
+    },
+    {
+      "beams": [
+        2212.0,
+        2112.0
+      ],
+      "passes": 4,
+      "final_pt0_reference": 2.9160000000000004,
+      "final_integral": 57.01236772536843
+    },
+    {
+      "beams": [
+        2112.0,
+        2212.0
+      ],
+      "passes": 4,
+      "final_pt0_reference": 2.9160000000000004,
+      "final_integral": 55.14899129166581
+    },
+    {
+      "beams": [
+        2112.0,
+        2112.0
+      ],
+      "passes": 4,
+      "final_pt0_reference": 2.9160000000000004,
+      "final_integral": 56.504138931747406
+    }
+  ],
+  "sampled_points": 32000,
+  "random_draws": 192000,
+  "groups": {
+    "pass-count": {
+      "values": 4,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "draw-count": {
+      "values": 4,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "screening-parameters": {
+      "values": 48,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "sampled-kinematics": {
+      "values": 128000,
+      "max_absolute_error": 1.3763296058399987e-14,
+      "max_relative_error": 5.1702513444059694e-12
+    },
+    "cross-sections": {
+      "values": 32000,
+      "max_absolute_error": 4.888534022029489e-12,
+      "max_relative_error": 3.897668437789802e-12
+    },
+    "bin-counts": {
+      "values": 640,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "bin-sums": {
+      "values": 320,
+      "max_absolute_error": 1.4551915228366852e-11,
+      "max_relative_error": 1.0535866180541378e-15
+    },
+    "integral": {
+      "values": 16,
+      "max_absolute_error": 4.263256414560601e-14,
+      "max_relative_error": 7.517779436527506e-16
+    },
+    "acceptance": {
+      "values": 16,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "overlap-normalization": {
+      "values": 24,
+      "max_absolute_error": 4.263256414560601e-14,
+      "max_relative_error": 5.463668586721339e-15
+    }
+  },
+  "failures": [],
+  "reference_evidence": "live-reference-trace",
+  "provenance": {
+    "hepmc_byte_identical": true,
+    "baseline_hepmc_sha256": "2520d8ed8f707d7b397bcddd20703896abbc47b3f8b6c70af038787076513e40",
+    "artifacts": {
+      "pythia.f": "bc96f340b3ef7accecf51d73e37a9c31f10d9b1e3f6eb771e8aaba75218eca99",
+      "core.f": "16ea71f393d2fb34120b21f8fda02384e259c323a498d1229886a79fd927f097",
+      "trace.f90": "11b6d5c3691d7f6c3278716b0efac7ab700fdd17477ba71b5f3c3757e40e162c",
+      "reference": "f1ed7af05e7868cee2da3abd6a14c4009664da70bd2a214c762dba9081edd1ed",
+      "params.dat": "1782d057e1d1287f003612ee1616d6b8b8711932a351ff202e0f6baf5a4e535a",
+      "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+      "run.log": "352de96dfe5b1df0e8d0c666ad0b55810022a282d133aab3674a42757b1ca303",
+      "instrumentation.patch": "d6d5e34b2f3c0c2bbeaf86e96373a55e994766bf23dbd61b27615534174106cb",
+      "configuration.patch": "d79ee4cea6cdffae36ec9fb62c6835c5a3bf421ce2fae679d1215cc9ee009dd3"
+    }
+  },
+  "input_sha256": "1bbaf4b23a32024550ddb723643c715db0d73c89dabc9574b2b92dc3e7d13f61",
+  "cpp_sha256": "e1cdb3ed9f4d6f9d568b3c5af719e0c1e276cc4cb64b921756c6ea4c9e36e542",
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13
+}

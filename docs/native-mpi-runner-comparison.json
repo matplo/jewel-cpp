@@ -1,0 +1,1127 @@
+{
+  "schema": "jewel-jet-comparison-v1",
+  "full_goal_validated": false,
+  "analysis_sha256": "c9acf5a0197d8f65622e41370c2e342fdfddba2825b6942ffddbdebb8414d119",
+  "selection": {
+    "algorithm": "anti-kt",
+    "R": 0.4,
+    "min_pt_GeV": 10,
+    "max_abs_eta": 2,
+    "particles": "per-sample particle_level: native partons use status 3/4/5; hadron samples use final flag; exclude neutrino PDG 12/14/16",
+    "soft_drop": {
+      "algorithm": "Soft Drop",
+      "reclustering": "Cambridge/Aachen",
+      "recombination": "E scheme",
+      "zcut": 0.1,
+      "beta": 0.0,
+      "R0": 0.4,
+      "reclustering_R": 1000.0,
+      "condition": "z > zcut (delta_R/R0)^beta",
+      "untagged": "null zg and groomed_mass; counted separately"
+    },
+    "mass": "FastJet signed invariant mass in GeV; negative values retained",
+    "order": "full-phase-space clustering before jet cuts",
+    "geometry_matching": {
+      "max_delta_r": 0.3,
+      "coordinates": "pseudorapidity and azimuth",
+      "assignment": "hepyy_utils.match_hard_legs: maximize matches then minimize total distance",
+      "order": "all positive-pT jets before analysis cuts",
+      "unmatched_jet_geometry": null
+    },
+    "recoils": "per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles"
+  },
+  "analysis_versions": {
+    "source_sha256": {
+      "analyze_native_events.py": "0af304f5f38f27d2b95613b813a4551f77a621cecb567de8e5014d18a29b37d1",
+      "jet_substructure.py": "ce6868688f2e0951300f5509411e7e414e5fc3602d12bed8b52317694a25f39b",
+      "native_geometry_analysis.py": "4aaedd47f717d92601274a37b027a03f0daebc3d9bd2bd480ae81597ce2c0ee4"
+    },
+    "python": "3.14.7",
+    "hepyy": "0.2.30",
+    "cppyy": "3.5.0",
+    "fastjet": "FastJet version 3.5.1",
+    "matching_sha256": "064807f4c9767d71e01f2cca61f0a59e70767e6b1076abdde36b41729d72582f",
+    "loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+  },
+  "comparisons": [
+    {
+      "native_index": 0,
+      "reference_index": 1,
+      "selected_jets": [
+        153,
+        133
+      ],
+      "minimum_selected_jets": 1000,
+      "sample_size_gate": false,
+      "ratio_tolerance": 0.1,
+      "observables": {
+        "girth": {
+          "bins": [
+            {
+              "low": 0,
+              "high": 0.02,
+              "native": 0.0,
+              "reference": 0.01,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.01,
+              "ratio": 0.0,
+              "ratio_standard_error": 0.0,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.02,
+              "high": 0.04,
+              "native": 0.03,
+              "reference": 0.01,
+              "native_standard_error": 0.01714466079977653,
+              "reference_standard_error": 0.01,
+              "ratio": 3.0,
+              "ratio_standard_error": 3.4553428106909942,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.04,
+              "high": 0.06,
+              "native": 0.02,
+              "reference": 0.03,
+              "native_standard_error": 0.01407052941362897,
+              "reference_standard_error": 0.01714466079977653,
+              "ratio": 0.6666666666666667,
+              "ratio_standard_error": 0.6042622026713685,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.06,
+              "high": 0.08,
+              "native": 0.09,
+              "reference": 0.09,
+              "native_standard_error": 0.02876234912646614,
+              "reference_standard_error": 0.02876234912646614,
+              "ratio": 1.0,
+              "ratio_standard_error": 0.4519567135595373,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 0.08,
+              "high": 0.1,
+              "native": 0.15,
+              "reference": 0.09,
+              "native_standard_error": 0.041132945334843116,
+              "reference_standard_error": 0.02876234912646614,
+              "ratio": 1.6666666666666667,
+              "ratio_standard_error": 0.7018405247702301,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.1,
+              "high": 0.15,
+              "native": 0.66,
+              "reference": 0.54,
+              "native_standard_error": 0.07415517445863032,
+              "reference_standard_error": 0.0626357112455213,
+              "ratio": 1.222222222222222,
+              "ratio_standard_error": 0.1973731894842005,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.15,
+              "high": 0.2,
+              "native": 0.44,
+              "reference": 0.43,
+              "native_standard_error": 0.059152260303304546,
+              "reference_standard_error": 0.057304784999495324,
+              "ratio": 1.0232558139534884,
+              "ratio_standard_error": 0.19369930585948153,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 0.2,
+              "high": 0.3,
+              "native": 0.14,
+              "reference": 0.13,
+              "native_standard_error": 0.04025173313289777,
+              "reference_standard_error": 0.033799766898963114,
+              "ratio": 1.076923076923077,
+              "ratio_standard_error": 0.41745521994507767,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 0.3,
+              "high": 0.4,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            }
+          ],
+          "numerical_gate": "not-passed",
+          "undefined_bins": 1
+        },
+        "groomed_mass": {
+          "bins": [
+            {
+              "low": -50,
+              "high": 0,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 0,
+              "high": 1,
+              "native": 0.02,
+              "reference": 0.0,
+              "native_standard_error": 0.01407052941362897,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 1,
+              "high": 2,
+              "native": 0.15,
+              "reference": 0.04,
+              "native_standard_error": 0.03859920970562726,
+              "reference_standard_error": 0.019694638556693237,
+              "ratio": 3.75,
+              "ratio_standard_error": 2.0833333333333335,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 2,
+              "high": 4,
+              "native": 0.72,
+              "reference": 0.5,
+              "native_standard_error": 0.07923880286064322,
+              "reference_standard_error": 0.0611340636419152,
+              "ratio": 1.44,
+              "ratio_standard_error": 0.23688483328914126,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 4,
+              "high": 6,
+              "native": 0.48,
+              "reference": 0.5,
+              "native_standard_error": 0.06887259501016602,
+              "reference_standard_error": 0.06435381994422819,
+              "ratio": 0.96,
+              "ratio_standard_error": 0.18504228291027558,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 6,
+              "high": 8,
+              "native": 0.1,
+              "reference": 0.17,
+              "native_standard_error": 0.03015113445777636,
+              "reference_standard_error": 0.03775251680686369,
+              "ratio": 0.5882352941176471,
+              "ratio_standard_error": 0.2202749047497129,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 8,
+              "high": 12,
+              "native": 0.06,
+              "reference": 0.08,
+              "native_standard_error": 0.0238683256575942,
+              "reference_standard_error": 0.027265992434429075,
+              "ratio": 0.75,
+              "ratio_standard_error": 0.39288173870270504,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 12,
+              "high": 20,
+              "native": 0.0,
+              "reference": 0.01,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.01,
+              "ratio": 0.0,
+              "ratio_standard_error": 0.0,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 20,
+              "high": 40,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 40,
+              "high": 80,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            }
+          ],
+          "numerical_gate": "not-passed",
+          "undefined_bins": 4
+        },
+        "mass": {
+          "bins": [
+            {
+              "low": -50,
+              "high": 0,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 0,
+              "high": 1,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 1,
+              "high": 2,
+              "native": 0.03,
+              "reference": 0.0,
+              "native_standard_error": 0.01714466079977653,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 2,
+              "high": 4,
+              "native": 0.68,
+              "reference": 0.41,
+              "native_standard_error": 0.07638287395970011,
+              "reference_standard_error": 0.05876678784428628,
+              "ratio": 1.6585365853658538,
+              "ratio_standard_error": 0.30202699828018115,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 4,
+              "high": 6,
+              "native": 0.56,
+              "reference": 0.53,
+              "native_standard_error": 0.07696253844067465,
+              "reference_standard_error": 0.06269212893420538,
+              "ratio": 1.0566037735849056,
+              "ratio_standard_error": 0.19159137534804552,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 6,
+              "high": 8,
+              "native": 0.18,
+              "reference": 0.2,
+              "native_standard_error": 0.04114522199392407,
+              "reference_standard_error": 0.04264014327112209,
+              "ratio": 0.8999999999999999,
+              "ratio_standard_error": 0.2813208384414744,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 8,
+              "high": 12,
+              "native": 0.07,
+              "reference": 0.18,
+              "native_standard_error": 0.025643239997624277,
+              "reference_standard_error": 0.03861229196653691,
+              "ratio": 0.38888888888888895,
+              "ratio_standard_error": 0.1650900193758328,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 12,
+              "high": 20,
+              "native": 0.01,
+              "reference": 0.01,
+              "native_standard_error": 0.01,
+              "reference_standard_error": 0.01,
+              "ratio": 1.0,
+              "ratio_standard_error": 1.4142135623730951,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 20,
+              "high": 40,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 40,
+              "high": 80,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            }
+          ],
+          "numerical_gate": "not-passed",
+          "undefined_bins": 5
+        },
+        "pt": {
+          "bins": [
+            {
+              "low": 10,
+              "high": 15,
+              "native": 0.56,
+              "reference": 0.28,
+              "native_standard_error": 0.07696253844067465,
+              "reference_standard_error": 0.05519478821831502,
+              "ratio": 2.0,
+              "ratio_standard_error": 0.48060722259645017,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 15,
+              "high": 20,
+              "native": 0.36,
+              "reference": 0.33,
+              "native_standard_error": 0.05949280577846316,
+              "reference_standard_error": 0.053285963812189224,
+              "ratio": 1.0909090909090908,
+              "ratio_standard_error": 0.2520532285223294,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 20,
+              "high": 30,
+              "native": 0.45,
+              "reference": 0.46,
+              "native_standard_error": 0.0701729465267237,
+              "reference_standard_error": 0.06578200914591106,
+              "ratio": 0.9782608695652174,
+              "ratio_standard_error": 0.20698366971126667,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 30,
+              "high": 40,
+              "native": 0.09,
+              "reference": 0.16,
+              "native_standard_error": 0.032082595426382345,
+              "reference_standard_error": 0.04197161137740796,
+              "ratio": 0.5625,
+              "ratio_standard_error": 0.24895714466560404,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 40,
+              "high": 60,
+              "native": 0.07,
+              "reference": 0.1,
+              "native_standard_error": 0.029318866956210287,
+              "reference_standard_error": 0.03623715376697394,
+              "ratio": 0.7000000000000001,
+              "ratio_standard_error": 0.3876893476780479,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 60,
+              "high": 80,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 80,
+              "high": 100,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 100,
+              "high": 150,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 150,
+              "high": 250,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            }
+          ],
+          "numerical_gate": "not-passed",
+          "undefined_bins": 4
+        },
+        "ptd": {
+          "bins": [
+            {
+              "low": 0,
+              "high": 0.2,
+              "native": 0.0,
+              "reference": 0.0,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.0,
+              "ratio": null,
+              "ratio_standard_error": null,
+              "status": "undefined"
+            },
+            {
+              "low": 0.2,
+              "high": 0.3,
+              "native": 0.04,
+              "reference": 0.02,
+              "native_standard_error": 0.019694638556693237,
+              "reference_standard_error": 0.01407052941362897,
+              "ratio": 2.0,
+              "ratio_standard_error": 1.7174093715520913,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.3,
+              "high": 0.4,
+              "native": 0.47,
+              "reference": 0.53,
+              "native_standard_error": 0.06883591968139773,
+              "reference_standard_error": 0.05938234271450249,
+              "ratio": 0.8867924528301886,
+              "ratio_standard_error": 0.1635255902179162,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.4,
+              "high": 0.5,
+              "native": 0.66,
+              "reference": 0.53,
+              "native_standard_error": 0.07278028371042322,
+              "reference_standard_error": 0.06428314889862842,
+              "ratio": 1.2452830188679245,
+              "ratio_standard_error": 0.20413216584817007,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.5,
+              "high": 0.6,
+              "native": 0.28,
+              "reference": 0.15,
+              "native_standard_error": 0.04731156136066362,
+              "reference_standard_error": 0.03859920970562726,
+              "ratio": 1.866666666666667,
+              "ratio_standard_error": 0.5746440094729476,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.6,
+              "high": 0.7,
+              "native": 0.06,
+              "reference": 0.04,
+              "native_standard_error": 0.0238683256575942,
+              "reference_standard_error": 0.019694638556693237,
+              "ratio": 1.5,
+              "ratio_standard_error": 0.9494815172056544,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.7,
+              "high": 0.8,
+              "native": 0.02,
+              "reference": 0.03,
+              "native_standard_error": 0.01407052941362897,
+              "reference_standard_error": 0.01714466079977653,
+              "ratio": 0.6666666666666667,
+              "ratio_standard_error": 0.6042622026713685,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.8,
+              "high": 0.9,
+              "native": 0.0,
+              "reference": 0.02,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.01407052941362897,
+              "ratio": 0.0,
+              "ratio_standard_error": 0.0,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.9,
+              "high": 1.0000001,
+              "native": 0.0,
+              "reference": 0.01,
+              "native_standard_error": 0.0,
+              "reference_standard_error": 0.01,
+              "ratio": 0.0,
+              "ratio_standard_error": 0.0,
+              "status": "outside-10-percent"
+            }
+          ],
+          "numerical_gate": "not-passed",
+          "undefined_bins": 1
+        },
+        "zg": {
+          "bins": [
+            {
+              "low": 0.1,
+              "high": 0.15,
+              "native": 0.44,
+              "reference": 0.31,
+              "native_standard_error": 0.06247423711443224,
+              "reference_standard_error": 0.05064233865696236,
+              "ratio": 1.4193548387096775,
+              "ratio_standard_error": 0.30720934179213477,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.15,
+              "high": 0.2,
+              "native": 0.29,
+              "reference": 0.23,
+              "native_standard_error": 0.05182526976156116,
+              "reference_standard_error": 0.04229525846816507,
+              "ratio": 1.2608695652173911,
+              "ratio_standard_error": 0.3233163438414484,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.2,
+              "high": 0.25,
+              "native": 0.21,
+              "reference": 0.25,
+              "native_standard_error": 0.040936018074033236,
+              "reference_standard_error": 0.04578165130223675,
+              "ratio": 0.84,
+              "ratio_standard_error": 0.22466567754480582,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.25,
+              "high": 0.3,
+              "native": 0.12,
+              "reference": 0.13,
+              "native_standard_error": 0.032659863237109045,
+              "reference_standard_error": 0.033799766898963114,
+              "ratio": 0.923076923076923,
+              "ratio_standard_error": 0.3474414718148628,
+              "status": "within-10-percent"
+            },
+            {
+              "low": 0.3,
+              "high": 0.35,
+              "native": 0.16,
+              "reference": 0.09,
+              "native_standard_error": 0.03949172013974524,
+              "reference_standard_error": 0.032082595426382345,
+              "ratio": 1.777777777777778,
+              "ratio_standard_error": 0.770815658173027,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.35,
+              "high": 0.4,
+              "native": 0.12,
+              "reference": 0.16,
+              "native_standard_error": 0.03561863092100633,
+              "reference_standard_error": 0.03684529491774706,
+              "ratio": 0.75,
+              "ratio_standard_error": 0.2817580988412334,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.4,
+              "high": 0.45,
+              "native": 0.1,
+              "reference": 0.05,
+              "native_standard_error": 0.03333333333333333,
+              "reference_standard_error": 0.02190429135575903,
+              "ratio": 2.0,
+              "ratio_standard_error": 1.1009637651263604,
+              "status": "outside-10-percent"
+            },
+            {
+              "low": 0.45,
+              "high": 0.5000000000000001,
+              "native": 0.09,
+              "reference": 0.08,
+              "native_standard_error": 0.02876234912646614,
+              "reference_standard_error": 0.027265992434429075,
+              "ratio": 1.125,
+              "ratio_standard_error": 0.5256219259990104,
+              "status": "outside-10-percent"
+            }
+          ],
+          "numerical_gate": "not-passed",
+          "undefined_bins": 0
+        }
+      },
+      "physics_gate": "not-established",
+      "blockers": [
+        "Matched physics configuration has not yet been established by a configuration audit.",
+        "Each sample must contain at least 1,000 selected jets."
+      ],
+      "normalization": "weighted jets per original denominator record; no rescaling or shape normalization",
+      "uncertainty": "independent-event delta method; errors do not relax the central-ratio gate",
+      "samples": [
+        {
+          "particle_level": "hadron",
+          "denominator_scope": "attempted-events",
+          "observable_accounting": {
+            "mass": {
+              "in_range": {
+                "jets": 153,
+                "weighted_count": 153
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "groomed_mass": {
+              "in_range": {
+                "jets": 153,
+                "weighted_count": 153
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "zg": {
+              "in_range": {
+                "jets": 153,
+                "weighted_count": 153
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "pt": {
+              "in_range": {
+                "jets": 153,
+                "weighted_count": 153
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "girth": {
+              "in_range": {
+                "jets": 153,
+                "weighted_count": 153
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "ptd": {
+              "in_range": {
+                "jets": 153,
+                "weighted_count": 153
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            }
+          },
+          "input": "/private/tmp/jewel-native-mpi-runner-counts-100.jsonl",
+          "input_sha256": "1cd2ef952cd4cb66ad39439fd32f02309758a644fe6923ad3fbd6c88b6f5064d",
+          "run": {
+            "type": "run",
+            "schema": "jewel-hadron-development-v1",
+            "scope": "experimental PPJJ ISR+MPI; incomplete topology and cascade validation",
+            "experimental_isr_mpi": true,
+            "inactive_nonparton_time_policy": "medium-lifetime-placeholder-preserve-source-draw",
+            "hard_colour_angle_policy": "not-evaluated-veto-disabled",
+            "medium_backend": "jewel-vacuum",
+            "mpi_channel_policy": "outgoing-flavour",
+            "mode": "vacuum",
+            "attempts_requested": 100,
+            "seed": 2600421,
+            "pythia_version": 8317,
+            "table_lifetime_fm": 0,
+            "table_energy_gev": 846.494030493817,
+            "table_energy_prescription": "jewel-eovest",
+            "table_impact_parameter_fm": 0,
+            "geometry_seed": 3100421,
+            "angular_ordering": 0,
+            "first_angle_ordering": false,
+            "coherence": true,
+            "keep_recoils": true,
+            "recoil_rescattering": false,
+            "recoil_soft_cut_3T": 0,
+            "recoil_hard_cut_3T": 0,
+            "longitudinal_scatterer_boost": true,
+            "compression": true,
+            "pythia_settings": [
+              "Tune:pp = 14",
+              "Beams:idA = 2212",
+              "Beams:idB = 2212",
+              "Beams:eCM = 5020",
+              "HardQCD:all = on",
+              "PhaseSpace:pTHatMin = 20",
+              "PhaseSpace:pTHatMax = 100",
+              "PDF:pSet = LHAPDF6:CT14nlo/0",
+              "HadronLevel:all = off",
+              "PartonLevel:FSR = off",
+              "PartonLevel:ISR = on",
+              "PartonLevel:MPI = off",
+              "Check:event = on",
+              "Random:setSeed = on",
+              "Random:seed = 2600421",
+              "Init:showChangedSettings = off",
+              "Init:showChangedParticleData = off",
+              "Init:showProcesses = off",
+              "Next:numberShowInfo = 0",
+              "Next:numberShowProcess = 0",
+              "Next:numberShowEvent = 0",
+              "SigmaProcess:alphaSvalue = 0.11754434294459773",
+              "SigmaProcess:alphaSorder = 1",
+              "SpaceShower:alphaSvalue = 0.11754434294459773",
+              "SpaceShower:alphaSorder = 1",
+              "StandardModel:alphaSnfmax = 5",
+              "SpaceShower:alphaSuseCMW = off"
+            ],
+            "hadronization": true,
+            "hadrotype": 0,
+            "hadronizer_settings": [
+              "Tune:pp = 14",
+              "ProcessLevel:all = off",
+              "PartonLevel:all = off",
+              "PartonLevel:FSR = off",
+              "PartonLevel:ISR = off",
+              "PartonLevel:MPI = off",
+              "PartonLevel:FSRinResonances = off",
+              "ProcessLevel:resonanceDecays = off",
+              "HadronLevel:all = on",
+              "HadronLevel:Decay = on",
+              "ColourReconnection:reconnect = off",
+              "ColourReconnection:forceHadronLevelCR = off",
+              "ParticleDecays:limitTau0 = on",
+              "ParticleDecays:tau0Max = 10",
+              "Check:event = on",
+              "Random:setSeed = on",
+              "Random:seed = 2600421",
+              "Init:showChangedSettings = off",
+              "Init:showChangedParticleData = off",
+              "Init:showProcesses = off",
+              "Next:numberShowInfo = 0",
+              "Next:numberShowProcess = 0",
+              "Next:numberShowEvent = 0",
+              "111:mayDecay = on",
+              "StringFlav:probQQtoQ = 0.072999998927116394",
+              "StringFlav:probStoUD = 0.20000000298023224",
+              "StringFlav:probSQtoQQ = 0.93999999761581421",
+              "StringFlav:probQQ1toQQ0 = 0.032000001519918442",
+              "StringFlav:mesonUDvector = 0.44927536732658224",
+              "StringFlav:mesonSvector = 0.66666668322351263",
+              "StringFlav:mesonCvector = 1.1739131448850337",
+              "StringFlav:mesonBvector = 1.1739131448850337",
+              "StringFlav:etaSup = 0.62999999523162842",
+              "StringFlav:etaPrimeSup = 0.11999999731779099",
+              "StringPT:sigma = 0.32499998807907104",
+              "StringZ:aLund = 0.5",
+              "StringZ:bLund = 0.60000002384185791",
+              "StringZ:aExtraDiquark = 0.5",
+              "StringZ:aExtraSQuark = 0",
+              "StringZ:useOldAExtra = off",
+              "StringZ:rFactC = 1",
+              "StringZ:rFactB = 0.67000001668930054"
+            ],
+            "centrality_percent": null,
+            "mpi_legacy_integral_mb": 119.664441340188,
+            "mpi_production_pt0_gev": 2.3261103201581284,
+            "native_mpi": true,
+            "mpi_remnant_policy": "pythia8-remnants-with-system-recoil"
+          },
+          "summary": {
+            "type": "summary",
+            "attempts": 100,
+            "accepted": 100,
+            "evolution_failures": 0,
+            "generation_failures": 0,
+            "accepted_weight": 100,
+            "failed_weight": 0,
+            "generator_weight_sum": 100,
+            "generator_sigma_mb": 0.12230112630814002,
+            "generator_sigma_error_mb": 0.006004544604536388,
+            "final_records": 3073
+          },
+          "selected_jets": 153,
+          "failure_reasons": {}
+        },
+        {
+          "particle_level": "hadron",
+          "denominator_scope": "attempted-events",
+          "observable_accounting": {
+            "mass": {
+              "in_range": {
+                "jets": 133,
+                "weighted_count": 133.0
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "groomed_mass": {
+              "in_range": {
+                "jets": 130,
+                "weighted_count": 130.0
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 3,
+                "weighted_count": 3.0
+              }
+            },
+            "zg": {
+              "in_range": {
+                "jets": 130,
+                "weighted_count": 130.0
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 3,
+                "weighted_count": 3.0
+              }
+            },
+            "pt": {
+              "in_range": {
+                "jets": 133,
+                "weighted_count": 133.0
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "girth": {
+              "in_range": {
+                "jets": 133,
+                "weighted_count": 133.0
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            },
+            "ptd": {
+              "in_range": {
+                "jets": 133,
+                "weighted_count": 133.0
+              },
+              "underflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "overflow": {
+                "jets": 0,
+                "weighted_count": 0
+              },
+              "undefined": {
+                "jets": 0,
+                "weighted_count": 0
+              }
+            }
+          },
+          "input": "/private/tmp/jewel-mpi-runner-fsr-reference.jsonl",
+          "input_sha256": "2df500061a7d682908a07550bdcd2f174c846033e8b1caa3b49dc52729082361",
+          "run": {
+            "type": "run",
+            "schema": "jewel-fortran-hepmc-analysis-v1",
+            "generator_family": "JEWEL 2.6.0 Fortran",
+            "mode": "vacuum",
+            "attempts_requested": 100,
+            "denominator_scope": "attempted-events",
+            "failed_attempts_known": true,
+            "keep_recoils": true,
+            "importer": {
+              "path": "/Users/ploskon/devel/jewel-cpp/tools/import_reference_hepmc.py",
+              "sha256": "09f9d4c81f5296d8cbe608537de3c1d07c6297276180abd880b806a54b119db6"
+            },
+            "reference_input": {
+              "path": "/private/tmp/jewel-mpi-runner-fsr-reference/events.hepmc",
+              "sha256": "10814e70c4851c94dcaa457666121b1f9c603dd26f01442c3f567c31100eb985"
+            },
+            "cards": {
+              "path": "/private/tmp/jewel-mpi-runner-fsr-reference/params.dat",
+              "sha256": "7148ff48a92ef2467c563c6637596ce0293a27b9aaa95f7545386ec807d900b1",
+              "text": "NEVENT 100\nNJOB 2600421\nLOGFILE jewel.log\nHEPMCFILE events.hepmc\nSPLITINTFILE splitint.dat\nPDFFILE pdfs.dat\nXSECFILE xsecs.dat\nMEDIUMPARAMS medium.dat\nSQRTS 5020\nPTMIN 20\nPTMAX 100\nETAMAX 2\nNF 3\nQ0 1\nLAMBDAQCD 0.2\nLAMBDAQCDPS 0.2\nPDFSET 13100\nPDFALPHAS 0.118\nPROCESS PPJJ\nISOCHANNEL PP\nMASS 208\nNPROTON 82\nWEIGHTED F\nMPI T\nMPIFSR T\nANGORD 0\nAOFIRSTSPLIT F\nKEEPRECOILS T\nSCATRECOIL F\nHADRO T\nHADROTYPE 0\nPI0DEC T\nISRSCAT T\nSHORTHEPMC T\nCOMPRESS T\nWRITESCATCEN F\nWRITEDUMMIES F\nDOSUBTRACTION F\nPUTONSHELL 0\nXSECSCALEFAC 0\nRECSOFTCUT 0\nRECHARDCUT 0\nCOHLENGTHFAC 1\nPCOHREJ 1\nCOHSCAT T\n"
+            },
+            "medium_cards": {
+              "path": "/private/tmp/jewel-mpi-runner-fsr-reference/medium.dat",
+              "sha256": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+              "text": "TAUI 0.4\nTI 0.59\nTC 0.17\nWOODSSAXON T\nCENTRMIN 0\nCENTRMAX 10\nNF 3\nN0 0.17\nD 0.54\nSIGMANN 6.199999809265137\nMDFACTOR 0.45\nMDSCALEFAC 1\n"
+            },
+            "output_policy": {
+              "DOSUBTRACTION": "F",
+              "PUTONSHELL": "0",
+              "RSUB": null,
+              "WRITESCATCEN": "F",
+              "WRITEDUMMIES": "F"
+            },
+            "selection_input": "HepMC status 1 only; neutrinos retained here and excluded by common analysis",
+            "normalization": "per logged GENEVENT attempt with explicit discarded indices",
+            "reference_ledger": {
+              "path": "/private/tmp/jewel-mpi-runner-fsr-reference/jewel.log",
+              "sha256": "c31a34da66444efd29e379bde5960f0ab269f8ddf4fd694958b9202cc2270e75",
+              "discarded_attempts": [],
+              "policy": "unweighted PP; conversion losses forbidden; each logged discard has unit weight"
+            }
+          },
+          "summary": {
+            "type": "summary",
+            "attempts": 100,
+            "accepted": 100,
+            "evolution_failures": null,
+            "generation_failures": null,
+            "discarded_events": 0,
+            "generator_weight_sum": 100.0,
+            "generator_weight_sum2": 100.0,
+            "last_cross_section": {
+              "value_pb": 136149000.0,
+              "error_pb": 0.0
+            },
+            "denominator_scope": "attempted-events",
+            "failed_attempts_known": true
+          },
+          "selected_jets": 133,
+          "failure_reasons": {}
+        }
+      ]
+    }
+  ]
+}

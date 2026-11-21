@@ -748,3 +748,285 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
  target_link_libraries(pythia8-lund-shape-test PRIVATE jewel_pythia8)
  add_test(NAME pythia8-lund-shape-contracts COMMAND pythia8-lund-shape-test ${PYTHIA8_XML_DIR})
 endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_test(NAME input-coupling-cli COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/input_coupling_cli.py $<TARGET_FILE:jewel-pythia8-input>
+  $<TARGET_FILE:jewel-run-events> ${CMAKE_BINARY_DIR}/input-coupling-validation.json)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME hard-initialization-octets-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/hard_initialization_differential.py
+  $<TARGET_FILE:jewel-medium-probe> $<TARGET_FILE:jewel-medium-reference>
+  ${CMAKE_BINARY_DIR}/hard-initialization-octets-validation.json --octets)
+endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_executable(isr-recovery-test tests/isr_recovery.cpp)
+ target_link_libraries(isr-recovery-test PRIVATE jewel_pythia8)
+ if(JEWEL_TEST_EXTERNAL_PDF STREQUAL "CT14nlo/0")
+  add_test(NAME isr-recovery-contracts COMMAND isr-recovery-test ${JEWEL_TEST_EXTERNAL_PDF})
+ endif()
+endif()
+
+# Legacy MPI hard-overlap component; not yet selected by production runners.
+target_sources(jewel_core PRIVATE src/legacy_mpi.cpp)
+add_executable(jewel-legacy-mpi-probe app/legacy_mpi_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_weight.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-weight-reference.f RESULT_VARIABLE mpi_extracted)
+ if(NOT mpi_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-reference ${CMAKE_BINARY_DIR}/mpi-weight-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-weight-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_differential.py $<TARGET_FILE:jewel-legacy-mpi-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-validation.json)
+endif()
+
+add_executable(jewel-legacy-mpi-overlap-probe app/legacy_mpi_overlap_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-overlap-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_overlap.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-overlap-reference.f RESULT_VARIABLE mpi_overlap_extracted)
+ if(NOT mpi_overlap_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI overlap reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-overlap-reference ${CMAKE_BINARY_DIR}/mpi-overlap-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-overlap-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-overlap-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_overlap_differential.py $<TARGET_FILE:jewel-legacy-mpi-overlap-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-overlap-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-overlap-validation.json)
+endif()
+
+add_executable(jewel-legacy-mpi-scale-probe app/legacy_mpi_scale_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-scale-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_scale.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-scale-reference.f RESULT_VARIABLE mpi_scale_extracted)
+ if(NOT mpi_scale_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI scale reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-scale-reference ${CMAKE_BINARY_DIR}/mpi-scale-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-scale-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-scale-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_scale_differential.py $<TARGET_FILE:jewel-legacy-mpi-scale-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-scale-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-scale-validation.json)
+endif()
+
+add_executable(jewel-legacy-mpi-phase-probe app/legacy_mpi_phase_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-phase-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_phase.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-phase-reference.f RESULT_VARIABLE mpi_phase_extracted)
+ if(NOT mpi_phase_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI phase-space reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-phase-reference ${CMAKE_BINARY_DIR}/mpi-phase-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-phase-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-phase-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_phase_differential.py $<TARGET_FILE:jewel-legacy-mpi-phase-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-phase-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-phase-validation.json)
+endif()
+
+add_executable(jewel-legacy-mpi-factor-probe app/legacy_mpi_factor_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-factor-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_factor.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-factor-reference.f RESULT_VARIABLE mpi_factor_extracted)
+ if(NOT mpi_factor_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI common-factor reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-factor-reference ${CMAKE_BINARY_DIR}/mpi-factor-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-factor-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-factor-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_factor_differential.py $<TARGET_FILE:jewel-legacy-mpi-factor-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-factor-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-factor-validation.json)
+endif()
+
+target_sources(jewel_core PRIVATE src/legacy_mpi_channels.cpp)
+add_executable(jewel-legacy-mpi-channels-probe app/legacy_mpi_channels_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-channels-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_channels.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-channels-reference.f RESULT_VARIABLE mpi_channels_extracted)
+ if(NOT mpi_channels_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI channel reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-channels-reference ${CMAKE_BINARY_DIR}/mpi-channels-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-channels-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-channels-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_channels_differential.py $<TARGET_FILE:jewel-legacy-mpi-channels-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-channels-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-channels-validation.json)
+endif()
+
+add_executable(jewel-legacy-gluon-width-probe app/legacy_gluon_width_probe.cpp)
+target_link_libraries(jewel-legacy-gluon-width-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_gluon_width.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/gluon-width-reference.f RESULT_VARIABLE gluon_width_extracted)
+ if(NOT gluon_width_extracted EQUAL 0)
+  message(FATAL_ERROR "Gluon width reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-gluon-width-reference ${CMAKE_BINARY_DIR}/gluon-width-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-gluon-width-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-gluon-width-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_gluon_width_differential.py $<TARGET_FILE:jewel-legacy-gluon-width-probe>
+  $<TARGET_FILE:jewel-legacy-gluon-width-reference> ${CMAKE_BINARY_DIR}/legacy-gluon-width-validation.json)
+endif()
+
+set(JEWEL_LHAPDF_ROOT "" CACHE PATH "Optional LHAPDF prefix for legacy MPI PDF evaluation")
+if(JEWEL_LHAPDF_ROOT)
+ find_path(JEWEL_LHAPDF_INCLUDE LHAPDF/LHAPDF.h HINTS ${JEWEL_LHAPDF_ROOT}/include REQUIRED)
+ find_library(JEWEL_LHAPDF_LIBRARY LHAPDF HINTS ${JEWEL_LHAPDF_ROOT}/lib REQUIRED)
+ add_library(jewel_legacy_pdf adapters/legacy_mpi_pdf.cpp adapters/legacy_mpi_cross_section.cpp)
+ target_include_directories(jewel_legacy_pdf PUBLIC include ${JEWEL_LHAPDF_INCLUDE})
+ target_link_libraries(jewel_legacy_pdf PUBLIC jewel_core ${JEWEL_LHAPDF_LIBRARY})
+ add_executable(jewel-legacy-mpi-pdf-probe app/legacy_mpi_pdf_probe.cpp)
+ target_link_libraries(jewel-legacy-mpi-pdf-probe PRIVATE jewel_legacy_pdf)
+ if(JEWEL_REFERENCE_SOURCE)
+  file(SHA256 "${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f" legacy_pdf_source_hash)
+  if(NOT legacy_pdf_source_hash STREQUAL "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9")
+   message(FATAL_ERROR "Legacy PDF reference source differs from audited JEWEL 2.6.0")
+  endif()
+  add_executable(jewel-legacy-mpi-pdf-reference ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f reference/legacy_pdf_probe.f90)
+  target_link_libraries(jewel-legacy-mpi-pdf-reference PRIVATE ${JEWEL_LHAPDF_LIBRARY})
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+   target_compile_options(jewel-legacy-mpi-pdf-reference PRIVATE -std=legacy -ffixed-line-length-none)
+  endif()
+  add_test(NAME legacy-mpi-pdf-differential COMMAND ${Python3_EXECUTABLE}
+   ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_pdf_differential.py $<TARGET_FILE:jewel-legacy-mpi-pdf-probe>
+   $<TARGET_FILE:jewel-legacy-mpi-pdf-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-pdf-validation.json)
+ endif()
+endif()
+
+add_executable(jewel-legacy-mpi-pair-probe app/legacy_mpi_pair_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-pair-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_pair.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-pair-reference.f RESULT_VARIABLE mpi_pair_extracted)
+ if(NOT mpi_pair_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI pair reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-pair-reference ${CMAKE_BINARY_DIR}/mpi-pair-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-pair-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-pair-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_pair_differential.py $<TARGET_FILE:jewel-legacy-mpi-pair-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-pair-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-pair-validation.json)
+endif()
+
+add_executable(jewel-legacy-mpi-strings-probe app/legacy_mpi_strings_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-strings-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_strings.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-strings-reference.f RESULT_VARIABLE mpi_strings_extracted)
+ if(NOT mpi_strings_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI strings reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-strings-reference ${CMAKE_BINARY_DIR}/mpi-strings-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-strings-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-strings-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_strings_differential.py $<TARGET_FILE:jewel-legacy-mpi-strings-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-strings-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-strings-validation.json)
+endif()
+
+add_executable(jewel-legacy-mpi-evolution-probe app/legacy_mpi_evolution_probe.cpp)
+target_link_libraries(jewel-legacy-mpi-evolution-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_mpi_evolution.py
+  ${JEWEL_REFERENCE_SOURCE}/pythia6425mod-lhapdf6.f ${CMAKE_BINARY_DIR}/mpi-evolution-reference.f RESULT_VARIABLE mpi_evolution_extracted)
+ if(NOT mpi_evolution_extracted EQUAL 0)
+  message(FATAL_ERROR "MPI evolution reference extraction failed")
+ endif()
+ add_executable(jewel-legacy-mpi-evolution-reference ${CMAKE_BINARY_DIR}/mpi-evolution-reference.f)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-legacy-mpi-evolution-reference PRIVATE -std=legacy -ffixed-line-length-none)
+ endif()
+ add_test(NAME legacy-mpi-evolution-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/legacy_mpi_evolution_differential.py $<TARGET_FILE:jewel-legacy-mpi-evolution-probe>
+  $<TARGET_FILE:jewel-legacy-mpi-evolution-reference> ${CMAKE_BINARY_DIR}/legacy-mpi-evolution-validation.json)
+endif()
+
+if(JEWEL_LHAPDF_ROOT AND JEWEL_WITH_PYTHIA8)
+ add_executable(jewel-legacy-mpi-cross-section-probe app/legacy_mpi_cross_section_probe.cpp)
+ target_include_directories(jewel-legacy-mpi-cross-section-probe PRIVATE ${PYTHIA8_INCLUDE_DIR})
+ target_link_libraries(jewel-legacy-mpi-cross-section-probe PRIVATE jewel_legacy_pdf ${PYTHIA8_LIBRARY})
+endif()
+if(JEWEL_LHAPDF_ROOT AND JEWEL_WITH_PYTHIA8)
+ add_executable(jewel-legacy-mpi-native-sequence-probe app/legacy_mpi_native_sequence_probe.cpp)
+ target_include_directories(jewel-legacy-mpi-native-sequence-probe PRIVATE ${PYTHIA8_INCLUDE_DIR})
+ target_link_libraries(jewel-legacy-mpi-native-sequence-probe PRIVATE jewel_legacy_pdf ${PYTHIA8_LIBRARY})
+endif()
+if(TARGET jewel-legacy-mpi-native-sequence-probe)
+ add_test(NAME legacy-mpi-native-sequences COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/analyze_mpi_native_sequences.py $<TARGET_FILE:jewel-legacy-mpi-native-sequence-probe>
+  ${CMAKE_SOURCE_DIR}/reference/fixtures/legacy-mpi-native-sequences.json.gz
+  ${CMAKE_BINARY_DIR}/legacy-mpi-native-sequences-validation.json
+  --width-config ${CMAKE_SOURCE_DIR}/reference/legacy-gluon-decays.dat --alpha-s .11754434294459773)
+endif()
+if(JEWEL_WITH_PYTHIA8)
+ add_executable(legacy-mpi-colour-boundary-test tests/legacy_mpi_colour_boundary.cpp)
+ target_link_libraries(legacy-mpi-colour-boundary-test PRIVATE jewel_pythia8)
+ add_test(NAME legacy-mpi-colour-boundary COMMAND legacy-mpi-colour-boundary-test ${CMAKE_BINARY_DIR}/legacy-mpi-colour-boundary-validation.json)
+endif()
+if(JEWEL_LHAPDF_ROOT AND JEWEL_WITH_PYTHIA8)
+ add_executable(jewel-legacy-mpi-initializer-probe app/legacy_mpi_initializer_probe.cpp)
+ target_include_directories(jewel-legacy-mpi-initializer-probe PRIVATE ${PYTHIA8_INCLUDE_DIR})
+ target_link_libraries(jewel-legacy-mpi-initializer-probe PRIVATE jewel_legacy_pdf ${PYTHIA8_LIBRARY})
+endif()
+if(TARGET jewel-legacy-mpi-initializer-probe)
+ add_test(NAME legacy-mpi-native-initializer COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/analyze_mpi_initializer_trace.py $<TARGET_FILE:jewel-legacy-mpi-initializer-probe>
+  ${CMAKE_SOURCE_DIR}/reference/fixtures/legacy-mpi-initializer.json.gz
+  ${CMAKE_BINARY_DIR}/legacy-mpi-native-initializer-validation.json
+  --width-config ${CMAKE_SOURCE_DIR}/reference/legacy-gluon-decays.dat --alpha-s .11754434294459773)
+endif()
+if(JEWEL_LHAPDF_ROOT AND JEWEL_WITH_PYTHIA8)
+ add_executable(jewel-legacy-mpi-retry-probe app/legacy_mpi_retry_probe.cpp)
+ target_include_directories(jewel-legacy-mpi-retry-probe PRIVATE ${PYTHIA8_INCLUDE_DIR})
+ target_link_libraries(jewel-legacy-mpi-retry-probe PRIVATE jewel_legacy_pdf ${PYTHIA8_LIBRARY})
+endif()
+add_executable(legacy-mpi-initialization-contracts-test tests/legacy_mpi_initialization_contracts.cpp)
+target_link_libraries(legacy-mpi-initialization-contracts-test PRIVATE jewel_core)
+add_test(NAME legacy-mpi-initialization-contracts COMMAND legacy-mpi-initialization-contracts-test)
+if(TARGET jewel-legacy-mpi-retry-probe)
+ add_test(NAME legacy-mpi-native-retries COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/analyze_mpi_retry_trace.py $<TARGET_FILE:jewel-legacy-mpi-retry-probe>
+  ${CMAKE_SOURCE_DIR}/reference/fixtures/legacy-mpi-retries.json.gz
+  ${CMAKE_BINARY_DIR}/legacy-mpi-native-retries-validation.json
+  --width-config ${CMAKE_SOURCE_DIR}/reference/legacy-gluon-decays.dat --alpha-s .11754434294459773)
+endif()
+if(TARGET jewel-legacy-mpi-retry-probe)
+ add_test(NAME legacy-mpi-native-lifecycle COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/analyze_mpi_retry_trace.py $<TARGET_FILE:jewel-legacy-mpi-retry-probe>
+  ${CMAKE_SOURCE_DIR}/reference/fixtures/legacy-mpi-lifecycle.json.gz
+  ${CMAKE_BINARY_DIR}/legacy-mpi-native-lifecycle-validation.json
+  --width-config ${CMAKE_SOURCE_DIR}/reference/legacy-gluon-decays.dat
+  --alpha-s .11754434294459773 --lifecycle)
+endif()
+if(TARGET jewel_legacy_pdf AND TARGET jewel-run-events)
+ target_compile_definitions(jewel-run-events PRIVATE JEWEL_NATIVE_MPI_RUNNER=1)
+ target_include_directories(jewel-run-events PRIVATE ${PYTHIA8_INCLUDE_DIR})
+ target_link_libraries(jewel-run-events PRIVATE jewel_legacy_pdf ${PYTHIA8_LIBRARY})
+endif()

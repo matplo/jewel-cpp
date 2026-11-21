@@ -1,0 +1,36 @@
+--- pythia6425mod-lhapdf6.f
++++ pythia6425mod-lhapdf6.f
+@@ -25121,6 +25121,10 @@
+       FKAC1(X,Y)=1.-X**2/Y**2
+       FKAC2(X,Y)=2.+X**2/Y**2
+  
++      INTEGER AUDITPHASE,AUDITCOUNTS(0:1)
++      COMMON/MPIAUDIT/ AUDITPHASE
++      SAVE AUDITCOUNTS
++      DATA AUDITCOUNTS/2*0/
+ C...Compressed code and sign; mass.
+       KFLA=IABS(KFLR)
+       KFLS=ISIGN(1,KFLR)
+@@ -25665,6 +25669,22 @@
+             WDTE(0,0)=WDTE(0,0)+WDTE(I,0)
+           ENDIF
+   190   CONTINUE
++      IF(AUDITCOUNTS(AUDITPHASE).LT.100) THEN
++       AUDITCOUNTS(AUDITPHASE)=AUDITCOUNTS(AUDITPHASE)+1
++       WRITE(*,*) 'WIDTH_CONTEXT',AUDITPHASE
++       WRITE(*,*) 'WIDTH_INPUT',SH,FUDGE,MDCY(KC,3)
++       DO 901 J=1,MDCY(KC,3)
++        JDC=J+MDCY(KC,2)-1
++        AUDITW=1D0
++        IF(J.GE.6.AND.J.LE.8) AUDITW=WIDS(J,1)
++        WRITE(*,*) 'WIDTH_DECAY',PMAS(IABS(KFDP(JDC,1)),1),
++     &   PMAS(IABS(KFDP(JDC,2)),1),AUDITW,MDME(JDC,1)
++  901  CONTINUE
++       WRITE(*,*) 'WIDTH_RESULT',WDTP(0),WDTE(0,:),
++     &  (WDTE(0,1)+WDTE(0,2)+WDTE(0,3)+WDTE(0,4)),
++     &  (WDTP(J),J=1,MDCY(KC,3))
++      ENDIF
++
+  
+       ELSEIF(KFLA.EQ.22) THEN
+ C...QED photon.

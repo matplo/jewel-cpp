@@ -85,6 +85,18 @@ std::optional<HadronizedSnapshot> Pythia8Hadronizer::hadronize(const std::vector
  for(double v:{delta.px(),delta.py(),delta.pz(),delta.e()})if(std::abs(v)>1e-8*std::max(1.,total.e()))throw std::domain_error("hadronization momentum does not close");
  ++impl_->returned;return result;
 }
+std::optional<HadronizedSnapshot> Pythia8Hadronizer::hadronize_string_pieces(
+ const std::vector<GeneratorParticle>& input,const std::vector<LegacyMpiStringPiece>& pieces){
+ std::vector<int> types;types.reserve(input.size());
+ for(const auto& p:input){
+  if(!p.final||!impl_->engine.particleData.isParticle(p.pdg))
+   throw std::domain_error("MPI string hadronization requires known outgoing particles");
+  types.push_back(impl_->engine.particleData.colType(p.pdg));
+ }
+ auto tags=legacy_mpi_colour_tags(pieces,types);auto particles=input;
+ for(std::size_t i=0;i<particles.size();++i){particles[i].colour=tags[i][0];particles[i].anticolour=tags[i][1];}
+ return hadronize(particles);
+}
 double Pythia8Hadronizer::nominal_mass(int pdg) const {
  auto& data=impl_->engine.particleData;
  if(!data.isParticle(pdg))throw std::domain_error("unknown projection PDG ID");
