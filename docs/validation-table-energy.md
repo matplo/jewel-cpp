@@ -8,10 +8,13 @@ PTMAX > 0: min(1.5 * (PTMAX + 50) * cosh(ETAMAX), sqrt(s)/2)
 otherwise: sqrt(s)/2
 ```
 
-The runner currently has PTMAX=100 GeV, sqrt(s)=5020 GeV and ETAMAX mapped
+The runner defaults to PTMAX=100 GeV, sqrt(s)=5020 GeV and ETAMAX mapped
 to its medium max_rapidity=2. The resulting scale is 846.494030493817 GeV.
 This implements the source prescription for these inputs; it does not select
-all stock JEWEL settings. Hard cuts and rapidity are not newly configurable.
+all stock JEWEL settings. The hard-process `--ecm`, `--pt-min` and `--pt-max`
+options now configure the energy and hard cuts; `--table-energy jewel` uses their
+selected values. The medium rapidity remains fixed at 2 in the runner.
+See [hard-range validation](validation-hard-range.md) for the subsequent extension.
 
 The scale feeds initial Sudakov, final splitting, partonic PDF and scattering
 rate tables. Event-local geometry updates retain the initialized tables.

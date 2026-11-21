@@ -1,7 +1,7 @@
 # Expanding medium and table validation
 
 Updated on 2026-11-21, macOS arm64, Release build with AppleClang 21 and
-GNU Fortran 16.2. The medium differential suite passes **18,475 scalar
+GNU Fortran 16.2. The medium differential suite passes **22,152 scalar
 comparisons** against unchanged, hash-verified JEWEL 2.6.0 routines.
 [Machine-readable results](validation-medium.json) include source and executable
 hashes, input hash, tolerances and all comparison groups.
@@ -26,6 +26,12 @@ hashes, input hash, tolerances and all comparison groups.
 | temperature-transition | 180 | 0 |
 | overlap-transition | 160 | 0 |
 | rapidity-transition | 160 | 0 |
+| varied-optical-thickness | 600 | 0 |
+| varied-optical-cross-section | 1,800 | 0 |
+| varied-optical-bounds | 21 | 0 |
+| varied-optical-medium | 240 | 0 |
+| screening-bounds | 56 | 1.4211e-14 |
+| screening-transition | 960 | 0 |
 
 Acceptance uses relative tolerance 2e-12 and absolute tolerance 2e-13.
 Temperature and density must additionally agree exactly on zero versus nonzero:
@@ -104,3 +110,41 @@ absolute difference 1.42109e-14, and all 24 before/after grid checks remain
 byte-identical. The 11 medium/table regression suites also pass. This extends
 component coverage; it does not resolve the documented full-cascade mismatches
 or establish jet-level agreement.
+
+## Non-default optical geometry and screening
+
+The latest extension adds 3,677 scalar comparisons. Optical configurations
+`(A, nuclear density, skin depth, sigma_NN)` are `(16, .14, .4, 4.2)`,
+`(197, .19, .65, 7.0)` and `(208, .17, .54, 6.199999809265137)`;
+lengths are in fm, density in fm^-3 and cross section in fm^2.
+Each engine independently computes all 100 thickness rows and 200 centrality
+cross-section rows, its medium bounds and 20 spacetime samples per configuration.
+
+Screening configurations `(floor in GeV, scale)` are `(.45, 1)`, `(.45, .6)`,
+`(.9, 1.2)` and `(2, 1)`, for both flat and Woods-Saxon profiles. Queries straddle
+candidate heating and cooling times where `3 * scale * T = floor`, with adjacent
+doubles and relative offsets of ±1e-10, at spacetime rapidities -1.5, 0 and 1.5.
+These cover an active crossover, a crossover hidden by the temperature cutoff,
+and a floor above the peak thermal screening mass. The candidate times only
+select query coordinates; temperatures and screening masses are independently
+computed by the C++ and Fortran routines. All 960 sampled values agree exactly;
+zero/nonzero temperature and density agreement is enforced separately.
+
+No production implementation or numerical tolerance changed. This extends
+component validation and does not establish full-generator jet agreement.
+
+For this extension, all 13 selected CTest suites passed after rebuilding:
+medium, radiation, final-splitting, PDF and scattering contracts and differential
+checks, plus sampling, event-geometry and geometry-lengths differential checks.
+The full-table checks retained exact agreement for 9,006,000 final-splitting
+values and 1,203,300 scattering-grid values. Event geometry/rates retained
+143,220 passing comparisons (maximum absolute error 1.42109e-14) with all
+24 initialized-grid preservation checks passing.
+
+Reproduce with:
+
+```sh
+cmake --build build -j 4
+ctest --test-dir build --output-on-failure -j 3 \
+  -R '^(medium|sampling|radiation|final-splitting|pdf|scattering|event-geometry|geometry-lengths)-(contracts|differential)$'
+```

@@ -79,6 +79,30 @@ for taui,ti,tc in [(.4,.59,.17),(.6,.45,.15),(.3,.7,.12)]:
  for transition in [taui*tc/ti,taui,taui*(ti/tc)**(1/exponent)]:
   for tau in [transition*(1-1e-10),math.nextafter(transition,0),transition,math.nextafter(transition,math.inf),transition*(1+1e-10)]:
    commands.append(f'POINT\n0 0 0 {tau:.17g}\n'); labels.append('temperature-transition')
+# Non-default optical geometry parameters affect both the thickness and
+# centrality tables. Calculate each table independently in both engines.
+optical_configs=[(16,.14,.4,4.2),(197,.19,.65,7.0),(208,.17,.54,6.199999809265137)]
+for mass,density,skin,sigma in optical_configs:
+ commands.append(f'CONFIG\n{mass} 3 1 .4 .59 .17 {density} {skin} {sigma} 3 2 .45 1\nTABLE\nCROSS\nBOUNDS\n')
+ labels+=['varied-optical-thickness']*100+['varied-optical-cross-section']*200+['varied-optical-bounds']
+ for x,y in [(0,0),(1,2),(4,0),(8,0)]:
+  for tau in [.1,.4,1,5,30]:
+   commands.append(f'POINT\n{x} {y} 0 {tau}\n');labels.append('varied-optical-medium')
+# Straddle max(3 * screening_scale * T, screening_floor) on both
+# heating and cooling branches. Include a crossing hidden by Tc and one
+# above the peak temperature, where the floor controls all active samples.
+# These candidate times are query inputs, not substituted reference results.
+screening_configs=[(.45,1.),(.45,.6),(.9,1.2),(2.,1.)]
+for floor,scale in screening_configs:
+ for woods in [0,1]:
+  commands.append(f'CONFIG\n208 3 {woods} .4 .59 .17 .17 .54 6.199999809265137 0 2 {floor} {scale}\nBOUNDS\n')
+  labels.append('screening-bounds')
+  threshold=floor/(3*scale)
+  for transition in [.4*threshold/.59,.4*(.59/threshold)**(1/exponent)]:
+   for tau in [transition*(1-1e-10),math.nextafter(transition,0),transition,math.nextafter(transition,math.inf),transition*(1+1e-10)]:
+    for eta in [-1.5,0,1.5]:
+     commands.append(f'POINT\n0 0 {tau*math.sinh(eta):.17g} {tau*math.cosh(eta):.17g}\n')
+     labels.append('screening-transition')
 payload=''.join(commands)
 def run(exe):
  result=subprocess.run([exe],input=payload,text=True,capture_output=True)
@@ -94,9 +118,11 @@ for i,(label,a,b) in enumerate(zip(labels,actual,expected)):
  for col,(x,y) in enumerate(zip(a,b)):
   error=abs(x-y);rel=error/max(abs(y),1e-300)
   group['values']+=1;group['max_absolute_error']=max(group['max_absolute_error'],error);group['max_relative_error']=max(group['max_relative_error'],rel)
-  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition'] and col in [0,3] and ((x==0)!=(y==0))
+  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition','varied-optical-medium','screening-transition'] and col in [0,3] and ((x==0)!=(y==0))
   if activity_mismatch or not math.isfinite(x) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13): failures.append({'row':i,'column':col,'label':label,'cpp':x,'fortran':y})
 report={'scope':'optical medium and numerical tables, not full events','input_sha256':hashlib.sha256(payload.encode()).hexdigest(),
+ 'optical_configs_mass_density_skin_sigma':optical_configs,
+ 'screening_configs_floor_scale':screening_configs,
  'relative_tolerance':2e-12,'absolute_tolerance':2e-13,'groups':summary,'failures':failures,
  'sources':json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),
  'executables':{Path(exe).name:hashlib.sha256(Path(exe).read_bytes()).hexdigest() for exe in [cpp,fortran]}}
