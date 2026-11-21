@@ -2,8 +2,9 @@
 program kinematics
  implicit none
  integer hpmcfid,logfid,first,second
- double precision nominal(0:10000),eta_limit,temp_mass
- common /nominal_masses/ nominal
+ double precision nominal(23000),eta_limit,temp_mass
+ integer nominal_codes(23000),nominal_count
+ common /nominal_masses/ nominal,nominal_codes,nominal_count
  common /hepmcid/ hpmcfid,logfid
  integer n,npad,k(23000,5),mstu(200),mstj(200),i,status,warnings
  double precision p(23000,5),v(23000,5),paru(200),parj(200),mv(23000,5)
@@ -34,9 +35,10 @@ program kinematics
    nominal=0
    do i=1,n
     read(*,*)k(i,1),k(i,2),p(i,1:5),v(i,1:4),temp_mass
-    if(abs(k(i,2))>10000)stop 8
-    nominal(abs(k(i,2)))=temp_mass
+    nominal_codes(i)=abs(k(i,2))
+    nominal(i)=temp_mass
    enddo
+   nominal_count=n
    call preparepartons(first,second,eta_limit)
    do i=1,n
     write(*,'(I0,1X,9ES26.17E3)')k(i,1),p(i,1:5),v(i,1:4)
@@ -86,9 +88,14 @@ integer function pychge(code)
 end function
 double precision function pymass(code)
  implicit none
- integer code
- double precision nominal(0:10000)
- common /nominal_masses/ nominal
- if(abs(code)>10000)stop 6
- pymass=nominal(abs(code))
+ integer code,i,nominal_codes(23000),nominal_count
+ double precision nominal(23000)
+ common /nominal_masses/ nominal,nominal_codes,nominal_count
+ do i=1,nominal_count
+  if(nominal_codes(i)==abs(code))then
+   pymass=nominal(i)
+   return
+  endif
+ enddo
+ stop 6 ! Missing nominal mass is a harness error.
 end function

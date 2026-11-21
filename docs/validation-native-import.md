@@ -39,8 +39,9 @@ This is a raw import stage, **not an evolution-ready event**. Parent categories
 now follow the stock record distinction, but the compact record is not a
 one-to-one copy of Pythia6 history or its full ordering. No parton is activated
 and no virtualities are initialized. The native runner's ISR/MPI guard remains
-in place. Source string ordering, selection, hard/MPI virtuality initialization
-and cascade integration still need to be connected and validated.
+in place. Survivor selection is now connected and checked separately in
+[native preparation](validation-native-preparation.md). Source string ordering,
+hard/MPI virtuality initialization and cascade integration remain pending.
 
 ## Generated-record audit
 

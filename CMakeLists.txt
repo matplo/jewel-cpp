@@ -687,3 +687,8 @@ if(JEWEL_WITH_PYTHIA8)
  add_executable(jewel-isr-timing app/isr_timing_probe.cpp)
  target_link_libraries(jewel-isr-timing PRIVATE jewel_pythia8)
 endif()
+
+if(JEWEL_WITH_PYTHIA8)
+ add_executable(jewel-native-preparation app/native_preparation_probe.cpp)
+ target_link_libraries(jewel-native-preparation PRIVATE jewel_pythia8)
+endif()

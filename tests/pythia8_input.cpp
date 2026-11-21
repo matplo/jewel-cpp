@@ -94,6 +94,14 @@ int main(){
   }
   for(const auto& binding:bindings)check(sources.at(binding.native)==binding.source);
   native.validate();
+  // A nominal-mass failure after earlier records have been visited must not
+  // partially activate the imported state or lose attached timing.
+  auto preparation_copy=imported;unsigned mass_calls=0;bool preparation_rejected=false;
+  try{jewel::prepare_imported_partons(preparation_copy,[&](int pdg){if(++mass_calls==2)throw std::domain_error("mass lookup failure");return first.nominal_mass(pdg);},2);}
+  catch(const std::domain_error&){preparation_rejected=true;}
+  check(preparation_rejected&&mass_calls==2);
+  for(const auto& [id,source]:sources){const auto& old=native.at(id);const auto& node=preparation_copy.state.at(id);
+   check(node.particle.status==4&&node.record_mass==old.record_mass&&node.particle.momentum.energy==old.particle.momentum.energy&&node.decay_time==old.decay_time&&node.particle.production.t==old.particle.production.t);}
 
   bool invalid_mass=false;
   try{jewel::prepare_subsystem_isr_timing(*a,[](int){return -1.;});}catch(const std::domain_error&){invalid_mass=true;}

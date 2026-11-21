@@ -147,4 +147,24 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
  result.state.validate();return result;
 }
 
+void prepare_imported_partons(ImportedPythiaRecord& imported,
+ const std::function<double(int)>& nominal_mass,double eta_max){
+ auto require=[](bool ok,const char* why){if(!ok)throw std::domain_error(why);};
+ imported.state.validate();
+ require(!imported.subsystems.empty(),"preparation lacks primary hard pair");
+ require(bool(nominal_mass),"preparation lacks nominal mass provider");
+ std::vector<ShowerParticle> records;std::vector<double> masses;
+ std::array<std::size_t,2> hard{imported.input_sources.size(),imported.input_sources.size()};
+ for(const auto& node:imported.state.particles())if(imported.input_sources.count(node.particle.id)){
+  require(node.particle.status==4,"preparation requires inactive imported finals");
+  for(std::size_t side=0;side<2;++side)if(node.particle.id==imported.subsystems.front().hard[side])hard[side]=records.size();
+  masses.push_back(nominal_mass(node.particle.pdg));records.push_back(node);
+ }
+ require(records.size()==imported.input_sources.size(),"preparation map includes missing records");
+ prepare_surviving_partons(records,hard[0],hard[1],masses,eta_max);
+ auto working=imported.state;
+ for(const auto& node:records)working.at(node.particle.id)=node;
+ working.validate();imported.state=std::move(working);
+}
+
 }

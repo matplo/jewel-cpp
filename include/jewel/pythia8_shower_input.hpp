@@ -4,6 +4,7 @@
 #include "jewel/pythia8_isr.hpp"
 #include "jewel/hard_initialization.hpp"
 #include <map>
+#include <functional>
 namespace jewel {
 struct PreparedDijet {
  ShowerState state{-1e6};
@@ -51,5 +52,12 @@ struct ImportedPythiaRecord {
 // Optional order must be a permutation of all final source IDs.
 ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot&,
  double x,double y,double lifetime,const std::vector<ParticleId>& order={});
+
+// Apply GENEVENT survivor preparation to all imported finals in native slot
+// order, using the primary hard pair for ordered MAKEMASSLESS recoil.
+// Call after ISR timing and before primary/MPI virtuality initialization.
+// Nominal masses come from the generator. Entire state is transactional.
+void prepare_imported_partons(ImportedPythiaRecord&,
+ const std::function<double(int)>& nominal_mass,double max_pseudorapidity);
 
 }

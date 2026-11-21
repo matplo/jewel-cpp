@@ -841,3 +841,11 @@ Export completed native hadron runs to HepMC3 with
 environment. The final-state export is readable by hepyy-utils and preserves
 weights plus the full attempt ledger in run attributes.
 [Output scope, normalization and validation](docs/validation-native-hepmc3.md).
+
+### Native ISR/MPI preparation checkpoint
+
+Imported Pythia8 records now support ISR timing attachment followed by the
+JEWEL survivor-selection and ordered massless-conversion step. The generated
+record replay passes 640,920 values against the JEWEL 2.6.0 Fortran routines;
+see [native preparation validation](docs/validation-native-preparation.md).
+This adapter stage is not yet connected to full ISR/MPI cascade evolution.
