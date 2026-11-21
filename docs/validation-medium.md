@@ -80,7 +80,7 @@ final-splitting, PDF, scattering, event-geometry, transport and coherent-evoluti
 comparisons, plus their selected C++ contract tests. The final-splitting
 comparison checks 9,006,000 table values, and the scattering comparison checks
 1,203,300 grid values, plus their lookup/integral tests. The expanded nonzero-
-rapidity event-geometry test also passes independently: 33,060 values, maximum
+rapidity event-geometry test also passes independently: 143,220 values, maximum
 absolute error 1.42109e-14, with initialized grids unchanged byte for byte.
 No production physics code changed in this update.
 
@@ -96,3 +96,11 @@ geometries with both flow settings at all three table energies and includes
 proper times 0.2, 0.4, 1, 4, 20 and 100 fm. It also requires exact zero/nonzero
 agreement. All 11 related medium/table suites were rerun successfully with this
 extension; see [event-geometry evidence](validation-event-geometry.json).
+
+The latest combined geometry/rate extension additionally crosses six transverse
+positions with three massless projectile directions, including positive and
+negative longitudinal momentum. All 143,220 scalar comparisons pass with maximum
+absolute difference 1.42109e-14, and all 24 before/after grid checks remain
+byte-identical. The 11 medium/table regression suites also pass. This extends
+component coverage; it does not resolve the documented full-cascade mismatches
+or establish jet-level agreement.

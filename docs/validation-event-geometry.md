@@ -65,7 +65,13 @@ cooling and late shutoff. Zero versus nonzero agreement is required in addition
 to the numerical tolerance, preventing an inactive-medium discrepancy from
 being hidden by the absolute tolerance.
 
-**33,060 values pass** at abs=2e-13, rel=2e-12; maximum absolute difference is
+The extended matrix includes transverse points (0,0), (3,0), (7,0),
+(0,3), (3,4) and (−3,−4) fm. Each point is tested with massless incoming
+four-momenta (px,py,pz,E) = (10,0,0,10), (6,0,8,10) and
+(0,6,−8,10) GeV. This exercises off-axis geometry and partons moving with
+and against longitudinal flow without changing the input energy.
+
+**143,220 values pass** at abs=2e-13, rel=2e-12; maximum absolute difference is
 1.42109e-14. Each engine's complete scattering grid is byte-identical before and
 after all event-geometry changes (24 checks across the two engines). All 11 related
 medium, sampling, radiation, final-splitting, PDF and scattering differential

@@ -1,6 +1,6 @@
 {
   "scope": "event-local medium/rates after frozen initialization tables",
-  "values": 33060,
+  "values": 143220,
   "max_absolute_error": 1.4210854715202004e-14,
   "matrix": {
     "table_impact_parameters_fm": [
@@ -17,6 +17,52 @@
       9,
       14,
       "initialization value"
+    ],
+    "transverse_positions_fm": [
+      [
+        0,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        7,
+        0
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        -3,
+        -4
+      ]
+    ],
+    "incoming_momenta_px_py_pz_energy_gev": [
+      [
+        10,
+        0,
+        0,
+        10
+      ],
+      [
+        6,
+        0,
+        8,
+        10
+      ],
+      [
+        0,
+        6,
+        -8,
+        10
+      ]
     ],
     "proper_times_fm": [
       0.2,
@@ -513,7 +559,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "44824b0c9e9b6beb182821994ab3a781584ccc337fe39eb7adaf5c6c2c652460",
-    "jewel-medium-reference": "183549c850082bbbde7491f5f9459e64ed5b8a7a7112ffcc98c0fbaf210656d3"
+    "jewel-medium-probe": "e5f4f9c5757cda2e0646a6c3bf776745e124dc978a77db36baca0fc00837d4d2",
+    "jewel-medium-reference": "26ddda78feea07d5ba9efeb40d11b92eec79c783e5622957c99bfe96ec71faef"
   }
 }
