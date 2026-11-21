@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#include "jewel/radiation.hpp"
+#include "jewel/scattering.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -13,6 +13,7 @@ int main() {
  std::unique_ptr<jewel::InitialSudakovTable> sudakov;
  std::unique_ptr<jewel::FinalSplittingTable> final_table;
  std::unique_ptr<jewel::PartonicPdf> pdf;
+ std::unique_ptr<jewel::ScatteringRates> rates;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -31,7 +32,30 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="PCONFIG") {
+   if(op=="XCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>k.lambda_scattering>>emax>>scale>>boost))throw std::runtime_error("bad rate configuration");
+    rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);
+   } else if(op=="XDUMP") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);
+    for(double x:rates->transfers())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(double x:rates->debye_masses())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(auto row:rates->values())for(double x:row)out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    if(!out)throw std::runtime_error("rate dump failed");
+   } else if(op=="XINT") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    std::string name;double t,md;if(!(std::cin>>name>>t>>md))throw std::runtime_error("bad rate query");
+    jewel::RateChannel c;
+    if(name=="QA")c=jewel::RateChannel::QA;else if(name=="QB")c=jewel::RateChannel::QB;
+    else if(name=="GA")c=jewel::RateChannel::GA;else if(name=="GB")c=jewel::RateChannel::GB;else throw std::runtime_error("bad rate channel");
+    std::cout<<rates->integral(t,md,c)<<'\n';
+   } else if(op=="XSEC") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    jewel::Momentum p;jewel::SpaceTime v;double mass,lower;char incoming,outgoing;int mode;
+    if(!(std::cin>>p.px>>p.py>>p.pz>>p.energy>>mass>>lower>>incoming>>outgoing>>v.x>>v.y>>v.z>>v.t>>mode))throw std::runtime_error("bad cross section query");
+    std::cout<<rates->cross_section(p,mass,lower,incoming,outgoing,v,mode)<<'\n';
+   } else if(op=="PCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad partonic PDF config");
     pdf=std::make_unique<jewel::PartonicPdf>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
@@ -98,7 +122,30 @@ int main() {
     if(!(std::cin>>count)||count>100000) throw std::runtime_error("invalid replay size");
     std::vector<double> tape(count); for(double& r:tape) if(!(std::cin>>r)) throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="PCONFIG") {
+    if(op=="XCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>k.lambda_scattering>>emax>>scale>>boost))throw std::runtime_error("bad rate configuration");
+    rates=std::make_unique<jewel::ScatteringRates>(k,q0,emax,scale,*medium,boost!=0);
+   } else if(op=="XDUMP") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);
+    for(double x:rates->transfers())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(double x:rates->debye_masses())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(auto row:rates->values())for(double x:row)out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    if(!out)throw std::runtime_error("rate dump failed");
+   } else if(op=="XINT") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    std::string name;double t,md;if(!(std::cin>>name>>t>>md))throw std::runtime_error("bad rate query");
+    jewel::RateChannel c;
+    if(name=="QA")c=jewel::RateChannel::QA;else if(name=="QB")c=jewel::RateChannel::QB;
+    else if(name=="GA")c=jewel::RateChannel::GA;else if(name=="GB")c=jewel::RateChannel::GB;else throw std::runtime_error("bad rate channel");
+    std::cout<<rates->integral(t,md,c)<<'\n';
+   } else if(op=="XSEC") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    jewel::Momentum p;jewel::SpaceTime v;double mass,lower;char incoming,outgoing;int mode;
+    if(!(std::cin>>p.px>>p.py>>p.pz>>p.energy>>mass>>lower>>incoming>>outgoing>>v.x>>v.y>>v.z>>v.t>>mode))throw std::runtime_error("bad cross section query");
+    std::cout<<rates->cross_section(p,mass,lower,incoming,outgoing,v,mode)<<'\n';
+   } else if(op=="PCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad partonic PDF config");
     pdf=std::make_unique<jewel::PartonicPdf>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));

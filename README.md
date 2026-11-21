@@ -195,3 +195,31 @@ That case is tested and documented, not counted as numerical agreement.
 [PDF validation](docs/validation-pdf.md) covers four complete table sets,
 density endpoints, direct integrals and extrapolated table queries. Remaining
 work includes scattering-rate grids and their integration into evolution.
+
+## Milestone 1g: scattering-rate grids and cross sections
+
+`include/jewel/scattering.hpp` provides `ScatteringRates`, translating XSECINT,
+GETXSECINT and GETSSCAT. It builds all four 1,000 × 100 grids (QA/QB/GA/GB),
+with logarithmic transfer and linear Debye-mass coordinates. The model owns
+its medium, partonic PDFs and Sudakov data, avoiding shared mutable COMMON
+state. `integral(t, md, channel)` retains stock bilinear interpolation and
+extrapolation; a constant Debye grid uses its single physical column.
+
+`cross_section(projectile, mass, lower_transfer, incoming, outgoing, position,
+mode)` supports Q/G projectiles, Q/G/combined-C outgoing channels and all three
+query modes: local medium (0), minimum screening (1), maximum screening (2).
+The lower-transfer argument is squared internally, as LW in stock GETSSCAT.
+It returns the stock integrated cross section; the collision rate still needs
+the medium-density and evolution-time factors. Do not treat this call alone as
+an event transport algorithm.
+
+The implementation deliberately preserves the reference's use of Lambda_shower
+in the second rate integrals and Lambda_scattering in SCATPRIMFUNC, and the
+single-precision quark colour factor 2./3. Empty phase space returns zero;
+negative accumulated cross sections are clamped to zero as in stock. Invalid
+query types or nonfinite inputs throw.
+
+[Scattering validation](docs/validation-scattering.md) compares every grid entry
+and channel queries, including distinct coupling scales, medium boosts,
+non-unit SCALEFACM and a constant Debye-mass grid. Full transport evolution,
+colour/recoil bookkeeping and Pythia8 event integration remain outstanding.

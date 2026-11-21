@@ -46,6 +46,11 @@ program mediumprobe
  double precision qinqx(2,1000),ginqx(2,1000),qingx(2,1000),gingx(2,1000)
  common /PDFS/ qinqx,ginqx,qingx,gingx
  double precision getpdf,getpdfxintexact,getpdfxint
+ double precision intq1(1001,101),intq2(1001,101),intg1(1001,101),intg2(1001,101)
+ common /XSECS/ intq1,intq2,intg1,intg2
+ double precision getxsecint,getsscat,pmass,lower
+ integer rate_mode
+ character incoming,outgoing
  character(20) op
  logfid=0
  logfid2=0
@@ -151,6 +156,30 @@ program mediumprobe
    if(trim(op)=='PEXACT')v=getpdfxintexact(x,channel)
    if(trim(op)=='PINT')v=getpdfxint(x,channel)
    write(*,'(ES26.17E3)')v
+  case('XCONFIG')
+   read(*,*) knf,q0,lps,lqcd,emax,scalefacm,boostflag
+   boost=boostflag/=0
+   call insudaint(emax)
+   call pdfint(emax)
+   call xsecint(emax)
+  case('XDUMP')
+   read(*,'(A)') dumpfile
+   open(unit=89,file=trim(dumpfile),access='stream',form='unformatted',status='replace')
+   write(89) intq1(1:1000,101),intq1(1001,1:100)
+   do i=1,1000
+    do j=1,100
+     write(89) intq1(i,j),intq2(i,j),intg1(i,j),intg2(i,j)
+    enddo
+   enddo
+   close(89)
+  case('XINT')
+   read(*,*) channel,x,y
+   v=getxsecint(x,y,channel)
+   write(*,'(ES26.17E3)')v
+  case('XSEC')
+   read(*,*) px,py,pz,energy,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode
+   v=getsscat(energy,px,py,pz,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode)
+   write(*,'(ES26.17E3)')v
   case('CROSS')
    call calcxsection
    do i=1,200
@@ -191,6 +220,8 @@ end program
 function deriv(x,w) result(v)
  implicit none
  double precision x,v,medderiv,getinspliti,getspliti,alphas,pqq,pgg,pqg,pgq,getinsudafast
+ double precision qlow,mdx,scatprimfunc
+ common /XSECV/ qlow,mdx
  double precision xmax,z
  common /PDFINTV/ xmax,z
  double precision qquad,fm
@@ -231,6 +262,14 @@ function deriv(x,w) result(v)
   v=2*getinsudafast(x,xmax,'QQ')*alphas((1-z)*x**2,lps)*pqg(z)/(2*pi*x)
  else if(w==10) then
   v=2*getinsudafast(x,xmax,'GC')*alphas((1-z)*x**2,lps)*2*pgg(z)/(2*pi*x)
+ else if(w==11) then
+  v=3*getinspliti(scalefacm*sqrt(x),'GQ')*scatprimfunc(x,mdx)/(2*x)
+ else if(w==12) then
+  v=2*getinspliti(scalefacm*sqrt(x),'QG')*scatprimfunc(x,mdx)/(3*x)
+ else if(w==13) then
+  v=getinsudafast(qlow,scalefacm*sqrt(x),'GC')*3*2*pi*alphas(x+mdx**2,lps)**2/(2*(x+mdx**2)**2)
+ else if(w==14) then
+  v=getinsudafast(qlow,scalefacm*sqrt(x),'QQ')*2*2*pi*alphas(x+mdx**2,lps)**2/(3*(x+mdx**2)**2)
  else if(w==21) then
   v=2*getinsudafast(x,xmax,'QQ')*getinspliti(x,'QQ')/x
  else if(w==22) then
