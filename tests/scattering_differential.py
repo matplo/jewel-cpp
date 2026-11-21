@@ -36,6 +36,35 @@ with tempfile.TemporaryDirectory() as tmp:
    records.append(dict(executable=Path(exe).name,nf=nf,q0=q0,lambda_shower=lps,lambda_scattering=lqcd,emax=emax,scale=scale,boost=boost,debye_floor=floor,seconds=time.monotonic()-start,table_sha256=hashlib.sha256(raw).hexdigest()))
    print('built',Path(exe).name,'NF',nf,flush=True)
   compare('full-grids',data[0],data[1]);compare('integrals-and-cross-sections',values[0],values[1])
+  # Use reference coordinates for identical queries in both independently built
+  # engines. Probe every interpolation-cell boundary and adjacent doubles.
+  transfers=list(data[1][:1000]);debye=list(data[1][1000:1100])
+  neighbours=lambda x: (math.nextafter(x,-math.inf),x,math.nextafter(x,math.inf))
+  boundary_queries=[]
+  for channel in ['QA','QB','GA','GB']:
+   for t in transfers:
+    for near in neighbours(t):
+     for md in sorted(set([debye[0],debye[49],debye[-1]])):
+      boundary_queries.append(f'XINT\n{channel} {near:.17g} {md:.17g}\n')
+   for md in sorted(set(debye)):
+    for near in neighbours(md):
+     for t in [transfers[0],transfers[499],transfers[-1]]:
+      boundary_queries.append(f'XINT\n{channel} {t:.17g} {near:.17g}\n')
+   # Stock linear extrapolation outside both axes is part of the contract.
+   for t in [transfers[0]/2,transfers[-1]*2]:
+    for md in [debye[0]/2,debye[-1]*2]:
+     boundary_queries.append(f'XINT\n{channel} {t:.17g} {md:.17g}\n')
+  boundary_payload=base+''.join(boundary_queries)
+  boundary_results=[]
+  for exe in [cpp,reference]:
+   r=subprocess.run([exe],input=boundary_payload,text=True,capture_output=True,timeout=180)
+   if r.returncode:raise RuntimeError((exe,r.returncode,r.stderr[-1500:]))
+   boundary_results.append([float(line) for line in r.stdout.splitlines()])
+  assert all(len(result)==len(boundary_queries) for result in boundary_results)
+  compare('grid-boundaries-and-extrapolation',*boundary_results)
+  records.append(dict(scope='grid-boundaries-and-extrapolation',nf=nf,boost=boost,
+   debye_floor=floor,queries=len(boundary_queries),
+   input_sha256=hashlib.sha256(boundary_payload.encode()).hexdigest()))
 report=dict(scope='scattering grids and channel cross sections, not transport events',groups=groups,failures=failures,records=records,
  relative_tolerance=2e-12,absolute_tolerance=2e-13,
  sources=json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),
