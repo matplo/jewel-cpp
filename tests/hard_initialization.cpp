@@ -20,4 +20,20 @@ int main(){
  jewel::SplitMixRandom random(2600100);jewel::initialize_hard_dijet(state,first,second,config,sampler,random);state.validate();
  auto a=state.at(first).particle.momentum,b=state.at(second).particle.momentum;
  check(std::abs(a.energy+b.energy-20)<1e-10&&std::abs(a.px+b.px)<1e-10);
+ // MPI switches override the primary hard scale and do not consult colour angles.
+ state.restore(baseline);config.mpi_pair=true;config.mpi_fsr=false;config.mpi_sampling_channels=std::array<jewel::Channel,2>{jewel::Channel::QQ,jewel::Channel::QQ};config.first_angle_ordering=true;config.pt_hat=1000;
+ for(auto id:{first,second}){state.at(id).particle.colour=0;state.at(id).particle.anticolour=0;}
+ jewel::ReplayRandom no_mpi_fsr({.5});auto mpi=jewel::initialize_hard_dijet(state,first,second,config,sampler,no_mpi_fsr);
+ check(no_mpi_fsr.checkpoint()==1&&mpi.colour_angles[0]==-1&&mpi.colour_angles[1]==-1);
+ check(state.at(first).record_mass==0&&state.at(second).record_mass==0);
+ config.mpi_fsr=true;state.restore(baseline);jewel::SplitMixRandom mpi_random(2600100);
+ jewel::initialize_hard_dijet(state,first,second,config,sampler,mpi_random);
+ auto mpi_a=state.at(first),mpi_b=state.at(second);auto draws=mpi_random.checkpoint();
+ state.restore(baseline);config.pt_hat=0;jewel::SplitMixRandom mpi_repeat(2600100);
+ jewel::initialize_hard_dijet(state,first,second,config,sampler,mpi_repeat);
+ check(draws==mpi_repeat.checkpoint()&&state.at(first).record_mass==mpi_a.record_mass&&state.at(second).record_mass==mpi_b.record_mass);
+ check(state.at(first).particle.momentum.energy==mpi_a.particle.momentum.energy&&state.at(second).particle.momentum.energy==mpi_b.particle.momentum.energy);
+ config.mpi_sampling_channels.reset();jewel::ReplayRandom missing_channels({.5});bool missing_rejected=false;
+ try{jewel::initialize_hard_dijet(state,first,second,config,sampler,missing_channels);}catch(const std::domain_error&){missing_rejected=true;}
+ check(missing_rejected&&missing_channels.checkpoint()==0);
 }

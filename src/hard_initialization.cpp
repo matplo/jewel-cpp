@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// PPJJ branch of FINDVIRTUALITIES and GETTHETAM, JEWEL 2.6.0.
+// PPJJ and MPI-pair branches of FINDVIRTUALITIES and GETTHETAM, JEWEL 2.6.0.
 #include "jewel/hard_initialization.hpp"
 #include "jewel/kinematics.hpp"
 #include <algorithm>
@@ -37,9 +37,21 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  state.validate();require(first!=second,"identical hard legs");
  for(double x:{config.pt_hat,config.x,config.y,config.formation_factor,config.lifetime})require(std::isfinite(x),"nonfinite hard initialization configuration");
  require(config.pt_hat>=0&&config.formation_factor>0&&config.lifetime>=0&&config.maximum_trials>0,"invalid hard initialization configuration");
+ if(config.mpi_pair){require(config.mpi_sampling_channels.has_value(),"MPI initialization requires explicit TYPE1/TYPE2 channels");
+  for(auto channel:*config.mpi_sampling_channels)require(channel==Channel::QQ||channel==Channel::GC,"unsupported MPI sampling channel");}
  auto working=state;auto& a=working.at(first);auto& b=working.at(second);
  for(auto* leg:{&a,&b})require(parton(leg->particle.pdg)&&(leg->particle.status==1||leg->particle.status==4),"hard dijet initialization requires active quarks/gluons");
- HardInitializationResult result;result.colour_angles={colour_opening_angle(working,first),colour_opening_angle(working,second)};
+ HardInitializationResult result;result.colour_angles=config.mpi_pair?std::array<double,2>{-1,-1}:std::array<double,2>{colour_opening_angle(working,first),colour_opening_angle(working,second)};
+ // Source computes these scales before the pair rest-frame round trip.
+ auto maximum=[&](const ShowerParticle& leg){
+  if(leg.particle.status==4||(config.mpi_pair&&!config.mpi_fsr))return 0.;
+  if(!config.mpi_pair)return config.pt_hat;
+  const auto& p=leg.particle.momentum;
+  double delta=std::abs(rapidity(a.particle.momentum,a.record_mass)-rapidity(b.particle.momentum,b.record_mass));
+  double value=std::sqrt(p.px*p.px+p.py*p.py)*std::exp(double(.3f)*delta/2.)/2.;
+  require(std::isfinite(value),"nonfinite MPI initialization scale");return value;
+ };
+ const double maximum_a=maximum(a),maximum_b=maximum(b);
  const double energy=a.particle.momentum.energy+b.particle.momentum.energy;
  require(energy>0,"nonpositive hard pair energy");
  const std::array<double,3> beta{(a.particle.momentum.px+b.particle.momentum.px)/energy,(a.particle.momentum.py+b.particle.momentum.py)/energy,(a.particle.momentum.pz+b.particle.momentum.pz)/energy};
@@ -47,8 +59,8 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  require(beta[0]*beta[0]+beta[1]*beta[1]+beta[2]*beta[2]<1,"non-timelike hard pair");
  boost(a,inverse);boost(b,inverse);const double total=a.particle.momentum.energy+b.particle.momentum.energy;
  boost(a,beta);boost(b,beta);
- auto sample=[&](ShowerParticle& leg,double maximum){return sampler.mass(0,maximum,-1,energy,leg.particle.pdg==21?Channel::GC:Channel::QQ,energy,false,random);};
- auto qa=sample(a,a.particle.status==4?0:config.pt_hat),qb=sample(b,b.particle.status==4?0:config.pt_hat);
+ auto sample=[&](ShowerParticle& leg,double maximum){return sampler.mass(0,maximum,-1,energy,config.mpi_pair?(*config.mpi_sampling_channels)[&leg==&a?0:1]:(leg.particle.pdg==21?Channel::GC:Channel::QQ),energy,false,random);};
+ auto qa=sample(a,maximum_a),qb=sample(b,maximum_b);
  auto draw=[&]{double u=random.uniform();require(std::isfinite(u)&&u>0&&u<1,"invalid initialization random draw");return u;};
  for(;;){
   if(++result.trials>config.maximum_trials)throw std::runtime_error("hard initialization retries exhausted");

@@ -806,3 +806,7 @@ The [signed-energy audit](docs/validation-isr-energy-frames.md) shows that a fin
 boost does not resolve all negative spacelike energies. The timing kernel now
 preserves the signed Fortran expression and passes 1152 reference cases; its
 physical use for reconstructed Pythia8 histories remains under investigation.
+
+[MPI pair virtuality initialization](docs/validation-mpi-initialization.md) now
+preserves the source rapidity-dependent scale, MPIFSR switch and explicit
+TYPE1/TYPE2 context. MPI pair discovery and event generation remain pending.
