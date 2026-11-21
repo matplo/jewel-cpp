@@ -23,6 +23,13 @@ int main(){
    check(x.status==y.status&&x.pdg==y.pdg&&x.mothers==y.mothers&&x.daughters==y.daughters&&x.colour==y.colour&&x.anticolour==y.anticolour);
    check(x.momentum.px==y.momentum.px&&x.momentum.py==y.momentum.py&&x.momentum.pz==y.momentum.pz&&x.momentum.energy==y.momentum.energy);
   }
+  auto primordial=jewel::reconstruct_primordial_recoil_frame(*a);
+  check(primordial.copies.size()>=4);
+  auto displacement=jewel::apply_primordial_frame_displacement(primordial,{.2,-.4,.1,1.});
+  check(std::abs(displacement.t*displacement.t-displacement.x*displacement.x-displacement.y*displacement.y-displacement.z*displacement.z-.79)<1e-9);
+  auto corrupted_primordial=*a;
+  for(auto pair:primordial.copies)if(std::abs(a->particles[pair[1]-1].status)==62){corrupted_primordial.particles[pair[1]-1].momentum.energy+=1;break;}
+  bool bad_primordial=false;try{jewel::reconstruct_primordial_recoil_frame(corrupted_primordial);}catch(const std::domain_error&){bad_primordial=true;}check(bad_primordial);
   check(a->initial_state_radiation==isr&&b->initial_state_radiation==isr);
   check(a->isr_emissions==b->isr_emissions&&a->isr_final==b->isr_final);
   emission_count+=a->isr_emissions.size();

@@ -34,4 +34,15 @@ Momentum apply_isr_frame(const IsrRecoilFrame&,Momentum);
 // Apply to a displacement relative to an independently chosen event origin.
 // Does not choose that origin or assign a production time.
 SpaceTime apply_isr_frame_displacement(const IsrRecoilFrame&,SpaceTime);
+struct PrimordialRecoilFrame {
+ std::array<ParticleId,2> incoming_before{},incoming_after{};
+ std::array<double,16> matrix{}; // Same (energy,px,py,pz) convention.
+ std::vector<std::array<ParticleId,2>> copies; // Includes incoming 61 and outgoing 62.
+ double maximum_copy_error{};
+};
+// Single pp hard system only; reconstructs BeamRemnants' toCM/fromCM mapping.
+// Additional rescattering mismatch corrections are unsupported and fail closure.
+PrimordialRecoilFrame reconstruct_primordial_recoil_frame(const HardEventSnapshot&);
+Momentum apply_primordial_frame(const PrimordialRecoilFrame&,Momentum);
+SpaceTime apply_primordial_frame_displacement(const PrimordialRecoilFrame&,SpaceTime);
 }

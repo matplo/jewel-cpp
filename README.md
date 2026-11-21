@@ -796,3 +796,8 @@ integration; signed spacelike energies are preserved.
 ordinary initial-initial Pythia8 recoil copies and transforms spacetime
 displacements. Primordial recoil and physical production-point assignment
 remain pending.
+
+[Primordial recoil reconstruction](docs/validation-primordial-recoil.md) now
+completes the checked momentum-copy path for the reduced single-system samples.
+Composed ISR and primordial matrices reproduce final hard/emitted partons;
+physical production-time assignment and ISR medium evolution remain pending.

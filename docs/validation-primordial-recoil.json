@@ -1,0 +1,73 @@
+{
+  "scope": "Single-system Pythia8 primordial recoil and composed momentum/displacement transport; no physical production-time assignment",
+  "samples": [
+    {
+      "input": "/private/tmp/jewel-primordial-2600317.jsonl",
+      "sha256": "0b0c9cf794bf60399182c88a787a3b043a262c00eed4730c01d67cddc3adf878",
+      "events": 1000,
+      "copies": 7935,
+      "transported_final_partons": 5935,
+      "max_composed_momentum_error_gev": 2.056594894384034e-10,
+      "max_copy_error_gev": 1.4597389963455498e-10,
+      "max_lorentz_metric_error": 9.381384558082573e-14,
+      "max_displacement_roundtrip_error_fm": 3.4017233474514796e-13
+    },
+    {
+      "input": "/private/tmp/jewel-primordial-2600318.jsonl",
+      "sha256": "b3e31f787f9bd9f98807bf4b21980bd5e0025aabdc3f5da1586849bb7f04b1d4",
+      "events": 1000,
+      "copies": 8018,
+      "transported_final_partons": 6018,
+      "max_composed_momentum_error_gev": 1.9898607206414454e-09,
+      "max_copy_error_gev": 8.003553375601768e-11,
+      "max_lorentz_metric_error": 9.57012247226885e-14,
+      "max_displacement_roundtrip_error_fm": 3.0331293032759277e-13
+    },
+    {
+      "input": "/private/tmp/jewel-primordial-2600319.jsonl",
+      "sha256": "7d38be50f31dadf8a3dcca3acfb5cd9154d05402dc122879e7ebe55d3df4b20c",
+      "events": 1000,
+      "copies": 7990,
+      "transported_final_partons": 5990,
+      "max_composed_momentum_error_gev": 3.12070369545836e-10,
+      "max_copy_error_gev": 5.630695909530914e-11,
+      "max_lorentz_metric_error": 9.559020242022598e-14,
+      "max_displacement_roundtrip_error_fm": 3.3928415632544784e-13
+    },
+    {
+      "input": "/private/tmp/jewel-primordial-off1000.jsonl",
+      "sha256": "b9bcce95ac15f5f3054fb5e5a34c7924001fe8a273cbaa6ba47b1301b49b0e8e",
+      "events": 1000,
+      "copies": 4000,
+      "transported_final_partons": 2000,
+      "max_composed_momentum_error_gev": 4.135927156312391e-10,
+      "max_copy_error_gev": 4.702087608166039e-10,
+      "max_lorentz_metric_error": 2.384314967684986e-12,
+      "max_displacement_roundtrip_error_fm": 7.526868017748711e-12
+    }
+  ],
+  "acceptance": {
+    "copy_absolute_tolerance_gev": 2e-09,
+    "copy_relative_tolerance": 2e-11,
+    "composed_absolute_tolerance_gev": 1e-08,
+    "composed_relative_tolerance": 1e-10,
+    "metric_tolerance": 1e-09,
+    "displacement_roundtrip_tolerance_fm": 1e-09
+  },
+  "prior_isr_on_events_exactly_unchanged": 3000,
+  "executable_sha256": "9814f9935202e373921991e303f83aec244286d91a6ede54f0df2bfda9715895",
+  "source_sha256": {
+    "adapters/pythia8_primordial.cpp": "5da56e3a46f553fd3974c34e91365e47872aeebf7737b5ebf13490164d4d9b15",
+    "include/jewel/pythia8_isr.hpp": "c0af1340c02fc5adf490f9132499444dac7a6b40063a1be6957ca44d1dff97eb",
+    "tests/primordial_audit.py": "4dc95df92cff2a50850b9e3e1dc84f54de81a94d44094b1c4b3fe73f8bf399d2",
+    "tests/pythia8_input.cpp": "86d3c869bf15e77016f84c4d8f4f03ad06f9772665a57574771960a5dcbf7a58"
+  },
+  "pythia_source_sha256": "7a466ba004f96bb717027087ded4438e1bfc95ce64cc9135d43f71ea5b6edfb5",
+  "tests": {
+    "input": "pass",
+    "isr_cli": "pass",
+    "boundary": "pass",
+    "shower_output": "pass",
+    "isr_times": "pass"
+  }
+}

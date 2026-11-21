@@ -50,6 +50,10 @@ int main(int argc,char** argv){
     out<<"{\"emitted\":"<<f.emitted<<",\"mother\":"<<f.mother<<",\"recoiler\":"<<f.recoiler<<",\"old_recoiler\":"<<f.old_recoiler<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);
     out<<",\"copies\":[";bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";
    }}out<<']';
+   {auto f=jewel::reconstruct_primordial_recoil_frame(e);
+    out<<",\"primordial_recoil_frame\":{\"incoming_before\":";list(out,f.incoming_before);out<<",\"incoming_after\":";list(out,f.incoming_after);
+    out<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);out<<",\"copies\":[";
+    bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";}
    out<<",\"particles\":[";first=true;
    for(const auto& p:e.particles){if(!first)out<<',';first=false;
     out<<"{\"id\":"<<p.id<<",\"source_index\":"<<p.source_index<<",\"pdg\":"<<p.pdg<<",\"status\":"<<p.status<<",\"final\":"<<p.final<<",\"colour\":"<<p.colour<<",\"anticolour\":"<<p.anticolour<<",\"momentum\":";list(out,std::array<double,4>{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy});
