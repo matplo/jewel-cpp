@@ -24,6 +24,11 @@ for mass,nf,woods,b,taui,ti,tc in [(208,3,1,0,.4,.59,.17),(208,3,1,7,.4,.59,.17)
   return [list(map(float,line.split())) for line in result.stdout.splitlines()][-100:]
  knots=table_from(fortran)
  commands.append('CROSS\n'); labels+=['cross-section-table']*200
+ commands.append('BOUNDS\n'); labels.append('medium-bounds')
+ for boost in [0,1]:
+  commands.append(f'MAXIMUM\n{boost}\n'); labels.append('maximum-scatterer')
+  for eta in [-3,-1,0,1,3]:
+   commands.append(f'AVERAGE\n0 0 {math.sinh(eta):.17g} {math.cosh(eta):.17g} {boost}\n'); labels.append('average-scatterer')
  for radial in [0,knots[1][0],knots[50][0],knots[-1][0],knots[-1][0]+1e-10,20]:
   commands.append(f'THICK\n{radial:.17g} 0\n'); labels.append('thickness-boundary')
  for i in range(40):

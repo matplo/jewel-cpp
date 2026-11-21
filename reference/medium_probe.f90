@@ -28,6 +28,12 @@ program mediumprobe
  ANGORD,aofirstsplit,SCATRECOIL,ALLHAD,compress,mpifsr,KNF,KINMODE,recmode
  double precision impmax,cross(200,3),intpqglow,intpqghigh,scatprimfunc
  common /CROSSSEC/ impmax,cross
+ double precision tape(100000),px,py,pz,energy,ms
+ integer count,cursor,boostflag,ptype
+ common /REPLAY/ tape,count,cursor
+ logical boost
+ common /boostmed/ boost
+ double precision gettempmax,getmdmax,getmdmin,getmsmax,getnatmdmin,getltimemax,getneffmax
  character(20) op
  logfid=0
  logfid2=0
@@ -43,6 +49,44 @@ program mediumprobe
    read(*,*) mass,nf,woodflag,taui,ti,tc,n0,d,sigmann,breal,etamax2,mdfactor,mdscalefac
    woods=woodflag/=0
    call calcta
+  case('EVENT')
+   read(*,*) centrmin,centrmax
+   read(*,*) count
+   if(count<1.or.count>100000) stop 5
+   read(*,*) tape(1:count)
+   cursor=0
+   call calcxsection
+   call mednextevt
+   write(*,'(2ES26.17E3,1X,I0)') breal,centr,cursor
+  case('VERTEX')
+   read(*,*) breal,rau
+   read(*,*) count
+   if(count<1.or.count>100000) stop 5
+   read(*,*) tape(1:count)
+   cursor=0
+   call pickvtx(x,y)
+   write(*,'(2ES26.17E3,1X,I0)') x,y,cursor
+  case('SCATTER')
+   read(*,*) x,y,z,t,boostflag
+   read(*,*) count
+   if(count<1.or.count>100000) stop 5
+   read(*,*) tape(1:count)
+   cursor=0
+   boost=boostflag/=0
+   call getscatterer(x,y,z,t,ptype,px,py,pz,energy,ms)
+   write(*,'(I0,5ES26.17E3,1X,I0)') ptype,px,py,pz,energy,ms,cursor
+  case('BOUNDS')
+   write(*,'(7ES26.17E3)') gettempmax(),getmdmax(),getmdmin(),getmsmax(),getnatmdmin(),getltimemax(),getneffmax()
+  case('AVERAGE')
+   read(*,*) x,y,z,t,boostflag
+   boost=boostflag/=0
+   call avscatcen(x,y,z,t,px,py,pz,energy,ms)
+   write(*,'(5ES26.17E3)') px,py,pz,energy,ms
+  case('MAXIMUM')
+   read(*,*) boostflag
+   boost=boostflag/=0
+   call maxscatcen(px,py,pz,energy,ms)
+   write(*,'(5ES26.17E3)') px,py,pz,energy,ms
   case('CROSS')
    call calcxsection
    do i=1,200
@@ -91,4 +135,15 @@ function deriv(x,w) result(v)
  else
   stop 4
  endif
+end function
+
+function pyr(dummy) result(v)
+ implicit none
+ integer dummy,count,cursor
+ double precision tape(100000),v
+ common /REPLAY/ tape,count,cursor
+ if(cursor>=count) stop 6
+ cursor=cursor+1
+ v=tape(cursor)
+ if(v<=0.or.v>=1) stop 7
 end function

@@ -1,6 +1,6 @@
 {
   "scope": "optical medium and numerical tables, not full events",
-  "input_sha256": "e284837fb580a611640802cd22af632e1d430cfeeb127be669b4d80b9a6e4054",
+  "input_sha256": "d0cce94c8052f6f8e67f34bb9a7b1db35585bc8fdf8217bdf3c3e21d834b0a9b",
   "relative_tolerance": 2e-12,
   "absolute_tolerance": 2e-13,
   "groups": {
@@ -36,6 +36,21 @@
     },
     "cross-section-table": {
       "values": 2400,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "medium-bounds": {
+      "values": 28,
+      "max_absolute_error": 2.842170943040401e-14,
+      "max_relative_error": 2.7657485409900073e-16
+    },
+    "maximum-scatterer": {
+      "values": 40,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "average-scatterer": {
+      "values": 200,
       "max_absolute_error": 0.0,
       "max_relative_error": 0.0
     },
@@ -132,6 +147,54 @@
         "CALCXSECTION": [
           762,
           804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
         ]
       }
     },
@@ -146,7 +209,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "8562339b1f7cf512ad65824be56dccaebae9839140e0daa835d0a189ac464e27",
-    "jewel-medium-reference": "a3bd3e8a6bff289c10fcff28c37faf73c669de7ba6ee105a180c34e128bc1c14"
+    "jewel-medium-probe": "f8705aa5d4a47b10d9632b3208e0365bdb1cb015fd0a1e6dbbedac86bc036e80",
+    "jewel-medium-reference": "6b7123d1e88e744046b7457c30b232e376cee02d69d32ed477cd76c65c6253ad"
   }
 }

@@ -26,7 +26,7 @@ Rows contain `operation nf a b c`; output is `value random_draw_count`. For GETT
 
 - Owned event storage with stable particle IDs, parent references, production coordinates, momentum and colour fields. It is an initial append-only graph; colour closure and evolution accounting are not implemented.
 - Explicit RNG interface and finite replay tape, checkpoint/restore, exhausted-tape errors. No claim that a standard C++ RNG reproduces PYR; callers supply a recorded tape.
-- Medium interface, zero-density vacuum implementation and expanding optical medium (see milestone 1b below). Thermal-scatterer sampling remains to be ported.
+- Medium interface, zero-density vacuum implementation and expanding optical medium (see milestone 1b below). Thermal-scatterer sampling is covered by milestone 1c below.
 - Direct translations of PQQ, PGQ, PGG, PQG, ALPHAS, INTPQQ, INTPGGLOW, INTPGGHIGH and GETT. GETT rejection sampling uses the same draw order and empty-interval convention.
 - ALPHAS deliberately retains the Fortran single-precision beta-function coefficient before double-precision evaluation. Changing that is a separate numerical change.
 
@@ -42,7 +42,7 @@ python3 reference/freeze.py --variant stock --output validation-output/stock-001
   --file /path/to/medium.params.dat --file /path/to/pdf-member.dat
 ```
 
-The full stages 0 and 1 remain open. Next implement the remaining splitting/Sudakov/scattering grids, medium sampling bounds, thermal-scatterer draws, centrality and vertex sampling. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
+The full stages 0 and 1 remain open. Next implement the remaining splitting/Sudakov/scattering grids, the run configuration and evolution state machine. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
 
 Pythia8 hard-event import and separate hadronization adapters follow core evolution validation. No Pythia8, TGlauberMC or JETSCAPE dependency is introduced here. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
 
@@ -97,6 +97,33 @@ MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
   throw if they request such a value. Integration failures throw instead of
   printing a warning and returning a partial result.
 
-This does not yet implement medium event/vertex sampling, thermal momenta,
-medium-query bounds, complete shower/scattering rate grids or transport evolution.
+Complete shower/scattering rate grids and transport evolution remain unimplemented.
 It is validation of medium fields and these tables, not full JEWEL event parity.
+
+## Milestone 1c: medium sampling and bounds
+
+`GeometrySampler` builds from a medium's cross-section table and returns impact
+parameter plus centrality **fraction** (input centrality limits are percentages).
+Use `medium.with_impact_parameter(b)` to obtain event-specific geometry without
+rebuilding the thickness table. `sample_vertex(random)` follows stock PICKVTX,
+including the stock 10 fm sampling radius; this differs from the Woods-Saxon
+radius used to construct the thickness table.
+
+`sample_scatterer(position, random, boost)` follows stock GETSCATTERER species
+selection, rejection weights, momentum cutoff, angles and longitudinal boost.
+`type=2` is the stock quark-class indicator, not a resolved quark flavour.
+The output mass and momentum are in GeV. Stock's zero-momentum cold-medium
+fallback is preserved with `synthetic=true` so the evolution engine can diagnose
+it. Timelike sampling positions are required. Random draws must be in (0,1),
+and exhausted replay tapes throw. The stock species-dependent weight signs
+are preserved rather than replaced with a different thermal prescription.
+
+`bounds()`, `average_scatterer()` and `maximum_scatterer()` cover the medium
+queries needed by rate tabulation. They preserve the stock distinction between
+GETMS's single-precision sqrt(2.) and GETMSMAX's double-precision sqrt(2.D0).
+Bounds require positive Tc and Debye scale to avoid undefined divisions.
+Centrality input requires 0 <= min < max <= 100; a rounded draw at unity or an
+empty cumulative interval throws rather than reading past the stock table.
+
+See [sampling validation](docs/validation-sampling.md). These interfaces still
+need integration with the complete shower and run/card configuration.

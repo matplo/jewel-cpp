@@ -1,0 +1,174 @@
+{
+  "scope": "medium random-tape replay, not full events",
+  "groups": {
+    "centrality": {
+      "cases": 20,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 1
+    },
+    "vertex": {
+      "cases": 50,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 96
+    },
+    "scatterer": {
+      "cases": 108,
+      "max_absolute_error": 1.7763568394002505e-15,
+      "max_relative_error": 5.61509774007837e-16,
+      "max_draws": 341
+    },
+    "cold-fallback": {
+      "cases": 3,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 1
+    }
+  },
+  "failures": [],
+  "input_sha256": "7b6576cdcfc6bcf7f5c66d630ce311285fd0bd0e277d5794c8315a3c4d440540",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "f8705aa5d4a47b10d9632b3208e0365bdb1cb015fd0a1e6dbbedac86bc036e80",
+    "jewel-medium-reference": "6b7123d1e88e744046b7457c30b232e376cee02d69d32ed477cd76c65c6253ad"
+  }
+}

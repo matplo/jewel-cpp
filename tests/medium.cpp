@@ -32,4 +32,26 @@ int main() {
  rejects([&]{ei.intpqglow(0,10,k);});rejects([&]{ei.intpqghigh(1,10,k);});
  rejects([&]{ei.intpqglow(.5,1e20,k);});
  rejects([&]{ei.scatprimfunc(-1,.5,k);});
+ jewel::ReplayRandom vertex_rng({.5,.5,.1});
+ auto vertex=medium.sample_vertex(vertex_rng);check(vertex.x==0&&vertex.y==0&&vertex_rng.checkpoint()==3);
+ jewel::ReplayRandom unused({});
+ rejects([&]{medium.with_impact_parameter(20).sample_vertex(unused);});
+ rejects([&]{medium.with_impact_parameter(40).sample_vertex(unused,30);});
+ rejects([&]{medium.with_impact_parameter(-1);});
+ jewel::GeometrySampler geometry(medium.cross_section_table());
+ jewel::ReplayRandom centrality_rng({.5});
+ auto event=geometry.sample(0,10,centrality_rng);
+ check(event.centrality_fraction==.05&&event.impact_parameter>0&&centrality_rng.checkpoint()==1);
+ rejects([&]{geometry.sample(50,10,unused);});
+ rejects([&]{geometry.sample(0,101,unused);});
+ jewel::ReplayRandom scatter_rng({.01,.000001,.000001,.2,.7});
+ auto thermal=medium.sample_scatterer({0,0,0,1},scatter_rng);
+ check(!thermal.synthetic&&thermal.type==2&&scatter_rng.checkpoint()==5);
+ jewel::ReplayRandom cold_rng({.5});
+ check(medium.sample_scatterer({30,0,0,1},cold_rng).synthetic);
+ rejects([&]{medium.sample_scatterer({0,0,0,0},unused);});
+ check(medium.average_scatterer({0,0,0,0}).mass==0);
+ auto maximum=medium.maximum_scatterer(false);
+ check(maximum.momentum.pz==0&&maximum.momentum.energy==maximum.mass);
+
 }

@@ -74,6 +74,54 @@
       "CALCXSECTION": [
         762,
         804
+      ],
+      "MEDNEXTEVT": [
+        207,
+        243
+      ],
+      "PICKVTX": [
+        255,
+        278
+      ],
+      "GETSCATTERER": [
+        292,
+        368
+      ],
+      "GETTEMPMAX": [
+        527,
+        542
+      ],
+      "GETMDMAX": [
+        546,
+        554
+      ],
+      "GETMDMIN": [
+        558,
+        576
+      ],
+      "GETMSMAX": [
+        580,
+        584
+      ],
+      "GETNATMDMIN": [
+        588,
+        612
+      ],
+      "GETLTIMEMAX": [
+        616,
+        634
+      ],
+      "GETNEFFMAX": [
+        638,
+        657
+      ],
+      "AVSCATCEN": [
+        371,
+        403
+      ],
+      "MAXSCATCEN": [
+        406,
+        426
       ]
     }
   },

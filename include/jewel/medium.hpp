@@ -13,6 +13,18 @@ struct MediumConfig {
  double impact_parameter{0}, max_rapidity{5}, debye_floor{0.45}, debye_scale{1};
  bool woods_saxon{true};
 };
+struct MediumBounds {
+ double temperature_max{},debye_max{},debye_min{},scatterer_mass_max{};
+ double density_at_debye_min{},lifetime_max{},density_max{};
+};
+struct GeometryEvent { double impact_parameter{}, centrality_fraction{}; };
+struct Scatterer { int type{}; Momentum momentum; double mass{}; bool synthetic{}; };
+class GeometrySampler {
+ std::array<std::array<double,3>,200> cross_;
+public:
+ explicit GeometrySampler(std::array<std::array<double,3>,200> cross);
+ GeometryEvent sample(double centrality_min_percent,double centrality_max_percent,Random&) const;
+};
 class ExpandingMedium final : public Medium {
  MediumConfig config_;
  std::array<std::array<double,2>,100> thickness_{};
@@ -22,6 +34,12 @@ public:
  std::array<std::array<double,3>,200> cross_section_table() const;
  double thickness(double x,double y) const;
  double participants(double x1,double y1,double x2,double y2) const;
+ ExpandingMedium with_impact_parameter(double b) const;
+ SpaceTime sample_vertex(Random&,double sampling_radius=10) const;
+ Scatterer sample_scatterer(SpaceTime,Random&,bool longitudinal_boost=true) const;
+ MediumBounds bounds() const;
+ Scatterer average_scatterer(SpaceTime,bool longitudinal_boost=true) const;
+ Scatterer maximum_scatterer(bool longitudinal_boost=true) const;
  double temperature(SpaceTime position) const;
  MediumSample sample(SpaceTime position) const override;
 };

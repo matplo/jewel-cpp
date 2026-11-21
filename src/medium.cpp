@@ -152,4 +152,95 @@ double ExponentialIntegral::scatprimfunc(double t,double debye,const Kernels& k)
  return 2*pi*std::pow(12*pi,2)*(-(*this)(-logarithm)/(l*l)-1/(s*logarithm))/std::pow(33-2*k.nf,2);
 }
 
+namespace {
+double draw(Random& random) {
+ double r=random.uniform();check(std::isfinite(r)&&r>0&&r<1,"random draw must be in (0,1)");return r;
+}
+}
+GeometrySampler::GeometrySampler(std::array<std::array<double,3>,200> cross):cross_(cross) {
+ double previous=-1;
+ for(auto row:cross_) {
+  check(std::isfinite(row[2])&&row[2]>=previous,"invalid cumulative cross section");previous=row[2];
+ }
+ check(cross_[0][2]==0&&cross_.back()[2]>0,"empty cumulative cross section");
+}
+GeometryEvent GeometrySampler::sample(double lo,double hi,Random& random) const {
+ check(std::isfinite(lo)&&std::isfinite(hi)&&lo>=0&&hi>lo&&hi<=100,"centrality must satisfy 0 <= min < max <= 100");
+ double r=(draw(random)*(hi-lo)+lo)/100, total=cross_.back()[2];
+ int i=0;
+ for(auto row:cross_) { if(r-row[2]/total>=0) ++i;else break; }
+ // Avoid stock out-of-bounds access at exactly unity (possible after rounding).
+ check(i>=1&&i<200,"centrality draw lies outside invertible cumulative table");
+ double a=cross_[i-1][2]/total,b=cross_[i][2]/total;
+ check(a!=b,"flat cumulative interval");
+ double b1=(i-1)*0.1,b2=i*0.1;
+ return {(b2*(a-r)+b1*(r-b))/(a-b),r};
+}
+ExpandingMedium ExpandingMedium::with_impact_parameter(double b) const {
+ check(std::isfinite(b)&&b>=0,"invalid impact parameter");
+ auto copy=*this;copy.config_.impact_parameter=b;return copy;
+}
+SpaceTime ExpandingMedium::sample_vertex(Random& random,double radius) const {
+ double b=config_.impact_parameter;
+ check(std::isfinite(radius)&&radius>0&&b<2*radius,"empty vertex sampling rectangle");
+ double peak=thickness(-b/2,0)*thickness(b/2,0);
+ check(peak>0,"no nuclear overlap for vertex sampling");
+ double x1=b/2-radius,x2=radius-b/2,y1=-std::sqrt(4*radius*radius-b*b)/2,y2=-y1;
+ for(;;) {
+  double x=draw(random)*(x2-x1)+x1,y=draw(random)*(y2-y1)+y1;
+  double a=thickness(x-b/2,y),c=thickness(x+b/2,y);
+  if(a==0||c==0) continue;
+  double z=draw(random)*peak;
+  if(z>a*c) continue;
+  return {x,y,0,0};
+ }
+}
+Scatterer ExpandingMedium::sample_scatterer(SpaceTime v,Random& random,bool boost) const {
+ position_check(v);
+ check(v.t>std::abs(v.z),"scatterer sampling requires forward timelike position");
+ double r=draw(random),flavour=2.*12*config_.nf*0.9/3;
+ int type=r<flavour/(flavour+3.*16*1.2/2)?2:21;
+ auto field=sample(v);
+ double ms=type==2?field.scatterer_mass:field.debye_mass,temp=field.temperature;
+ // Preserve the stock diagnostic fallback, but make it observable to the caller.
+ if(temp<1e-2) {
+  ms=config_.debye_floor/double(std::sqrt(2.f));
+  return {21,{0,0,0,ms},ms,true};
+ }
+ double ys=boost?0.5*std::log((v.t+v.z)/(v.t-v.z)):0;
+ double p,e2;
+ for(;;) {
+  p=std::pow(draw(random),double(0.3333333f))*10*temp;
+  e2=std::sqrt(p*p+ms*ms);
+  // These species-dependent signs intentionally follow stock GETSCATTERER.
+  double sign=type==2?-1.:1.;
+  double weight=(std::exp(ms/temp)+sign)/(std::exp(e2/temp)+sign);
+  if(draw(random)<=weight) break;
+ }
+ double phi=draw(random)*2*pi,theta=-std::acos(2*draw(random)-1)+pi;
+ double px=p*std::sin(theta)*std::cos(phi),py=p*std::sin(theta)*std::sin(phi),pz2=p*std::cos(theta);
+ return {type,{px,py,std::sinh(ys)*e2+std::cosh(ys)*pz2,std::cosh(ys)*e2+std::sinh(ys)*pz2},ms,false};
+}
+
+MediumBounds ExpandingMedium::bounds() const {
+ const auto& c=config_;
+ check(c.temperature_cutoff>0&&c.debye_scale>0,"medium bounds require positive Tc and Debye scale");
+ double t=temperature({0,0,0,c.tau_initial});
+ double mdmax=std::max(c.debye_scale*3*t,c.debye_floor),mdmin=std::max(c.debye_scale*3*c.temperature_cutoff,c.debye_floor);
+ double atmin=mdmin/(c.debye_scale*3);
+ auto density=[&](double temperature){return (2.*6*c.nf*.9*2/3+16.*1.2*3/2)*std::pow(temperature,3)/(pi*pi);};
+ // GETMSMAX uses sqrt(2.D0), unlike local GETMS's default REAL sqrt(2.).
+ return {t,mdmax,mdmin,mdmax/std::sqrt(2.),density(atmin),c.tau_initial*std::pow(t/c.temperature_cutoff,3)*std::cosh(c.max_rapidity),density(t)};
+}
+Scatterer ExpandingMedium::average_scatterer(SpaceTime v,bool boost) const {
+ position_check(v);if(std::abs(v.z)>=v.t) return {};
+ double rapidity=boost?std::clamp(.5*std::log((v.t+v.z)/(v.t-v.z)),-config_.max_rapidity,config_.max_rapidity):0;
+ double mass=sample(v).scatterer_mass;
+ return {0,{0,0,mass*std::sinh(rapidity),mass*std::cosh(rapidity)},mass,false};
+}
+Scatterer ExpandingMedium::maximum_scatterer(bool boost) const {
+ double rapidity=boost?config_.max_rapidity:0,mass=bounds().scatterer_mass_max;
+ return {0,{0,0,mass*std::sinh(rapidity),mass*std::cosh(rapidity)},mass,false};
+}
+
 }
