@@ -133,6 +133,14 @@
       "MAKESPLITTING": [
         3288,
         3682
+      ],
+      "GETNEWMASS": [
+        5253,
+        5360
+      ],
+      "GETPNORAD1": [
+        5366,
+        5431
       ]
     }
   },

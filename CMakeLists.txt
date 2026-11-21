@@ -150,3 +150,9 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/splitting_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/splitting-validation.json)
 endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME virtuality-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/virtuality_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/virtuality-validation.json)
+endif()

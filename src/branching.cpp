@@ -85,4 +85,58 @@ double BranchingSampler::fraction(double ti,double energy,double epsilon,Channel
   }
  }
 }
+MassSample BranchingSampler::updated_mass(const VirtualityUpdate& u,
+ const InitialSudakovTable& initial,const FinalSplittingTable& final,Random& random) const {
+ for(double x:{u.q_squared,u.old_q_squared,u.previous_mass,u.record_mass,u.energy,u.energy_fraction,u.previous_fraction})
+  check(std::isfinite(x),"nonfinite virtuality update");
+ check(u.q_squared<=0&&u.old_q_squared<=0&&u.energy>=0&&u.energy_fraction>=0&&u.energy_fraction<=1&&u.previous_mass>=0,
+  "invalid virtuality update");
+ double energy=u.energy_fraction*u.energy;
+ MassSample result{0,u.previous_fraction,u.previous_pair};
+ if(energy<q0_)return {0,0,false};
+ if(-u.q_squared<q0_*q0_)return result;
+ double high=std::sqrt(-u.q_squared),old=std::sqrt(-u.old_q_squared);
+ Channel channel=u.pdg==21?Channel::GC:Channel::QQ;
+ auto sample=[&](double low,double e,double maximum){
+  auto s=mass(low,high,-1,e,channel,maximum,u.initial_state,random);
+  result.mass=s.mass;
+  if(s.fraction)result.fraction=s.fraction;
+  if(s.quark_pair)result.quark_pair=s.quark_pair;
+ };
+ if(old<=q0_){
+  sample(0,u.initial_state?energy:u.energy,u.initial_state?energy:high);
+  result.mass=std::min(result.mass,energy);return result;
+ }
+ if(std::max(u.record_mass,u.previous_mass)>0){
+  if(-u.q_squared>-u.old_q_squared){
+   sample(0,energy,high);
+   if(result.mass<old)result={u.previous_mass,u.previous_fraction,u.previous_pair};
+  }else{
+   auto no_split=[&](double q){
+    if(q0_+1e-10>=q-1e-10)return 1.;
+    return u.initial_state?initial.ratio(q0_,q,channel):final.sudakov(q,1,q0_,1,energy,channel,angular_);
+   };
+   double old_probability=no_split(old),probability=no_split(high);
+   check(old_probability!=1,"undefined zero-probability virtuality update");
+   double keep=(1-probability)/(1-old_probability);
+   if(draw(random)<keep){
+    if(u.record_mass<high)result.mass=u.previous_mass;
+    else{
+     for(unsigned trial=0;;++trial){
+      check(trial<1000000,"virtuality-update retry limit exceeded");
+      sample(q0_,energy,high);
+      if(result.mass!=0||energy<=q0_)break;
+     }
+    }
+   }else result={0,0,false};
+  }
+ }else{
+  if(-u.q_squared>(-u.old_q_squared)*double(1.0000001f)){
+   sample(0,energy,energy);
+   if(result.mass<old)result={0,0,false};
+  }else result={0,0,false};
+ }
+ result.mass=std::min(result.mass,energy);return result;
+}
+
 }

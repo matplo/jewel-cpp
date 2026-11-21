@@ -26,4 +26,8 @@ int main(){
  rejects([&]{rates.next_collision({10,0,0,10},0,1,{},1,5,20,1,false,empty);});
  rejects([&]{rates.next_collision({},0,1,{},1,5,20,1,false,empty);});
  rejects([&]{rates.next_collision({10,0,0,10},0,1,{},1,-1,20,1,false,empty);});
+ check(rates.no_initial_radiation({.1,0,0,.1},0,1,{0,0,0,1})==1);
+ check(std::isfinite(rates.no_initial_radiation({10,0,0,10},0,21,{0,0,0,1})));
+ rejects([&]{rates.no_initial_radiation({},0,21,{});});
+
 }

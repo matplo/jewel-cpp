@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/radiation.hpp"
+#include "jewel/branching.hpp"
 #include <cmath>
 #include <stdexcept>
 void check(bool b){if(!b)throw std::runtime_error("final splitting contract failed");}
@@ -21,4 +22,14 @@ int main(){
  rejects([&]{table.splitting(100,2,1,100,jewel::Channel::GQ,0);});
  rejects([&]{table.splitting(100,2,1,100,jewel::Channel::QQ,6);});
  rejects([&]{table.splitting(1,2,.5,100,jewel::Channel::QQ,1);});
+ jewel::InitialSudakovTable initial(k,1,20,1,maximum);
+ jewel::BranchingSampler sampler(k,1,1,0);jewel::ReplayRandom empty({});
+ jewel::VirtualityUpdate u;u.q_squared=-.25;u.old_q_squared=-25;u.previous_mass=2;
+ u.record_mass=2;u.energy=100;u.pdg=1;u.previous_fraction=.37;u.previous_pair=true;
+ auto updated=sampler.updated_mass(u,initial,table,empty);
+ check(updated.mass==0&&updated.fraction==.37&&updated.quark_pair==true&&empty.checkpoint()==0);
+ u.energy_fraction=.001;updated=sampler.updated_mass(u,initial,table,empty);
+ check(updated.mass==0&&updated.fraction==0&&updated.quark_pair==false&&empty.checkpoint()==0);
+ u.q_squared=1;rejects([&]{sampler.updated_mass(u,initial,table,empty);});
+
 }

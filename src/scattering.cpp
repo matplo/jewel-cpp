@@ -84,4 +84,22 @@ double ScatteringRates::cross_section(Momentum p,double mass,double lower,char i
  }
  return std::max(result,0.);
 }
+double ScatteringRates::no_initial_radiation(Momentum p,double mass,int pdg,SpaceTime v) const {
+ for(double x:{p.px,p.py,p.pz,p.energy,mass})check(std::isfinite(x),"nonfinite radiation probability input");
+ check(p.energy>=0,"negative projectile energy");
+ double md=medium_.sample(v).debye_mass;
+ auto average=medium_.average_scatterer(v,boost_);auto a=average.momentum;double ms=average.mass;
+ double shat=ms*ms+mass*mass+2*(a.energy*p.energy-a.px*p.px-a.py*p.py-a.pz*p.pz);
+ check(shat>0,"undefined scattering invariant for radiation probability");
+ double pcms2=std::pow(shat+mass*mass-ms*ms,2)/(4*shat)-mass*mass;
+ double upper=4*pcms2,lower=q0_*q0_/(scale_*scale_);
+ if(upper<=lower||p.energy<q0_/scale_)return 1;
+ bool gluon=pdg==21;
+ double total=cross_section(p,mass,0,gluon?'G':'Q','C',v);
+ if(total==0)return gluon?-1:1;
+ double colour=gluon?double(3.f/2.f):double(2.f/3.f);
+ return (colour*(ei_.scatprimfunc(lower,md,kernels_)-ei_.scatprimfunc(0,md,kernels_))+
+  integral(upper,md,gluon?RateChannel::GB:RateChannel::QB))/total;
+}
+
 }

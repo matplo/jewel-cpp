@@ -354,3 +354,31 @@ colour flow, formation times, angular rejection and second-generation daughters.
 This is a working branch operation, not a complete vacuum or medium shower:
 MAKEBRANCH scheduling, scattering/recoil application and Pythia8 integration
 remain outstanding.
+
+
+## Milestone 2f: scattering-induced virtuality updates
+
+`BranchingSampler::updated_mass()` translates GETNEWMASS. `VirtualityUpdate`
+contains the new/old spacelike transfer squared, previous candidate mass,
+current record mass and energy, PDG code, initial-state switch, energy fraction
+and previous branch fraction/pair flag. Supply initial and final Sudakov tables
+from the same run configuration as the sampler. The operation returns updated
+values without mutating an event; the caller applies them to the selected line.
+
+The update preserves branches when required by the Sudakov ratio, resamples
+when the allowed scale changes and caps the resulting mass at the available
+energy. Early returns and accepted initial-state samples can retain the prior
+fraction/pair flag. Those values are explicitly carried through instead of
+being replaced with zeros. The stock default-REAL `1.0000001` threshold is
+preserved. Undefined zero-denominator decisions and retry exhaustion throw.
+
+`ScatteringRates::no_initial_radiation()` translates GETPNORAD1 using the owned
+medium, average scatterer and rate grids. It preserves the reference quark/gluon
+colour factors and raw return convention, including −1 for a gluon with zero
+total cross section (versus 1 for a quark). Values are not clipped to [0,1].
+Undefined scattering invariants throw rather than propagate NaNs.
+
+[Validation](docs/validation-virtuality.md) covers increasing/decreasing scales,
+all angular-ordering modes, initial/final updates, retained metadata, different
+couplings and medium boosts. Momentum-transfer sampling, coherent scattering,
+recoils and the complete evolution scheduler remain to be integrated.

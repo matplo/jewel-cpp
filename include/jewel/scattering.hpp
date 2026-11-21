@@ -15,6 +15,7 @@ class ScatteringRates {
  std::vector<std::array<double,4>> values_;
 public:
  ScatteringRates(Kernels,double q0,double emax,double scale,ExpandingMedium,bool boost=true);
+ double no_initial_radiation(Momentum,double mass,int pdg,SpaceTime) const;
  CollisionTime next_collision(Momentum,double mass,int pdg,SpaceTime production,
   double start,double maximum_interval,double lifetime,double cross_section_scale,
   bool elastic_only,Random&) const;

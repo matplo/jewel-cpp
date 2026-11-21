@@ -78,6 +78,7 @@ program mediumprobe
  common /FTIMEFAC/ ftfac
  common /COLOUR/ trip,anti,colmax
  common /WEIGHT/ evweight,sumofweights
+ double precision getnewmass,getpnorad1,qnew2,qold2,previousmass,energyfraction
  character(20) op
  logfid=0
  logfid2=0
@@ -202,6 +203,20 @@ program mediumprobe
   case('XINT')
    read(*,*) channel,x,y
    v=getxsecint(x,y,channel)
+   write(*,'(ES26.17E3)')v
+  case('NEWMASS')
+   read(*,*)qnew2,qold2,previousmass,p(1,5),p(1,4),k(1,2),initial_flag,energyfraction,zdec,qflag
+   qqbardec=qflag/=0
+   mv(1,4)=0
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   v=getnewmass(1,qnew2,qold2,previousmass,initial_flag/=0,energyfraction,zdec,qqbardec)
+   write(*,'(2ES26.17E3,2I8)')v,zdec,merge(1,0,qqbardec),cursor
+  case('NORAD')
+   read(*,*)p(1,:),k(1,2),x,y,z,t
+   v=getpnorad1(1,x,y,z,t)
    write(*,'(ES26.17E3)')v
   case('XSEC')
    read(*,*) px,py,pz,energy,pmass,lower,incoming,outgoing,x,y,z,t,rate_mode

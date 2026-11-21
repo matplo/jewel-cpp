@@ -35,7 +35,23 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="REJECT"||op=="SPLIT") {
+   if(op=="NEWMASS") {
+    if(!branching||!sudakov||!final_table)throw std::runtime_error("BCONFIG, RCONFIG and FCONFIG required");
+    jewel::VirtualityUpdate u;int initial,pair;
+    std::cin>>u.q_squared>>u.old_q_squared>>u.previous_mass>>u.record_mass>>u.energy>>u.pdg>>initial
+     >>u.energy_fraction>>u.previous_fraction>>pair;
+    u.initial_state=initial!=0;u.previous_pair=pair!=0;
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("invalid update replay");
+    std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
+    jewel::ReplayRandom random(tape);
+    auto value=branching->updated_mass(u,*sudakov,*final_table,random);
+    std::cout<<value.mass<<' '<<value.fraction.value()<<' '<<int(value.quark_pair.value())<<' '<<random.checkpoint()<<'\n';
+   } else if(op=="NORAD") {
+    if(!rates)throw std::runtime_error("XCONFIG required");
+    jewel::Momentum p;jewel::SpaceTime v;double mass;int pdg;
+    if(!(std::cin>>p.px>>p.py>>p.pz>>p.energy>>mass>>pdg>>v.x>>v.y>>v.z>>v.t))throw std::runtime_error("invalid radiation query");
+    std::cout<<rates->no_initial_radiation(p,mass,pdg,v)<<'\n';
+   } else if(op=="REJECT"||op=="SPLIT") {
     if(!branching)throw std::runtime_error("BCONFIG required");
     std::size_t n; jewel::ParticleId mother;std::cin>>n>>mother;
     if(n>23000||n==0)throw std::runtime_error("invalid event size");
