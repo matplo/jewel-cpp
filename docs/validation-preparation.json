@@ -1,0 +1,77 @@
+{
+  "scope": "GENEVENT survivor status selection and ordered MAKEMASSLESS; not full event mapping",
+  "cases": 1017,
+  "groups": {
+    "selection-boundaries": {
+      "cases": 990,
+      "values": 29700,
+      "max_absolute_error": 0.0
+    },
+    "ordered-conversions": {
+      "cases": 12,
+      "values": 600,
+      "max_absolute_error": 0.0
+    },
+    "hard-status": {
+      "cases": 15,
+      "values": 450,
+      "max_absolute_error": 0.0
+    }
+  },
+  "status_counts": {
+    "1": 2321,
+    "4": 418,
+    "11": 168,
+    "21": 168
+  },
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "f63a31a45e4f71975a31fd647e09840fd16dd2e2b3716d714853104ce64400b4",
+  "sources": {
+    "pythia6425mod-lhapdf6.f": {
+      "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+      "routines": {
+        "PYANGL": [
+          74441,
+          74466
+        ],
+        "PYROBO": [
+          74638,
+          74735
+        ],
+        "PYP": [
+          76081,
+          76156
+        ]
+      }
+    },
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "GETPOSITION": [
+          8807,
+          8826
+        ],
+        "MAKEMASSLESS": [
+          8588,
+          8632
+        ],
+        "ISQORG": [
+          8705,
+          8714
+        ]
+      },
+      "blocks": {
+        "GENEVENT status preparation": [
+          1267,
+          1291
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-kinematics-probe": "941b253974d4c460542560dbb75828e24bbad342889b143086ff62eb8cda834b",
+    "jewel-kinematics-reference": "acb689a40cd9b445d216162a0ec16194da2fe3b09f9efdbfa0b0bef3b1a2c03e"
+  }
+}

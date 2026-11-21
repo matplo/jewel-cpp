@@ -22,6 +22,20 @@
       "GETPOSITION": [
         8807,
         8826
+      ],
+      "MAKEMASSLESS": [
+        8588,
+        8632
+      ],
+      "ISQORG": [
+        8705,
+        8714
+      ]
+    },
+    "blocks": {
+      "GENEVENT status preparation": [
+        1267,
+        1291
       ]
     }
   }

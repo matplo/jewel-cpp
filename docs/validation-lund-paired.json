@@ -1,0 +1,18 @@
+{
+  "scope": "Paired fixed-seed isolation of the fragmentation-profile correction",
+  "attempts": 1500,
+  "unchanged_pre_hadronization_events": 1500,
+  "changed_hadronized_events": 1500,
+  "other_differences": [],
+  "added_settings": [
+    "111:mayDecay = on",
+    "StringZ:aExtraDiquark = 0.5",
+    "StringZ:aExtraSQuark = 0",
+    "StringZ:useOldAExtra = off"
+  ],
+  "removed_settings": [],
+  "hashes": {
+    "/private/tmp/jewel-inclusive-vac1500.jsonl": "aeea77b0592276cbf15e043ff056e7527e17b2aef99acca6c7218d324cf85443",
+    "/private/tmp/jewel-lund-vac1500.jsonl": "406f9fb642908566c331c18cf65ba1ec12f391de1c6ab4f44a6ad57f31fe99e2"
+  }
+}

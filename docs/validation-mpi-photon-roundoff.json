@@ -1,0 +1,139 @@
+{
+  "scope": "diagnostic copies; no physics changes; unchanged stdout is not reference parity",
+  "all_collisions": false,
+  "fixture_sha256": "9880881191ff587e1b7f38150137158c7b78ecca7861d75a0586c349f1876bb2",
+  "columns": [
+    "p32",
+    "p42",
+    "e3",
+    "e4",
+    "m32",
+    "m42",
+    "shat",
+    "transfer_t",
+    "p3old"
+  ],
+  "results": [
+    {
+      "engine": "cpp",
+      "negative_collision_squares": [],
+      "recorded_collision_squares": [],
+      "unchanged_stdout_sha256": "20951f4558ae2d8e2b3c91586396db6c94ec56ffb043f965ef6fae3bac5654c4",
+      "baseline_executable_sha256": "18450983587463a99902d6b0d3f49ecb67dde45ec48e79e4cc7626e75497144e",
+      "diagnostic_executable_sha256": "b5734899289595aeb003c7e3b20fabf62f25839623e803d6ff54ff335237089f"
+    },
+    {
+      "engine": "fortran",
+      "negative_collision_squares": [
+        [
+          -8.456990869161364e-18,
+          0.0,
+          1.262939739127149,
+          0.48784055729067216,
+          1.5950167846665513,
+          0.2379884093376736,
+          3.065231646324874,
+          -0.67426657692479,
+          0.6449193769610039
+        ]
+      ],
+      "recorded_collision_squares": [
+        [
+          -8.456990869161364e-18,
+          0.0,
+          1.262939739127149,
+          0.48784055729067216,
+          1.5950167846665513,
+          0.2379884093376736,
+          3.065231646324874,
+          -0.67426657692479,
+          0.6449193769610039
+        ]
+      ],
+      "unchanged_stdout_sha256": "4b093afc414b1a1726a71bfae29bfbbd42b23e5fdc4b5e36578e580c37c2c481",
+      "baseline_executable_sha256": "37bc6273115ba5693ee85cfe3a9125f37a2704de3fab6d73ef51a6ec992845cc",
+      "diagnostic_executable_sha256": "1e4625a3ac5bd358bbe28066113ec973ec98a82013e62d23e7e8787e30ccb9d6"
+    }
+  ],
+  "commands": [
+    [
+      "/usr/bin/c++",
+      "-O3",
+      "-DNDEBUG",
+      "-std=c++17",
+      "-arch",
+      "arm64",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-I/Users/ploskon/devel/jewel-cpp/include",
+      "-I/Users/ploskon/devel/jewel-cpp/src",
+      "-c",
+      "/private/tmp/jewel-photon217-roundoff/collision-diagnostic.cpp",
+      "-o",
+      "/private/tmp/jewel-photon217-roundoff/collision-diagnostic.o"
+    ],
+    [
+      "/usr/bin/c++",
+      "-O3",
+      "-DNDEBUG",
+      "-arch",
+      "arm64",
+      "-Wl,-search_paths_first",
+      "-Wl,-headerpad_max_install_names",
+      "CMakeFiles/jewel-medium-probe.dir/app/medium_probe.cpp.o",
+      "-o",
+      "/private/tmp/jewel-photon217-roundoff/jewel-cpp-diagnostic",
+      "/private/tmp/jewel-photon217-roundoff/collision-diagnostic.o",
+      "libjewel_core.a"
+    ],
+    [
+      "/opt/homebrew/bin/gfortran",
+      "-O3",
+      "-std=legacy",
+      "-ffixed-line-length-none",
+      "-c",
+      "/private/tmp/jewel-photon217-roundoff/medium-diagnostic.f",
+      "-o",
+      "/private/tmp/jewel-photon217-roundoff/medium-diagnostic.o"
+    ],
+    [
+      "/usr/bin/c++",
+      "-O3",
+      "-DNDEBUG",
+      "-arch",
+      "arm64",
+      "-Wl,-search_paths_first",
+      "-Wl,-headerpad_max_install_names",
+      "/private/tmp/jewel-photon217-roundoff/medium-diagnostic.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/medium_probe.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/geometry_lengths.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/guarded_cascade.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/generated_random.cpp.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference-expanding-backend.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/kinematics-reference.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/pythia_probe_stubs.f90.o",
+      "CMakeFiles/jewel-medium-reference.dir/collision-reference.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/compression-reference.f.o",
+      "CMakeFiles/jewel-medium-reference.dir/reference/record_listing_stub.f90.o",
+      "-o",
+      "/private/tmp/jewel-photon217-roundoff/jewel-fortran-diagnostic",
+      "-L/opt/homebrew/Cellar/gcc/16.2.0/lib/gcc/current/gcc/aarch64-apple-darwin25/16",
+      "-L/opt/homebrew/Cellar/gcc/16.2.0/lib/gcc/current/gcc",
+      "-L/opt/homebrew/Cellar/gcc/16.2.0/lib/gcc/current",
+      "-L/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/lib",
+      "-L/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/lib/swift",
+      "-lemutls_w",
+      "-lheapt_w",
+      "-lgfortran",
+      "-lgcc",
+      "-lquadmath"
+    ]
+  ],
+  "sources": {
+    "/Users/ploskon/devel/jewel-cpp/src/collision.cpp": "0441227a755a1fda43a53d7ba1e1ab58ab6dd4e3e6c2655367a6dd8fd25298d9",
+    "/Users/ploskon/devel/jewel-cpp/build/medium-reference.f": "749c76179f3731965878c7c2cff6841f7117dd3ea7ed1690905c9824cbb7b88d",
+    "/private/tmp/jewel-photon217-roundoff/collision-diagnostic.cpp": "035e70039fd9f004b26d3f1fc8f9fe149b6530a33a8cee73b35cdcddcb98b0ed",
+    "/private/tmp/jewel-photon217-roundoff/medium-diagnostic.f": "a599ea15215357878fab2fe3f86687b3683e81ad6cdb6df59c5b2dd5f3cb725d"
+  }
+}

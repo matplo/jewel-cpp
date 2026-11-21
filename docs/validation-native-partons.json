@@ -1,0 +1,56 @@
+{
+  "scope": "Native reduced PPJJ smoke tests, not Fortran event parity",
+  "samples": [
+    {
+      "input": "/private/tmp/jewel-native-vacuum-20.jsonl",
+      "sha256": "5712392b67d5af6fba1e03039371f2da5be523015e1672a2a42d253d3975d974",
+      "mode": "vacuum",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15199660026516534,
+        "generator_sigma_error_mb": 0.01580675911776028,
+        "final_records": 322
+      },
+      "failure_reasons": [],
+      "audit": "passed; accounting and record integrity only"
+    },
+    {
+      "input": "/private/tmp/jewel-native-medium-20.jsonl",
+      "sha256": "f531d7767e7abeaccce7e71d92bd75649d409a1b72653c9062052a4053008c4b",
+      "mode": "medium",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 16,
+        "evolution_failures": 4,
+        "generation_failures": 0,
+        "accepted_weight": 16,
+        "failed_weight": 4,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15199660026516534,
+        "generator_sigma_error_mb": 0.01580675911776028,
+        "final_records": 1172
+      },
+      "failure_reasons": [
+        {
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "count": 2
+        },
+        {
+          "stage": "cascade",
+          "reason": "undefined scattering invariant for radiation probability",
+          "count": 2
+        }
+      ],
+      "audit": "passed; accounting and record integrity only"
+    }
+  ]
+}

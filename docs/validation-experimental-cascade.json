@@ -1,0 +1,2204 @@
+{
+  "scope": "Experimental full-input parton cascade; incomplete physics validation",
+  "vacuum_replay": {
+    "scope": "identical Pythia-initialized states; guarded Fortran scheduler",
+    "executables": {
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe": "5d532a0a4516dd4d437e7c4f4c02f9b3c7b0a92a18dae8c1a00962a926a66585",
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference": "0d5f2871ffb692e3d40d0ce392e2a447dd6a4d758fc70bf0aed0da592568afaa"
+    },
+    "guard_sha256": "6e6a6da4d9eab65a20c98bd20be30c7317285bec4e3a2d5e111004cab170ca18",
+    "sources": {
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "ODEINT": [
+            8315,
+            8347
+          ],
+          "RKSTEPPER": [
+            8354,
+            8400
+          ],
+          "RK4STEP": [
+            8407,
+            8416
+          ],
+          "EI": [
+            7872,
+            7920
+          ],
+          "EIXINT": [
+            8282,
+            8308
+          ],
+          "INTPQGLOW": [
+            7784,
+            7802
+          ],
+          "INTPQGHIGH": [
+            7809,
+            7827
+          ],
+          "SCATPRIMFUNC": [
+            7692,
+            7710
+          ],
+          "GETINSPLITI": [
+            6837,
+            6922
+          ],
+          "GETINSUDAKOV": [
+            6545,
+            6582
+          ],
+          "INSUDAINT": [
+            8235,
+            8275
+          ],
+          "GETINSUDARED": [
+            7284,
+            7359
+          ],
+          "GETINSUDAFAST": [
+            7247,
+            7278
+          ],
+          "SPLITFNCINT": [
+            7994,
+            8075
+          ],
+          "GETSPLITI": [
+            6692,
+            6831
+          ],
+          "GETSUDAKOV": [
+            6486,
+            6539
+          ],
+          "PQQ": [
+            7927,
+            7931
+          ],
+          "PGG": [
+            7949,
+            7953
+          ],
+          "PQG": [
+            7960,
+            7964
+          ],
+          "ALPHAS": [
+            7971,
+            7987
+          ],
+          "GETPDF": [
+            6928,
+            7022
+          ],
+          "GETPDFXINTEXACT": [
+            7096,
+            7129
+          ],
+          "PDFINT": [
+            8082,
+            8135
+          ],
+          "GETPDFXINT": [
+            7027,
+            7090
+          ],
+          "PGQ": [
+            7938,
+            7942
+          ],
+          "XSECINT": [
+            8142,
+            8228
+          ],
+          "GETXSECINT": [
+            7135,
+            7241
+          ],
+          "GETSSCAT": [
+            7365,
+            7458
+          ],
+          "GETMASS": [
+            7465,
+            7625
+          ],
+          "GENERATEZ": [
+            7632,
+            7685
+          ],
+          "GETDELTAT": [
+            8423,
+            8554
+          ],
+          "REJECTSPLITTING": [
+            3688,
+            3865
+          ],
+          "MAKESPLITTING": [
+            3288,
+            3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ],
+          "DOKINEMATICS": [
+            5643,
+            6452
+          ],
+          "MAKEINSPLIT": [
+            3871,
+            4126
+          ],
+          "DOCOHSCATTERING": [
+            4644,
+            5072
+          ],
+          "DOINSTATESCAT": [
+            4132,
+            4638
+          ],
+          "MAKECASCADE": [
+            2902,
+            2942
+          ],
+          "MAKEBRANCH": [
+            2948,
+            3282
+          ],
+          "FINDVIRTUALITIES": [
+            1893,
+            2239
+          ],
+          "GETTHETAM": [
+            2303,
+            2365
+          ],
+          "ISPARTON": [
+            8690,
+            8700
+          ],
+          "ISDIQUARK": [
+            8658,
+            8671
+          ]
+        },
+        "declaration_normalizations": {
+          "DOINSTATESCAT": [
+            {
+              "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+              "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+              "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+            }
+          ]
+        }
+      },
+      "medium-simple.f.stock": {
+        "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+        "routines": {
+          "GETTEMP": [
+            473,
+            523
+          ],
+          "GETMD": [
+            430,
+            438
+          ],
+          "GETMS": [
+            442,
+            446
+          ],
+          "GETNEFF": [
+            450,
+            469
+          ],
+          "NPART": [
+            661,
+            674
+          ],
+          "NTHICK": [
+            678,
+            716
+          ],
+          "CALCTA": [
+            720,
+            758
+          ],
+          "MEDDERIV": [
+            808,
+            829
+          ],
+          "CALCXSECTION": [
+            762,
+            804
+          ],
+          "MEDNEXTEVT": [
+            207,
+            243
+          ],
+          "PICKVTX": [
+            255,
+            278
+          ],
+          "GETSCATTERER": [
+            292,
+            368
+          ],
+          "GETTEMPMAX": [
+            527,
+            542
+          ],
+          "GETMDMAX": [
+            546,
+            554
+          ],
+          "GETMDMIN": [
+            558,
+            576
+          ],
+          "GETMSMAX": [
+            580,
+            584
+          ],
+          "GETNATMDMIN": [
+            588,
+            612
+          ],
+          "GETLTIMEMAX": [
+            616,
+            634
+          ],
+          "GETNEFFMAX": [
+            638,
+            657
+          ],
+          "AVSCATCEN": [
+            371,
+            403
+          ],
+          "MAXSCATCEN": [
+            406,
+            426
+          ]
+        }
+      },
+      "meix.f": {
+        "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "routines": {
+          "EIX": [
+            7,
+            38
+          ]
+        }
+      }
+    },
+    "relative_tolerance": 2e-12,
+    "absolute_tolerance": 2e-13,
+    "results": [
+      {
+        "attempt": 1,
+        "fixture_sha256": "2cf5d95dde2aaef3c4cdfd33dae3e431fe1736aa0203ce2fe9f07ce36089aab3",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            79,
+            136,
+            0,
+            19,
+            341,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          35\n",
+          "header": [
+            79,
+            136,
+            0,
+            19,
+            341,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 3946,
+        "mismatches": 1,
+        "examples": [
+          {
+            "row": 78,
+            "column": 5,
+            "cpp": 0.07624940526269088,
+            "reference": 0.07624940526208365
+          }
+        ],
+        "max_absolute_error": 9.388045896230324e-13
+      },
+      {
+        "attempt": 2,
+        "fixture_sha256": "9a1c9ec6748f991c0edd3b1e1f552eaf812eabfc4a58078a6bd999484c907915",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            83,
+            141,
+            0,
+            23,
+            512,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          33\n",
+          "header": [
+            83,
+            141,
+            0,
+            23,
+            512,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 4054,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 1.4876988529977098e-13
+      },
+      {
+        "attempt": 3,
+        "fixture_sha256": "87056e761a9ffd9aae22fe6ec4553cd859cf5603c87fe38e757b423da80f7c02",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            60,
+            128,
+            0,
+            11,
+            599,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getxsecint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    599.42071386967018        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    722.54822413648981        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    722.54822413648992        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    722.54822413648981        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    722.54822413648981        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    722.54822413648992        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    722.54822413648981        248.75909225703947     \n GUARD_STATS            0          32\n",
+          "header": [
+            60,
+            128,
+            0,
+            11,
+            599,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 3433,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 9.534040223968532e-14
+      },
+      {
+        "attempt": 4,
+        "fixture_sha256": "28fd9c6f5c67b7c646853c30e1c0d44f0166262771455e477a16fd838cb7749c",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            109,
+            157,
+            0,
+            27,
+            721,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          43\n",
+          "header": [
+            109,
+            157,
+            0,
+            27,
+            721,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 4756,
+        "mismatches": 8,
+        "examples": [
+          {
+            "row": 75,
+            "column": 5,
+            "cpp": 0.5203400465987968,
+            "reference": 0.5203400465967848
+          },
+          {
+            "row": 75,
+            "column": 6,
+            "cpp": 0.06115921366808121,
+            "reference": 0.06115921366744369
+          },
+          {
+            "row": 75,
+            "column": 7,
+            "cpp": 0.5140753562030567,
+            "reference": 0.5140753562018725
+          },
+          {
+            "row": 82,
+            "column": 5,
+            "cpp": 0.5203400465987965,
+            "reference": 0.5203400465967788
+          },
+          {
+            "row": 82,
+            "column": 6,
+            "cpp": 0.06115921366808118,
+            "reference": 0.0611592136674419
+          },
+          {
+            "row": 82,
+            "column": 7,
+            "cpp": 0.5140753562030566,
+            "reference": 0.5140753562018693
+          },
+          {
+            "row": 99,
+            "column": 5,
+            "cpp": -0.3002364600722154,
+            "reference": -0.3002364600715806
+          },
+          {
+            "row": 99,
+            "column": 6,
+            "cpp": -0.2107975218823749,
+            "reference": -0.210797521881673
+          }
+        ],
+        "max_absolute_error": 2.4229507289419416e-12
+      },
+      {
+        "attempt": 5,
+        "fixture_sha256": "c7747af5411a7ed3a8884b0563c4c508b15c0a5f776242dc52cfd3e63935eb63",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            138,
+            177,
+            0,
+            39,
+            689,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          77\n",
+          "header": [
+            138,
+            177,
+            0,
+            39,
+            689,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 5539,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 4.1744385725905886e-14
+      },
+      {
+        "attempt": 6,
+        "fixture_sha256": "14935ff424230e5e45e2b51b40d50038e9b4523319982ed073bca4051d80c84a",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            116,
+            167,
+            0,
+            47,
+            500,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getpdfxint: need to extrapolate:    498.45222913322579        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    498.45222913322573        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    498.45222913322579        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    498.45222913322573        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    497.52926840264803        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    497.52926840264809        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    497.52926840264803        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    497.52926840264803        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    497.52926840264809        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    497.52926840264803        248.75909225703947     \n GUARD_STATS            0          41\n",
+          "header": [
+            116,
+            167,
+            0,
+            47,
+            500,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 4945,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 2.2515322939398175e-12
+      },
+      {
+        "attempt": 7,
+        "fixture_sha256": "a121e00a649da76cb85eccc6637b030a263b9cf3c2e62fd7f959b8bc9161a0e0",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            106,
+            157,
+            0,
+            31,
+            602,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getxsecint: need to extrapolate:    472.31516801613020        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    472.31516801613014        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    472.31516801613020        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    472.31516801613020        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    472.31516801613014        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    472.31516801613020        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    584.66220198854114        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    584.66220198854126        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    584.66220198854114        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    584.66220198854114        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    584.66220198854126        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    584.66220198854114        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    472.31516801613020        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    472.31516801613020        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    559.11218393539866        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    559.11218393539866        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    559.11218393539866        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    559.11218393539866        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    559.11218393539866        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    559.11218393539866        248.75909225703947     \n GUARD_STATS            0          34\n",
+          "header": [
+            106,
+            157,
+            0,
+            31,
+            602,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 4675,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 3.552713678800501e-14
+      },
+      {
+        "attempt": 8,
+        "fixture_sha256": "15ce56ae23a396c6c2541469ff23b51180ac23517f5e0cec5c477e30d160784f",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            114,
+            164,
+            0,
+            39,
+            418,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getpdfxint: need to extrapolate:    660.36383170142790        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    660.36383170142790        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    660.36383170142790        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    660.36383170142790        248.75909225703947     \n GUARD_STATS            0          49\n",
+          "header": [
+            114,
+            164,
+            0,
+            39,
+            418,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 4891,
+        "mismatches": 1,
+        "examples": [
+          {
+            "row": 107,
+            "column": 7,
+            "cpp": 0.08414918118452668,
+            "reference": 0.08414918118474886
+          }
+        ],
+        "max_absolute_error": 3.4899860779091796e-13
+      },
+      {
+        "attempt": 9,
+        "fixture_sha256": "de603c6ab2c832dce216d596bec008040886b49f10d15df098ddbcf28c1769fc",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            88,
+            145,
+            0,
+            19,
+            503,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          42\n",
+          "header": [
+            88,
+            145,
+            0,
+            19,
+            503,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 4189,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 4.671818487622659e-13
+      },
+      {
+        "attempt": 10,
+        "fixture_sha256": "98f863b50db44e2295c4a59c5de4700483cfdf85f8779ce29bfdbb05649db62b",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            110,
+            156,
+            0,
+            23,
+            693,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getxsecint: need to extrapolate:    255.27488149859795        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    255.27488149859795        248.75909225703947     \n GUARD_STATS            0          46\n",
+          "header": [
+            110,
+            156,
+            0,
+            23,
+            693,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 4783,
+        "mismatches": 14,
+        "examples": [
+          {
+            "row": 78,
+            "column": 5,
+            "cpp": -0.4138244392987298,
+            "reference": -0.4138244392932287
+          },
+          {
+            "row": 78,
+            "column": 6,
+            "cpp": 0.34361768729594205,
+            "reference": 0.3436176872934502
+          },
+          {
+            "row": 85,
+            "column": 5,
+            "cpp": -0.4138244393008365,
+            "reference": -0.41382443929322643
+          },
+          {
+            "row": 85,
+            "column": 6,
+            "cpp": 0.34361768729690106,
+            "reference": 0.3436176872934513
+          },
+          {
+            "row": 88,
+            "column": 5,
+            "cpp": 0.1666336890090907,
+            "reference": 0.16663368900942438
+          },
+          {
+            "row": 91,
+            "column": 6,
+            "cpp": 0.13098556391098118,
+            "reference": 0.13098556391144264
+          },
+          {
+            "row": 93,
+            "column": 6,
+            "cpp": -0.07882907434932479,
+            "reference": -0.07882907434955
+          },
+          {
+            "row": 98,
+            "column": 6,
+            "cpp": 0.13098556391095975,
+            "reference": 0.1309855639114426
+          },
+          {
+            "row": 102,
+            "column": 5,
+            "cpp": 1.360229085356586,
+            "reference": 1.3602290853530403
+          },
+          {
+            "row": 102,
+            "column": 6,
+            "cpp": 0.8234957263424306,
+            "reference": 0.8234957263379078
+          }
+        ],
+        "max_absolute_error": 1.198863230911229e-11
+      },
+      {
+        "attempt": 11,
+        "fixture_sha256": "e6834890f4c219ee2057561917761f911d226c8f836801a87291e8c54c371f2c",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            116,
+            160,
+            0,
+            35,
+            681,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getxsecint: need to extrapolate:    667.03990590094043        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    667.03990590094054        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    667.03990590094043        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    667.03990590094043        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    667.03990590094054        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    667.03990590094043        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    727.80751808511286        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    727.80751808511297        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    727.80751808511286        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    727.80751808511286        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    727.80751808511297        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    727.80751808511286        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    667.03990590094043        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    667.03990590094043        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    732.25371936104796        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    732.25371936104807        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    732.25371936104796        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    732.25371936104796        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    732.25371936104807        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    732.25371936104796        248.75909225703947     \n GUARD_STATS            0          47\n",
+          "header": [
+            116,
+            160,
+            0,
+            35,
+            681,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 4945,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 4.618527782440651e-14
+      },
+      {
+        "attempt": 12,
+        "fixture_sha256": "b08a6fecd1caa472c58d436bc204efc08c4fab23795bd28f1dcc636a60521495",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            111,
+            166,
+            0,
+            35,
+            596,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getxsecint: need to extrapolate:    341.80209465676762        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    341.80209465676757        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    341.80209465676762        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    341.80209465676762        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    341.80209465676757        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    341.80209465676762        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    340.18354729813876        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    340.18354729813871        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    340.18354729813876        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    340.18354729813876        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    340.18354729813871        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    340.18354729813876        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    341.80209465676762        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    341.80209465676762        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    319.45033544407329        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    319.45033544407323        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    319.45033544407329        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    319.45033544407329        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    319.45033544407323        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    319.45033544407329        248.75909225703947     \n GUARD_STATS            0          51\n",
+          "header": [
+            111,
+            166,
+            0,
+            35,
+            596,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 4810,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 2.842170943040401e-14
+      },
+      {
+        "attempt": 13,
+        "fixture_sha256": "78473721ff19cce8fe7b6f845b3d3b6866a1771b5031301305b30eec6966f294",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            70,
+            134,
+            0,
+            15,
+            551,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getpdfxint: need to extrapolate:    968.05155573007960        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    968.05155573007960        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    968.05155573007960        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    968.05155573007960        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    446.07718884693287        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    446.07718884693287        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    446.07718884693287        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    446.07718884693287        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    446.07718884693287        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    446.07718884693287        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    943.53602566523864        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    943.53602566523864        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    943.53602566523864        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    943.53602566523864        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    299.11272201552299        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    299.11272201552299        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    299.11272201552299        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    299.11272201552299        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    299.11272201552299        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    299.11272201552299        248.75909225703947     \n GUARD_STATS            0          32\n",
+          "header": [
+            70,
+            134,
+            0,
+            15,
+            551,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 3703,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 1.4641621248756564e-12
+      },
+      {
+        "attempt": 14,
+        "fixture_sha256": "20404f7708dfa081c364f84b0211039c710e6b1d7964a6af61f74333cea54edc",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            55,
+            129,
+            0,
+            19,
+            289,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getpdfxint: need to extrapolate:    400.46334362135434        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    400.46334362135440        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    400.46334362135434        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    400.46334362135440        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    650.44907933263141        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    650.44907933263141        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    650.44907933263141        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    650.44907933263141        248.75909225703947     \n GUARD_STATS            0          20\n",
+          "header": [
+            55,
+            129,
+            0,
+            19,
+            289,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 3298,
+        "mismatches": 10,
+        "examples": [
+          {
+            "row": 45,
+            "column": 5,
+            "cpp": -1.598128106255805,
+            "reference": -1.598128106249819
+          },
+          {
+            "row": 47,
+            "column": 5,
+            "cpp": -1.6258455281711397,
+            "reference": -1.6258455281648478
+          },
+          {
+            "row": 48,
+            "column": 5,
+            "cpp": 0.027717421915334415,
+            "reference": 0.027717421915028535
+          },
+          {
+            "row": 49,
+            "column": 5,
+            "cpp": -1.5981281062558046,
+            "reference": -1.598128106249819
+          },
+          {
+            "row": 50,
+            "column": 5,
+            "cpp": -1.6258455281711355,
+            "reference": -1.6258455281648487
+          },
+          {
+            "row": 51,
+            "column": 5,
+            "cpp": 0.027717421915331244,
+            "reference": 0.027717421915028573
+          },
+          {
+            "row": 52,
+            "column": 5,
+            "cpp": -1.983603674917326,
+            "reference": -1.9836036749107495
+          },
+          {
+            "row": 53,
+            "column": 6,
+            "cpp": 0.40298683168617533,
+            "reference": 0.40298683168474464
+          },
+          {
+            "row": 54,
+            "column": 5,
+            "cpp": -0.2543388266401358,
+            "reference": -0.25433882664108826
+          },
+          {
+            "row": 55,
+            "column": 5,
+            "cpp": 0.28205624855546707,
+            "reference": 0.2820562485561169
+          }
+        ],
+        "max_absolute_error": 6.576517108669577e-12
+      },
+      {
+        "attempt": 15,
+        "fixture_sha256": "deb1603fdbb1bd25e24b2ab048d16d47ffe7fbe1e15d93abe11b87c968c52e74",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            60,
+            128,
+            0,
+            15,
+            314,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          31\n",
+          "header": [
+            60,
+            128,
+            0,
+            15,
+            314,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 3433,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 8.881784197001252e-15
+      },
+      {
+        "attempt": 16,
+        "fixture_sha256": "1ad7b33569b4e25f8fcd6609b483f3a7a14d1e4b1314fcdee6efd365f17e240c",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            130,
+            173,
+            0,
+            39,
+            519,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getpdfxint: need to extrapolate:    466.91805866599560        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    466.91805866599566        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    466.91805866599560        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    466.91805866599566        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    542.88195256681001        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    542.88195256681001        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    542.88195256681001        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    542.88195256681001        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    523.18987866357918        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    523.18987866357918        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    523.18987866357918        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    523.18987866357918        248.75909225703947     \n GUARD_STATS            0          61\n",
+          "header": [
+            130,
+            173,
+            0,
+            39,
+            519,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 5323,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 1.5401568909112484e-13
+      },
+      {
+        "attempt": 17,
+        "fixture_sha256": "1bcce777fec3b7cfad63c239b170dd38463d55bd09187d5e1371a9c3560ef177",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            142,
+            171,
+            0,
+            39,
+            557,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          60\n",
+          "header": [
+            142,
+            171,
+            0,
+            39,
+            557,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 5647,
+        "mismatches": 1,
+        "examples": [
+          {
+            "row": 123,
+            "column": 7,
+            "cpp": 0.0749651940706865,
+            "reference": 0.07496519407089819
+          }
+        ],
+        "max_absolute_error": 5.8475446707007e-13
+      },
+      {
+        "attempt": 18,
+        "fixture_sha256": "ef440c3952f41f65867564b1f6bda07a0fbbb8cacdcbb13bd21427f8a0d51fca",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            75,
+            132,
+            0,
+            11,
+            558,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          44\n",
+          "header": [
+            75,
+            132,
+            0,
+            11,
+            558,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 3838,
+        "mismatches": 2,
+        "examples": [
+          {
+            "row": 67,
+            "column": 5,
+            "cpp": 0.13983455601935174,
+            "reference": 0.13983455601902253
+          },
+          {
+            "row": 72,
+            "column": 5,
+            "cpp": 0.13983455601931485,
+            "reference": 0.13983455601902545
+          }
+        ],
+        "max_absolute_error": 6.021849685566849e-13
+      },
+      {
+        "attempt": 19,
+        "fixture_sha256": "7790062ba5a461e62911d11d1a0c20eae1236e7ef45b075f3b35c352db7303fd",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            168,
+            190,
+            0,
+            43,
+            1060,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " WARNING in getxsecint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    349.14969661973544        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    348.60752268386187        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    348.60752268386187        248.75909225703947     \n GUARD_STATS            0          75\n",
+          "header": [
+            168,
+            190,
+            0,
+            43,
+            1060,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 6349,
+        "mismatches": 12,
+        "examples": [
+          {
+            "row": 103,
+            "column": 5,
+            "cpp": -0.13172551702311364,
+            "reference": -0.13172551701307544
+          },
+          {
+            "row": 103,
+            "column": 6,
+            "cpp": -0.1122297627366113,
+            "reference": -0.11222976274029788
+          },
+          {
+            "row": 104,
+            "column": 6,
+            "cpp": -1.5151279996952214,
+            "reference": -1.5151279996915081
+          },
+          {
+            "row": 111,
+            "column": 5,
+            "cpp": -0.13172551700761798,
+            "reference": -0.1317255170102375
+          },
+          {
+            "row": 111,
+            "column": 6,
+            "cpp": -0.11222976274231306,
+            "reference": -0.11222976274135094
+          },
+          {
+            "row": 111,
+            "column": 14,
+            "cpp": 0.4395644308344073,
+            "reference": 0.4395644308404536
+          },
+          {
+            "row": 111,
+            "column": 15,
+            "cpp": -0.9329860870986136,
+            "reference": -0.9329860871008047
+          },
+          {
+            "row": 148,
+            "column": 6,
+            "cpp": 0.5643915109904217,
+            "reference": 0.5643915109876112
+          },
+          {
+            "row": 149,
+            "column": 6,
+            "cpp": 0.042786172070521794,
+            "reference": 0.042786172073030676
+          },
+          {
+            "row": 155,
+            "column": 5,
+            "cpp": -0.20779188291828773,
+            "reference": -0.20779188291881243
+          }
+        ],
+        "max_absolute_error": 1.0038192499450815e-11
+      },
+      {
+        "attempt": 20,
+        "fixture_sha256": "8959140dc718bf5191c204b6fb01176f0a2dcaa38e889eb5c50eb75b4dc2c49a",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            183,
+            199,
+            0,
+            55,
+            770,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " GUARD_STATS            0          72\n",
+          "header": [
+            183,
+            199,
+            0,
+            55,
+            770,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 6754,
+        "mismatches": 4,
+        "examples": [
+          {
+            "row": 138,
+            "column": 5,
+            "cpp": -0.8453209141729191,
+            "reference": -0.8453209141703697
+          },
+          {
+            "row": 138,
+            "column": 6,
+            "cpp": -0.28526328324876876,
+            "reference": -0.2852632832480741
+          },
+          {
+            "row": 160,
+            "column": 6,
+            "cpp": 0.3371660221381233,
+            "reference": 0.33716602214006597
+          },
+          {
+            "row": 168,
+            "column": 6,
+            "cpp": 0.33716602213812363,
+            "reference": 0.3371660221400669
+          }
+        ],
+        "max_absolute_error": 2.630784479151771e-12
+      }
+    ]
+  },
+  "medium_selected_replay": {
+    "scope": "identical Pythia-initialized states; guarded Fortran scheduler",
+    "executables": {
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe": "5d532a0a4516dd4d437e7c4f4c02f9b3c7b0a92a18dae8c1a00962a926a66585",
+      "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference": "0d5f2871ffb692e3d40d0ce392e2a447dd6a4d758fc70bf0aed0da592568afaa"
+    },
+    "guard_sha256": "6e6a6da4d9eab65a20c98bd20be30c7317285bec4e3a2d5e111004cab170ca18",
+    "sources": {
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "ODEINT": [
+            8315,
+            8347
+          ],
+          "RKSTEPPER": [
+            8354,
+            8400
+          ],
+          "RK4STEP": [
+            8407,
+            8416
+          ],
+          "EI": [
+            7872,
+            7920
+          ],
+          "EIXINT": [
+            8282,
+            8308
+          ],
+          "INTPQGLOW": [
+            7784,
+            7802
+          ],
+          "INTPQGHIGH": [
+            7809,
+            7827
+          ],
+          "SCATPRIMFUNC": [
+            7692,
+            7710
+          ],
+          "GETINSPLITI": [
+            6837,
+            6922
+          ],
+          "GETINSUDAKOV": [
+            6545,
+            6582
+          ],
+          "INSUDAINT": [
+            8235,
+            8275
+          ],
+          "GETINSUDARED": [
+            7284,
+            7359
+          ],
+          "GETINSUDAFAST": [
+            7247,
+            7278
+          ],
+          "SPLITFNCINT": [
+            7994,
+            8075
+          ],
+          "GETSPLITI": [
+            6692,
+            6831
+          ],
+          "GETSUDAKOV": [
+            6486,
+            6539
+          ],
+          "PQQ": [
+            7927,
+            7931
+          ],
+          "PGG": [
+            7949,
+            7953
+          ],
+          "PQG": [
+            7960,
+            7964
+          ],
+          "ALPHAS": [
+            7971,
+            7987
+          ],
+          "GETPDF": [
+            6928,
+            7022
+          ],
+          "GETPDFXINTEXACT": [
+            7096,
+            7129
+          ],
+          "PDFINT": [
+            8082,
+            8135
+          ],
+          "GETPDFXINT": [
+            7027,
+            7090
+          ],
+          "PGQ": [
+            7938,
+            7942
+          ],
+          "XSECINT": [
+            8142,
+            8228
+          ],
+          "GETXSECINT": [
+            7135,
+            7241
+          ],
+          "GETSSCAT": [
+            7365,
+            7458
+          ],
+          "GETMASS": [
+            7465,
+            7625
+          ],
+          "GENERATEZ": [
+            7632,
+            7685
+          ],
+          "GETDELTAT": [
+            8423,
+            8554
+          ],
+          "REJECTSPLITTING": [
+            3688,
+            3865
+          ],
+          "MAKESPLITTING": [
+            3288,
+            3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ],
+          "DOKINEMATICS": [
+            5643,
+            6452
+          ],
+          "MAKEINSPLIT": [
+            3871,
+            4126
+          ],
+          "DOCOHSCATTERING": [
+            4644,
+            5072
+          ],
+          "DOINSTATESCAT": [
+            4132,
+            4638
+          ],
+          "MAKECASCADE": [
+            2902,
+            2942
+          ],
+          "MAKEBRANCH": [
+            2948,
+            3282
+          ],
+          "FINDVIRTUALITIES": [
+            1893,
+            2239
+          ],
+          "GETTHETAM": [
+            2303,
+            2365
+          ],
+          "ISPARTON": [
+            8690,
+            8700
+          ],
+          "ISDIQUARK": [
+            8658,
+            8671
+          ]
+        },
+        "declaration_normalizations": {
+          "DOINSTATESCAT": [
+            {
+              "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+              "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+              "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+            }
+          ]
+        }
+      },
+      "medium-simple.f.stock": {
+        "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+        "routines": {
+          "GETTEMP": [
+            473,
+            523
+          ],
+          "GETMD": [
+            430,
+            438
+          ],
+          "GETMS": [
+            442,
+            446
+          ],
+          "GETNEFF": [
+            450,
+            469
+          ],
+          "NPART": [
+            661,
+            674
+          ],
+          "NTHICK": [
+            678,
+            716
+          ],
+          "CALCTA": [
+            720,
+            758
+          ],
+          "MEDDERIV": [
+            808,
+            829
+          ],
+          "CALCXSECTION": [
+            762,
+            804
+          ],
+          "MEDNEXTEVT": [
+            207,
+            243
+          ],
+          "PICKVTX": [
+            255,
+            278
+          ],
+          "GETSCATTERER": [
+            292,
+            368
+          ],
+          "GETTEMPMAX": [
+            527,
+            542
+          ],
+          "GETMDMAX": [
+            546,
+            554
+          ],
+          "GETMDMIN": [
+            558,
+            576
+          ],
+          "GETMSMAX": [
+            580,
+            584
+          ],
+          "GETNATMDMIN": [
+            588,
+            612
+          ],
+          "GETLTIMEMAX": [
+            616,
+            634
+          ],
+          "GETNEFFMAX": [
+            638,
+            657
+          ],
+          "AVSCATCEN": [
+            371,
+            403
+          ],
+          "MAXSCATCEN": [
+            406,
+            426
+          ]
+        }
+      },
+      "meix.f": {
+        "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "routines": {
+          "EIX": [
+            7,
+            38
+          ]
+        }
+      }
+    },
+    "relative_tolerance": 2e-12,
+    "absolute_tolerance": 2e-13,
+    "results": [
+      {
+        "attempt": 1,
+        "fixture_sha256": "f27cd05cf614508fe8822b414733ee6bd37bbb8e41e6a4057069949934f6e946",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            330,
+            266,
+            109,
+            19,
+            108454,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": "0865        1.3060470855008777        21.581993755693407     \n problem in getmass: weight> 1   1.0018594145694895      GC  0.21420650293921417       -2.2257782336583891        22.500431073840865        1.1670980879181947        22.138900239912886     \n problem in getmass: weight> 1   1.3072437329280904      GC   1.8157540182504112E-002  -2.2257782336583891        22.500431073840865        13.768384786001471        22.477671118680302     \n problem in getmass: weight> 1   1.0694233852531461      GC  0.16727357314722571       -2.2257782336583891        22.500431073840865        1.4945576596248271        22.479773469802740     \n problem in getmass: weight> 1   1.3069378196512726      GC   1.8275636754098434E-002  -2.2257782336583891        22.500431073840865        13.679413930348327        21.924459258660910     \n problem in getmass: weight> 1   1.0795839422910944      GC  0.15999842443680559       -2.2257782336583891        22.500431073840865        1.5625153865108354        22.488385986419782     \n problem in getmass: weight> 1   1.1388615697337372      GC  0.11741301322700018       -2.2257782336583891        22.500431073840865        2.1292358753851506        22.496915914593981     \n problem in getmass: weight> 1   1.1725353312556164      GC   9.3839223455420992E-002  -2.2257782336583891        22.500431073840865        2.6641311681225104        22.491519794543709     \n problem in getmass: weight> 1   1.2029311035397541      GC   7.3636916731029012E-002  -2.2257782336583891        22.500431073840865        3.3950362277275437        22.333420353708483     \n problem in getmass: weight> 1   1.2945845297219873      GC   2.3353414768949990E-002  -2.2257782336583891        22.500431073840865        10.705072576041111        22.284237453135528     \n problem in getmass: weight> 1   1.1231481598127180      GC  0.12864803767368063       -2.2257782336583891        22.500431073840865        1.9432865399325565        7.1118286331189973     \n GUARD_STATS            0         161\n",
+          "header": [
+            330,
+            266,
+            109,
+            19,
+            108454,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "scalar mismatch",
+        "values": 11922,
+        "mismatches": 83,
+        "examples": [
+          {
+            "row": 137,
+            "column": 5,
+            "cpp": 0.2554965743034652,
+            "reference": 0.25549657430411354
+          },
+          {
+            "row": 137,
+            "column": 6,
+            "cpp": -0.264145086930887,
+            "reference": -0.2641450869332168
+          },
+          {
+            "row": 151,
+            "column": 5,
+            "cpp": 0.13708863683453532,
+            "reference": 0.1370886368331881
+          },
+          {
+            "row": 151,
+            "column": 6,
+            "cpp": -0.6650703462745817,
+            "reference": -0.6650703462771417
+          },
+          {
+            "row": 152,
+            "column": 5,
+            "cpp": 0.11840793746892994,
+            "reference": 0.11840793747092537
+          },
+          {
+            "row": 162,
+            "column": 22,
+            "cpp": 0.0,
+            "reference": 1.0
+          },
+          {
+            "row": 173,
+            "column": 5,
+            "cpp": 0.4367906876856491,
+            "reference": 0.4367906876844713
+          },
+          {
+            "row": 173,
+            "column": 6,
+            "cpp": -0.3881770567007511,
+            "reference": -0.3881770567063476
+          },
+          {
+            "row": 173,
+            "column": 14,
+            "cpp": -1.3429507402184444,
+            "reference": -1.342950740221208
+          },
+          {
+            "row": 173,
+            "column": 15,
+            "cpp": 0.9455022969899223,
+            "reference": 0.9455022969845566
+          }
+        ],
+        "max_absolute_error": 1.0
+      },
+      {
+        "attempt": 2,
+        "fixture_sha256": "8cf9f92970ed84e2d26c880229f7c6a075785a9f6e849d02baffabac0332d276",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_ERROR nonfinite shower record\nCOH_STATS 0 0 0\n",
+          "header": [
+            53,
+            129,
+            2,
+            23,
+            6052,
+            0,
+            1,
+            1
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": " problem in getmass: weight> 1   1.0431650764981293      GC  0.18590037656967279      -0.78180847144772747        3.3692655826796498        1.3448063130001440        1.6770142290136529     \n problem in getmass: weight> 1   1.2177583737738769      GC   6.4286377242357098E-002   1.1097357405331416        3.5058260705605067        3.8888487845179065        3.4748977062322450     \n problem in getmass: weight> 1   1.1437494332868703      GC  0.11392286623947499        1.1097357405331416        3.5058260705605067        2.1944672588774230        2.7043788612242978     \n GUARD_STATS            1           5\n",
+          "header": [
+            55,
+            130,
+            3,
+            23,
+            6052,
+            0,
+            1,
+            1
+          ]
+        },
+        "classification": "failed or nonfinite cascade; not parity"
+      },
+      {
+        "attempt": 14,
+        "fixture_sha256": "6538541af87875c35c777aead11e99847015dd0046b00c7c62de331ee6a048f2",
+        "cpp": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-probe",
+          "returncode": 0,
+          "stderr": "COH_STATS 0 0 0\n",
+          "header": [
+            173,
+            188,
+            51,
+            19,
+            1077377,
+            0,
+            0,
+            0
+          ]
+        },
+        "reference": {
+          "executable": "/Users/ploskon/devel/jewel-cpp/build/jewel-medium-reference",
+          "returncode": 0,
+          "stderr": "092796        2.4222298410107670     \n problem in getmass: weight> 1   1.0177298486001005      GC  0.20349622846229926        1.3233210462751430        2.5238819586326282        1.2285239971723421        1.8838216770949778     \n problem in getmass: weight> 1   1.0916499145561820      GC  0.15133724884647640        1.9663900912335581        2.6936183350973706        1.6519396375020121        2.1473737515235318     \n WARNING in getpdfxint: need to extrapolate:    645.72584033157045        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    645.72584033157045        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    645.72584033157045        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    645.72584033157045        248.75909225703947     \n problem in getmass: weight> 1   1.0615051001917462      GC  0.17294833157169973       -1.0506169064493203        1.9438752354598687        1.4455184258100617        1.7162947538209672     \n problem in getmass: weight> 1   1.0561356496914591      GC  0.17675930932176570       -1.0506169064493203        1.9438752354598687        1.4143526638526847        1.7577226048757124     \n problem in getmass: weight> 1   1.0848702015521581      GC  0.15622854067489741       -1.0506169064493203        1.9438752354598687        1.6002197736726964        1.6721407697886370     \n problem in getmass: weight> 1   1.1070744405298196      GC  0.14020547370360312       -1.0506169064493203        1.9438752354598687        1.7830972885445577        1.4832253355303409     \n WARNING in getpdfxint: need to extrapolate:    555.59160865377498        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    555.59160865377498        248.75909225703947     \n WARNING in getpdfxint: need to extrapolate:    555.59160865377498        248.75909225703947     \n WARNING in getxsecint: need to extrapolate:    555.59160865377498        248.75909225703947     \n GUARD_STATS            0          84\n",
+          "header": [
+            173,
+            188,
+            51,
+            19,
+            1077377,
+            0,
+            0,
+            0
+          ]
+        },
+        "classification": "passed",
+        "values": 7045,
+        "mismatches": 0,
+        "examples": [],
+        "max_absolute_error": 1.2789769243681803e-13
+      }
+    ]
+  },
+  "samples": {
+    "vac": {
+      "header": {
+        "type": "run",
+        "schema": "jewel-parton-development-v1",
+        "scope": "experimental PPJJ ISR+MPI; incomplete topology and cascade validation",
+        "experimental_isr_mpi": true,
+        "mode": "vacuum",
+        "attempts_requested": 20,
+        "seed": 2600417,
+        "pythia_version": 8317,
+        "table_lifetime_fm": 62.908690318670054,
+        "table_energy_gev": 100,
+        "table_energy_prescription": "legacy-100",
+        "table_impact_parameter_fm": 0,
+        "geometry_seed": 3100417,
+        "angular_ordering": 0,
+        "first_angle_ordering": false,
+        "coherence": true,
+        "keep_recoils": true,
+        "recoil_rescattering": false,
+        "recoil_soft_cut_3T": 0,
+        "recoil_hard_cut_3T": 0,
+        "longitudinal_scatterer_boost": false,
+        "compression": true,
+        "pythia_settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 20",
+          "PhaseSpace:pTHatMax = 100",
+          "PDF:pSet = 13",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600417",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0"
+        ],
+        "hadronization": false,
+        "hadrotype": 0,
+        "hadronizer_settings": [],
+        "centrality_percent": null
+      },
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 873
+      },
+      "failures": [],
+      "sha256": "07c7c4044cda1a31689ca042c4491fe8386cf20b1a404b99e9be9a14ad673bcb"
+    },
+    "medium": {
+      "header": {
+        "type": "run",
+        "schema": "jewel-parton-development-v1",
+        "scope": "experimental PPJJ ISR+MPI; incomplete topology and cascade validation",
+        "experimental_isr_mpi": true,
+        "mode": "medium",
+        "attempts_requested": 20,
+        "seed": 2600417,
+        "pythia_version": 8317,
+        "table_lifetime_fm": 62.908690318670054,
+        "table_energy_gev": 100,
+        "table_energy_prescription": "legacy-100",
+        "table_impact_parameter_fm": 0,
+        "geometry_seed": 3100417,
+        "angular_ordering": 0,
+        "first_angle_ordering": false,
+        "coherence": true,
+        "keep_recoils": true,
+        "recoil_rescattering": false,
+        "recoil_soft_cut_3T": 0,
+        "recoil_hard_cut_3T": 0,
+        "longitudinal_scatterer_boost": false,
+        "compression": true,
+        "pythia_settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 20",
+          "PhaseSpace:pTHatMax = 100",
+          "PDF:pSet = 13",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600417",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0"
+        ],
+        "hadronization": false,
+        "hadrotype": 0,
+        "hadronizer_settings": [],
+        "centrality_percent": null
+      },
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 2,
+        "evolution_failures": 18,
+        "generation_failures": 0,
+        "accepted_weight": 2,
+        "failed_weight": 18,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 235
+      },
+      "failures": [
+        {
+          "type": "evolution_failure",
+          "attempt": 2,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 6052
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 3,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 2477
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 4,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 46085
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 5,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 106817
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 6,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 41273
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 7,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 503
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 8,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 503
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 9,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 5058
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 10,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 1240
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 11,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 5594
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 12,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 989994
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 13,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "draws": 1215516
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 15,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 39168
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 16,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 505
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 17,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 63874
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 18,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 21920
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 19,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 48890
+        },
+        {
+          "type": "evolution_failure",
+          "attempt": 20,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "draws": 294787
+        }
+      ],
+      "sha256": "3d940e3db11d91fbaae29e080189e0b5a9f72e5672eb908b9aca359fdec7a7c8"
+    }
+  },
+  "native_runner_sha256": "d9b2188e8c394de5418b1bd740e1b2c9738028131c92350e46e9777946022129"
+}

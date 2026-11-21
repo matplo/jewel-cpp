@@ -1,0 +1,456 @@
+{
+  "scope": "MAKEBRANCH and MAKECASCADE",
+  "baseline_only": true,
+  "guarded": true,
+  "rng": "splitmix64-open52-v1",
+  "case_indices": [
+    38,
+    39,
+    40,
+    41
+  ],
+  "cases": 4,
+  "values": 10824,
+  "max_absolute_error": 3.1530333899354446e-14,
+  "failures": [],
+  "settings": [
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260038,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21,
+      "operation": "NCASCADE",
+      "status": 1,
+      "start": 0.5,
+      "birth": 0.4,
+      "scatter_recoils": 0,
+      "rng_cursor": 17
+    },
+    {
+      "pdg": 21,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260039,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21,
+      "operation": "NCASCADE",
+      "status": 2,
+      "start": 0.5,
+      "birth": 0.4,
+      "scatter_recoils": 0,
+      "rng_cursor": 17
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260040,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21,
+      "operation": "NCASCADE",
+      "status": 1,
+      "start": 0.5,
+      "birth": 0.4,
+      "scatter_recoils": 0,
+      "rng_cursor": 17
+    },
+    {
+      "pdg": 1,
+      "selected": 4,
+      "left": 0.5,
+      "cross": 0,
+      "length": 1,
+      "seed": 260041,
+      "kinmode": 1,
+      "history": 0,
+      "recmode": 0,
+      "subtract": 0,
+      "energy": 20,
+      "mass": 4,
+      "rotation": 0,
+      "shorten": false,
+      "weight": 1,
+      "enabled": 0,
+      "near_edge": false,
+      "nf": 3,
+      "boost": 0,
+      "retry": false,
+      "rejection": 0,
+      "force_radiation": false,
+      "selected_flavour": 21,
+      "operation": "NCASCADE",
+      "status": 2,
+      "start": 0.5,
+      "birth": 0.4,
+      "scatter_recoils": 0,
+      "rng_cursor": 17
+    }
+  ],
+  "max_draws": 25,
+  "max_records": 9,
+  "input_sha256": "218413ca1410c0915e7636ebb9b99c1df1125378100a63f63e7cafa8517f3308",
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ],
+        "GETPDF": [
+          6928,
+          7022
+        ],
+        "GETPDFXINTEXACT": [
+          7096,
+          7129
+        ],
+        "PDFINT": [
+          8082,
+          8135
+        ],
+        "GETPDFXINT": [
+          7027,
+          7090
+        ],
+        "PGQ": [
+          7938,
+          7942
+        ],
+        "XSECINT": [
+          8142,
+          8228
+        ],
+        "GETXSECINT": [
+          7135,
+          7241
+        ],
+        "GETSSCAT": [
+          7365,
+          7458
+        ],
+        "GETMASS": [
+          7465,
+          7625
+        ],
+        "GENERATEZ": [
+          7632,
+          7685
+        ],
+        "GETDELTAT": [
+          8423,
+          8554
+        ],
+        "REJECTSPLITTING": [
+          3688,
+          3865
+        ],
+        "MAKESPLITTING": [
+          3288,
+          3682
+        ],
+        "GETNEWMASS": [
+          5253,
+          5360
+        ],
+        "GETPNORAD1": [
+          5366,
+          5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ],
+        "MAKECASCADE": [
+          2902,
+          2942
+        ],
+        "MAKEBRANCH": [
+          2948,
+          3282
+        ],
+        "FINDVIRTUALITIES": [
+          1893,
+          2239
+        ],
+        "GETTHETAM": [
+          2303,
+          2365
+        ],
+        "ISPARTON": [
+          8690,
+          8700
+        ],
+        "ISDIQUARK": [
+          8658,
+          8671
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "guard_source_sha256": "e7037917cab19b08f840635c0d4065aeb67e4ddc1478f72930e36ff141e64a40",
+  "executables": {
+    "jewel-medium-probe": "1d79bd72c2e42d3eedcfcdeb1eaea6035145bf0e08c0371eec9b57f738c4c52b",
+    "jewel-medium-reference": "fed054973fe39aa8850a91eb00547b3b3287c0aea1e8feebe8eaa5ef7d2ad345"
+  }
+}

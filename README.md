@@ -1,6 +1,6 @@
 # jewel-cpp
 
-An experimental standalone C++17 port of JEWEL 2.6.0, starting with a frozen-source numerical reference harness. This is not an official JEWEL release or a working event generator. GPL-2.0-or-later; see NOTICE, LICENSE and GUIDELINES.
+An experimental standalone C++17 port of JEWEL 2.6.0, starting with a frozen-source numerical reference harness. This is not an official JEWEL release or a complete, physics-validated event generator. GPL-2.0-or-later; see NOTICE, LICENSE and GUIDELINES.
 
 ## Build and validate
 
@@ -44,7 +44,7 @@ python3 reference/freeze.py --variant stock --output validation-output/stock-001
 
 The full stages 0 and 1 remain open. The numerical grids are implemented below; next implement the run configuration and evolution state machine. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
 
-Pythia8 hard-event import and separate hadronization adapters follow core evolution validation. No Pythia8, TGlauberMC or JETSCAPE dependency is introduced here. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
+Pythia8 hard-event import and a separate hadronization adapter are optional components described below. The core remains independent of Pythia8, TGlauberMC and JETSCAPE. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
 
 ## Milestone 1b: expanding medium and numerical tables
 
@@ -74,12 +74,16 @@ The Ei table has 1,000 positive/negative nodes and uses stock interpolation.
 
 The `medium-differential` CTest compares every generated table entry, interpolation,
 participant density, medium samples, interpolation-knot neighbours, heating/cooling
-cutoff transitions and the three Ei-dependent kernels against
+cutoff transitions, configurable rapidity boundaries and the three Ei-dependent kernels against
 unchanged, hash-verified stock Fortran routines. The reference harness dispatches
 only DERIV modes 5 and 101 and sets parameters explicitly rather than invoking
 MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
 `build/medium-validation.json` records errors and hashes. See
-[recorded validation](docs/validation-medium.md).
+[recorded validation](docs/validation-medium.md). The
+[event-geometry comparison](docs/validation-event-geometry.md) additionally checks
+143,220 values across both initialization geometries, flow off/on, three table
+energies, six proper times, six transverse positions and three projectile
+directions, with all 24 initialized-table preservation checks passing.
 
 ### Preserved reference details and explicit domain policies
 
@@ -224,6 +228,11 @@ query types or nonfinite inputs throw.
 and channel queries, including distinct coupling scales, medium boosts,
 non-unit SCALEFACM and a constant Debye-mass grid. Full transport evolution,
 colour/recoil bookkeeping and Pythia8 event integration remain outstanding.
+
+The [expanding-medium trajectory comparison](docs/validation-scattering-rays.md)
+checks 49,248 additional cross sections against JEWEL 2.6.0 and verifies that
+queries preserve initialized tables. All 13 selected medium/table suites pass;
+complete-cascade and jet-level agreement remain separate validation requirements.
 
 ## Milestone 2a: branch candidate sampling
 
@@ -377,7 +386,8 @@ preserved. Undefined zero-denominator decisions and retry exhaustion throw.
 medium, average scatterer and rate grids. It preserves the reference quark/gluon
 colour factors and raw return convention, including −1 for a gluon with zero
 total cross section (versus 1 for a quark). Values are not clipped to [0,1].
-Undefined scattering invariants throw rather than propagate NaNs.
+Zero scattering invariants preserve the source's finite energy-cutoff or
+zero-cross-section return; negative invariants throw.
 
 [Validation](docs/validation-virtuality.md) covers increasing/decreasing scales,
 all angular-ordering modes, initial/final updates, retained metadata, different
@@ -580,3 +590,514 @@ source evolution-time slot metadata while preserving stable particle IDs.
 The reference needs one documented duplicate-declaration normalization; its
 executable statements remain unchanged. Complete shower scheduling and Pythia8
 integration remain pending.
+
+## Scheduler integration (in progress)
+
+`Cascade::branch()` and `Cascade::evolve()` in `jewel/cascade.hpp` connect the
+ported routines into branch and cascade evolution. Validation is incomplete:
+the expanded cascade replay currently fails. See the [development checkpoint](docs/scheduler-progress.md)
+for the passing baseline, the first traced numerical divergence, and remaining
+work. The reduced native event runner is available below; complete generator validation remains open.
+
+The [interactive cascade comparison](docs/cascade-ensemble-report.html) shows
+1,000 attempted showers per engine with coherence on/off, jet spectra, girth,
+pTD and failed-event accounting. See the [validation notes](docs/validation-cascade-ensemble.md)
+for reproduction and transactional collision retries and remaining discrepancies. This is a
+controlled parton-level study, not a passing full-generator comparison.
+
+## Compression boundary routine
+
+`compress_records` ports COMPRESSEVENT, including protected records, moved
+genealogy and physical-slot metadata. [Exact reference validation](docs/validation-compression.md)
+covers 222 cases and 1,531,146 values. `ShowerState::compress()` now preserves stable-ID ancestry in an archive while
+physics follows separate source scheduling links. Enable scheduler integration
+with `CascadeConfig::compress_records=true`. Vacuum, threshold and one medium
+cascade comparison pass; another medium fixture retains four stored-transfer
+discrepancies. Full compression-mode and generator validation remain open.
+
+## Optional native Pythia8 boundary
+
+`Pythia8Input` imports hard-event snapshots and maps hard roles to final
+beam-recoil copies through ancestry. `Pythia8Hadronizer` uses a separate
+instance for a complete colour-connected input state. A native
+`jewel-pythia8-input` executable writes snapshots without Python or Fortran.
+[Build instructions and validation](docs/validation-pythia8.md) cover a
+1,000-event input/hadronization round trip. Reduced PPJJ shower insertion and hard initialization are now available
+through `jewel-run-partons`; `jewel-run-events` also performs HADROTYPE=0
+string construction and Pythia8 hadronization. Full-generator validation
+remains pending. This is not yet a complete event generator.
+
+## Hard initialization and native parton runner
+
+`initialize_hard_dijet()` implements the PPJJ FINDVIRTUALITIES branch and
+GETTHETAM with 288 passing Fortran comparisons. `prepare_pythia_dijet()` maps
+Pythia final hard copies into the cascade while retaining frozen beam remnants.
+The development `jewel-run-partons` executable produces explicit accepted and
+failed-event records, with production coordinates, ancestry, momenta and thermal
+references. The separate `jewel-run-events` executable also hadronizes the
+evolved state, as described below.
+
+[Validation and reproduction instructions](docs/validation-hard-initialization.md)
+record 20/20 accepted vacuum attempts and 16/20 medium attempts. The four medium
+failures remain unresolved and are counted explicitly; these smoke tests are
+not a passing full-event comparison with JEWEL.
+
+### Native medium replay correction
+
+Exact initialized-state replay exposed and fixed a zero-invariant branch in
+GETPNORAD1. The same 20-attempt medium sample now accepts 18 events. The two
+remaining failures also produce nonfinite states in guarded Fortran replay;
+other cascade mismatches remain open. See [replay evidence and limitations](docs/validation-native-replay.md).
+
+## Native hadronized development runner
+
+`jewel-run-events output.jsonl attempts seed vacuum|medium` connects Pythia8
+hard input, JEWEL virtuality initialization and cascade, HADROTYPE=0 string
+construction, and a separate Pythia8 hadronizer. It preserves input IDs and
+thermal references and records failures without replacing failed attempts.
+The output includes the native parton event, hadronization inputs and complete
+Pythia8 hadronization history. This is development JSONL, not HepMC.
+
+[Validation](docs/validation-strings.md) covers 292 exact Fortran string-routine
+comparisons and small native samples: 20/20 vacuum and 18/20 medium attempts
+produce hadronized output. HADROTYPE=1, junction mapping, ISR/MPI and the
+full-generator physics comparison remain incomplete.
+
+The [native sample browser](docs/native-hadron-report.html) now contains more
+than 1,000 selected jets per setting, analyzed with hepyy/cppyy: 1,081 vacuum
+and 1,295 medium jets. [Sample accounting and selection](docs/validation-native-ensemble.md)
+record 136 failed medium attempts out of 1,500. This native-only report does
+not evaluate the required Fortran/C++ ratios.
+
+An opt-in `--jewel-fragmentation` flag applies the mapped explicit JEWEL
+fragmentation overrides in `jewel-run-events`, including probability-to-ratio
+conversion for vector mesons. [Mapping, tests and remaining configuration gaps](docs/validation-fragmentation-mapping.md)
+explain why this is not yet equivalent to Pythia6 fragmentation. Existing
+native ensemble results retain their original Monash settings.
+
+External hard-input PDFs are available with `--lhapdf SET/MEMBER`, together
+with explicit `--hard-alpha-s VALUE --hard-alpha-s-order ORDER`. These options
+work in the hard-input, parton and hadronized runners. [CT14nlo validation and
+runtime setup](docs/validation-external-pdf.md) record deterministic hard-event
+checks, plugin/grid provenance and the remaining coupling-comparison limits.
+
+Use `--centrality MIN MAX` on native parton/hadron runners to sample an optical
+centrality interval in percent. Event records carry their impact parameter,
+centrality fraction and lifetime. [Geometry validation](docs/validation-event-geometry.md)
+checks event-local medium/rate updates against Fortran while retaining the
+initialized numerical tables. Omit the option to retain fixed b=0 behavior.
+
+Use `--table-energy jewel` to compute the table initialization scale with JEWEL
+2.6.0's EOVEST prescription, or `--table-energy GEV` for an explicit positive
+scale. Omission preserves the earlier 100 GeV setting. All four table families,
+run metadata and replay fixtures use the same value. See
+[table-energy validation](docs/validation-table-energy.md) for reference checks
+and the remaining strict cascade mismatch.
+
+Use `--longitudinal-boost on` to enable JEWEL's longitudinal scatterer flow.
+It controls the maximum scatterer used by tables, local rates and sampled
+momentum transfers consistently. The default remains `off` to reproduce prior
+native samples. [Flow validation](docs/validation-longitudinal-flow.md) includes
+Fortran comparisons and explicitly records the remaining cascade failures.
+
+Set `JEWEL_CASCADE_TRACE=1` for optional branch-boundary diagnostics in the
+native probe and guarded Fortran cascade. The [flow-failure investigation](docs/validation-cascade-flow-failures.md)
+includes reproducible input fixtures, traces and their comparison. These traces
+help distinguish shared rejected events from differences introduced by the port.
+
+The [collision roundoff investigation](docs/validation-collision-roundoff.md)
+identifies a shared C++/Fortran nonfinite trigger in the flow sample. Its
+reproduction tool instruments temporary source copies and checks that event
+output remains unchanged; it does not clamp or alter the production physics.
+
+Use `--keep-recoils off` to exclude medium recoils using JEWEL's ALLHAD /
+KEEPRECOILS behavior. The setting controls collision colours as well as
+hadronization; it is not a post-clustering particle removal or thermal
+subtraction. Omission retains the previous `on` behavior. See
+[recoil validation](docs/validation-recoil-retention.md) and the
+[small native recoil-mode browser](docs/native-recoil-smoke.html).
+
+Recoil rescattering is configurable with `--recoil-rescattering on|off`, and
+fluid-rest-frame thresholds with `--recoil-cuts SOFT HARD` (multipliers of 3T).
+Defaults remain off and 0/0. [Validation and limits](docs/validation-recoil-controls.md)
+record shared nonfinite failures when rescattering becomes active; this mode
+is not yet validated for production or the full-generator comparison gate.
+
+Collision sequences preserve provisional recoil splitting sentinels until the
+source retry decision. The [retry validation](docs/validation-recoil-fraction-retries.md)
+records four finite Fortran outcomes previously rejected too early by the port;
+all now agree, while unrecovered nonfinite state remains unpublishable.
+
+The native runners accept `--angular-ordering 0..5`; omission retains mode 0,
+and mode 1 selects JEWEL's default ANGORD value. The separate AOFIRSTSPLIT
+setting remains false. [Angular-mode validation](docs/validation-angular-runner.md)
+records passing component/native-replay checks and an unresolved mode-1 event
+where C++ fails but Fortran completes. These modes are not yet fully validated.
+
+### Thermal constituent subtraction kernel
+
+The typed `subtract_thermal_momenta` API ports the JEWEL 2.6.0 subtraction
+helpers, with 132 passing reference cases. It retains source IDs and marks
+positive residual thermal particles explicitly. The native hadronized runner enables it with
+`--subtraction-radius R`; optional on-shell projection follows it via `--put-on-shell 0|1|2`. The upstream process-offset wrapper has
+known defects and is excluded from the kernel parity claim.
+See [behaviour, validation and integration limits](docs/validation-subtraction.md).
+
+With subtraction enabled, the runner retains raw hadrons and writes
+`subtracted_particles`, including source IDs and signed mass metadata.
+`tools/analyze_native_events.py` selects this collection automatically; the
+report labels its subtraction setting. The adapter uses all final particles,
+all stored thermal centres and a separate recorded SplitMix stream. It does not
+reproduce the broken process-offset wrapper. See
+[native subtraction validation](docs/validation-native-subtraction.md).
+
+### On-shell projection core
+
+`project_on_shell` supports modes 0, 1 and 2 with explicit nominal masses and
+mode-2 ranges. All 208 reference cases pass, including nonconverged and
+insufficient-energy source paths, which are reported explicitly. The native runner exposes these modes after subtraction using explicit Pythia8
+nominal masses. See
+[projection behaviour and validation limits](docs/validation-projection.md).
+
+The projection adapter retains subtracted records and adds `projected_particles`,
+recording nominal masses, convergence outcomes and total four-momentum changes.
+Analysis selects the projected collection when enabled. See
+[native projection validation](docs/validation-native-projection.md) and the
+[selectable smoke report](docs/native-projection-smoke.html).
+
+## Jet substructure analysis
+
+The native hepyy/cppyy analysis includes jet mass and Soft Drop groomed mass/zg,
+with explicit untagged and out-of-range accounting. See the
+[definition and validation](docs/validation-substructure.md) and
+[selectable native sample report](docs/native-substructure-report.html).
+These remain native-only results; the matched Fortran ratio gate is outstanding.
+
+Fortran HepMC2 samples can enter the same analysis through the
+[native HepMC3 importer](docs/validation-reference-analysis.md). The
+[common event browser](docs/common-event-report.html) records generator identity
+and the distinction between native attempts and written reference events.
+The included Fortran sample is a smoke check with unmatched settings, not a
+passing physics comparison.
+
+## ISR input milestone
+
+The hard-input adapter accepts `--isr on|off` and exports validated emission
+and final-copy ancestry. See [ISR input validation](docs/validation-isr-input.md).
+The reduced JEWEL transport adapter rejects ISR snapshots until their production
+times, virtualities and medium evolution are mapped; the event runner remains
+ISR-off.
+
+The core now includes the [backward ISR production-time calculation](docs/validation-isr-times.md),
+validated against the unedited JEWEL timing block. Connecting actual Pythia8
+ancestry and non-hard-parton virtualities remains outstanding.
+
+[Actual ISR ancestry mapping](docs/validation-isr-ancestry.md) now identifies
+both incoming chains and reconstructs stage-local spacelike branch momenta.
+Recoil-frame and coordinate transport remain separate work before timing
+integration; signed spacelike energies are preserved.
+
+[ISR recoil-frame reconstruction](docs/validation-isr-frames.md) now reproduces
+ordinary initial-initial Pythia8 recoil copies and transforms spacetime
+displacements. Primordial recoil and physical production-point assignment
+remain pending.
+
+[Primordial recoil reconstruction](docs/validation-primordial-recoil.md) now
+completes the checked momentum-copy path for the reduced single-system samples.
+Composed ISR and primordial matrices reproduce final hard/emitted partons;
+physical production-time assignment and ISR medium evolution remain pending.
+
+The [signed-energy audit](docs/validation-isr-energy-frames.md) shows that a final-frame
+boost does not resolve all negative spacelike energies. The timing kernel now
+preserves the signed Fortran expression and passes 1152 reference cases; its
+physical use for reconstructed Pythia8 histories remains under investigation.
+
+[MPI pair virtuality initialization](docs/validation-mpi-initialization.md) now
+preserves the source rapidity-dependent scale, MPIFSR switch and explicit
+TYPE1/TYPE2 context. MPI pair discovery and event generation remain pending.
+
+### Native/Fortran ratio report
+
+The [comparison browser](docs/jet-comparison.html) adds selectable distributions,
+native/Fortran ratios, the ±10% band and a 1,000-selected-jet gate for each sample.
+The current example uses unmatched smoke samples and does not establish physics
+agreement. [Commands, statistical treatment and limitations](docs/jet-comparison.md).
+
+Hard-input and native runners now accept `--ecm GEV --pt-min GEV --pt-max GEV`.
+`--table-energy jewel` derives the table scale from those inputs. Defaults remain
+5020 GeV and pThat 20–100 GeV. See [hard-range validation](docs/validation-hard-range.md).
+
+Use `--geometry-step .02` to export both hard legs' production points and the
+custom JEWEL straight-line geometric/hot-medium length estimates in native JSON.
+[Definitions and Fortran validation](docs/validation-geometry-lengths.md).
+
+The common hepyy analysis now associates native geometry with final jets across
+the full phase space before applying jet cuts. Unmatched selected jets receive
+null geometry. [Matching rules and sample validation](docs/validation-native-jet-geometry.md).
+
+The HADROTYPE=1 minimum-invariant-mass string constructor is now ported and
+validated against the original Fortran routine. The hadronized runner supports
+`--hadrotype 1`, with explicit synthetic-endpoint provenance and Pythia8 mass-field
+adaptation. [Constructor evidence](docs/validation-minimum-strings.md) and
+[runner/hadronization validation](docs/validation-minimum-hadronization.md).
+
+Export completed native hadron runs to HepMC3 with
+`python tools/export_native_hepmc3.py native.jsonl native.hepmc3` in the hepyy
+environment. The final-state export is readable by hepyy-utils and preserves
+weights plus the full attempt ledger in run attributes.
+[Output scope, normalization and validation](docs/validation-native-hepmc3.md).
+
+### Native ISR/MPI preparation checkpoint
+
+Imported Pythia8 records now support ISR timing attachment followed by the
+JEWEL survivor-selection and ordered massless-conversion step. The generated
+record replay passes 640,920 values against the JEWEL 2.6.0 Fortran routines;
+see [native preparation validation](docs/validation-native-preparation.md).
+These input stages are connected to the experimental ISR/MPI runner described below.
+
+Prepared records also support [primary/MPI subsystem initialization](docs/validation-subsystem-initialization.md),
+with whole-event rollback on failure. The source-replay policy inherits primary
+sampling channels. The experimental native runner instead selects each MPI
+leg's outgoing-flavour channel, avoiding flavour-inconsistent quark splitting.
+This explicit Pythia8 adapter policy is documented in
+[the MPI channel validation](docs/validation-mpi-flavour.md).
+
+### Experimental ISR/MPI cascades and hadronization
+
+`jewel-run-partons --experimental-isr-mpi` connects the input stages to cascade
+evolution. `jewel-run-events` also accepts this option with HADROTYPE 0 and
+preserves explicit native junctions at the hadronization boundary. This remains
+a development mode with unsupported input topologies and incomplete physics
+validation. See the [initial smoke samples](docs/validation-experimental-cascade.md),
+[native junction boundary](docs/validation-native-topology.md) and
+[current MPI channel policy](docs/validation-mpi-flavour.md).
+
+The collision fallback now [resolves negative roundoff at an algebraically zero CM momentum](docs/validation-zero-cm-limit.md).
+This documented numerical extension recovers source-nonfinite cases; ordinary
+finite-source comparisons retain their original tolerances. The 20-event
+experimental medium smoke sample completes, but full jet validation is pending.
+
+The [1,000-attempt-per-setting stability audit](docs/validation-stability-parton.md)
+now completes 953 vacuum and 952 medium cascades, with no nonfinite failures in
+that sample. A [parton-level interactive browser](docs/stability-parton-browser.html)
+shows hepyy/cppyy jet diagnostics; this is separate from matched hadron-level
+Fortran validation, which remains unfinished.
+
+### Larger Fortran/native comparison checkpoint
+
+The [zero-interaction comparison](docs/validation-zero-interaction-comparison.md)
+now contains more than 1,000 selected hadron-level jets from each engine and
+[interactive side-by-side ratios](docs/zero-interaction-comparison.html).
+Both denominators include discarded attempts using a complete Fortran run log.
+The 10% numerical target is not met; full configuration equivalence remains
+unproven. This setting uses an expanding background with scattering disabled,
+not JEWEL's distinct vacuum medium backend.
+
+### Vacuum backend distinction
+
+`vacuum` now uses JEWEL's actual vacuum medium contract: zero lifetime and
+medium fields, origin vertices and the source's fixed maximum scatterer for
+table initialization. `zero-interaction` preserves the previous noninteracting
+expanding-background behavior and permits centrality settings. `medium` keeps
+the interacting expanding background. See [backend validation](docs/validation-vacuum-backend.md)
+and the [larger true-vacuum comparison](docs/vacuum-backend-comparison.html).
+
+### Unused colour-angle diagnostics
+
+The experimental native runner now accepts hard junction legs when the first-
+splitting angular veto is disabled, by omitting its unused colour-angle diagnostic.
+No junction angle is fabricated. Matched 150-attempt samples recover four events
+in both expanding-medium modes; [validation and limits](docs/validation-unused-colour-angles.md)
+include the remaining strict Fortran replay discrepancy.
+
+### MPI photons
+
+Native MPI pairs can now include inactive massless colourless photons. Their
+identity and mass survive pair initialization and hadronization.
+[Validation](docs/validation-mpi-photons.md) covers 228,960 Fortran comparisons
+and a generated photon event; massive nonpartons remain unsupported.
+
+### Inactive massive MPI particles
+
+Native MPI initialization retains colourless nonparton masses and uses an explicit
+finite placeholder for their unused shower time, preserving source random draws.
+[Validation and convention](docs/validation-mpi-passive.md) distinguish finite
+kinematic parity from the source infinite-time expression. The matched medium
+sample now completes 220/220 attempts; full physics validation remains open.
+
+### Current vacuum comparison
+
+The [updated comparison](docs/inclusive-vacuum-comparison.html) includes all
+1500 native attempts and 2126 selected jets, versus 1357 Fortran jets. It keeps
+the earlier sample selectable. The [10% gate still fails](docs/validation-inclusive-vacuum.md);
+recovering previously excluded event types does not establish physics agreement.
+
+### Neutral-pion decay
+
+Use `--pi0-decay off` with `jewel-run-events` to retain final neutral pions,
+matching JEWEL PI0DEC=F. Default is on. [Validation](docs/validation-pi0-decay.md)
+covers both engines and records the next unresolved fragmentation mapping.
+
+### Diquark Lund mapping
+
+The JEWEL fragmentation profile now explicitly uses the Pythia6 diquark exponent
+and old/new flavour orientation. [All 144 tested coefficients match exactly](docs/validation-diquark-lund.md).
+Earlier jet comparisons predate this correction; a refreshed comparison is required.
+
+### Corrected-profile comparison
+
+The [latest vacuum report](docs/lund-vacuum-comparison.html) compares the source-
+derived diquark profile with both historical samples. All 1500 events complete,
+but [spectrum and substructure gates still fail](docs/validation-lund-vacuum.md).
+The effective Pythia6/Pythia8 hard and ISR couplings are the next audit priority.
+
+### Effective coupling audit
+
+The [initialized coupling audit](docs/validation-effective-couplings.md) confirms
+that the current hard/ISR settings are not equivalent between engines. A source-
+derived one-loop translation matches ten scales to 1.1e-16, but is not yet
+applied to production samples. Historical jet comparisons remain unvalidated.
+
+### Expanded medium/table validation
+
+The [thermodynamic scattering-table matrix](docs/validation-scattering-thermodynamics.md)
+checks six configurations against frozen JEWEL 2.6.0 routines: changed initial
+and cutoff temperatures, formation time, screening scale, profile and table
+energy. All 2,620,056 comparisons pass; complete grids and boundary queries
+agree exactly. This is component validation, not full-generator jet agreement.
+
+### Explicit input coupling policy
+
+Hard-input and full runners now accept `--isr-alpha-s VALUE` with
+`--isr-alpha-s-order ORDER`, `--alpha-s-nfmax 5|6`, and
+`--isr-alpha-s-cmw on|off`. These preserve defaults unless requested and verify
+explicit values after Pythia initialization. See the
+[reference-derived policy and integration checks](docs/validation-input-coupling.md).
+
+The [translated-coupling vacuum comparison](docs/validation-translated-vacuum.md)
+contains 2090 native and 1357 Fortran selected jets, with historical samples
+available in its interactive report. The 10% physics target remains unmet;
+four native failed attempts remain counted in normalization.
+
+The [octet-onium MPI extension](docs/validation-mpi-octets.md) recovers
+attempt 511 of the translated-coupling sample while preserving all preceding
+event records. Its retained-mass initialization passes 1440 Fortran comparison
+cases; this does not establish quarkonium production or full-generator parity.
+
+The [ISR source-matrix diagnostic](docs/validation-isr-source-trace.md) traces
+the three translated-sample frame failures to loss of precision when recovering
+source variables from particle output. Captured source matrices pass the
+existing copy checks; production tolerances and rejection behavior are unchanged.
+
+The [bounded ISR recovery](docs/validation-isr-recovery.md) now accepts the
+complete 1500-attempt translated-coupling sample. Its interactive comparison
+contains 2070 native and 1357 Fortran jets. The 10% target remains unmet, and
+four baseline frame-composition residuals remain explicitly recorded.
+
+The [MPI coupling/screening audit](docs/validation-mpi-coupling.md) adds explicit
+`--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER` and
+`--mpi-screening PT0REF ECMREF POWER` controls. Common-scale couplings match
+60 Fortran evaluations, but Pythia8 automatically lowers the requested screening
+scale. The fresh 1981-versus-1357-jet comparison is not fully MPI-matched and
+still fails the 10% target.
+
+The [phase-aware MPI audit](docs/validation-mpi-normalization.md) corrects the
+initialization-only interpretation: both screening scales reach 2.326 GeV,
+but production MPI PDF scales differ. An isolated shifted-scale Pythia8
+diagnostic yields 2075 native versus 1357 Fortran jets and still fails the
+10% target. It is not integrated into the standard build.
+
+The [expanding-medium reference checks](docs/validation-medium.md) also follow
+144 prescribed rays through central and peripheral media: all 35,136 additional
+field values agree with JEWEL 2.6.0, bringing that suite to 59,848 comparisons.
+These validate local fields along supplied coordinates, not interacting-jet
+trajectories or full-generator agreement.
+
+The optional `--mpi-double-gaussian .5 .4` selects the frozen reference's MPI
+core profile. Its [source-expression and event validation](docs/validation-mpi-overlap.md)
+passes the overlap check but still fails the requested jet/substructure ratios.
+See the [interactive comparison](docs/mpi-overlap-vacuum-comparison.html).
+
+The [legacy MPI saved-state audit](docs/validation-mpi-saved-state.md) confirms
+that the reference retains its original sampling tables after another initializer
+lowers the live screening scale. The diagnostic reproduces all 1,000 reference
+attempts byte for byte; a native equivalent of this initialization remains open.
+
+The [native legacy MPI hard-overlap component](docs/validation-legacy-mpi-weight.md)
+now separates saved tables from live screening. It passes 7,216 differential
+comparisons and exactly replays 1,000 full-reference weight evaluations. It is
+not yet connected to native event generation; initialization and sampling remain.
+
+The [legacy MPI overlap normalization and hard-impact sampler](docs/validation-legacy-mpi-overlap.md)
+now pass 16,330 Fortran comparisons, including exact random-draw counts.
+Cross-section table construction and full MPI generation remain unconnected.
+
+The [legacy MPI scale sampler](docs/validation-legacy-mpi-scale.md) now matches
+6,484 Fortran outputs exactly, including eight terminating proposal sequences
+and random draw counts. Differential acceptance and table/bound initialization
+remain required before selecting this path in the event runner.
+
+The [legacy MPI massless phase-space proposal](docs/validation-legacy-mpi-phase.md)
+passes 17,115 exact Fortran comparisons, including momentum-availability
+boundaries and five-draw consumption. Cross-section evaluation and event
+construction remain to be connected before replacing the current MPI backend.
+
+The [legacy MPI differential common factor](docs/validation-legacy-mpi-factor.md)
+passes 8,100 exact Fortran comparisons. Subprocess matrix elements, PDF weighting
+and heavy-flavour thresholds remain necessary to complete the acceptance evaluator.
+
+The [legacy MPI channel evaluator](docs/validation-legacy-mpi-channels.md) now
+passes 313,640 synthetic-reference comparisons and 75,360 values from actual
+initialization/production calls, all exactly on this host. Native PDF and
+annihilation-width evaluation remain external inputs before backend integration.
+
+The [native gluon annihilation width](docs/validation-legacy-gluon-width.md)
+passes 37,932 constructed and 3,400 live-reference comparisons. Substituting it
+into the prior channel replay preserves all 75,360 exact values; native PDF
+evaluation and full MPI backend integration remain outstanding.
+
+## Native legacy MPI beam PDF validation
+
+The optional LHAPDF-backed `LegacyMpiPdf` adapter reproduces the audited nucleon
+PDF policy and heavy-flavour suppression. Its [reference comparison](docs/validation-legacy-mpi-pdf.md)
+passes 96,096 values, explicitly distinguishing the linked Fortran scale floor
+from the PDF-metadata floor. It is not yet integrated into complete native MPI
+event generation; final-state jet agreement remains open.
+
+The native [accepted MPI pair component](docs/validation-legacy-mpi-pair.md)
+preserves PYMULT's separate flavour prescription and random-draw order;
+65,625 comparisons pass against extracted Fortran statements. Colour attachment
+and full native MPI event-loop integration remain unfinished.
+
+The [native MPI string-piece update](docs/validation-legacy-mpi-strings.md)
+preserves sequential attachment and reference tie handling: 44,956 endpoint/count
+comparisons agree exactly. Complete Pythia8 colour-tag integration remains open.
+
+`LegacyMpiEvolution` now [composes the MPI components into persistent state](docs/validation-legacy-mpi-evolution.md).
+All 710,092 compared state values pass against source-extracted Fortran sequences
+with identical supplied cross sections. Colour tags, remnants and event-runner integration remain unfinished.
+
+The [native MPI cross-section provider](docs/validation-legacy-mpi-cross-section.md)
+now implements the evolution callback using LHAPDF and an explicit running-coupling
+policy. With Pythia8 AlphaStrong, 81,160 live-reference comparisons pass. Complete
+native MPI event integration and final jet agreement remain unfinished.
+
+The [connected native MPI sequence replay](docs/validation-legacy-mpi-native-sequences.md)
+now calculates its own cross sections and reproduces 759 reference steps and
+42 accepted pairs with identical state and random consumption. A compressed
+reference fixture is included as a Pythia8/LHAPDF CTest. MPI showers and complete
+collision-event integration remain unfinished.
+
+A [Pythia8 boundary for complete outgoing MPI string graphs](docs/validation-legacy-mpi-colour-boundary.md)
+now assigns and validates colour tags before hadronization. All 80 constructed
+cases pass closure, including gluon loops and diquark endpoints. Hard-event
+history projection and beam-remnant reconstruction remain unfinished.
+
+The [native MPI initializer](docs/validation-legacy-mpi-initializer.md) now
+constructs twenty-bin cross-section tables and double-Gaussian normalization.
+All four pp/pn/np/nn reference passes agree over 8,000 sampled points. The complete initialization lifecycle remains unfinished.
+
+The [adaptive MPI screening initializer](docs/validation-legacy-mpi-retries.md)
+now reproduces rejected and accepted passes for pp/pn/np/nn, validated over
+32,000 points and 192,000 random draws. Phase-space optimization and the secondary
+initializer/shared-state lifecycle still need integration.

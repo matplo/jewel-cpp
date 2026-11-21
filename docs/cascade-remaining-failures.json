@@ -1,0 +1,213 @@
+{
+  "scope": "Acceptance disagreements after collision retry fix, not all trajectory differences",
+  "events": [
+    {
+      "coherence": "off",
+      "seed": 1294155,
+      "cpp": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 30028,
+        "records": 43
+      },
+      "reference": {
+        "accepted": false,
+        "diagnostic": "nonfinite post-branch state",
+        "draws": 28485,
+        "records": 53
+      }
+    },
+    {
+      "coherence": "off",
+      "seed": 1297555,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 62633,
+        "records": 45
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 62882,
+        "records": 57
+      }
+    },
+    {
+      "coherence": "off",
+      "seed": 1311155,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 84096,
+        "records": 45
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 114684,
+        "records": 69
+      }
+    },
+    {
+      "coherence": "off",
+      "seed": 1341955,
+      "cpp": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 42589,
+        "records": 59
+      },
+      "reference": {
+        "accepted": false,
+        "diagnostic": "nonfinite post-branch state",
+        "draws": 42189,
+        "records": 47
+      }
+    },
+    {
+      "coherence": "off",
+      "seed": 1353655,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 58511,
+        "records": 57
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 58852,
+        "records": 71
+      }
+    },
+    {
+      "coherence": "off",
+      "seed": 1355655,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 31842,
+        "records": 29
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 113424,
+        "records": 79
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1262755,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 95433,
+        "records": 58
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 95470,
+        "records": 64
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1279455,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 106489,
+        "records": 34
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 106734,
+        "records": 43
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1280055,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite kinematics input",
+        "draws": 27732,
+        "records": 60
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 25989,
+        "records": 74
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1285955,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite kinematics input",
+        "draws": 102794,
+        "records": 75
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 115134,
+        "records": 124
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1345455,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite kinematics input",
+        "draws": 39968,
+        "records": 64
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 40279,
+        "records": 74
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1350355,
+      "cpp": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 42601,
+        "records": 51
+      },
+      "reference": {
+        "accepted": false,
+        "diagnostic": "nonfinite post-branch state",
+        "draws": 4841,
+        "records": 35
+      }
+    },
+    {
+      "coherence": "on",
+      "seed": 1359355,
+      "cpp": {
+        "accepted": false,
+        "diagnostic": "nonfinite shower record",
+        "draws": 59697,
+        "records": 55
+      },
+      "reference": {
+        "accepted": true,
+        "diagnostic": null,
+        "draws": 74405,
+        "records": 83
+      }
+    }
+  ]
+}

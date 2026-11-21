@@ -1,0 +1,18 @@
+{
+  "scope": "extracted MPI overlap expressions only; not impact-parameter sampling or complete MPI parity",
+  "cases": 4020,
+  "relative_tolerance": 2e-13,
+  "absolute_tolerance": 0,
+  "max_absolute_error": 4.440892098500626e-16,
+  "max_relative_error": 7.354929205240328e-15,
+  "failures": [],
+  "source_sha256": {
+    "/private/tmp/jewel-stockvac-reference-build/pythia6425mod-lhapdf6.f": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+    "/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/src/pythia8-8.317-src/src/MultipartonInteractions.cc": "41e27d7247b40884f235323e76c18b573da3dc7af546403b34253a14dec10c75"
+  },
+  "extracted_sources": {
+    "fortran": "      PROGRAM PROBE\n      IMPLICIT NONE\n      DOUBLE PRECISION PARP(200),PARU(200),B,OV\n      DOUBLE PRECISION P83A,P83B,P83C,CQ2I,CQ2R\n      PARU(2)=2D0*ACOS(-1D0)\n   10 READ(*,*,END=20) PARP(83),PARP(84),B\n        P83A=(1D0-PARP(83))**2\n        P83B=2D0*PARP(83)*(1D0-PARP(83))\n        P83C=PARP(83)**2\n        CQ2I=1D0/PARP(84)**2\n        CQ2R=2D0/(1D0+PARP(84)**2)\n            OV=(P83A*EXP(-MIN(50D0,B**2))+\n     &      P83B*CQ2R*EXP(-MIN(50D0,B**2*CQ2R))+\n     &      P83C*CQ2I*EXP(-MIN(50D0,B**2*CQ2I)))/PARU(2)\n      WRITE(*,'(ES25.17)') OV\n      GOTO 10\n   20 END\n",
+    "cpp": "#include <algorithm>\n#include <cmath>\n#include <iostream>\n#include <iomanip>\nusing namespace std;\ndouble pow2(double x){return x*x;}\nint main(){double coreFraction,coreRadius,b;const double normPi=1/(2*acos(-1.)),EXPMAX=50.;\nwhile(cin>>coreFraction>>coreRadius>>b){double fracA,fracB,fracC,radius2B,radius2C,overlapNow;\n    fracA        = pow2(1. - coreFraction);\n    fracB        = 2. * coreFraction * (1. - coreFraction);\n    fracC        = pow2(coreFraction);\n    radius2B     = 0.5 * (1. + pow2(coreRadius));\n    radius2C     = pow2(coreRadius);\n          overlapNow = normPi * ( fracA * exp( -min(EXPMAX, b*b))\n            + fracB * exp( -min(EXPMAX, b*b / radius2B)) / radius2B\n            + fracC * exp( -min(EXPMAX, b*b / radius2C)) / radius2C );\ncout<<setprecision(17)<<overlapNow<<\"\\n\";}}\n"
+  },
+  "input_sha256": "9ad403135d547de48f418bcea6be67921dd02ab107c4c6443792e6d38c4068db"
+}

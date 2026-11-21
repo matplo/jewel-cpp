@@ -1,0 +1,40 @@
+{
+  "scope": "legacy double-Gaussian normalization and hard-impact proposal, not full MPI generation",
+  "cases": 1633,
+  "scalar_comparisons": 16330,
+  "maximum_absolute_errors": [
+    0.0,
+    3.0531133177191805e-16,
+    5.551115123125783e-17,
+    7.771561172376096e-16,
+    0.0,
+    1.4210854715202004e-14,
+    5.684341886080802e-14,
+    3.552713678800501e-15,
+    4.973799150320701e-14,
+    0.0
+  ],
+  "failures": [],
+  "random_draws_per_sample": 2,
+  "invalid_cases": 12,
+  "live_initialization_fixture": [
+    124.7319196645562,
+    0.830599328667382,
+    0.09124084018994628,
+    0.9193775157317519,
+    1.0000000000000007,
+    24.828001492113064,
+    0.40202536472476824,
+    1.264505977328304,
+    0.6896565239330661,
+    2.0
+  ],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "8b77d78c888611f0342c32c97f2ae26171963958be4d5572bf95c0679d08483e",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-overlap-probe": "52ea3b4acef9fb78040b8ffed2878b59c93b87b4f46d51db7e549d492da70454",
+    "jewel-legacy-mpi-overlap-reference": "780b46220d6e5d5e476b5a5a6d04ced9b2d734ee17d5b1ad53bbd4215281be80"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "scope": "legacy MSTP52=2 MSTP57=1 nucleon PDFs and PYSIGH heavy suppression; no companion/nuclear model",
+  "set": "CT14nlo/0",
+  "reference_pdf_id": 13100,
+  "cases": 4368,
+  "scalar_comparisons": 96096,
+  "policies": [
+    {
+      "policy": "linked-common",
+      "reference_q2_floor": 0.0,
+      "scalar_comparisons": 48048
+    },
+    {
+      "policy": "metadata",
+      "reference_q2_floor": 1.6770249999999998,
+      "scalar_comparisons": 48048
+    }
+  ],
+  "maximum_absolute_error": 0.0,
+  "maximum_relative_error": 0.0,
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "zero_decisions_exact": true,
+  "invalid_cases": 7,
+  "invalid_floor_cases": 3,
+  "input_sha256": "68867affc0258a29c233fcaa357a119c71c2f4bf5f5623bdcd676721b54ad980",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-pdf-probe": "db8aa25b02f9d539fef5a609e41139a4eb66a9eeed06a58c965a4887ac54b4d4",
+    "jewel-legacy-mpi-pdf-reference": "cd557d3f4fa6e9730087029e5694d7b8bb87c21914deb4360aff2412d1bc1dd5"
+  }
+}

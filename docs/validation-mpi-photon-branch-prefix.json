@@ -1,0 +1,39 @@
+{
+  "files": {
+    "/private/tmp/photon217-trace-jewel-medium-probe.err": "ac52b504105c43ce930e072413e124d4700c4184b8da991a6268485369e5a9a9",
+    "/private/tmp/photon217-trace-jewel-medium-reference.err": "d1190cd8ff22da7515374a5152dcdeb9134783fe6d36791c79dada313605a62d"
+  },
+  "columns": [
+    "phase (0 before, 1 after)",
+    "branch call",
+    "scheduling slot",
+    "record count",
+    "RNG cursor",
+    "discard",
+    "px",
+    "py",
+    "pz",
+    "energy",
+    "mass",
+    "fraction",
+    "evolution time",
+    "production time",
+    "decay time"
+  ],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "cpp_records": 516,
+  "fortran_records": 58,
+  "aligned_entries": 29,
+  "first_discrete_difference": null,
+  "first_numeric_difference": null,
+  "fortran_last": [
+    1,
+    29,
+    128,
+    156,
+    31949,
+    0
+  ],
+  "scope": "Selected branch-boundary diagnostic; not proof of all intermediate states"
+}

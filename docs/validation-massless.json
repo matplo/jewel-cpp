@@ -1,0 +1,48 @@
+{
+  "scope": "Literal MAKEMASSLESS, not complete ISR event preparation",
+  "cases": 192,
+  "values": 5184,
+  "max_absolute_error": 3.552713678800501e-15,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "failures": [],
+  "max_hard_mass_shell_residual_gev2": 56.72485571913421,
+  "max_total_four_momentum_residual_gev": 2.2737367544323206e-13,
+  "input_sha256": "8ca8178ed439bf78d787dda9cc32a641ac83c9b221f54886faab7c7e33cf2d18",
+  "executables": {
+    "jewel-kinematics-probe": "e22c4f20217a2a136887325cf369b4617babe4d73b7030277be3b8f58bfa9912",
+    "jewel-kinematics-reference": "d0f78ca038b64e314bb3a8c774b2ad84eddf771f1b5c6049352ac21f20219984"
+  },
+  "sources": {
+    "pythia6425mod-lhapdf6.f": {
+      "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+      "routines": {
+        "PYANGL": [
+          74441,
+          74466
+        ],
+        "PYROBO": [
+          74638,
+          74735
+        ],
+        "PYP": [
+          76081,
+          76156
+        ]
+      }
+    },
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "GETPOSITION": [
+          8807,
+          8826
+        ],
+        "MAKEMASSLESS": [
+          8588,
+          8632
+        ]
+      }
+    }
+  }
+}

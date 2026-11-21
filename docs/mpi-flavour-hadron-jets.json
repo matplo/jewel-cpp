@@ -1,0 +1,1272 @@
+{
+  "scope": "Generator event analysis; no matched Fortran/native ratio validation",
+  "full_goal_validated": false,
+  "generator": {
+    "path": "/Users/ploskon/devel/jewel-cpp/build-pythia8/jewel-run-events",
+    "sha256": "d02cf242c1c973cc72f66638171a02d45abedb2db5674577e74463565dc3c929"
+  },
+  "selection": {
+    "algorithm": "anti-kt",
+    "R": 0.4,
+    "min_pt_GeV": 10,
+    "max_abs_eta": 2,
+    "particles": "per-sample particle_level: native partons use status 3/4/5; hadron samples use final flag; exclude neutrino PDG 12/14/16",
+    "soft_drop": {
+      "algorithm": "Soft Drop",
+      "reclustering": "Cambridge/Aachen",
+      "recombination": "E scheme",
+      "zcut": 0.1,
+      "beta": 0.0,
+      "R0": 0.4,
+      "reclustering_R": 1000.0,
+      "condition": "z > zcut (delta_R/R0)^beta",
+      "untagged": "null zg and groomed_mass; counted separately"
+    },
+    "mass": "FastJet signed invariant mass in GeV; negative values retained",
+    "order": "full-phase-space clustering before jet cuts",
+    "geometry_matching": {
+      "max_delta_r": 0.3,
+      "coordinates": "pseudorapidity and azimuth",
+      "assignment": "hepyy_utils.match_hard_legs: maximize matches then minimize total distance",
+      "order": "all positive-pT jets before analysis cuts",
+      "unmatched_jet_geometry": null
+    },
+    "recoils": "per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles"
+  },
+  "normalization": "weighted jets per denominator record: attempted events for native runs, written events for imported Fortran; not cross-section normalized or directly comparable without a configuration/normalization audit",
+  "analysis_versions": {
+    "source_sha256": {
+      "analyze_native_events.py": "3024bb537eb3abd26733a41b11ec092e1b389156674d04e5baf4e41ad2e6e49b",
+      "jet_substructure.py": "ce6868688f2e0951300f5509411e7e414e5fc3602d12bed8b52317694a25f39b",
+      "native_geometry_analysis.py": "4aaedd47f717d92601274a37b027a03f0daebc3d9bd2bd480ae81597ce2c0ee4"
+    },
+    "python": "3.14.7",
+    "hepyy": "0.2.30",
+    "cppyy": "3.5.0",
+    "fastjet": "FastJet version 3.5.1",
+    "matching_sha256": "064807f4c9767d71e01f2cca61f0a59e70767e6b1076abdde36b41729d72582f",
+    "loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+  },
+  "samples": [
+    {
+      "particle_level": "hadron",
+      "denominator_scope": "attempted-events",
+      "observable_accounting": {
+        "mass": {
+          "in_range": {
+            "jets": 1414,
+            "weighted_count": 1414
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "groomed_mass": {
+          "in_range": {
+            "jets": 1405,
+            "weighted_count": 1405
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 9,
+            "weighted_count": 9
+          }
+        },
+        "zg": {
+          "in_range": {
+            "jets": 1405,
+            "weighted_count": 1405
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 9,
+            "weighted_count": 9
+          }
+        },
+        "pt": {
+          "in_range": {
+            "jets": 1414,
+            "weighted_count": 1414
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "girth": {
+          "in_range": {
+            "jets": 1414,
+            "weighted_count": 1414
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "ptd": {
+          "in_range": {
+            "jets": 1414,
+            "weighted_count": 1414
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        }
+      },
+      "input": "/private/tmp/jewel-mpi-flavour-vac1000.jsonl",
+      "input_sha256": "2135a42c350bbe6f214627770b3cbceb26f3d6eef67218a43c7e1bebc20629e0",
+      "run": {
+        "type": "run",
+        "schema": "jewel-hadron-development-v1",
+        "scope": "experimental PPJJ ISR+MPI; incomplete topology and cascade validation",
+        "experimental_isr_mpi": true,
+        "mpi_channel_policy": "outgoing-flavour",
+        "mode": "vacuum",
+        "attempts_requested": 1000,
+        "seed": 2600417,
+        "pythia_version": 8317,
+        "table_lifetime_fm": 62.908690318670054,
+        "table_energy_gev": 100,
+        "table_energy_prescription": "legacy-100",
+        "table_impact_parameter_fm": 0,
+        "geometry_seed": 3100417,
+        "angular_ordering": 0,
+        "first_angle_ordering": false,
+        "coherence": true,
+        "keep_recoils": true,
+        "recoil_rescattering": false,
+        "recoil_soft_cut_3T": 0,
+        "recoil_hard_cut_3T": 0,
+        "longitudinal_scatterer_boost": false,
+        "compression": true,
+        "pythia_settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 20",
+          "PhaseSpace:pTHatMax = 100",
+          "PDF:pSet = 13",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600417",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0"
+        ],
+        "hadronization": true,
+        "hadrotype": 0,
+        "hadronizer_settings": [
+          "Tune:pp = 14",
+          "ProcessLevel:all = off",
+          "PartonLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = off",
+          "PartonLevel:MPI = off",
+          "PartonLevel:FSRinResonances = off",
+          "ProcessLevel:resonanceDecays = off",
+          "HadronLevel:all = on",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600417",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0"
+        ],
+        "centrality_percent": null
+      },
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "accepted": 953,
+        "evolution_failures": 47,
+        "generation_failures": 0,
+        "accepted_weight": 953,
+        "failed_weight": 47,
+        "generator_weight_sum": 1000,
+        "generator_sigma_mb": 0.17169824200868514,
+        "generator_sigma_error_mb": 0.002773380328617346,
+        "final_records": 42956
+      },
+      "selected_jets": 1414,
+      "failure_reasons": {
+        "subsystem initialization: subsystem initialization currently requires quark/gluon pairs": 14,
+        "subsystem initialization: missing hard-parton colour partner": 32,
+        "ISR mapping: reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09": 1
+      },
+      "distributions": {
+        "mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 3.0,
+            "jets_per_attempt": 0.003,
+            "event_standard_error": 0.0017303161543469432
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 42.0,
+            "jets_per_attempt": 0.042,
+            "event_standard_error": 0.006346359293033784
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 464.0,
+            "jets_per_attempt": 0.464,
+            "event_standard_error": 0.021334459429738526
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 500.0,
+            "jets_per_attempt": 0.5,
+            "event_standard_error": 0.020746817356655706
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 256.0,
+            "jets_per_attempt": 0.256,
+            "event_standard_error": 0.015514660960030829
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 133.0,
+            "jets_per_attempt": 0.133,
+            "event_standard_error": 0.01214324744285722
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 16.0,
+            "jets_per_attempt": 0.016,
+            "event_standard_error": 0.0042144705197405
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "groomed_mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 25.0,
+            "jets_per_attempt": 0.025,
+            "event_standard_error": 0.004939574819698493
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 101.0,
+            "jets_per_attempt": 0.101,
+            "event_standard_error": 0.009944742223803385
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 538.0,
+            "jets_per_attempt": 0.538,
+            "event_standard_error": 0.022958290073154038
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 458.0,
+            "jets_per_attempt": 0.458,
+            "event_standard_error": 0.02065581425804034
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 194.0,
+            "jets_per_attempt": 0.194,
+            "event_standard_error": 0.01365835094550402
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 76.0,
+            "jets_per_attempt": 0.076,
+            "event_standard_error": 0.008735004310262263
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 13.0,
+            "jets_per_attempt": 0.013,
+            "event_standard_error": 0.0038530307351286267
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "zg": [
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 345.0,
+            "jets_per_attempt": 0.345,
+            "event_standard_error": 0.01778458015504699
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 252.0,
+            "jets_per_attempt": 0.252,
+            "event_standard_error": 0.01614796447719516
+          },
+          {
+            "low": 0.2,
+            "high": 0.25,
+            "weighted_count": 175.0,
+            "jets_per_attempt": 0.175,
+            "event_standard_error": 0.012982432112032918
+          },
+          {
+            "low": 0.25,
+            "high": 0.3,
+            "weighted_count": 143.0,
+            "jets_per_attempt": 0.143,
+            "event_standard_error": 0.011691350977867686
+          },
+          {
+            "low": 0.3,
+            "high": 0.35,
+            "weighted_count": 133.0,
+            "jets_per_attempt": 0.133,
+            "event_standard_error": 0.01155181563410897
+          },
+          {
+            "low": 0.35,
+            "high": 0.4,
+            "weighted_count": 115.0,
+            "jets_per_attempt": 0.115,
+            "event_standard_error": 0.010857849367756623
+          },
+          {
+            "low": 0.4,
+            "high": 0.45,
+            "weighted_count": 122.0,
+            "jets_per_attempt": 0.122,
+            "event_standard_error": 0.010734581092489415
+          },
+          {
+            "low": 0.45,
+            "high": 0.5000000000000001,
+            "weighted_count": 120.0,
+            "jets_per_attempt": 0.12,
+            "event_standard_error": 0.011032756759836669
+          }
+        ],
+        "pt": [
+          {
+            "low": 10,
+            "high": 15,
+            "weighted_count": 424.0,
+            "jets_per_attempt": 0.424,
+            "event_standard_error": 0.021229099714181823
+          },
+          {
+            "low": 15,
+            "high": 20,
+            "weighted_count": 341.0,
+            "jets_per_attempt": 0.341,
+            "event_standard_error": 0.01734992853068911
+          },
+          {
+            "low": 20,
+            "high": 30,
+            "weighted_count": 414.0,
+            "jets_per_attempt": 0.414,
+            "event_standard_error": 0.018946317926261107
+          },
+          {
+            "low": 30,
+            "high": 40,
+            "weighted_count": 153.0,
+            "jets_per_attempt": 0.153,
+            "event_standard_error": 0.01263925435897034
+          },
+          {
+            "low": 40,
+            "high": 60,
+            "weighted_count": 62.0,
+            "jets_per_attempt": 0.062,
+            "event_standard_error": 0.008845011827817656
+          },
+          {
+            "low": 60,
+            "high": 80,
+            "weighted_count": 15.0,
+            "jets_per_attempt": 0.015,
+            "event_standard_error": 0.004097778885175699
+          },
+          {
+            "low": 80,
+            "high": 100,
+            "weighted_count": 5.0,
+            "jets_per_attempt": 0.005,
+            "event_standard_error": 0.0022315868748448895
+          },
+          {
+            "low": 100,
+            "high": 150,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 150,
+            "high": 250,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "girth": [
+          {
+            "low": 0,
+            "high": 0.02,
+            "weighted_count": 1.0,
+            "jets_per_attempt": 0.001,
+            "event_standard_error": 0.001
+          },
+          {
+            "low": 0.02,
+            "high": 0.04,
+            "weighted_count": 8.0,
+            "jets_per_attempt": 0.008,
+            "event_standard_error": 0.002818500300504498
+          },
+          {
+            "low": 0.04,
+            "high": 0.06,
+            "weighted_count": 48.0,
+            "jets_per_attempt": 0.048,
+            "event_standard_error": 0.006909684778898654
+          },
+          {
+            "low": 0.06,
+            "high": 0.08,
+            "weighted_count": 98.0,
+            "jets_per_attempt": 0.098,
+            "event_standard_error": 0.010607002805152288
+          },
+          {
+            "low": 0.08,
+            "high": 0.1,
+            "weighted_count": 132.0,
+            "jets_per_attempt": 0.132,
+            "event_standard_error": 0.011344809593144553
+          },
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 517.0,
+            "jets_per_attempt": 0.517,
+            "event_standard_error": 0.021358070305324103
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 446.0,
+            "jets_per_attempt": 0.446,
+            "event_standard_error": 0.020579298032428306
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 163.0,
+            "jets_per_attempt": 0.163,
+            "event_standard_error": 0.012984590852221705
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 1.0,
+            "jets_per_attempt": 0.001,
+            "event_standard_error": 0.001
+          }
+        ],
+        "ptd": [
+          {
+            "low": 0,
+            "high": 0.2,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 55.0,
+            "jets_per_attempt": 0.055,
+            "event_standard_error": 0.007485387834376455
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 495.0,
+            "jets_per_attempt": 0.495,
+            "event_standard_error": 0.02155085704651765
+          },
+          {
+            "low": 0.4,
+            "high": 0.5,
+            "weighted_count": 535.0,
+            "jets_per_attempt": 0.535,
+            "event_standard_error": 0.02202862365787432
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "weighted_count": 236.0,
+            "jets_per_attempt": 0.236,
+            "event_standard_error": 0.01537987452941475
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "weighted_count": 63.0,
+            "jets_per_attempt": 0.063,
+            "event_standard_error": 0.008191342875139467
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "weighted_count": 19.0,
+            "jets_per_attempt": 0.019,
+            "event_standard_error": 0.004319451082910612
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "weighted_count": 8.0,
+            "jets_per_attempt": 0.008,
+            "event_standard_error": 0.002818500300504498
+          },
+          {
+            "low": 0.9,
+            "high": 1.0000001,
+            "weighted_count": 3.0,
+            "jets_per_attempt": 0.003,
+            "event_standard_error": 0.0017303161543469432
+          }
+        ]
+      }
+    },
+    {
+      "particle_level": "hadron",
+      "denominator_scope": "attempted-events",
+      "observable_accounting": {
+        "mass": {
+          "in_range": {
+            "jets": 5046,
+            "weighted_count": 5046
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "groomed_mass": {
+          "in_range": {
+            "jets": 5041,
+            "weighted_count": 5041
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 5,
+            "weighted_count": 5
+          }
+        },
+        "zg": {
+          "in_range": {
+            "jets": 5041,
+            "weighted_count": 5041
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 5,
+            "weighted_count": 5
+          }
+        },
+        "pt": {
+          "in_range": {
+            "jets": 5046,
+            "weighted_count": 5046
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "girth": {
+          "in_range": {
+            "jets": 5046,
+            "weighted_count": 5046
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        },
+        "ptd": {
+          "in_range": {
+            "jets": 5046,
+            "weighted_count": 5046
+          },
+          "underflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "overflow": {
+            "jets": 0,
+            "weighted_count": 0
+          },
+          "undefined": {
+            "jets": 0,
+            "weighted_count": 0
+          }
+        }
+      },
+      "input": "/private/tmp/jewel-mpi-flavour-medium1000.jsonl",
+      "input_sha256": "8684ea71ffc7c0983089b577e0ab61ada2284359bccc257ca3fea87df33fc97d",
+      "run": {
+        "type": "run",
+        "schema": "jewel-hadron-development-v1",
+        "scope": "experimental PPJJ ISR+MPI; incomplete topology and cascade validation",
+        "experimental_isr_mpi": true,
+        "mpi_channel_policy": "outgoing-flavour",
+        "mode": "medium",
+        "attempts_requested": 1000,
+        "seed": 2600417,
+        "pythia_version": 8317,
+        "table_lifetime_fm": 62.908690318670054,
+        "table_energy_gev": 100,
+        "table_energy_prescription": "legacy-100",
+        "table_impact_parameter_fm": 0,
+        "geometry_seed": 3100417,
+        "angular_ordering": 0,
+        "first_angle_ordering": false,
+        "coherence": true,
+        "keep_recoils": true,
+        "recoil_rescattering": false,
+        "recoil_soft_cut_3T": 0,
+        "recoil_hard_cut_3T": 0,
+        "longitudinal_scatterer_boost": false,
+        "compression": true,
+        "pythia_settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 20",
+          "PhaseSpace:pTHatMax = 100",
+          "PDF:pSet = 13",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600417",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0"
+        ],
+        "hadronization": true,
+        "hadrotype": 0,
+        "hadronizer_settings": [
+          "Tune:pp = 14",
+          "ProcessLevel:all = off",
+          "PartonLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = off",
+          "PartonLevel:MPI = off",
+          "PartonLevel:FSRinResonances = off",
+          "ProcessLevel:resonanceDecays = off",
+          "HadronLevel:all = on",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2600417",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0"
+        ],
+        "centrality_percent": null
+      },
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "accepted": 953,
+        "evolution_failures": 47,
+        "generation_failures": 0,
+        "accepted_weight": 953,
+        "failed_weight": 47,
+        "generator_weight_sum": 1000,
+        "generator_sigma_mb": 0.17169824200868514,
+        "generator_sigma_error_mb": 0.002773380328617346,
+        "final_records": 216425
+      },
+      "selected_jets": 5046,
+      "failure_reasons": {
+        "subsystem initialization: subsystem initialization currently requires quark/gluon pairs": 14,
+        "subsystem initialization: missing hard-parton colour partner": 32,
+        "ISR mapping: reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09": 1
+      },
+      "distributions": {
+        "mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 2.0,
+            "jets_per_attempt": 0.002,
+            "event_standard_error": 0.0014135055705578234
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 6.0,
+            "jets_per_attempt": 0.006,
+            "event_standard_error": 0.0024433521993298406
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 114.0,
+            "jets_per_attempt": 0.114,
+            "event_standard_error": 0.010541115458769774
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 510.0,
+            "jets_per_attempt": 0.51,
+            "event_standard_error": 0.0223696312084129
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 1134.0,
+            "jets_per_attempt": 1.134,
+            "event_standard_error": 0.04242456651332862
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 2080.0,
+            "jets_per_attempt": 2.08,
+            "event_standard_error": 0.07508153725941709
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 1105.0,
+            "jets_per_attempt": 1.105,
+            "event_standard_error": 0.06588106947610455
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 95.0,
+            "jets_per_attempt": 0.095,
+            "event_standard_error": 0.014428554438445425
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "groomed_mass": [
+          {
+            "low": -50,
+            "high": 0,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 0,
+            "high": 1,
+            "weighted_count": 9.0,
+            "jets_per_attempt": 0.009,
+            "event_standard_error": 0.002987963843142672
+          },
+          {
+            "low": 1,
+            "high": 2,
+            "weighted_count": 31.0,
+            "jets_per_attempt": 0.031,
+            "event_standard_error": 0.00566313261994376
+          },
+          {
+            "low": 2,
+            "high": 4,
+            "weighted_count": 171.0,
+            "jets_per_attempt": 0.171,
+            "event_standard_error": 0.012803238766926238
+          },
+          {
+            "low": 4,
+            "high": 6,
+            "weighted_count": 531.0,
+            "jets_per_attempt": 0.531,
+            "event_standard_error": 0.02318569767284514
+          },
+          {
+            "low": 6,
+            "high": 8,
+            "weighted_count": 1149.0,
+            "jets_per_attempt": 1.149,
+            "event_standard_error": 0.04257477670653848
+          },
+          {
+            "low": 8,
+            "high": 12,
+            "weighted_count": 2018.0,
+            "jets_per_attempt": 2.018,
+            "event_standard_error": 0.07514867479419264
+          },
+          {
+            "low": 12,
+            "high": 20,
+            "weighted_count": 1040.0,
+            "jets_per_attempt": 1.04,
+            "event_standard_error": 0.06422246121509612
+          },
+          {
+            "low": 20,
+            "high": 40,
+            "weighted_count": 92.0,
+            "jets_per_attempt": 0.092,
+            "event_standard_error": 0.014132789382699218
+          },
+          {
+            "low": 40,
+            "high": 80,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "zg": [
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 614.0,
+            "jets_per_attempt": 0.614,
+            "event_standard_error": 0.0287372550851648
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 567.0,
+            "jets_per_attempt": 0.567,
+            "event_standard_error": 0.026233551021529647
+          },
+          {
+            "low": 0.2,
+            "high": 0.25,
+            "weighted_count": 564.0,
+            "jets_per_attempt": 0.564,
+            "event_standard_error": 0.029372891699095047
+          },
+          {
+            "low": 0.25,
+            "high": 0.3,
+            "weighted_count": 561.0,
+            "jets_per_attempt": 0.561,
+            "event_standard_error": 0.029036565260411266
+          },
+          {
+            "low": 0.3,
+            "high": 0.35,
+            "weighted_count": 642.0,
+            "jets_per_attempt": 0.642,
+            "event_standard_error": 0.032044701010664194
+          },
+          {
+            "low": 0.35,
+            "high": 0.4,
+            "weighted_count": 665.0,
+            "jets_per_attempt": 0.665,
+            "event_standard_error": 0.03205936373047354
+          },
+          {
+            "low": 0.4,
+            "high": 0.45,
+            "weighted_count": 708.0,
+            "jets_per_attempt": 0.708,
+            "event_standard_error": 0.03549642229853589
+          },
+          {
+            "low": 0.45,
+            "high": 0.5000000000000001,
+            "weighted_count": 720.0,
+            "jets_per_attempt": 0.72,
+            "event_standard_error": 0.03516869114477872
+          }
+        ],
+        "pt": [
+          {
+            "low": 10,
+            "high": 15,
+            "weighted_count": 2893.0,
+            "jets_per_attempt": 2.893,
+            "event_standard_error": 0.08961909719798891
+          },
+          {
+            "low": 15,
+            "high": 20,
+            "weighted_count": 1175.0,
+            "jets_per_attempt": 1.175,
+            "event_standard_error": 0.05451005729538675
+          },
+          {
+            "low": 20,
+            "high": 30,
+            "weighted_count": 766.0,
+            "jets_per_attempt": 0.766,
+            "event_standard_error": 0.044712897951745906
+          },
+          {
+            "low": 30,
+            "high": 40,
+            "weighted_count": 153.0,
+            "jets_per_attempt": 0.153,
+            "event_standard_error": 0.012479853634828685
+          },
+          {
+            "low": 40,
+            "high": 60,
+            "weighted_count": 47.0,
+            "jets_per_attempt": 0.047,
+            "event_standard_error": 0.0074057981234871536
+          },
+          {
+            "low": 60,
+            "high": 80,
+            "weighted_count": 9.0,
+            "jets_per_attempt": 0.009,
+            "event_standard_error": 0.0033060444537135205
+          },
+          {
+            "low": 80,
+            "high": 100,
+            "weighted_count": 3.0,
+            "jets_per_attempt": 0.003,
+            "event_standard_error": 0.0017303161543469432
+          },
+          {
+            "low": 100,
+            "high": 150,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          },
+          {
+            "low": 150,
+            "high": 250,
+            "weighted_count": 0.0,
+            "jets_per_attempt": 0.0,
+            "event_standard_error": 0.0
+          }
+        ],
+        "girth": [
+          {
+            "low": 0,
+            "high": 0.02,
+            "weighted_count": 2.0,
+            "jets_per_attempt": 0.002,
+            "event_standard_error": 0.0014135055705578234
+          },
+          {
+            "low": 0.02,
+            "high": 0.04,
+            "weighted_count": 3.0,
+            "jets_per_attempt": 0.003,
+            "event_standard_error": 0.0017303161543469432
+          },
+          {
+            "low": 0.04,
+            "high": 0.06,
+            "weighted_count": 17.0,
+            "jets_per_attempt": 0.017,
+            "event_standard_error": 0.004089954489689063
+          },
+          {
+            "low": 0.06,
+            "high": 0.08,
+            "weighted_count": 26.0,
+            "jets_per_attempt": 0.026,
+            "event_standard_error": 0.005034813735318254
+          },
+          {
+            "low": 0.08,
+            "high": 0.1,
+            "weighted_count": 42.0,
+            "jets_per_attempt": 0.042,
+            "event_standard_error": 0.006654342963830485
+          },
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "weighted_count": 213.0,
+            "jets_per_attempt": 0.213,
+            "event_standard_error": 0.014485884192580059
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "weighted_count": 491.0,
+            "jets_per_attempt": 0.491,
+            "event_standard_error": 0.022592685308068836
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 4075.0,
+            "jets_per_attempt": 4.075,
+            "event_standard_error": 0.15001292903906277
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 177.0,
+            "jets_per_attempt": 0.177,
+            "event_standard_error": 0.015029866828980783
+          }
+        ],
+        "ptd": [
+          {
+            "low": 0,
+            "high": 0.2,
+            "weighted_count": 761.0,
+            "jets_per_attempt": 0.761,
+            "event_standard_error": 0.06588034015713048
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "weighted_count": 3369.0,
+            "jets_per_attempt": 3.369,
+            "event_standard_error": 0.1158890386070627
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "weighted_count": 599.0,
+            "jets_per_attempt": 0.599,
+            "event_standard_error": 0.024876049079743705
+          },
+          {
+            "low": 0.4,
+            "high": 0.5,
+            "weighted_count": 198.0,
+            "jets_per_attempt": 0.198,
+            "event_standard_error": 0.013963917465775534
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "weighted_count": 73.0,
+            "jets_per_attempt": 0.073,
+            "event_standard_error": 0.008470108779864798
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "weighted_count": 25.0,
+            "jets_per_attempt": 0.025,
+            "event_standard_error": 0.005138229403345223
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "weighted_count": 14.0,
+            "jets_per_attempt": 0.014,
+            "event_standard_error": 0.003717232548256541
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "weighted_count": 6.0,
+            "jets_per_attempt": 0.006,
+            "event_standard_error": 0.0024433521993298406
+          },
+          {
+            "low": 0.9,
+            "high": 1.0000001,
+            "weighted_count": 1.0,
+            "jets_per_attempt": 0.001,
+            "event_standard_error": 0.001
+          }
+        ]
+      }
+    }
+  ]
+}

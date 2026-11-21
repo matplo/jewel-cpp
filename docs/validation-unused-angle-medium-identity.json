@@ -1,0 +1,16 @@
+{
+  "seed": 2600417,
+  "previous_accepted_events": 144,
+  "unchanged_pre_hadronization_event_records": 144,
+  "changed_non_hadronization_fields": {},
+  "newly_accepted_attempts": [
+    109,
+    114,
+    121,
+    146
+  ],
+  "inputs": {
+    "/private/tmp/jewel-mpi-flavour-medium1000.jsonl": "8684ea71ffc7c0983089b577e0ab61ada2284359bccc257ca3fea87df33fc97d",
+    "/private/tmp/jewel-unused-angle-medium150.jsonl": "71bdd26f05ad208ce7f85c1c449dbfe4857763cc95b07360f78e928f8c9cf088"
+  }
+}

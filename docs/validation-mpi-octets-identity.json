@@ -1,0 +1,16 @@
+{
+  "unchanged_previous_attempts": 510,
+  "exact_match": true,
+  "recovered_attempt": 511,
+  "previous_failure": {
+    "type": "evolution_failure",
+    "attempt": 511,
+    "impact_parameter_fm": 0,
+    "centrality_fraction": null,
+    "weight": 1,
+    "stage": "subsystem initialization",
+    "reason": "subsystem initialization requires quarks/gluons or inactive massless photons",
+    "draws": 8
+  },
+  "new_event_type": "event"
+}

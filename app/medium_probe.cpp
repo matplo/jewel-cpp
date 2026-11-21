@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/scattering.hpp"
+#include "jewel/geometry.hpp"
 #include "jewel/branching.hpp"
 #include "jewel/shower.hpp"
 #include "jewel/transfer.hpp"
@@ -7,7 +8,10 @@
 #include "jewel/collision.hpp"
 #include "jewel/coherence.hpp"
 #include "jewel/initial_evolution.hpp"
+#include "jewel/cascade.hpp"
+#include "jewel/hard_initialization.hpp"
 #include <iostream>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <memory>
@@ -15,7 +19,7 @@
 int main() {
  try {
  jewel::ExponentialIntegral ei;
- std::unique_ptr<jewel::ExpandingMedium> medium;
+ std::unique_ptr<jewel::MediumModel> medium;
  std::unique_ptr<jewel::InitialRadiation> radiation;
  std::unique_ptr<jewel::InitialSudakovTable> sudakov;
  std::unique_ptr<jewel::FinalSplittingTable> final_table;
@@ -26,12 +30,13 @@ int main() {
  jewel::EvolutionConfig evolution_config;jewel::Kernels evolution_kernels;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
-  if(op=="CONFIG") {
+  if(op=="VACUUM") { medium=std::make_unique<jewel::MediumModel>(); }
+  else if(op=="CONFIG") {
    jewel::MediumConfig c; int woods;
    std::cin>>c.mass_number>>c.nf>>woods>>c.tau_initial>>c.temperature_initial>>c.temperature_cutoff
     >>c.nuclear_density>>c.skin_depth>>c.sigma_nn>>c.impact_parameter>>c.max_rapidity>>c.debye_floor>>c.debye_scale;
    if(!std::cin) throw std::runtime_error("bad configuration");
-   c.woods_saxon=woods!=0; medium=std::make_unique<jewel::ExpandingMedium>(c);
+   c.woods_saxon=woods!=0; medium=std::make_unique<jewel::MediumModel>(jewel::ExpandingMedium(c));
   } else if(op=="EI") { double x; if(!(std::cin>>x)) throw std::runtime_error("bad EI input"); std::cout<<ei(x)<<'\n'; }
   else if(op=="LOW"||op=="HIGH"||op=="SCAT") {
    jewel::Kernels k; double x,y;
@@ -42,7 +47,17 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="ECONFIG") {
+   if(op=="LENGTHS") {
+    double x,y,b,r,t,step;jewel::Momentum p;
+    if(!(std::cin>>x>>y>>b>>r>>t>>p.px>>p.py>>p.pz>>p.energy>>step))throw std::runtime_error("bad geometry query");
+    auto v=jewel::straight_path_lengths(x,y,b,r,t,p,step,*medium);
+    std::cout<<v.geometric_transverse<<' '<<v.hot<<' '<<v.hot_transverse<<' '<<v.temperature_cubed_integral<<'\n';
+   } else if(op=="EVENTB") {
+    double b;if(!(std::cin>>b))throw std::runtime_error("bad event impact parameter");
+    *medium=medium->with_impact_parameter(b);
+    if(rates)*rates=rates->with_event_impact_parameter(b);
+    if(transfers)*transfers=transfers->with_event_impact_parameter(b);
+   } else if(op=="ECONFIG") {
     std::cin>>evolution_config.cutoff>>evolution_config.mass_scale>>evolution_config.formation_factor
      >>evolution_config.lifetime>>evolution_config.cross_section_scale;
    } else if(op=="PAIR"||op=="HIT") {
@@ -138,23 +153,30 @@ int main() {
     }
     for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
      <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
-   } else if(op=="COHERENT"||op=="ISTATE") {
+   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE"||op=="NCASCADE") {
     if(!rates||!transfers||!branching)throw std::runtime_error("coherent models required");
     jewel::CoherentConfig config;config.lifetime=evolution_config.lifetime;config.cross_section_scale=evolution_config.cross_section_scale;
     config.collision.cutoff=evolution_config.cutoff;config.collision.mass_scale=evolution_config.mass_scale;
     int enabled;std::size_t selected;double now,left,angle,split_time;
-    jewel::ShowerState state;jewel::TransferHistory history;history.records.resize(100);
+    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE"||op=="NCASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
     std::cin>>selected>>enabled>>now>>left>>angle>>split_time>>config.length_factor>>config.collision.kinematic_mode>>state.colour_max>>state.weight>>history.last;
     config.enabled=enabled;history.first=1;int retry_initial=0;double coherence_rejection=1;
-    if(op=="ISTATE")std::cin>>retry_initial>>coherence_rejection;
-    std::array<std::array<jewel::ParticleId,2>,5> links;
-    for(int i=0;i<5;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,ao;
+    if(op!="COHERENT")std::cin>>retry_initial>>coherence_rejection;
+    std::size_t input_count=5;if(op=="NCASCADE")std::cin>>input_count;
+    if(input_count<2||input_count>22990)throw std::runtime_error("invalid native record count");
+    std::vector<std::array<jewel::ParticleId,2>> links(input_count);
+    for(std::size_t i=0;i<input_count;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,ao;
      std::cin>>p.status>>p.pdg>>s.parent>>links[i][0]>>links[i][1]>>p.momentum.px>>p.momentum.py>>p.momentum.pz>>p.momentum.energy>>s.record_mass
       >>s.generator_vertex.x>>s.generator_vertex.y>>s.generator_vertex.z>>s.generator_vertex.t>>p.production.x>>p.production.y>>p.production.z>>p.production.t>>s.decay_time
       >>s.fraction>>s.angle>>qp>>ao>>p.colour>>p.anticolour>>s.evolution_time;
      s.quark_pair=qp;s.angular_required=ao;state.append(s);
     }
-    for(int i=0;i<5;++i)state.at(i+1).daughters=links[i];
+    for(std::size_t i=0;i<input_count;++i)state.at(i+1).daughters=links[i];
+    if(op=="CCASCADE"){
+     std::size_t padding;std::cin>>padding;if(padding>22995)throw std::runtime_error("invalid compression padding");
+     jewel::ShowerParticle retired;retired.particle.status=13;
+     for(std::size_t i=0;i<padding;++i)state.append(retired,true,true);
+    }
     auto& finish=config.finalization;jewel::RecoilStorage ledger;int had,scat,write,subtract;
     std::cin>>finish.formation_factor>>finish.soft_recoil_cut>>finish.hard_recoil_cut>>had>>scat>>finish.storage.mode>>write>>subtract>>ledger.capacity;
     finish.hadronize_recoils=had;finish.scatter_recoils=scat;finish.storage.write_centres=write;finish.storage.subtract=subtract;
@@ -164,16 +186,38 @@ int main() {
      std::cin>>r.invariant>>q.px>>q.py>>q.pz>>q.energy>>r.time>>r.scatterer.type>>a.px>>a.py>>a.pz>>a.energy>>r.scatterer.mass>>x.x>>x.y>>x.z>>x.t;
      history.sum.px+=q.px;history.sum.py+=q.py;history.sum.pz+=q.pz;history.sum.energy+=q.energy;history.sum_squared+=r.invariant;
     }
-    std::size_t count;std::cin>>count;if(count>100000)throw std::runtime_error("bad coherent tape");
-    std::vector<double> tape(count);for(auto& v:tape)std::cin>>v;if(!std::cin)throw std::runtime_error("bad coherent input");
-    jewel::ReplayRandom random(tape);jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
+    std::int64_t count;std::cin>>count;if(count < -1||count>2000000)throw std::runtime_error("bad coherent tape");
+    std::uint64_t seed=0;std::vector<double> tape;
+    if(count==-1)std::cin>>seed;else{tape.resize(count);for(auto& v:tape)std::cin>>v;}
+    if(!std::cin)throw std::runtime_error("bad coherent input");
+    jewel::ReplayRandom replay(std::move(tape));jewel::SplitMixRandom generated(seed);
+    if(op=="NCASCADE"){std::uint64_t offset;std::cin>>offset;if(!std::cin||count!=-1)throw std::runtime_error("invalid native random offset");generated.restore(offset);}
+    jewel::Random& random=count==-1?static_cast<jewel::Random&>(generated):static_cast<jewel::Random&>(replay);
+    auto checkpoint=[&]{return count==-1?generated.checkpoint():replay.checkpoint();};jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
     jewel::InitialScatteringResult initial_result;initial_result.selected=selected;
     try{
-     if(op=="ISTATE"){
+     if(op!="COHERENT"){
       if(!pdf||!sudakov||!final_table)throw std::runtime_error("initial models required");
       jewel::InitialEvolutionConfig initial_config{evolution_config,config,coherence_rejection};
       jewel::InitialScatteringEvolution evolution(initial_config,evolution_kernels,*branching,*sudakov,*final_table,*pdf,*rates,*transfers,*medium);
-      initial_result=evolution.sample(state,selected,1,history,ledger,now,left,retry_initial,random,&histograms);result.selected=initial_result.selected;
+      if(op=="ISTATE"){
+       initial_result=evolution.sample(state,selected,1,history,ledger,now,left,retry_initial,random,&histograms);result.selected=initial_result.selected;
+      }else{
+       jewel::ScatteringEvolution final_evolution(evolution_config,*branching,*sudakov,*final_table,*rates,*transfers);
+       jewel::Cascade cascade({evolution_config,config.collision,config.finalization,1000000,op=="CCASCADE"||op=="NCASCADE"},evolution,final_evolution,*branching,*medium);
+       if(op=="BRANCH")cascade.branch(state,selected,1,history,ledger,random,&histograms);
+       else {
+        jewel::CascadeObserver observer;
+        const char* trace=std::getenv("JEWEL_CASCADE_TRACE");
+        if(trace&&std::string(trace)=="1")observer=[&](std::size_t call,std::size_t index,bool before,const jewel::ShowerState& current){
+         std::cerr<<std::setprecision(17)<<"CASCADE_TRACE "<<(before?0:1)<<' '<<call<<' '<<index+1<<' '<<current.particles().size()<<' '<<checkpoint()<<' '<<current.discarded;
+         if(before){const auto& s=current.particles().at(index);const auto& p=s.particle.momentum;
+          std::cerr<<' '<<p.px<<' '<<p.py<<' '<<p.pz<<' '<<p.energy<<' '<<s.record_mass<<' '<<s.fraction<<' '<<s.evolution_time<<' '<<s.particle.production.t<<' '<<s.decay_time;}
+         std::cerr<<'\n';
+        };
+        cascade.evolve(state,1,history,ledger,random,&histograms,observer);
+       }
+      }
      }else result=jewel::evolve_coherent(state,selected,1,history,ledger,now,left,angle,split_time,config,*rates,*transfers,*branching,*medium,random,&histograms);
      state.validate();
     }
@@ -182,14 +226,16 @@ int main() {
     if(op=="ISTATE")std::cerr<<"INI_STATS "<<initial_result.trials<<' '<<initial_result.unresolved_rejections<<' '<<initial_result.coherence_reversions<<'\n';
     else std::cerr<<"COH_STATS "<<result.collision_calls<<' '<<result.kinematic_calls<<' '<<result.undone_kicks<<'\n';
     auto slot=[&](jewel::ParticleId id){if(!id)return std::size_t(0);for(std::size_t i=0;i<state.particles().size();++i)if(state.particles()[i].particle.id==id)return i+1;throw std::runtime_error("dangling coherent ID");};
-    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<random.checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
+    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<(op=="CCASCADE"?selected:slot(result.selected))<<' '<<checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
     if(op=="ISTATE")std::cout<<' '<<initial_result.fraction<<' '<<initial_result.virtuality<<' '<<initial_result.elapsed<<' '<<initial_result.incoming_flavour<<' '<<initial_result.above_cutoff<<' '<<bool(initial_result.coherent);
     std::cout<<'\n';
-    for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(s.parent)<<' '<<slot(s.daughters[0])<<' '<<slot(s.daughters[1])<<' '
+    for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(state.scheduling_parent(p.id))<<' '<<slot(state.scheduling_daughters(p.id)[0])<<' '<<slot(state.scheduling_daughters(p.id)[1])<<' '
      <<p.momentum.px<<' '<<p.momentum.py<<' '<<p.momentum.pz<<' '<<p.momentum.energy<<' '<<s.record_mass<<' '
      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
      <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '<<s.fraction<<' '<<s.angle<<' '
-     <<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time<<'\n';}
+     <<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time;
+     if(op=="BRANCH"||op=="CASCADE"||op=="GCASCADE"||op=="CCASCADE"||op=="NCASCADE")std::cout<<' '<<s.medium_induced;
+     std::cout<<'\n';}
     std::cout<<history.sum.px<<' '<<history.sum.py<<' '<<history.sum.pz<<' '<<history.sum.energy<<' '<<history.sum_squared<<'\n';
     for(const auto& r:history.records)std::cout<<r.invariant<<' '<<r.momentum.px<<' '<<r.momentum.py<<' '<<r.momentum.pz<<' '<<r.momentum.energy<<' '<<r.time<<' '
      <<r.scatterer.type<<' '<<r.scatterer.momentum.px<<' '<<r.scatterer.momentum.py<<' '<<r.scatterer.momentum.pz<<' '<<r.scatterer.momentum.energy<<' '<<r.scatterer.mass<<' '
@@ -330,6 +376,36 @@ int main() {
     jewel::ReplayRandom random(tape);
     auto value=rates->next_collision(p,mass,pdg,v,start,dt,lifetime,scale,elastic!=0,random);
     std::cout<<int(value.collision)<<' '<<value.elapsed<<' '<<random.checkpoint()<<'\n';
+   } else if(op=="HARDINIT"||op=="MPIINIT"||op=="MPIPASSIVE") {
+    if(!branching)throw std::runtime_error("BCONFIG required");
+    jewel::HardInitializationConfig config;int ao;
+    std::cin>>config.pt_hat>>config.x>>config.y>>config.formation_factor>>config.lifetime>>ao;config.first_angle_ordering=ao;
+    if(op=="MPIINIT"||op=="MPIPASSIVE"){config.inactive_nonparton_lifetime=op=="MPIPASSIVE";int fsr,channel1,channel2;std::cin>>fsr>>channel1>>channel2;config.mpi_pair=true;config.mpi_fsr=fsr;
+     if((channel1!=0&&channel1!=1)||(channel2!=0&&channel2!=1))throw std::runtime_error("MPI channel must be QQ(0) or GC(1)");
+     config.mpi_sampling_channels=std::array<jewel::Channel,2>{channel1?jewel::Channel::GC:jewel::Channel::QQ,channel2?jewel::Channel::GC:jewel::Channel::QQ};}
+    jewel::ShowerState state(-1e6);state.colour_max=1000;
+    std::array<std::array<jewel::ParticleId,2>,6> links;
+    for(int i=0;i<6;++i){jewel::ShowerParticle s;auto& p=s.particle;int qp,order;
+     std::cin>>p.status>>p.pdg>>s.parent>>links[i][0]>>links[i][1]>>p.momentum.px>>p.momentum.py>>p.momentum.pz>>p.momentum.energy>>s.record_mass
+      >>s.generator_vertex.x>>s.generator_vertex.y>>s.generator_vertex.z>>s.generator_vertex.t>>p.production.x>>p.production.y>>p.production.z>>p.production.t>>s.decay_time
+      >>s.fraction>>s.angle>>qp>>order>>p.colour>>p.anticolour>>s.evolution_time;
+     s.quark_pair=qp;s.angular_required=order;state.append(s);
+    }
+    for(int i=0;i<6;++i)state.at(i+1).daughters=links[i];
+    std::int64_t count;std::uint64_t seed=0;std::cin>>count;if(count< -1||count>2000000)throw std::runtime_error("bad hard-initialization tape");
+    std::vector<double> tape;if(count==-1)std::cin>>seed;else{tape.resize(count);for(auto& u:tape)std::cin>>u;}
+    if(!std::cin)throw std::runtime_error("incomplete hard-initialization input");
+    jewel::ReplayRandom replay(tape);jewel::SplitMixRandom generated(seed);jewel::Random& random=count==-1?static_cast<jewel::Random&>(generated):static_cast<jewel::Random&>(replay);
+    auto result=jewel::initialize_hard_dijet(state,4,5,config,*branching,random);
+    std::cout<<(count==-1?generated.checkpoint():replay.checkpoint())<<' '<<result.colour_angles[0]<<' '<<result.colour_angles[1]<<'\n';
+    std::cerr<<"HARD_INIT_TRIALS "<<result.trials<<'\n';
+    for(const auto& s:state.particles()){const auto& p=s.particle;
+     std::cout<<p.status<<' '<<p.pdg<<' '<<s.parent<<' '<<s.daughters[0]<<' '<<s.daughters[1]<<' '
+      <<p.momentum.px<<' '<<p.momentum.py<<' '<<p.momentum.pz<<' '<<p.momentum.energy<<' '<<s.record_mass<<' '
+      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
+      <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '
+      <<s.fraction<<' '<<s.angle<<' '<<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time<<'\n';
+    }
    } else if(op=="BCONFIG") {
     jewel::Kernels k;double q0,pt;int angular;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>pt>>angular))throw std::runtime_error("invalid branching config");
@@ -342,7 +418,7 @@ int main() {
     std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);jewel::Channel channel;
     if(name=="QQ")channel=jewel::Channel::QQ;else if(name=="GC")channel=jewel::Channel::GC;
-    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else throw std::runtime_error("invalid branching channel");
+    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else if(name=="GQ")channel=jewel::Channel::GQ;else throw std::runtime_error("invalid branching channel");
     if(op=="MASS") {
      auto result=branching->mass(a,b,c,energy,channel,maxmass,initial!=0,random);
      std::cout<<result.mass<<' '<<result.fraction.value_or(-1)<<' '<<int(result.quark_pair.value_or(false))<<' '<<random.checkpoint()<<'\n';

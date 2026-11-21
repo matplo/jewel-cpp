@@ -1,0 +1,52 @@
+{
+  "generator_sha256": "1fab29a274e8ab14203c20ca8013942058932627ef6521377b5b08c61b73d893",
+  "scope": "native minimum-string export and Pythia8 hadronization; not Pythia6 hadron-level parity",
+  "reports": [
+    {
+      "mode": "vacuum",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15199660026516534,
+        "generator_sigma_error_mb": 0.01580675911776028,
+        "final_records": 322
+      },
+      "synthetic_endpoints": 32,
+      "generated_quark_halves": 34,
+      "string_draws": 104,
+      "max_hadronization_closure_gev": 7.389644451905042e-13,
+      "failures": {},
+      "input_sha256": "601cec1ed7cedf14a89d0f273ebdde81be9821bec718226641441a6054d9c0c3"
+    },
+    {
+      "mode": "medium",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 18,
+        "evolution_failures": 2,
+        "generation_failures": 0,
+        "accepted_weight": 18,
+        "failed_weight": 2,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15199660026516534,
+        "generator_sigma_error_mb": 0.01580675911776028,
+        "final_records": 1410
+      },
+      "synthetic_endpoints": 36,
+      "generated_quark_halves": 66,
+      "string_draws": 180,
+      "max_hadronization_closure_gev": 4.547473508864641e-13,
+      "failures": {
+        "cascade: nonfinite kinematics input": 2
+      },
+      "input_sha256": "fdb56aea2590bf4ae43d2ead62907de760dfe310f3f8c811ae4fd7229f5aec66"
+    }
+  ]
+}

@@ -16,10 +16,11 @@ CoherentStart begin_coherent(ShowerState& state,ParticleId selected,bool enabled
  if(!enabled)return r;
  r.remaining=duration;
  const auto original=state.at(selected);
- if(!original.parent)return r; // Stock assumes a valid mother index.
- const auto mother=state.at(original.parent);r.mother=original.parent;
- if(!mother.parent)return r;
- auto sibling=mother.daughters[mother.daughters[0]==selected?1:0];
+ if(!state.scheduling_parent(selected))return r; // Stock assumes a valid mother index.
+ const auto mother=state.at(state.scheduling_parent(selected));r.mother=mother.particle.id;
+ if(!state.scheduling_parent(mother.particle.id))return r;
+ auto daughters=state.scheduling_daughters(mother.particle.id);
+ auto sibling=daughters[daughters[0]==selected?1:0];
  if(!sibling)return r;
  // Stock orders by record slot; stable IDs need not follow slot order after restore.
  for(const auto& node:state.particles())if(node.particle.id==selected||node.particle.id==sibling){r.first=node.particle.id;break;}
@@ -46,7 +47,7 @@ CoherentStart begin_coherent(ShowerState& state,ParticleId selected,bool enabled
  merged.particle.production=original.particle.production;
  merged.particle.colour=mother.particle.colour;merged.particle.anticolour=mother.particle.anticolour;
  merged.angle=mother.angle;merged.fraction=mother.fraction;merged.quark_pair=mother.quark_pair;
- r.coherent=state.append(merged,true);
+ r.coherent=state.append(merged,true,true);
  state.at(r.second)=second;
  state.at(r.first).decay_time=state.at(r.first).particle.production.t;
  state.at(r.second).decay_time=state.at(r.second).particle.production.t;

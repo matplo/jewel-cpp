@@ -69,7 +69,7 @@ CoherentResult evolve_coherent(ShowerState& state,ParticleId selected,ParticleId
     // Stock removes only the latest two rows, retaining colour/storage side effects.
     if(state.particles().size()!=before_count+2)throw std::domain_error("coherent rollback without one appended collision pair");
     auto saved=state.snapshot_truncated(state.particles().size()-2);
-    auto& previous=saved.particles.back();previous.particle.status=1;previous.daughters={};previous.decay_time=0;
+    auto& previous=saved.particles.back();previous.particle.status=1;previous.daughters={};if(previous.scheduling_slots){(*previous.scheduling_slots)[1]=0;(*previous.scheduling_slots)[2]=0;}previous.decay_time=0;
     current=previous.particle.id;state.restore(saved);++result.undone_kicks;
    }else{
     pos1=advance(mom1,pos1,next.elapsed,pos1.t+next.elapsed);
@@ -111,7 +111,7 @@ CoherentResult evolve_coherent(ShowerState& state,ParticleId selected,ParticleId
  b.evolution_time=selected==init.second?init.second_before.evolution_time:end;
  parent.particle.status=21;parent.decay_time=end;parent.particle.momentum=pair.parent;parent.generator_vertex=pair.generator_vertex;
  state.at(current)=parent;
- auto first=state.append(a),second=state.append(b);state.connect(current,first,second);
+ auto first=state.append(a,false,true),second=state.append(b,false,true);state.connect(current,first,second);
  result.selected=selected==init.first?first:second;return result;
 }
 }

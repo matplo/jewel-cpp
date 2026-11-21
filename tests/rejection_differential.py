@@ -7,23 +7,25 @@ def rotate(p,theta,phi):
 def record(status,pdg,parent,children,p,mass,fraction,angle,decay,theta,phi):
  return [status,pdg,parent,*children,*rotate(p,theta,phi),mass,.1,.2,.3,.4,1,2,0,.4,decay,.25,fraction,angle,0,1]
 commands=[];lengths=[];labels=[]
-for mode in range(6):
- commands.append(f'BCONFIG\n3 1 .2 1 {mode}\n')
- for pdg1,pdg2 in [(21,1),(21,-1),(21,21),(-1,1)]:
-  for angle1,angle2 in [(.3,.3),(.3,.01),(.01,.3),(.01,.01)]:
-   for theta,phi in [(0,0),(.7,-1.2)]:
-    for scattered in [False,True]:
-     e=100.;mass=10.;z=.4;mb=2.;mc=3.;pm=math.sqrt(e*e-mass*mass)
-     pz=(2*z*e*e-mass*mass-mb*mb+mc*mc)/(2*pm)
-     pt=math.sqrt(z*z*e*e-pz*pz-mb*mb)
-     rows=[record(11,21,0,[2,3],[0,0,pm,e],mass,z,.1,1,theta,phi),
-           record(12 if scattered else 1,pdg1,1,[4,5] if scattered else [0,0],[-pt,0,pm-pz,(1-z)*e],mc,.3,angle1,2,theta,phi),
-           record(1,pdg2,1,[0,0],[pt,0,pz,z*e],mb,.3,angle2,3,theta,phi)]
-     if scattered:
-      rows.extend([record(1,21,2,[0,0],[1,0,0,1],0,0,0,0,0,0),record(1,pdg1,2,[0,0],[2,0,0,2],0,0,0,0,0,0)])
-     rng=random.Random(601+len(lengths));tape=[rng.uniform(.000001,.999999) for _ in range(3000)]
-     commands.append(f'REJECT\n{len(rows)} 1\n'+'\n'.join(' '.join(format(x,'.17g') for x in row) for row in rows)+'\n3000\n'+' '.join(format(x,'.17g') for x in tape)+'\n')
-     lengths.append(len(rows));labels.append([mode,pdg1,pdg2,angle1,angle2,theta,scattered])
+# Cover near-threshold and boosted parents as well as the original energy.
+for energy in [20.,100.,10000.]:
+ for mode in range(6):
+  commands.append(f'BCONFIG\n3 1 .2 1 {mode}\n')
+  for pdg1,pdg2 in [(21,1),(21,-1),(21,21),(-1,1)]:
+   for angle1,angle2 in [(.3,.3),(.3,.01),(.01,.3),(.01,.01)]:
+    for theta,phi in [(0,0),(.7,-1.2)]:
+     for scattered in [False,True]:
+      e=energy;mass=10.;z=.4;mb=2.;mc=3.;pm=math.sqrt(e*e-mass*mass)
+      pz=(2*z*e*e-mass*mass-mb*mb+mc*mc)/(2*pm)
+      pt=math.sqrt(z*z*e*e-pz*pz-mb*mb)
+      rows=[record(11,21,0,[2,3],[0,0,pm,e],mass,z,.1,1,theta,phi),
+            record(12 if scattered else 1,pdg1,1,[4,5] if scattered else [0,0],[-pt,0,pm-pz,(1-z)*e],mc,.3,angle1,2,theta,phi),
+            record(1,pdg2,1,[0,0],[pt,0,pz,z*e],mb,.3,angle2,3,theta,phi)]
+      if scattered:
+       rows.extend([record(1,21,2,[0,0],[1,0,0,1],0,0,0,0,0,0),record(1,pdg1,2,[0,0],[2,0,0,2],0,0,0,0,0,0)])
+      rng=random.Random(601+len(lengths));tape=[rng.uniform(.000001,.999999) for _ in range(3000)]
+      commands.append(f'REJECT\n{len(rows)} 1\n'+'\n'.join(' '.join(format(x,'.17g') for x in row) for row in rows)+'\n3000\n'+' '.join(format(x,'.17g') for x in tape)+'\n')
+      lengths.append(len(rows));labels.append([mode,pdg1,pdg2,angle1,angle2,theta,scattered,energy])
 # Defined failure path: even zero daughter masses cannot fit this fraction.
 rows=[record(11,21,0,[2,3],[0,0,math.sqrt(9900),100],10,1e-5,.1,1,.7,-1.2),
       record(1,21,1,[0,0],[-2,0,60,61],3,.3,.3,2,.7,-1.2),
@@ -49,7 +51,9 @@ for label,n in zip(labels,lengths):
    assert math.isclose(first[col]+second[col],mother[col],rel_tol=1e-12,abs_tol=1e-12)
   for child in [first,second]:
    invariant=child[8]**2-sum(child[col]**2 for col in [5,6,7])
-   assert math.isclose(invariant,child[9]**2,rel_tol=1e-10,abs_tol=5e-11)
+   # The momentum repair subtracts parent-scale squared terms. Account for
+   # their roundoff in this independent shell check, not the parity tolerance.
+   assert math.isclose(invariant,child[9]**2,rel_tol=1e-10,abs_tol=max(5e-11,32*math.ulp(mother[8]**2))), (label,invariant,child[9]**2)
  for i in range(n):
   a,b=actual[offset],expected[offset];offset+=1;assert len(a)==len(b)==24
   for col,(x,y) in enumerate(zip(a,b)):

@@ -13,6 +13,7 @@ all four 1,000 × 100 grids, both axes and channel cross-section queries.
 |---|---:|---:|
 | full-grids | 1203300 | 0 |
 | integrals-and-cross-sections | 852 | 2.2204e-16 |
+| grid-boundaries-and-extrapolation | 91284 | 0 |
 
 Three configurations cover NF=3/5, equal and different shower/scattering Lambda
 values, boost off/on, SCALEFACM=1/1.2 and a Debye floor of 2 GeV that collapses
@@ -32,5 +33,44 @@ tolerance 2e-13. The single-precision 2./3. colour factor is preserved.
 
 [Detailed results, grid hashes and source provenance](validation-scattering.json).
 These are cross-section and numerical-grid comparisons, not full transport or
-jet-level validation. Collision scheduling, formation times, shower branch
-construction, colour/recoil state and Pythia8 integration remain unfinished.
+jet-level validation. See the port plan and later validation reports for the
+status of event evolution and Pythia8 integration.
+
+
+## Grid-boundary extension (2026-11-21)
+
+The lookup audit now queries every transfer knot and its immediately adjacent
+representable doubles at the first, middle and last Debye coordinates. It also
+queries every distinct Debye knot and adjacent doubles at three transfer
+coordinates. All four channels and all three initialization configurations are
+covered, including the degenerate Debye axis. Additional queries at half the
+minimum and twice the maximum axis values check stock linear extrapolation.
+These are numerical contract tests, not a claim of physical accuracy outside
+the tabulated range.
+
+Both executables receive exactly the same coordinates, taken from the reference
+grid; they independently rebuild their own tables and evaluate the queries.
+The report records each input hash and the source/executable hashes. All 91,284
+new lookup values agree exactly. The existing abs=2e-13 and rel=2e-12 tolerances
+are unchanged. No production physics code changed.
+
+All 13 selected medium/table suites pass after this extension, including
+expanding-medium geometry, sampling, radiation, final splitting, partonic PDFs,
+scattering and final scattering, plus their selected C++ contract checks:
+
+```sh
+ctest --test-dir build -R '(medium|sampling|radiation|final-splitting|pdf|scattering|event-geometry)-(differential|contracts)$' --output-on-failure -j 4
+```
+
+## Expanded thermodynamic coverage
+
+The subsequent [medium/table matrix](validation-scattering-thermodynamics.md)
+adds changed temperatures, formation time, screening scale and table energies.
+All 2,620,056 comparisons pass, including exact zero/nonzero rate agreement.
+
+## Cross sections along prescribed trajectories
+
+The [trajectory extension](validation-scattering-rays.md) adds 49,248 passing
+comparisons through the expanding medium and 12 byte-identical table-preservation
+checks. All 13 selected medium/table regression suites pass. These cross sections
+require density and evolution-time factors before they become collision probabilities.

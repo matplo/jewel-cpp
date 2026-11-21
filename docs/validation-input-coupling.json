@@ -1,0 +1,79 @@
+{
+  "scope": "runner coupling wiring and post-initialization verification; not jet parity",
+  "valid_runs": [
+    {
+      "executable": "jewel-pythia8-input",
+      "events": 3,
+      "settings": {
+        "Tune:pp": "14",
+        "Beams:idA": "2212",
+        "Beams:idB": "2212",
+        "Beams:eCM": "5020",
+        "HardQCD:all": "on",
+        "PhaseSpace:pTHatMin": "20",
+        "PhaseSpace:pTHatMax": "100",
+        "PDF:pSet": "13",
+        "HadronLevel:all": "off",
+        "PartonLevel:FSR": "off",
+        "PartonLevel:ISR": "on",
+        "PartonLevel:MPI": "on",
+        "Check:event": "on",
+        "Random:setSeed": "on",
+        "Random:seed": "2600421",
+        "Init:showChangedSettings": "off",
+        "Init:showChangedParticleData": "off",
+        "Init:showProcesses": "off",
+        "Next:numberShowInfo": "0",
+        "Next:numberShowProcess": "0",
+        "Next:numberShowEvent": "0",
+        "SigmaProcess:alphaSvalue": "0.11754434294459773",
+        "SigmaProcess:alphaSorder": "1",
+        "SpaceShower:alphaSvalue": "0.11754434294459773",
+        "SpaceShower:alphaSorder": "1",
+        "StandardModel:alphaSnfmax": "5",
+        "SpaceShower:alphaSuseCMW": "off"
+      },
+      "output_sha256": "8004c3a138e248ea39addbff11bba0d6db765baec45d24d3e3196cc5e7b0d998"
+    },
+    {
+      "executable": "jewel-run-events",
+      "events": 3,
+      "settings": {
+        "Tune:pp": "14",
+        "Beams:idA": "2212",
+        "Beams:idB": "2212",
+        "Beams:eCM": "5020",
+        "HardQCD:all": "on",
+        "PhaseSpace:pTHatMin": "20",
+        "PhaseSpace:pTHatMax": "100",
+        "PDF:pSet": "13",
+        "HadronLevel:all": "off",
+        "PartonLevel:FSR": "off",
+        "PartonLevel:ISR": "on",
+        "PartonLevel:MPI": "on",
+        "Check:event": "on",
+        "Random:setSeed": "on",
+        "Random:seed": "2600421",
+        "Init:showChangedSettings": "off",
+        "Init:showChangedParticleData": "off",
+        "Init:showProcesses": "off",
+        "Next:numberShowInfo": "0",
+        "Next:numberShowProcess": "0",
+        "Next:numberShowEvent": "0",
+        "SigmaProcess:alphaSvalue": "0.11754434294459773",
+        "SigmaProcess:alphaSorder": "1",
+        "SpaceShower:alphaSvalue": "0.11754434294459773",
+        "SpaceShower:alphaSorder": "1",
+        "StandardModel:alphaSnfmax": "5",
+        "SpaceShower:alphaSuseCMW": "off"
+      },
+      "output_sha256": "be3c0af978b459f153d34453a5047b7d0115a8e08cf68500b49e4f6cc32c959a"
+    }
+  ],
+  "invalid_cases": 28,
+  "alternate_policy_passed": true,
+  "executables": {
+    "jewel-pythia8-input": "a47bbcd096d43b46ae78c0b60e5c54984285600137a355b077ce3a3ac40f5fe2",
+    "jewel-run-events": "3dcec827580532ef83e798a5a6d50948a6832e0dcd82fa19a5c676f0a02f0a18"
+  }
+}

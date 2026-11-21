@@ -10,9 +10,10 @@ namespace {
 constexpr double pi=3.141592653589793;
 void check(bool b,const char* message){if(!b)throw std::domain_error(message);}
 }
-ScatteringRates::ScatteringRates(Kernels k,double q0,double emax,double scale,ExpandingMedium medium,bool boost):
+ScatteringRates::ScatteringRates(Kernels k,double q0,double emax,double scale,MediumModel medium,bool boost):
  kernels_(k),q0_(q0),scale_(scale),boost_(boost),medium_(std::move(medium)),radiation_(k,q0),
  sudakov_(k,q0,emax,scale,medium_.maximum_scatterer(boost)),pdf_(k,q0,emax,scale,medium_.maximum_scatterer(boost)),values_(100000) {
+ if(medium_.is_vacuum())return; // No scattering grid is physically used in vacuum.
  auto maximum=medium_.maximum_scatterer(boost);auto p=maximum.momentum;double m=maximum.mass;
  double shat=m*m+2*emax*(p.energy+std::sqrt(p.px*p.px+p.py*p.py+p.pz*p.pz));
  double pcms2=std::pow(shat-m*m,2)/(4*shat),tmaxmax=scale*4*pcms2;
@@ -38,8 +39,12 @@ ScatteringRates::ScatteringRates(Kernels k,double q0,double emax,double scale,Ex
   }
  }
 }
+ScatteringRates ScatteringRates::with_event_impact_parameter(double b) const {
+ auto medium=medium_.with_impact_parameter(b);auto copy=*this;copy.medium_=std::move(medium);return copy;
+}
 double ScatteringRates::integral(double t,double md,RateChannel channel) const {
  check(std::isfinite(t)&&t>0&&std::isfinite(md)&&md>=0,"invalid scattering table query");
+ check(!medium_.is_vacuum(),"vacuum has no scattering grid");
  int c=static_cast<int>(channel);check(c>=0&&c<4,"invalid rate channel");
  int it=int(std::clamp((std::log(t)-std::log(transfer_[0]))*999/(std::log(transfer_[999])-std::log(transfer_[0]))+1,1.,999.))-1;
  int im=debye_[99]==debye_[0]?0:int(std::clamp((md-debye_[0])*99/(debye_[99]-debye_[0])+1,1.,99.))-1;
@@ -51,6 +56,7 @@ double ScatteringRates::integral(double t,double md,RateChannel channel) const {
 double ScatteringRates::cross_section(Momentum p,double mass,double lower,char incoming,char outgoing,SpaceTime v,int mode) const {
  for(double x:{p.px,p.py,p.pz,p.energy,mass,lower})check(std::isfinite(x),"nonfinite projectile");
  check(p.energy>=0&&lower>=0&&(incoming=='Q'||incoming=='G')&&(outgoing=='Q'||outgoing=='G'||outgoing=='C')&&mode>=0&&mode<=2,"invalid cross section query");
+ if(medium_.is_vacuum())return 0;
  double colour=incoming=='Q'?double(2.f/3.f):double(3.f/2.f),md,shat,upper;
  Scatterer average;
  if(mode==0) {
@@ -87,9 +93,14 @@ double ScatteringRates::cross_section(Momentum p,double mass,double lower,char i
 double ScatteringRates::no_initial_radiation(Momentum p,double mass,int pdg,SpaceTime v) const {
  for(double x:{p.px,p.py,p.pz,p.energy,mass})check(std::isfinite(x),"nonfinite radiation probability input");
  check(p.energy>=0,"negative projectile energy");
+ check(!medium_.is_vacuum(),"vacuum has no scatterer radiation probability");
  double md=medium_.sample(v).debye_mass;
  auto average=medium_.average_scatterer(v,boost_);auto a=average.momentum;double ms=average.mass;
  double shat=ms*ms+mass*mass+2*(a.energy*p.energy-a.px*p.px-a.py*p.py-a.pz*p.pz);
+ // GETPNORAD1 forms 0/0 at a zero invariant, but its subsequent energy
+ // cutoff or GETSSCAT==0 branch returns a finite result without using UP.
+ // Preserve that observable branch result without propagating the transient NaN.
+ if(shat==0)return p.energy<q0_/scale_||pdg!=21?1:-1;
  check(shat>0,"undefined scattering invariant for radiation probability");
  double pcms2=std::pow(shat+mass*mass-ms*ms,2)/(4*shat)-mass*mass;
  double upper=4*pcms2,lower=q0_*q0_/(scale_*scale_);

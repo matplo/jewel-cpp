@@ -1,0 +1,51 @@
+{
+  "scope": "partial subsystem ISR reconstruction and staged primordial composition",
+  "reports": [
+    {
+      "path": "/private/tmp/jewel-isr-recovered-hard1500.jsonl",
+      "sha256": "40fc4aa9d474495f7111ded205c389324facde157aec42718b1425e273692e7a",
+      "prior_sha256": "90303beba87eaf45c61a11caaf6fd41a797a38a475e8fb77eab515a83bc8c929",
+      "counts": {
+        "events": 1500,
+        "mapped_events": 1500,
+        "frames": 11168,
+        "copies": 33958,
+        "composed_final_partons": 22334
+      },
+      "rejected_events": [],
+      "composition_failures": [
+        {
+          "attempt": 72,
+          "subsystem": 1,
+          "root": 21,
+          "final": 55,
+          "max_absolute_error_gev": 8.577064818382496e-07
+        },
+        {
+          "attempt": 72,
+          "subsystem": 1,
+          "root": 22,
+          "final": 56,
+          "max_absolute_error_gev": 1.5026071054080603e-08
+        },
+        {
+          "attempt": 302,
+          "subsystem": 1,
+          "root": 21,
+          "final": 42,
+          "max_absolute_error_gev": 7.937171631056117e-08
+        },
+        {
+          "attempt": 302,
+          "subsystem": 1,
+          "root": 22,
+          "final": 43,
+          "max_absolute_error_gev": 4.082341220623675e-08
+        }
+      ],
+      "max_copy_residual_gev": 2.980641511385329e-09,
+      "max_composed_residual_gev": 8.577064818382496e-07,
+      "max_metric_residual": 1.5502855603699572e-06
+    }
+  ]
+}

@@ -17,3 +17,14 @@ Pythia6 version supplied with JEWEL. Pythia authors: Torbjorn Sjostrand,
 Stephen Mrenna and Peter Skands. The hash-verified modified source is supplied
 externally and extracted only for the JEWEL reference tests; its upstream
 JEWEL-only use restriction and notices remain applicable.
+
+The legacy MPI hard-overlap numerical component translates selected PYMULT
+bin-mapping, survival-weight, double-Gaussian normalization and hard-impact
+sampling, screened scale-ordering, massless phase-space and common-factor expressions; Pythia authors are credited above.
+It is not a complete or official replacement for the Pythia MPI generator.
+
+The legacy MPI channel evaluator translates the ISUB=96 PYSGQC factors and
+PYSIGH PDF multiplication order, with Pythia authors credited above.
+
+The legacy gluon-width component translates the KFLA=21 PYWIDT branch, with
+Pythia authors credited above. Other resonance branches are not included.

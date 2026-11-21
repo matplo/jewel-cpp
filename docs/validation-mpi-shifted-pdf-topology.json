@@ -1,0 +1,104 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-mpi-shifted-pdf/events1500.jsonl",
+  "input_sha256": "36d4622dfc10e0b3611f7629b4488c0febde1ef352fbb255b51efa648ed7f189",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 1500,
+    "accepted": 1498,
+    "evolution_failures": 2,
+    "generation_failures": 0,
+    "accepted_weight": 1498,
+    "failed_weight": 2,
+    "generator_weight_sum": 1500,
+    "generator_sigma_mb": 0.13810622631950523,
+    "generator_sigma_error_mb": 0.0018249722787290956,
+    "final_records": 53608
+  },
+  "junction_events": 277,
+  "failures": {
+    "composed ISR emission transport exceeds existing closure gate": 1,
+    "reconstructed ISR frame disagrees with recorded recoil copy: emitted 39 before 33 after 37 predicted 1.0108255026259638 actual 1.0108255004148905 error 2.2110733244318226e-09": 1
+  },
+  "max_momentum_component_residual_gev": 3.41176928486675e-07,
+  "max_momentum_residual_over_total_energy": 6.796353157105081e-11,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": [
+      {
+        "attempt": 212,
+        "component": 2,
+        "residual_gev": 1.7553113307121728e-07
+      },
+      {
+        "attempt": 240,
+        "component": 2,
+        "residual_gev": 2.837010538449779e-07
+      },
+      {
+        "attempt": 250,
+        "component": 2,
+        "residual_gev": -1.238124451708166e-07
+      },
+      {
+        "attempt": 360,
+        "component": 2,
+        "residual_gev": 3.411763948839991e-07
+      },
+      {
+        "attempt": 403,
+        "component": 2,
+        "residual_gev": 1.4175030157905638e-07
+      },
+      {
+        "attempt": 406,
+        "component": 2,
+        "residual_gev": 1.4174921736593345e-07
+      },
+      {
+        "attempt": 490,
+        "component": 2,
+        "residual_gev": 1.0868906155300784e-07
+      },
+      {
+        "attempt": 707,
+        "component": 2,
+        "residual_gev": -1.1308345388056935e-07
+      },
+      {
+        "attempt": 885,
+        "component": 2,
+        "residual_gev": -2.6702232430817624e-07
+      },
+      {
+        "attempt": 976,
+        "component": 1,
+        "residual_gev": -1.6179711556760408e-07
+      },
+      {
+        "attempt": 996,
+        "component": 2,
+        "residual_gev": 1.7483857600933406e-07
+      },
+      {
+        "attempt": 1072,
+        "component": 2,
+        "residual_gev": -1.175121523550298e-07
+      },
+      {
+        "attempt": 1306,
+        "component": 2,
+        "residual_gev": -3.0818161944005246e-07
+      },
+      {
+        "attempt": 1371,
+        "component": 2,
+        "residual_gev": -1.2277532464299856e-07
+      }
+    ]
+  },
+  "boundary_invariants_pass": true
+}

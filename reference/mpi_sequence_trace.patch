@@ -1,0 +1,77 @@
+--- pythia6425mod-lhapdf6.f
++++ pythia6425mod-lhapdf6.f
+@@ -19580,6 +19580,11 @@
+      &CQ2I,CQ2R,PIK,BDIV,B,PLOWB,PHIGHB,PALLB,S4A,S4B,S4C,POWIP,
+      &RPWIP,B2RPDV,B2RPMX,BAVG,VNT145,VNT146,VNT147
+  
++      INTEGER ISEQACTIVE,NSEQCALLS
++      COMMON/SEQACTIVE/ ISEQACTIVE
++      COMMON/PYDAT3/MDCY(500,3),MDME(8000,2),BRAT(8000),KFDP(8000,5)
++      SAVE NSEQCALLS
++      DATA NSEQCALLS/0/
+ C...Initialization of multiple interaction treatment.
+       IF(MMUL.EQ.1) THEN
+         IF(MSTP(122).GE.1) WRITE(MSTU(11),5000) MSTP(82)
+@@ -20046,8 +20051,24 @@
+         VINT(143)=1D0-VINT(141)
+         VINT(144)=1D0-VINT(142)
+  
++      IF(NSEQCALLS.LT.10)THEN
++       NSEQCALLS=NSEQCALLS+1
++       ISEQACTIVE=1
++       WRITE(*,*) 'SEQ_BEGIN',NSEQCALLS,MSTP(152),MINT(141),
++     & MINT(142),MSTP(32),MSTP(33),MSTP(51),MSTP(52),MSTP(57)
++       WRITE(*,*) 'SEQ_CONFIG',VINT(1),VINT(149),VNT146,
++     & VINT(148),XSEC(96,1),SIGT(0,0,5),PARP(85),PARP(86),
++     & PARJ(2),PARU(2),COEF(96,1),COEF(96,8),COEF(96,9)
++       WRITE(*,*) 'SEQ_XCONFIG',
++     & (PARP(82)*(VINT(1)/PARP(89))**PARP(90))**2,PARP(34),
++     & PARU(5),MSTP(34),MSTP(58),MINT(11),MINT(12),
++     & (PMAS(J,1),J=1,5),(MIN(1,MAX(0,MDME(MDCY(21,2)-1+J,1))),
++     & J=1,5),COEF(96,1),COEF(96,2),COEF(96,8),COEF(96,9),
++     & COEF(96,10),VINT(231)
++      ENDIF
+ C...Iterate downwards in xT2.
+-  220   IF(MSTP(82).LE.1) THEN
++  220   IF(ISEQACTIVE.EQ.1)CALL SEQSTATE(XT2,NSTR,KSTR,0)
++        IF(MSTP(82).LE.1) THEN
+           XT2=XT2FAC*XT2/(XT2FAC-XT2*LOG(PYR(0)))
+           IF(XT2.LT.VINT(149)) GOTO 270
+         ELSE
+@@ -20082,6 +20103,7 @@
+         VINT(71)=0.5D0*VINT(1)*SQRT(XT2)
+         CALL PYSIGH(NCHN,SIGS)
+         IF(MINT(141).NE.0.OR.MINT(142).NE.0) SIGS=SIGS*VINT(320)
++        IF(ISEQACTIVE.EQ.1)WRITE(*,*) 'SEQ_SIGMA',SIGS
+         IF(SIGS.LT.XSEC(ISUB,1)*PYR(0)) GOTO 220
+  
+ C...Reset K, P and V vectors. Select some variables.
+@@ -20202,6 +20224,11 @@
+         ENDIF
+         IF(MINT(31).LT.240) GOTO 220
+   270   CONTINUE
++        IF(ISEQACTIVE.EQ.1)THEN
++         CALL SEQSTATE(XT2,NSTR,KSTR,1)
++         WRITE(*,*) 'SEQ_END'
++         ISEQACTIVE=0
++        ENDIF
+         MINT(1)=ISUBSV
+         DO 280 J=11,80
+           VINT(J)=VINTSV(J)
+@@ -74485,6 +74512,8 @@
+      &(MRPY4,MRPY(4)),(MRPY5,MRPY(5)),(MRPY6,MRPY(6)),
+      &(RRPY98,RRPY(98)),(RRPY99,RRPY(99)),(RRPY00,RRPY(100))
+  
++      INTEGER ISEQACTIVE
++      COMMON/SEQACTIVE/ ISEQACTIVE
+ C...Initialize generation from given seed.
+       IF(MRPY2.EQ.0) THEN
+         IJ=MOD(MRPY1/30082,31329)
+@@ -74541,6 +74570,7 @@
+         MRPY3=0
+       ENDIF
+       PYR=RUNI
++      IF(ISEQACTIVE.EQ.1)WRITE(*,*) 'SEQ_DRAW',RUNI
+  
+       RETURN
+       END

@@ -1,0 +1,12 @@
+{
+  "previous_accepted": 1496,
+  "current_accepted": 1500,
+  "recovered_attempts": [
+    385,
+    511,
+    1089,
+    1355
+  ],
+  "changed_pre_hadronization_attempts": [],
+  "hadronized_events_changed": 1112
+}

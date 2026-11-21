@@ -1,0 +1,19 @@
+{
+  "scope": "subtraction.C helpers with explicit zero offset; not Fortran-facing wrapper or native event integration",
+  "cases": 132,
+  "values": 5106,
+  "max_absolute_error": 1.7763568394002505e-15,
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "8f1eaab8b7890ef42f3e9c7a450fea2441533220660c7f3226e1c44a5e57ad02",
+  "source": {
+    "sha256": "5b84552df996799d9e1061d85fdddf9ee3add56aacc2e4a4655f8e7943d82d17",
+    "lines": 216,
+    "read_name": "subtraction.C"
+  },
+  "executables": {
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-subtraction-probe": "6b992b43e7079e52927de27af28251542725964929141634750f7a56a876937a",
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-subtraction-reference": "313f7ee14d4dca82447aab2e5a7d870c16745a2ae43988435a85e376dd1696a3"
+  }
+}

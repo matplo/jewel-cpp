@@ -1,0 +1,10 @@
+--- pythia6425mod-lhapdf6.f
++++ pythia6425mod-lhapdf6.f
+@@ -30289,6 +30289,7 @@
+       VINT(138)=1D0
+       VINT(57)=AEM
+       VINT(58)=AS
++      IF (ISTSB.EQ.9) CALL MPI_COUPLING_TRACE(Q2,Q2SF,SQPTH,AS)
+  
+ C...Set flags for allowed reacting partons/leptons
+       DO 140 I=1,2

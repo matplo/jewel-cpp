@@ -1,0 +1,62 @@
+{
+  "scope": "Pythia8 ISR incoming ancestry and stage-local virtuality reconstruction; no timing integration or Fortran event parity",
+  "samples": [
+    {
+      "seed": 2600317,
+      "events": 1000,
+      "chains": 2000,
+      "branches": 3935,
+      "negative_energy_branches": 270,
+      "min_virtuality_squared": 0.05583770805738758,
+      "max_virtuality_roundoff_vs_decimal": 1.3642420526593924e-10,
+      "massless_evolution_formula_checks": 3165,
+      "max_massless_evolution_formula_absolute_residual": 6.180584932735655e-10,
+      "prior_fields_exactly_unchanged": true,
+      "input": "/private/tmp/jewel-isr-chains-2600317.jsonl",
+      "sha256": "494111a5749ae1fe3409dd4021967afbf50d5e7151fbf3bf6c308537ae170c21"
+    },
+    {
+      "seed": 2600318,
+      "events": 1000,
+      "chains": 2000,
+      "branches": 4018,
+      "negative_energy_branches": 246,
+      "min_virtuality_squared": 0.04559749936346055,
+      "max_virtuality_roundoff_vs_decimal": 2.0179413695586845e-10,
+      "massless_evolution_formula_checks": 3248,
+      "max_massless_evolution_formula_absolute_residual": 1.7587808542884886e-08,
+      "prior_fields_exactly_unchanged": true,
+      "input": "/private/tmp/jewel-isr-chains-2600318.jsonl",
+      "sha256": "a3ca71acbb41e23db8bb842e259a4b0466dc9d38553a1e207858a7061641dae4"
+    },
+    {
+      "seed": 2600319,
+      "events": 1000,
+      "chains": 2000,
+      "branches": 3990,
+      "negative_energy_branches": 235,
+      "min_virtuality_squared": 0.07787751058810649,
+      "max_virtuality_roundoff_vs_decimal": 2.1390178517322056e-10,
+      "massless_evolution_formula_checks": 3267,
+      "max_massless_evolution_formula_absolute_residual": 9.028440217662137e-10,
+      "prior_fields_exactly_unchanged": true,
+      "input": "/private/tmp/jewel-isr-chains-2600319.jsonl",
+      "sha256": "fa1066a25b076c01cba0f9b27f485995dd387e7ea150e6a64a9690f33e2539c8"
+    }
+  ],
+  "source_sha256": {
+    "include/jewel/pythia8_isr.hpp": "9990c6f44078af0fcbd3fb1c15c214f0b2a510e9cbc66846e077dc74e11f309e",
+    "adapters/pythia8_isr.cpp": "7814abca59ab9d69fed8de06a3212c11413c672770cfbc29b8424e5ca8148371",
+    "tests/isr_ancestry_audit.py": "77c8dbb89729337e22053ec15474080988381fb6e1d89f6d53ff0943011a8f05",
+    "tests/pythia8_input.cpp": "85ebb8fce4b4c91888aa4aa9ea090c841a0a44be7f42609ec9c6e873525066d3"
+  },
+  "executable_sha256": "6755ed0fe0b6e517c61768f09729db0fa78e873fa5d5c9803592f4ad28160530",
+  "pythia_source_sha256": "953dd8b8fee0a75b9a297f9c6e854586aed42ed66576e6a3ddb61b568b4d696f",
+  "tests": {
+    "input": "pass",
+    "cli": "pass",
+    "boundary": "pass",
+    "shower_output": "pass",
+    "isr_times": "pass"
+  }
+}

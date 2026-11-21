@@ -1,0 +1,319 @@
+{
+  "fraction_capture": {
+    "scope": "ISR public-hook beam fractions versus exact source inputs",
+    "reports": [
+      {
+        "events": 1000,
+        "branches": 13253,
+        "exact_fraction_values": 53012,
+        "source_subsystem_mass_squared_exact": true,
+        "max_reconstructed_z_absolute_error": 1.1102230246251565e-16,
+        "max_reconstructed_q2_absolute_error_gev2": {
+          "light_or_massless": 5.638867150992155e-11,
+          "massive_fallback": 2.6136071085147705e-10
+        },
+        "sha256": {
+          "snapshot": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a",
+          "prior": "1460deddfce9e176c3d304f0cfbd434daaad6193e96b72d4c50792566401514a",
+          "trace": "48e8363ad0e90f628e5b6a62be324ac58022e882c72ca5f69616ca050684af3e"
+        }
+      },
+      {
+        "events": 1000,
+        "branches": 13709,
+        "exact_fraction_values": 54836,
+        "source_subsystem_mass_squared_exact": true,
+        "max_reconstructed_z_absolute_error": 1.1102230246251565e-16,
+        "max_reconstructed_q2_absolute_error_gev2": {
+          "light_or_massless": 8.731149137020111e-11,
+          "massive_fallback": 4.582005885822582e-10
+        },
+        "sha256": {
+          "snapshot": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c",
+          "prior": "b8a5cccc4ecf63eb0ec0282fa4ffb025e23f6747ef11ddb4e65d024f58bd62d3",
+          "trace": "5cff69c7de59e9883b18f69c19f27ed92d9976d319dd2dff48cdb354219cb3c0"
+        }
+      }
+    ]
+  },
+  "transport": {
+    "scope": "partial subsystem ISR reconstruction and staged primordial composition",
+    "reports": [
+      {
+        "path": "/private/tmp/jewel-fractions-final-2600417.jsonl",
+        "sha256": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a",
+        "prior_sha256": "e56e2a48f565abe77fac460d847693a1c4b44e31c7d5431523495a25e6a1c8c1",
+        "counts": {
+          "events": 1000,
+          "mapped_events": 999,
+          "frames": 13249,
+          "copies": 41219,
+          "composed_final_partons": 26777,
+          "rejected_events": 1
+        },
+        "rejected_events": [
+          {
+            "attempt": 273,
+            "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+          }
+        ],
+        "composition_failures": [
+          {
+            "attempt": 80,
+            "subsystem": 6,
+            "root": 91,
+            "final": 184,
+            "max_absolute_error_gev": 3.290829226898495e-07
+          },
+          {
+            "attempt": 80,
+            "subsystem": 6,
+            "root": 92,
+            "final": 185,
+            "max_absolute_error_gev": 9.964166736153857e-08
+          },
+          {
+            "attempt": 109,
+            "subsystem": 1,
+            "root": 36,
+            "final": 95,
+            "max_absolute_error_gev": 2.6476541847841872e-08
+          },
+          {
+            "attempt": 230,
+            "subsystem": 10,
+            "root": 161,
+            "final": 293,
+            "max_absolute_error_gev": 4.092174776815227e-08
+          },
+          {
+            "attempt": 297,
+            "subsystem": 3,
+            "root": 41,
+            "final": 129,
+            "max_absolute_error_gev": 2.358247002121061e-07
+          },
+          {
+            "attempt": 297,
+            "subsystem": 3,
+            "root": 42,
+            "final": 130,
+            "max_absolute_error_gev": 9.939043366102851e-08
+          },
+          {
+            "attempt": 364,
+            "subsystem": 2,
+            "root": 24,
+            "final": 97,
+            "max_absolute_error_gev": 4.044818524562288e-07
+          },
+          {
+            "attempt": 364,
+            "subsystem": 2,
+            "root": 25,
+            "final": 98,
+            "max_absolute_error_gev": 2.6018574317276943e-07
+          },
+          {
+            "attempt": 627,
+            "subsystem": 3,
+            "root": 56,
+            "final": 95,
+            "max_absolute_error_gev": 4.771322892338503e-08
+          },
+          {
+            "attempt": 700,
+            "subsystem": 5,
+            "root": 86,
+            "final": 140,
+            "max_absolute_error_gev": 3.561530093065812e-08
+          },
+          {
+            "attempt": 743,
+            "subsystem": 2,
+            "root": 19,
+            "final": 149,
+            "max_absolute_error_gev": 7.47973842862848e-08
+          },
+          {
+            "attempt": 749,
+            "subsystem": 3,
+            "root": 37,
+            "final": 275,
+            "max_absolute_error_gev": 5.610587550108903e-08
+          },
+          {
+            "attempt": 785,
+            "subsystem": 3,
+            "root": 76,
+            "final": 106,
+            "max_absolute_error_gev": 2.0583433979481924e-07
+          },
+          {
+            "attempt": 791,
+            "subsystem": 8,
+            "root": 134,
+            "final": 200,
+            "max_absolute_error_gev": 5.106227263240726e-08
+          },
+          {
+            "attempt": 832,
+            "subsystem": 2,
+            "root": 20,
+            "final": 158,
+            "max_absolute_error_gev": 8.380069971281046e-08
+          },
+          {
+            "attempt": 845,
+            "subsystem": 6,
+            "root": 91,
+            "final": 192,
+            "max_absolute_error_gev": 7.338312002502789e-08
+          },
+          {
+            "attempt": 887,
+            "subsystem": 4,
+            "root": 116,
+            "final": 158,
+            "max_absolute_error_gev": 3.7162544685998e-07
+          },
+          {
+            "attempt": 970,
+            "subsystem": 6,
+            "root": 61,
+            "final": 187,
+            "max_absolute_error_gev": 2.78621882898733e-07
+          },
+          {
+            "attempt": 970,
+            "subsystem": 6,
+            "root": 62,
+            "final": 188,
+            "max_absolute_error_gev": 3.99790280880552e-08
+          }
+        ],
+        "max_copy_residual_gev": 4.717264801001875e-09,
+        "max_composed_residual_gev": 4.044818524562288e-07,
+        "max_metric_residual": 1.2057753338012844e-06
+      },
+      {
+        "path": "/private/tmp/jewel-fractions-final-2600418.jsonl",
+        "sha256": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c",
+        "prior_sha256": "1d9611ba5393b9111d8303d9050f8f59398bb6d1d3b806d89d9671d425aeb6f7",
+        "counts": {
+          "events": 1000,
+          "mapped_events": 998,
+          "frames": 13683,
+          "copies": 42643,
+          "composed_final_partons": 27645,
+          "rejected_events": 2
+        },
+        "rejected_events": [
+          {
+            "attempt": 458,
+            "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+          },
+          {
+            "attempt": 613,
+            "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+          }
+        ],
+        "composition_failures": [
+          {
+            "attempt": 23,
+            "subsystem": 1,
+            "root": 15,
+            "final": 70,
+            "max_absolute_error_gev": 2.3021539163892157e-07
+          },
+          {
+            "attempt": 289,
+            "subsystem": 1,
+            "root": 21,
+            "final": 54,
+            "max_absolute_error_gev": 9.773771125765052e-08
+          },
+          {
+            "attempt": 289,
+            "subsystem": 1,
+            "root": 22,
+            "final": 55,
+            "max_absolute_error_gev": 2.5270600190197e-07
+          },
+          {
+            "attempt": 355,
+            "subsystem": 7,
+            "root": 56,
+            "final": 163,
+            "max_absolute_error_gev": 1.890427014927809e-08
+          },
+          {
+            "attempt": 413,
+            "subsystem": 12,
+            "root": 109,
+            "final": 253,
+            "max_absolute_error_gev": 3.931984338123584e-08
+          },
+          {
+            "attempt": 413,
+            "subsystem": 12,
+            "root": 110,
+            "final": 254,
+            "max_absolute_error_gev": 6.800149776609032e-08
+          },
+          {
+            "attempt": 488,
+            "subsystem": 8,
+            "root": 133,
+            "final": 210,
+            "max_absolute_error_gev": 5.106548428557289e-08
+          },
+          {
+            "attempt": 488,
+            "subsystem": 8,
+            "root": 134,
+            "final": 211,
+            "max_absolute_error_gev": 8.521766403646325e-08
+          },
+          {
+            "attempt": 695,
+            "subsystem": 2,
+            "root": 24,
+            "final": 138,
+            "max_absolute_error_gev": 9.774953468877356e-08
+          },
+          {
+            "attempt": 695,
+            "subsystem": 2,
+            "root": 25,
+            "final": 139,
+            "max_absolute_error_gev": 7.415827951717802e-08
+          },
+          {
+            "attempt": 909,
+            "subsystem": 6,
+            "root": 57,
+            "final": 137,
+            "max_absolute_error_gev": 1.0112737527379068e-06
+          },
+          {
+            "attempt": 909,
+            "subsystem": 6,
+            "root": 58,
+            "final": 138,
+            "max_absolute_error_gev": 3.944238358144503e-07
+          }
+        ],
+        "max_copy_residual_gev": 5.6177213991759345e-09,
+        "max_composed_residual_gev": 1.0112737527379068e-06,
+        "max_metric_residual": 4.4707621782436036e-07
+      }
+    ]
+  },
+  "executable_sha256": "58683a9e98b1a033dd4be4470001e67429e73ee785727e45f8bd08c98a4f726c",
+  "audit_sha256": {
+    "tests/isr_fractions_audit.py": "5ae27d7e7485993cde133f4f74613d2cb74a2151bfc94cdcea354f6f54e9e748",
+    "tests/mpi_isr_frames_audit.py": "0a161dfea7c9f909e65a8b1e39ed622b35a4138ac362eb0e62e4b8a342745005"
+  },
+  "composition_passed": false
+}

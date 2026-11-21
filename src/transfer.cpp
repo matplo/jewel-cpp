@@ -14,7 +14,7 @@ void transform(ShowerParticle& p,double theta,double phi,std::array<double,3> be
  if(p.particle.status>0)rotate_boost(p.particle.momentum,&p.generator_vertex,theta,phi,beta);
 }
 }
-TransferSampler::TransferSampler(Kernels k,ExpandingMedium medium,bool boost):
+TransferSampler::TransferSampler(Kernels k,MediumModel medium,bool boost):
  kernels_(k),medium_(std::move(medium)),boost_(boost){}
 void TransferSampler::sample(ShowerState& state,ParticleId projectile,ParticleId scratch,
  TransferHistory& history,std::size_t slot,double dt,double x,bool recalc,Random& random) const {

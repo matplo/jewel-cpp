@@ -1,0 +1,104 @@
+{
+  "scope": "Raw native final-record import and subsystem hard-pair identity; not evolution-ready",
+  "reports": [
+    {
+      "scope": "Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence",
+      "native_attachment_records": 13249,
+      "hard_pair_records": 13528,
+      "attempts": 1000,
+      "systems_replayed": 6764,
+      "emitted_values": 66245,
+      "max_timing_absolute_error": 0,
+      "kinematic_values": 240156,
+      "max_independent_kinematic_difference": 6.240554739633808e-10,
+      "discarded_reference_nonfinite_values": 20340,
+      "failures": [
+        {
+          "type": "mapping_failure",
+          "attempt": 273,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+        }
+      ],
+      "negative_incoming_energies": 1362,
+      "maximum_emission_copy_error_gev": 7.101334631443024e-09,
+      "input_hashes": {
+        "/private/tmp/jewel-fractions-final-2600417.jsonl": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a",
+        "/private/tmp/jewel-native-import-final-2600417.jsonl": "272af25b808da83642f877f0f231f20d4d4f11e9d8e0317037aa8668f3d7efea",
+        "/private/tmp/jewel-native-import-final-2600417.fixtures": "454c91da53695dabb5ad0c40c1fdf1228900313ffbb1af55905a7dffc3250689"
+      },
+      "executable_hashes": {
+        "build/jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+        "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+      },
+      "audit_sha256": "6e5cce4fc1c9f71f5a081a203843da11c0146e7831454b62b98bcfa01734dca8"
+    },
+    {
+      "scope": "Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence",
+      "native_attachment_records": 13683,
+      "hard_pair_records": 13962,
+      "attempts": 1000,
+      "systems_replayed": 6981,
+      "emitted_values": 68415,
+      "max_timing_absolute_error": 0,
+      "kinematic_values": 247968,
+      "max_independent_kinematic_difference": 2.765659701253753e-09,
+      "discarded_reference_nonfinite_values": 20880,
+      "failures": [
+        {
+          "type": "mapping_failure",
+          "attempt": 458,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+        },
+        {
+          "type": "mapping_failure",
+          "attempt": 613,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+        }
+      ],
+      "negative_incoming_energies": 1357,
+      "maximum_emission_copy_error_gev": 7.959897629916668e-09,
+      "input_hashes": {
+        "/private/tmp/jewel-fractions-final-2600418.jsonl": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c",
+        "/private/tmp/jewel-native-import-final-2600418.jsonl": "4f64c8b133bad348550b383ba856ad4c7f73cf22a674d6463bc3ccf09c0fdd48",
+        "/private/tmp/jewel-native-import-final-2600418.fixtures": "0ea9da39f73e3f88c7ab3101674849fe5a508dc09f73c00d1acdf5dc5e331a52"
+      },
+      "executable_hashes": {
+        "build/jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+        "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+      },
+      "audit_sha256": "6e5cce4fc1c9f71f5a081a203843da11c0146e7831454b62b98bcfa01734dca8"
+    }
+  ],
+  "role_totals": [
+    {
+      "seed": 2600417,
+      "mapped_events": 999,
+      "primary_hard": 1998,
+      "mpi_hard": 11530,
+      "isr": 13249,
+      "remnants": 4762
+    },
+    {
+      "seed": 2600418,
+      "mapped_events": 998,
+      "primary_hard": 1996,
+      "mpi_hard": 11966,
+      "isr": 13683,
+      "remnants": 4908
+    }
+  ],
+  "timing_fixtures_unchanged": true,
+  "generator_sha256": "7f6aa59f46f77e9f8abb2861c7f488563f19911c5dbafc6652fb85411ffee91d",
+  "source_hashes": {
+    "adapters/pythia8_input.cpp": "4d4ed3a75d5ecb3074edd5a3b160ea46459326eb78638144a8692890b768f047",
+    "adapters/pythia8_shower_input.cpp": "297fb5ee374252a9b559b8e18d5b1230a8d69286e328e8897d675f65a1c68b7d",
+    "include/jewel/pythia8_shower_input.hpp": "564f91ca32c9274429642517892c5c05cb76ff554b66a8e8faed485ddfbfa070",
+    "app/isr_timing_probe.cpp": "404b516a31a01cda9447241a89655753b07b4f94fcdf336fec9c5729b9ba88f4",
+    "tests/pythia8_input.cpp": "1adab388a46b6d797e3e6a1878f81ae6774618913a47bccdcfda80c118714468",
+    "tests/mapped_isr_timing_audit.py": "6e5cce4fc1c9f71f5a081a203843da11c0146e7831454b62b98bcfa01734dca8"
+  },
+  "contract_suites": [
+    "pythia8-input-contracts",
+    "pythia8-boundary-contracts"
+  ]
+}

@@ -1,0 +1,20 @@
+--- SimpleSpaceShower.cc
++++ SimpleSpaceShower.cc
+@@ -1,3 +1,4 @@
++#include <iomanip>
+ // SimpleSpaceShower.cc is a part of the PYTHIA event generator.
+ // Copyright (C) 2026 Torbjorn Sjostrand.
+ // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
+@@ -2924,6 +2925,12 @@
+       MfromRest.fromCMframe( event[iRecoiler].p(), pMotherWanted );
+     }
+     Mtot.rotbst(MfromRest);
++    std::cerr << std::setprecision(17) << "ISR_SOURCE " << iSysSel << " " << iMother+1 << " " << iSister+1
++      << " " << x1 << " " << x2 << " " << x1New << " " << x2New << " " << m2II
++      << " " << pT2 << " " << z << " " << Q2 << " " << m2Sister << " " << pT2corr << " " << phi;
++    for(int row=0;row<4;++row)for(int col=0;col<4;++col)std::cerr << " " << Mtot.value(row,col);
++    std::cerr << "\n";
++
+ 
+     // ME correction for weak emissions in the t-channel.
+     double wt;

@@ -1,0 +1,35 @@
+{
+  "scope": "legacy MPI screened ordering proposal only; no differential kinematic/PDF acceptance",
+  "cases": 1621,
+  "scalar_comparisons": 6484,
+  "maximum_absolute_errors": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "decision_and_random_draw_counts_exact": true,
+  "terminated_sequence_lengths": [
+    21,
+    17,
+    28,
+    19,
+    21,
+    21,
+    19,
+    23
+  ],
+  "pre_draw_stops": 721,
+  "post_draw_stops": 451,
+  "proposals": 449,
+  "invalid_cases": 9,
+  "input_sha256": "65de52794c9f50668b1b79c184200a11471cb75a8fe869f630bbeba709aefed0",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-scale-probe": "076e65619bf9da59e7018ac31b6bce64882a5d8f1767e73417b655432c402eb4",
+    "jewel-legacy-mpi-scale-reference": "78d10b9e7b0894ad2481f1b667b7f311ca68f16bd20648339335d7efdfaa92b5"
+  }
+}

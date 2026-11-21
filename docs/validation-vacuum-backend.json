@@ -1,0 +1,74 @@
+{
+  "scope": "Frozen JEWEL vacuum backend and initialized tables, not full generator equivalence",
+  "groups": {
+    "fields-bounds-maximum-vertex": {
+      "values": 386,
+      "max_absolute_error": 0.0,
+      "outside_tolerance": 0
+    },
+    "sudakov-and-pdf-tables": {
+      "values": 20000,
+      "max_absolute_error": 0.0,
+      "outside_tolerance": 0
+    },
+    "final-splitting-tables": {
+      "values": 6004000,
+      "max_absolute_error": 0.0,
+      "outside_tolerance": 0
+    }
+  },
+  "failures": [],
+  "records": [
+    {
+      "executable": "jewel-medium-probe",
+      "energy": 100,
+      "table_sha256": "b63ac410bd74e1809ff19bbc75eb7a3aea73c818b4644970b217dd18eeb39f22"
+    },
+    {
+      "executable": "jewel-vacuum-reference",
+      "energy": 100,
+      "table_sha256": "b63ac410bd74e1809ff19bbc75eb7a3aea73c818b4644970b217dd18eeb39f22"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "energy": 846.494030493817,
+      "table_sha256": "6902d37bb2aa896bf6f08706047e5cb20ab8b77182d943117baca907aa2da887"
+    },
+    {
+      "executable": "jewel-vacuum-reference",
+      "energy": 846.494030493817,
+      "table_sha256": "6902d37bb2aa896bf6f08706047e5cb20ab8b77182d943117baca907aa2da887"
+    }
+  ],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "vacuum_source_sha256": "c83fda6a0b81ce0dc9f524bbf9a3c68f0225f090107a5cd4d6711edad0b20ea0",
+  "executables": {
+    "jewel-medium-probe": "2725a19dfa77e58b3c6ef8235d508e5c292dbd00904605282026bd4fd1aefe86",
+    "jewel-vacuum-reference": "72f29bff8db0fe9efb03c59590900d679b77e44c57625fe130b26e21cc9018aa"
+  },
+  "native_sample": {
+    "path": "/private/tmp/jewel-stockvac20.jsonl",
+    "sha256": "e9798f4611a86e237551102f9200b9a87b9d166caf640768020f586fe03649b0",
+    "attempts": 20,
+    "hadronized": 20,
+    "lifetime_zero": true,
+    "primary_vertex_origin": true,
+    "no_thermal_references": true
+  },
+  "legacy_zero_interaction": {
+    "non_header_records_identical": true,
+    "files": {
+      "/private/tmp/jewel-zero-interaction20.jsonl": "b0e3936874f421d6dced916677251fee672d6b7bd0cb5387df42dec35a84b5de",
+      "/private/tmp/jewel-mpi-flavour-vac20.jsonl": "a075f51a32b250922732c806f20642cf3d93f7f945f376996f6c6f3c9a2be5fd"
+    }
+  },
+  "regression": {
+    "pythia8_existing_suites_passed": 44,
+    "vacuum_contract_passed": true,
+    "strengthened_experimental_contract_passed": true,
+    "expanding_suites_passed": 15,
+    "stock_cascade": "timeout in concurrent and isolated runs; also reproduced using pre-change probe",
+    "stock_cascade_evidence": "validation-expanding-cascade-timeout.json"
+  }
+}

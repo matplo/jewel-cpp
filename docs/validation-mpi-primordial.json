@@ -1,0 +1,77 @@
+{
+  "scope": "MPI primordial transforms at pre-energy-repair stage; failures retained",
+  "reports": [
+    {
+      "path": "/private/tmp/jewel-stage-verified-off-2600417.jsonl",
+      "sha256": "0dad1cb7a13f6adf82723acb4ba5f5dbb9eb7f10a394342cfa477d987779aaed",
+      "prior_sha256": "67d60bacbf0283217f2cd3e3b3863542897d98acf30b24fc81bee582c71a47e2",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "frames": 7572,
+        "copies": 30288
+      },
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 3.0548790164175443e-09,
+      "maximum_metric_residual": 2.293326542712748e-05,
+      "maximum_energy_repair_residual_gev": 2.2737367544323206e-13
+    },
+    {
+      "path": "/private/tmp/jewel-stage-verified-on-2600417.jsonl",
+      "sha256": "71607c9297328bded69811b75b02c39e4c8d38090511d3fd973ebe09bef73aae",
+      "prior_sha256": "9e855629b5e11ec35363852c1c6a092c11f69dac3e91558efed0210ba475edae",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "frames": 6767,
+        "copies": 40321
+      },
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 1.004309524432756e-09,
+      "maximum_metric_residual": 6.037593266228214e-06,
+      "maximum_energy_repair_residual_gev": 4.547473508864641e-13
+    },
+    {
+      "path": "/private/tmp/jewel-stage-verified-off-2600418.jsonl",
+      "sha256": "b817cdf012dd7fea8eb333edf593831ea4ca43cdafcf21e39bee5bee8b94d6ec",
+      "prior_sha256": null,
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "frames": 7164,
+        "copies": 28656
+      },
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 2.83296230918495e-09,
+      "maximum_metric_residual": 3.298131196061149e-05,
+      "maximum_energy_repair_residual_gev": 2.2737367544323206e-13
+    },
+    {
+      "path": "/private/tmp/jewel-stage-verified-on-2600418.jsonl",
+      "sha256": "7d5cc3b822e9ba535cca61f6d15b602f16a4ddc3fd63d075d46ca5f9f0938368",
+      "prior_sha256": null,
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "frames": 6997,
+        "copies": 41697
+      },
+      "rejection_reasons": {},
+      "maximum_copy_residual_gev": 1.597982191015035e-09,
+      "maximum_metric_residual": 4.320057087170426e-06,
+      "maximum_energy_repair_residual_gev": 2.2737367544323206e-13
+    }
+  ],
+  "executable_sha256": "bfa4d8818b4f541f9be3b1d1bf8482754ccd5ee4b34d7a671a19fe986c8dac6f",
+  "audit_sha256": "10fa243a542a33bdad1d7693714d8b3dfd59190c807d3e7d72209fdc8b2da0f3",
+  "pythia_8317_source_sha256": {
+    "BeamRemnants.cc": "7a466ba004f96bb717027087ded4438e1bfc95ce64cc9135d43f71ea5b6edfb5",
+    "BeamSetup.cc": "ef91002427c2d34a073f82d0d5367c40132fc6dfbf6a7d634d786c977f931393",
+    "Pythia.cc": "ce92ebd30c439b68cc836f780c6dce249132ff9d9265a8a6fe8fba75dbdd88b9"
+  },
+  "copy_tolerance": {
+    "absolute_gev": 2e-09,
+    "relative": 2e-11,
+    "extra_conditioning_allowance": false
+  }
+}

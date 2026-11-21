@@ -1,0 +1,116 @@
+{
+  "scope": "Native survivor preparation after ISR timing; primary/MPI virtuality assignment and cascade integration remain pending",
+  "audits": [
+    {
+      "scope": "Generated native survivor preparation; not complete cascade or Pythia6 event equivalence",
+      "seed": 2600417,
+      "attempts": 1000,
+      "prepared_events": 999,
+      "records": 31539,
+      "values": 315390,
+      "massless_conversions": 1502,
+      "max_absolute_error": 4.0529357647756115e-11,
+      "statuses": {
+        "1": 11239,
+        "4": 20300
+      },
+      "failures": [
+        {
+          "type": "failure",
+          "attempt": 273,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+        }
+      ],
+      "mismatches": [],
+      "relative_tolerance": 2e-12,
+      "absolute_tolerance": 2e-13,
+      "hashes": {
+        "build/jewel-kinematics-reference": "2fa58e4fc1ada87c0c5c80ca179b896b1f793b3be66f37b2b87c52dbd56506be",
+        "/private/tmp/jewel-prepared-2600417.jsonl": "7c9bc5a9db105feb5f2a536bc4fd537375278dd7255131e12b284a5092d0e4d7",
+        "/private/tmp/jewel-prepared-2600417.fixtures": "b317f03d4c4f624adf2384052eff72958ce9db1c6b62d62c3472619d95404d78",
+        "/Users/ploskon/devel/jewel-cpp/tests/native_preparation_audit.py": "b5e15b517e33aad79f21cc7cb59216cb198e9f25179aff8eae0911e153649be0"
+      }
+    },
+    {
+      "scope": "Generated native survivor preparation; not complete cascade or Pythia6 event equivalence",
+      "seed": 2600418,
+      "attempts": 1000,
+      "prepared_events": 998,
+      "records": 32553,
+      "values": 325530,
+      "massless_conversions": 1537,
+      "max_absolute_error": 3.512923285597935e-11,
+      "statuses": {
+        "1": 11686,
+        "4": 20867
+      },
+      "failures": [
+        {
+          "type": "failure",
+          "attempt": 458,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+        },
+        {
+          "type": "failure",
+          "attempt": 613,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+        }
+      ],
+      "mismatches": [],
+      "relative_tolerance": 2e-12,
+      "absolute_tolerance": 2e-13,
+      "hashes": {
+        "build/jewel-kinematics-reference": "2fa58e4fc1ada87c0c5c80ca179b896b1f793b3be66f37b2b87c52dbd56506be",
+        "/private/tmp/jewel-prepared-2600418.jsonl": "248d319cc62b44c51e9fefb906c2f655eb924823e4e9890997c11d6f6bbeb9d0",
+        "/private/tmp/jewel-prepared-2600418.fixtures": "bf22212162b7405fac34d95bf3c8d548f011f74922c96c61c95f29fa8473c14a",
+        "/Users/ploskon/devel/jewel-cpp/tests/native_preparation_audit.py": "b5e15b517e33aad79f21cc7cb59216cb198e9f25179aff8eae0911e153649be0"
+      }
+    }
+  ],
+  "sources": {
+    "pythia6425mod-lhapdf6.f": {
+      "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+      "routines": {
+        "PYANGL": [
+          74441,
+          74466
+        ],
+        "PYROBO": [
+          74638,
+          74735
+        ],
+        "PYP": [
+          76081,
+          76156
+        ]
+      }
+    },
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "GETPOSITION": [
+          8807,
+          8826
+        ],
+        "MAKEMASSLESS": [
+          8588,
+          8632
+        ],
+        "ISQORG": [
+          8705,
+          8714
+        ]
+      },
+      "blocks": {
+        "GENEVENT status preparation": [
+          1267,
+          1291
+        ]
+      }
+    }
+  },
+  "probe_sha256": "c10a6c2ab84a70d5f6457402b7777e61b6c0dc70d13c9340414046955360da9d"
+}

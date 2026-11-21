@@ -1,0 +1,79 @@
+{
+  "medium_backend": "vacuum",
+  "scope": "Stock JEWEL 2.6.0 physics with duplicate declaration and diagnostic FORMAT fixes only",
+  "changes": [
+    {
+      "old": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+      "new": "TAUEST,QSUMVECOLD(4),ZDUM,"
+    },
+    {
+      "old": "FORMAT(I6,' (',I6,',',I6')    ['3I6,' ]  {',I5,I3,' } ',2E14.6,l2)",
+      "new": "FORMAT(I6,' (',I6,',',I6,')    [',3I6,' ]  {',I5,I3,' } ',2E14.6,l2)"
+    }
+  ],
+  "commands": [
+    [
+      "gfortran",
+      "-O2",
+      "-std=legacy",
+      "-ffixed-line-length-none",
+      "-c",
+      "jewel-2.6.0.f"
+    ],
+    [
+      "gfortran",
+      "-O2",
+      "-std=legacy",
+      "-ffixed-line-length-none",
+      "-c",
+      "medium-vac.f"
+    ],
+    [
+      "gfortran",
+      "-O2",
+      "-std=legacy",
+      "-ffixed-line-length-none",
+      "-c",
+      "pythia6425mod-lhapdf6.f"
+    ],
+    [
+      "gfortran",
+      "-O2",
+      "-std=legacy",
+      "-ffixed-line-length-none",
+      "-c",
+      "meix.f"
+    ],
+    [
+      "c++",
+      "-c",
+      "subtraction.C"
+    ],
+    [
+      "gfortran",
+      "-o",
+      "jewel-reference-vac",
+      "jewel-2.6.0.o",
+      "medium-vac.o",
+      "pythia6425mod-lhapdf6.o",
+      "meix.o",
+      "subtraction.o",
+      "-L/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/lhapdf/6.5.5/lib",
+      "-lLHAPDF",
+      "-lc++"
+    ]
+  ],
+  "sources": {
+    "jewel-2.6.0.f.stock": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+    "pythia6425mod-lhapdf6.f": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+    "medium-vac.f.stock": "c83fda6a0b81ce0dc9f524bbf9a3c68f0225f090107a5cd4d6711edad0b20ea0",
+    "meix.f": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+    "subtraction.C": "5b84552df996799d9e1061d85fdddf9ee3add56aacc2e4a4655f8e7943d82d17"
+  },
+  "artifacts": {
+    "jewel-2.6.0.f": "225ee87eaea28d4d965cba46c6cd34656feb96c48030679b10859a30bf92cb7b",
+    "medium-vac.f": "c83fda6a0b81ce0dc9f524bbf9a3c68f0225f090107a5cd4d6711edad0b20ea0",
+    "jewel-reference-vac": "2ecdc367bd3cfa39566021d37bc5a47dfba451fa6dd61626a2e6818a23af2948"
+  },
+  "builder_sha256": "d838179e0d132d2e86a8428ab538c2a0fe00c58a6ea8d7554583e51e0bc1bf79"
+}

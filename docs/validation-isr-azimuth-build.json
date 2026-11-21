@@ -1,0 +1,27 @@
+{
+  "source_hashes": {
+    "src/SimpleSpaceShower.cc": "953dd8b8fee0a75b9a297f9c6e854586aed42ed66576e6a3ddb61b568b4d696f",
+    "include/Pythia8/SimpleSpaceShower.h": "b145926773ead27097376a45b4881dceb86f74e4f3104b978b583ce89822c5d7"
+  },
+  "command": [
+    "c++",
+    "-O3",
+    "-std=c++17",
+    "/private/tmp/jewel-isr-factor-trace/TraceSpaceShower.cc",
+    "/Users/ploskon/devel/jewel-cpp/reference/pythia_isr_trace.cpp",
+    "-I/private/tmp/jewel-isr-factor-trace",
+    "-I/Users/ploskon/devel/jewel-cpp/reference",
+    "-I/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/include",
+    "-L/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/lib",
+    "-Wl,-rpath,/Users/ploskon/devel/omni-sbi/jest-a/.venv/hepyy_packages/pythia8/8.317/lib",
+    "-lpythia8",
+    "-o",
+    "/private/tmp/jewel-isr-factor-trace/probe"
+  ],
+  "reference_hashes": {
+    "pythia_isr_trace.cpp": "d083f523e87116e2e709d92bc641888658ad0366177224669fbc5ae7f12fe6d9",
+    "pythia_isr_trace.hpp": "9351321f3bf03127f59971330e155f0d84651f9868feefaf9c8298cbe03690ca"
+  },
+  "generated_source_sha256": "64130eba2b98a941930df59ab2a12a9fcef2df9055576d09bf4bb96beffbae65",
+  "executable_sha256": "51b66bb22df0eac5cd13000014a873a7b52ccbcf4f1d12d2c485530053cd2221"
+}

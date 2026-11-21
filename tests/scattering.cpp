@@ -8,6 +8,9 @@ int main(){
  jewel::Kernels k;jewel::MediumConfig c;c.max_rapidity=2;c.debye_floor=2;
  jewel::ScatteringRates rates(k,1,10,1,jewel::ExpandingMedium(c),false);
  check(rates.values().size()==100000);
+ auto shifted=rates.with_event_impact_parameter(9);
+ check(shifted.values()==rates.values()&&shifted.transfers()==rates.transfers()&&shifted.debye_masses()==rates.debye_masses());
+ rejects([&]{rates.with_event_impact_parameter(-1);});
  check(rates.debye_masses().front()==rates.debye_masses().back());
  check(std::isfinite(rates.integral(10,2,jewel::RateChannel::QA)));
  check(rates.integral(10,1,jewel::RateChannel::QA)==rates.integral(10,3,jewel::RateChannel::QA));
@@ -28,6 +31,9 @@ int main(){
  rejects([&]{rates.next_collision({10,0,0,10},0,1,{},1,-1,20,1,false,empty);});
  check(rates.no_initial_radiation({.1,0,0,.1},0,1,{0,0,0,1})==1);
  check(std::isfinite(rates.no_initial_radiation({10,0,0,10},0,21,{0,0,0,1})));
- rejects([&]{rates.no_initial_radiation({},0,21,{});});
+ check(rates.no_initial_radiation({},0,21,{})==1);
+ check(rates.no_initial_radiation({10,0,0,10},0,21,{})==-1);
+ check(rates.no_initial_radiation({10,0,0,10},0,1,{})==1);
+ check(rates.no_initial_radiation({.1,0,0,.1},0,21,{})==1);
 
 }

@@ -19,6 +19,7 @@ class BranchingSampler {
 public:
  MassSample updated_mass(const VirtualityUpdate&,const InitialSudakovTable&,
   const FinalSplittingTable&,Random&) const;
+ double cutoff() const {return q0_;}
  int angular_ordering() const {return angular_;}
  BranchingSampler(Kernels,double q0,double pt_factor,int angular_ordering);
  MassSample mass(double minimum,double maximum,double angle,double energy,

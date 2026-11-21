@@ -3,20 +3,26 @@
   "groups": {
     "final-mass": {
       "cases": 720,
-      "max_absolute_error": 0.0,
-      "max_relative_error": 0.0,
+      "max_absolute_error": 1.2434497875801753e-14,
+      "max_relative_error": 6.824263422041453e-15,
       "max_draws": 77
     },
     "initial-mass": {
       "cases": 720,
-      "max_absolute_error": 0.0,
-      "max_relative_error": 0.0,
+      "max_absolute_error": 1.4210854715202004e-14,
+      "max_relative_error": 1.433903393830328e-15,
       "max_draws": 16
     },
     "no-initial-radiation": {
       "cases": 288,
       "max_absolute_error": 1.1102230246251565e-16,
       "max_relative_error": 2.4772295594241995e-16,
+      "max_draws": 0
+    },
+    "zero-invariant-no-radiation": {
+      "cases": 180,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
       "max_draws": 0
     }
   },
@@ -29,8 +35,8 @@
       "lambda_scattering": 0.2,
       "boost": 0,
       "scale": 1,
-      "cases": 864,
-      "input_sha256": "1da9b2cfef91852ea0ba187e37cf3e7aa6f02539c225f51c5dad4f1274665f28"
+      "cases": 954,
+      "input_sha256": "63dfb3ec481d435e17a01f6cb7aea4701b0be43bb64eff6349cd619de5e13fa2"
     },
     {
       "nf": 5,
@@ -39,8 +45,8 @@
       "lambda_scattering": 0.18,
       "boost": 1,
       "scale": 1.2,
-      "cases": 864,
-      "input_sha256": "e15cc6a3beaf789b7f584583de282055c43c688b9d7cfa8c6a8f167c19d8a870"
+      "cases": 954,
+      "input_sha256": "6f8f8e7d3a867b6dd6f96599ed97b0da643b8d8ac158583af8979538ce479a49"
     }
   ],
   "relative_tolerance": 2e-12,
@@ -188,6 +194,67 @@
         "GETPNORAD1": [
           5366,
           5431
+        ],
+        "GETQVEC": [
+          5437,
+          5638
+        ],
+        "GETT": [
+          7834,
+          7865
+        ],
+        "DOFISTATESCAT": [
+          5080,
+          5247
+        ],
+        "DOKINEMATICS": [
+          5643,
+          6452
+        ],
+        "MAKEINSPLIT": [
+          3871,
+          4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ],
+        "MAKECASCADE": [
+          2902,
+          2942
+        ],
+        "MAKEBRANCH": [
+          2948,
+          3282
+        ],
+        "FINDVIRTUALITIES": [
+          1893,
+          2239
+        ],
+        "GETTHETAM": [
+          2303,
+          2365
+        ],
+        "ISPARTON": [
+          8690,
+          8700
+        ],
+        "ISDIQUARK": [
+          8658,
+          8671
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
         ]
       }
     },
@@ -291,7 +358,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "2b9272c8d96e949441e2a92f1e6ae5ef7d2ec5c7cd6db3ea39334b31c2d6f3d1",
-    "jewel-medium-reference": "781a828065b68fac3aede2e3afc03e3d94e9d23f00df3a31b4d109f983b260e0"
+    "jewel-medium-probe": "1d79bd72c2e42d3eedcfcdeb1eaea6035145bf0e08c0371eec9b57f738c4c52b",
+    "jewel-medium-reference": "fed054973fe39aa8850a91eb00547b3b3287c0aea1e8feebe8eaa5ef7d2ad345"
   }
 }

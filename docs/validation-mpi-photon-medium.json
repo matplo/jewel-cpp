@@ -1,0 +1,32 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-mpi-photon-medium220.jsonl",
+  "input_sha256": "4ad33e72bb8b3e91cb612ba515c5e2766f61dd130c1e8ad8b90646d65ccebc1b",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 220,
+    "accepted": 218,
+    "evolution_failures": 2,
+    "generation_failures": 0,
+    "accepted_weight": 218,
+    "failed_weight": 2,
+    "generator_weight_sum": 220,
+    "generator_sigma_mb": 0.172886686694911,
+    "generator_sigma_error_mb": 0.00605443499211533,
+    "final_records": 48340
+  },
+  "junction_events": 78,
+  "failures": {
+    "subsystem initialization requires quarks/gluons or inactive massless photons": 2
+  },
+  "max_momentum_component_residual_gev": 5.31114267565691e-08,
+  "max_momentum_residual_over_total_energy": 1.0079660419057361e-11,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": []
+  },
+  "boundary_invariants_pass": true
+}

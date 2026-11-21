@@ -1,0 +1,65 @@
+{
+  "scope": "Native reduced PPJJ smoke tests, not Fortran event parity",
+  "samples": [
+    {
+      "input": "/private/tmp/jewel-native-hadrons-vacuum1000.jsonl",
+      "sha256": "ab81f5d18bfcb0d6d5ebd43ecbc161514eb884c4147de7cfa340fb8caeb7afb7",
+      "mode": "vacuum",
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "accepted": 1000,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 1000,
+        "failed_weight": 0,
+        "generator_weight_sum": 1000,
+        "generator_sigma_mb": 0.1731106431148282,
+        "generator_sigma_error_mb": 0.0027912500173327246,
+        "final_records": 16260
+      },
+      "hadronized_final_particles": 108575,
+      "max_hadronization_momentum_residual_GeV": 1.94854692381341e-07,
+      "failure_reasons": [],
+      "audit": "passed; accounting and record integrity only"
+    },
+    {
+      "input": "/private/tmp/jewel-native-hadrons-medium1500.jsonl",
+      "sha256": "333a5f513e238aa43f14744d99c4dcae8fe5839b9c3229c00a5c7c41d34dc4f6",
+      "mode": "medium",
+      "summary": {
+        "type": "summary",
+        "attempts": 1500,
+        "accepted": 1364,
+        "evolution_failures": 136,
+        "generation_failures": 0,
+        "accepted_weight": 1364,
+        "failed_weight": 136,
+        "generator_weight_sum": 1500,
+        "generator_sigma_mb": 0.1716592087469069,
+        "generator_sigma_error_mb": 0.002248623688012024,
+        "final_records": 101116
+      },
+      "hadronized_final_particles": 356974,
+      "max_hadronization_momentum_residual_GeV": 1.9485513469419402e-07,
+      "failure_reasons": [
+        {
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "count": 90
+        },
+        {
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "count": 43
+        },
+        {
+          "stage": "cascade",
+          "reason": "cascade discarded event",
+          "count": 3
+        }
+      ],
+      "audit": "passed; accounting and record integrity only"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "scope": "Bounded ISR rounding recovery; unresolved baseline composition failures retained",
+  "unchanged_events": 1497,
+  "total_events": 1500,
+  "recovered": [
+    {
+      "attempt": 385,
+      "emitted": 27,
+      "recovery": {
+        "azimuth": "largest-transverse-recoil",
+        "scale_squared_gev2": 1.871271605845837
+      },
+      "maximum_source_matrix_difference": 2.319495706615271e-10,
+      "maximum_copy_error_gev": 7.450580596923828e-09
+    },
+    {
+      "attempt": 1089,
+      "emitted": 43,
+      "recovery": {
+        "azimuth": "largest-transverse-recoil",
+        "scale_squared_gev2": 1.6729700046068572
+      },
+      "maximum_source_matrix_difference": 2.9594104944408173e-12,
+      "maximum_copy_error_gev": 1.1641532182693481e-10
+    },
+    {
+      "attempt": 1355,
+      "emitted": 39,
+      "recovery": {
+        "azimuth": "largest-transverse-recoil",
+        "scale_squared_gev2": 1.8099746505568974
+      },
+      "maximum_source_matrix_difference": 3.063860276597552e-11,
+      "maximum_copy_error_gev": 5.820766091346741e-11
+    }
+  ],
+  "baseline_composition_failures_unchanged": true,
+  "composition_failures": [
+    {
+      "attempt": 72,
+      "subsystem": 1,
+      "root": 21,
+      "final": 55,
+      "max_absolute_error_gev": 8.577064818382496e-07
+    },
+    {
+      "attempt": 72,
+      "subsystem": 1,
+      "root": 22,
+      "final": 56,
+      "max_absolute_error_gev": 1.5026071054080603e-08
+    },
+    {
+      "attempt": 302,
+      "subsystem": 1,
+      "root": 21,
+      "final": 42,
+      "max_absolute_error_gev": 7.937171631056117e-08
+    },
+    {
+      "attempt": 302,
+      "subsystem": 1,
+      "root": 22,
+      "final": 43,
+      "max_absolute_error_gev": 4.082341220623675e-08
+    }
+  ],
+  "corrupted_copy_tests": 3,
+  "old_input_sha256": "63e4dc73a110b912895de4c8a787ebee56479025686dc51893643026245a80d5",
+  "new_input_sha256": "40fc4aa9d474495f7111ded205c389324facde157aec42718b1425e273692e7a"
+}

@@ -28,6 +28,18 @@ public:
  std::size_t checkpoint() const { return cursor_; }
  void restore(std::size_t cursor);
 };
+// Versioned, portable SplitMix64 stream with midpoint conversion to (0,1).
+// Persist algorithm, seed and draw count together for restart.
+class SplitMixRandom final : public Random {
+ std::uint64_t seed_,draws_{};
+public:
+ static constexpr const char* algorithm="splitmix64-open52-v1";
+ explicit SplitMixRandom(std::uint64_t seed):seed_(seed){}
+ double uniform() override;
+ std::uint64_t seed() const {return seed_;}
+ std::uint64_t checkpoint() const {return draws_;}
+ void restore(std::uint64_t draws){draws_=draws;}
+};
 struct MediumSample { double temperature{}, debye_mass{}, scatterer_mass{}, density{}; };
 struct Medium { virtual ~Medium() = default; virtual MediumSample sample(SpaceTime) const = 0; };
 struct Vacuum final : Medium { MediumSample sample(SpaceTime) const override { return {}; } };

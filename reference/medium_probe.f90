@@ -2,7 +2,21 @@
 ! Only DERIV dispatch (modes 5/101) and initial COMMON configuration are harness code.
 program mediumprobe
  use, intrinsic :: ieee_arithmetic
+ use iso_c_binding, only: c_int64_t
  implicit none
+ logical reference_vacuum_enabled, vacuum_mode
+ data vacuum_mode/.false./
+ integer hard_type1,hard_type2,seq_count,seq_pairs(2,11500),seq_i
+ integer hard_mstp(200),hard_msti(200),lme1,lme2,lv,llep1,llep2,lme1orig,lme2orig
+ double precision hard_parp(200),hard_pari(200),hard_x,hard_y,hard_z1,hard_z2,hard_angle1,hard_angle2,getthetam
+ common /PYPARS/ hard_mstp,hard_parp,hard_msti,hard_pari
+ character(2) type1,type2,isochannel
+ common /SPECLINES/ lme1,lme2,lv,llep1,llep2,lme1orig,lme2orig,type1,type2
+ integer nsim,npart_hard,offset,hadrotype
+ double precision sqrts
+ character(4) collider,event_channel
+ logical hadro,shorthepmc,isrscat
+ common /EVRECORD/ nsim,npart_hard,offset,hadrotype,sqrts,collider,hadro,shorthepmc,isrscat,event_channel,isochannel
  double precision centrmin,centrmax,breal,centr,rau
  integer nf
  common /MEDPARAM/ centrmin,centrmax,breal,centr,rau,nf
@@ -29,8 +43,10 @@ program mediumprobe
  ANGORD,aofirstsplit,SCATRECOIL,ALLHAD,compress,mpifsr,KNF,KINMODE,recmode
  double precision impmax,cross(200,3),intpqglow,intpqghigh,scatprimfunc
  common /CROSSSEC/ impmax,cross
- double precision tape(100000),px,py,pz,energy,ms
+ double precision tape(2000000),px,py,pz,energy,ms
  integer count,cursor,boostflag,ptype
+ integer(c_int64_t) generated_seed
+ common /GENERATED_SEED/ generated_seed
  common /REPLAY/ tape,count,cursor
  logical boost
  common /boostmed/ boost
@@ -54,7 +70,7 @@ program mediumprobe
  character incoming,outgoing
  double precision ptfac,getmass,generatez,zdec,angle,maxmass
  common /ALPHASFAC/ ptfac
- integer initial_flag
+ integer initial_flag,guard_reason,guard_calls
  logical qqbardec
  integer n,npad,k(23000,5),errl,elastic_flag
  double precision p(23000,5),vertices(23000,5),mv(23000,5),xsecscalefac,etamax
@@ -120,14 +136,28 @@ program mediumprobe
   if(ios<0) exit
   if(ios/=0) stop 2
   select case(trim(op))
+  case('LENGTHS')
+   block
+    double precision gx,gy,gb,gr,gt,gp(4),gs,lg,lh,lht,it3
+    read(*,*) gx,gy,gb,gr,gt,gp,gs
+    call JG_LENGTHS(gx,gy,gb,gr,gt,gp,gs,lg,lh,lht,it3)
+    write(*,'(4(ES26.17E3,1X))')lg,lh,lht,it3
+   end block
+  case('VACUUM')
+   if(.not.reference_vacuum_enabled())stop 93
+   vacuum_mode=.true.
   case('CONFIG')
+   if(reference_vacuum_enabled())stop 94
+   vacuum_mode=.false.
    read(*,*) mass,nf,woodflag,taui,ti,tc,n0,d,sigmann,breal,etamax2,mdfactor,mdscalefac
    woods=woodflag/=0
    call calcta
+  case('EVENTB')
+   read(*,*)breal
   case('EVENT')
    read(*,*) centrmin,centrmax
    read(*,*) count
-   if(count<1.or.count>100000) stop 5
+   if(count<1.or.count>2000000) stop 5
    read(*,*) tape(1:count)
    cursor=0
    call calcxsection
@@ -136,7 +166,7 @@ program mediumprobe
   case('VERTEX')
    read(*,*) breal,rau
    read(*,*) count
-   if(count<1.or.count>100000) stop 5
+   if(count<1.or.count>2000000) stop 5
    read(*,*) tape(1:count)
    cursor=0
    call pickvtx(x,y)
@@ -144,7 +174,7 @@ program mediumprobe
   case('SCATTER')
    read(*,*) x,y,z,t,boostflag
    read(*,*) count
-   if(count<1.or.count>100000) stop 5
+   if(count<1.or.count>2000000) stop 5
    read(*,*) tape(1:count)
    cursor=0
    boost=boostflag/=0
@@ -219,7 +249,7 @@ program mediumprobe
    boost=boostflag/=0
    call insudaint(emax)
    call pdfint(emax)
-   call xsecint(emax)
+   if(.not.vacuum_mode)call xsecint(emax)
   case('XDUMP')
    read(*,'(A)') dumpfile
    open(unit=89,file=trim(dumpfile),access='stream',form='unformatted',status='replace')
@@ -256,7 +286,7 @@ program mediumprobe
     enddo
    endif
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0;pairdm=0;pairz=0;pairdir=0;pairsplit=.false.;pairqq=.false.;pairreject=.false.;pairshuffle=.false.
    pairnewm=pairtarget
@@ -305,7 +335,7 @@ program mediumprobe
     read(*,*)allqs(i,1),allqs(i,6),scatcentres(i,:)
    enddo
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0;seqretry=.false.
    call dokinematics(2,2,seqfirst,seqlast,pairtarget,seqretry,nowtime,energyfraction,zdec,qflag/=0,cohflag/=0)
@@ -320,19 +350,29 @@ program mediumprobe
    do i=1,maxnscatcen
     write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
    enddo
-  case('COHERENT','ISTATE')
+  case('COHERENT','ISTATE','BRANCH','CASCADE','GCASCADE','CCASCADE','NCASCADE')
    read(*,*)cohselected,cohflag,nowtime,lefttime,split_angle,split_time,cohlengthfac,kinmode,colmax,evweight,nend
    cohscat=cohflag/=0
-   if(trim(op)=='ISTATE')then
+   if(trim(op)/='COHERENT')then
     read(*,*)aflag,pcohrej
     seqretry=aflag/=0
    endif
    n=5;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.;starttime=0;medind=.false.
+   if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE'.or.trim(op)=='CCASCADE'.or.trim(op)=='NCASCADE')starttime=-1d6
    mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0;discard=.false.;nstart=1
-   do i=1,5
+   if(trim(op)=='NCASCADE')then
+    read(*,*)n
+    if(n<2.or.n>22990)stop 74
+   endif
+   do i=1,n
     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
     qqbard(i)=qflag/=0;aoreq(i)=aflag/=0
    enddo
+   if(trim(op)=='CCASCADE')then
+    read(*,*)j
+    if(j<0.or.j>22995)stop 73
+    n=5+j;k(6:n,1)=13
+   endif
    read(*,*)ftfac,recsoftcut,rechardcut,hadflag,scatflag,recmode,writeflag,subflag,maxnscatcen
    allhad=hadflag/=0;scatrecoil=scatflag/=0;writescatcen=writeflag/=0;dosubtraction=subflag/=0
    nscatcen=0;scatflav=-99
@@ -346,10 +386,24 @@ program mediumprobe
    enddo
    histotcoh=0;histothatcoh=0;tmin=0;timax=100;thatmin=0;thatmax=100;ntbinsaccrej=100;nthatbinsaccrej=100
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count < -1.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
+   if(count==-1)read(*,*)generated_seed
    cursor=0
-   if(trim(op)=='ISTATE')then
+   if(trim(op)=='NCASCADE')then
+    if(count/=-1)stop 75
+    read(*,*)cursor
+    if(cursor<0)stop 75
+   endif
+   compress=trim(op)=='CCASCADE'.or.trim(op)=='NCASCADE';guard_reason=0;guard_calls=0
+   if(trim(op)=='BRANCH')then
+    call makebranch(cohselected)
+   else if(trim(op)=='GCASCADE'.or.trim(op)=='NCASCADE')then
+    call guarded_cascade(1000000,guard_reason,guard_calls)
+    write(0,*) 'GUARD_STATS ',guard_reason,guard_calls
+   else if(trim(op)=='CASCADE'.or.trim(op)=='CCASCADE'.or.trim(op)=='NCASCADE')then
+    call makecascade
+   else if(trim(op)=='ISTATE')then
     energyfraction=1;newmass=0;instype=k(cohselected,2);above_cutoff=.false.
     call doinstatescat(cohselected,energyfraction,instype,newmass,nowtime,lefttime,above_cutoff,seqretry)
    else
@@ -358,6 +412,7 @@ program mediumprobe
    initial_flag=merge(0,1,all(ieee_is_finite(p(1:n,:))).and.all(ieee_is_finite(mv(1:n,:))).and. &
     all(ieee_is_finite(zd(1:n))).and.all(ieee_is_finite(thetad(1:n))).and. &
     all(ieee_is_finite(scatcen(1:maxnscatcen,:))).and.all(ieee_is_finite(dummies(1:maxnscatcen,:))))
+   if(guard_reason/=0)initial_flag=guard_reason
    if(trim(op)=='ISTATE')then
     write(*,'(8I8,3ES26.17E3,3I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend, &
      energyfraction,newmass,lefttime,instype,merge(1,0,above_cutoff),merge(1,0,didcohscat)
@@ -365,8 +420,13 @@ program mediumprobe
     write(*,'(8I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend
    endif
    do i=1,n
+    if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE'.or.trim(op)=='CCASCADE'.or.trim(op)=='NCASCADE')then
+     write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3,I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
+      merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i),merge(1,0,medind(i))
+    else
     write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i)
+    endif
    enddo
    write(*,'(5ES26.17E3)')qsumvec,qsum2
    do i=1,100
@@ -403,7 +463,7 @@ program mediumprobe
     read(*,*)allqs(i,:),scatcentres(i,:)
    enddo
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    call dofistatescat(2,nowtime,lefttime,elapsed,newmass,above_cutoff,zdec,qqbardec)
@@ -436,7 +496,7 @@ program mediumprobe
    read(*,*)qsumvec,qsum2
    read(*,*)allqs(nend,:),scatcentres(nend,:)
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    call getqvec(2,nend,dt,energyfraction,recalcflag/=0)
@@ -451,7 +511,7 @@ program mediumprobe
    qqbardec=qflag/=0
    mv(1,4)=0
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    v=getnewmass(1,qnew2,qold2,previousmass,initial_flag/=0,energyfraction,zdec,qqbardec)
@@ -467,7 +527,7 @@ program mediumprobe
   case('TIME')
    read(*,*)p(1,1:5),k(1,2),mv(1,1:4),start,dt,ltime,xsecscalefac,elastic_flag
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    errl=1
@@ -506,7 +566,7 @@ program mediumprobe
     aoreq(i)=aflag/=0
    enddo
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    if(trim(op)=='ISPLIT')then
@@ -530,12 +590,73 @@ program mediumprobe
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
     endif
    enddo
+  case('HARDINIT','MPIINIT','SEQINIT','SEQFLAV')
+   hard_mstp=0;hard_msti=0;hard_parp=0;hard_pari=0
+   read(*,*)hard_pari(17),hard_x,hard_y,ftfac,ltime,aflag
+   aofirstsplit=aflag/=0;mpifsr=.false.;collider='PPJJ';lme1=4;lme2=5
+   if(trim(op)=='MPIINIT')then
+    read(*,*)aflag,hard_type1,hard_type2
+    mpifsr=aflag/=0
+   endif
+   n=6
+   if(trim(op)=='SEQINIT'.or.trim(op)=='SEQFLAV')then
+    read(*,*)n,seq_count,aflag
+    if(n<2.or.n>23000.or.seq_count<1.or.seq_count>11500)stop 81
+    mpifsr=aflag/=0
+    do seq_i=1,seq_count
+     read(*,*)seq_pairs(:,seq_i)
+     if(any(seq_pairs(:,seq_i)<1).or.any(seq_pairs(:,seq_i)>n))stop 82
+    enddo
+    lme1=seq_pairs(1,1);lme2=seq_pairs(2,1)
+   endif
+   k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=0;thetad=0;qqbard=.false.;aoreq=.false.;starttime=-1d6
+   mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0
+   do i=1,n
+    read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
+    qqbard(i)=qflag/=0;aoreq(i)=aflag/=0
+   enddo
+   type1='QQ';type2='QQ'
+   if(k(lme1,2)==21)type1='GC'
+   if(k(lme2,2)==21)type2='GC'
+   if(trim(op)=='MPIINIT')then
+    type1='QQ';type2='QQ'
+    if(hard_type1==1)type1='GC'
+    if(hard_type2==1)type2='GC'
+   endif
+   read(*,*)count
+   if(count< -1.or.count>2000000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   if(count==-1)read(*,*)generated_seed
+   cursor=0;hard_z1=0;hard_z2=0
+   hard_angle1=-1;hard_angle2=-1
+   if(trim(op)=='HARDINIT')then
+    hard_angle1=getthetam(4);hard_angle2=getthetam(5)
+   endif
+   if(trim(op)=='SEQINIT'.or.trim(op)=='SEQFLAV')then
+    do seq_i=1,seq_count
+     ! Harness policy: set COMMON channels per outgoing flavour; routine unchanged.
+     if(trim(op)=='SEQFLAV')then
+      type1='QQ';type2='QQ'
+      if(k(seq_pairs(1,seq_i),2)==21)type1='GC'
+      if(k(seq_pairs(2,seq_i),2)==21)type2='GC'
+     endif
+     call findvirtualities(seq_pairs(1,seq_i),seq_pairs(2,seq_i),hard_x,hard_y,hard_z1,hard_z2,seq_i>1)
+    enddo
+    write(*,*)cursor
+   else
+    call findvirtualities(4,5,hard_x,hard_y,hard_z1,hard_z2,trim(op)=='MPIINIT')
+    write(*,*)cursor,hard_angle1,hard_angle2
+   endif
+   do i=1,n
+    write(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
+     merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i)
+   enddo
   case('BCONFIG')
    read(*,*) knf,q0,lps,ptfac,angord
   case('MASS')
    read(*,*) channel,x,y,angle,energy,maxmass,initial_flag
    read(*,*) count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    zdec=-1.d0
@@ -545,7 +666,7 @@ program mediumprobe
   case('FRACTION')
    read(*,*) channel,x,y,z
    read(*,*) count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    v=generatez(x,y,z,channel)
@@ -656,12 +777,26 @@ function deriv(x,w) result(v)
 end function
 
 function pyr(dummy) result(v)
+ use iso_c_binding, only: c_int64_t,c_double
  implicit none
+ integer(c_int64_t) generated_seed
+ common /GENERATED_SEED/ generated_seed
+ interface
+  function reference_uniform(seed,draw) bind(C) result(value)
+   import c_int64_t,c_double
+   integer(c_int64_t),value :: seed,draw
+   real(c_double) value
+  end function
+ end interface
  integer dummy,count,cursor
- double precision tape(100000),v
+ double precision tape(2000000),v
  common /REPLAY/ tape,count,cursor
- if(cursor>=count) stop 6
+ if(count>=0.and.cursor>=count) stop 6
  cursor=cursor+1
- v=tape(cursor)
+ if(count==-1)then
+  v=reference_uniform(generated_seed,int(cursor,c_int64_t))
+ else
+  v=tape(cursor)
+ endif
  if(v<=0.or.v>=1) stop 7
 end function

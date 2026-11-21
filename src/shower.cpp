@@ -11,15 +11,14 @@ void rotate(ShowerParticle& p,double theta,double phi){
 }
 }
 void reject_splitting(ShowerState& state,ParticleId mother,const BranchingSampler& sampler,Random& random){
- auto& m=state.at(mother);auto first=m.daughters[0],second=m.daughters[1];
+ auto& m=state.at(mother);auto children=state.scheduling_daughters(mother);auto first=children[0],second=children[1];
  if(!first||!second)throw std::domain_error("rejected splitting requires two siblings");
  for(auto sibling:{first,second}){
   auto id=sibling;
   for(std::size_t visited=0;state.at(id).particle.status==12;++visited){
    if(visited>=state.particles().size())throw std::domain_error("cyclic rejected-scattering chain");
-   auto& p=state.at(id);
-   for(auto child:p.daughters)state.at(child).particle.status=-1;
-   id=p.parent;
+   for(auto child:state.scheduling_daughters(id))state.at(child).particle.status=-1;
+   id=state.scheduling_parent(id);
   }
   if(state.at(sibling).particle.status==12)state.at(sibling).particle.status=1;
  }
@@ -53,8 +52,14 @@ void reject_splitting(ShowerState& state,ParticleId mother,const BranchingSample
   if(newc)mcnew=sample(c,mc,cmax);
   if(newb)mbnew=sample(b,mb,bmax);
   if(pm.pz==0)throw std::domain_error("undefined parent splitting axis");
-  pznew=(2*m.fraction*pm.energy*pm.energy-m.record_mass*m.record_mass-mbnew*mbnew+mcnew*mcnew)/(2*pm.pz);
-  ptsnew=m.fraction*m.fraction*pm.energy*pm.energy-pznew*pznew-mbnew*mbnew;
+  // REJECTSPLITTING uses the same grouped squares and subtraction order
+  // as MAKESPLITTING in the frozen GNU Fortran reference.
+  double e2=pm.energy*pm.energy,mb2=mbnew*mbnew,mc2=mcnew*mcnew;
+  double numerator=std::fma(-m.record_mass,m.record_mass,(2*m.fraction)*e2);
+  numerator-=mb2;
+  numerator+=mc2;
+  pznew=numerator/(2*pm.pz);
+  ptsnew=std::fma(-pznew,pznew,(m.fraction*m.fraction)*e2)-mb2;
   if(ptsnew>=0)break;
   if(mbnew==0&&mcnew==0){state.discarded=true;return;}
   if(mbnew==0){cmax=mcnew;newb=false;newc=true;}
@@ -104,8 +109,15 @@ void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sam
   if(newb)bmass=sampler.mass(0,bmax,theta,z*p.energy,(quark||qqbar)?Channel::QQ:Channel::GC,bmax,false,random);
   if(newc)cmass=sampler.mass(0,cmax,theta,(1-z)*p.energy,(quark||!qqbar)?Channel::GC:Channel::QQ,cmax,false,random);
   double mb=bmass.mass,mc=cmass.mass;
-  pz=(2*z*p.energy*p.energy-parent.record_mass*parent.record_mass-mb*mb+mc*mc)/(2*p.pz);
-  pts=z*z*p.energy*p.energy-pz*pz-mb*mb;
+  // MAKESPLITTING squares E before multiplying by z. Preserve the frozen
+  // GNU Fortran subtraction order: fuse the parent-mass and pz squares,
+  // while the reused daughter-mass squares are rounded independently.
+  double e2=p.energy*p.energy,mb2=mb*mb,mc2=mc*mc;
+  double numerator=std::fma(-parent.record_mass,parent.record_mass,(2*z)*e2);
+  numerator-=mb2;
+  numerator+=mc2;
+  pz=numerator/(2*p.pz);
+  pts=std::fma(-pz,pz,(z*z)*e2)-mb2;
   if(pts<0||mb+mc>parent.record_mass){
    if(mb==0&&mc==0){
     state.discarded=true;restore();
@@ -125,26 +137,24 @@ void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sam
   if(mode==5)parent.angle=std::asin(std::sqrt(pts/(z*z*p.energy*p.energy-mb*mb)))+
     std::asin(std::sqrt(pts/((1-z)*(1-z)*p.energy*p.energy-mc*mc)));
   if(mode==1||mode==5){
-   auto mother=parent.parent;
+   auto mother=state.scheduling_parent(id);
    if(!mother)throw std::domain_error("angular ordering requires a parent record");
-   bool scattered=false,first=state.at(mother).daughters[0]==id;
+   bool scattered=false,first=state.scheduling_daughters(mother)[0]==id;
    for(std::size_t count=0;state.at(mother).particle.status==12;++count){
     if(count>=state.particles().size())throw std::domain_error("cyclic scattering ancestry");
-    auto& m=state.at(mother);
-    if(state.at(m.daughters[0]).particle.status!=11)scattered=true;
-    first=state.at(m.parent).daughters[0]==mother;mother=m.parent;
+    if(state.at(state.scheduling_daughters(mother)[0]).particle.status!=11)scattered=true;
+    first=state.scheduling_daughters(state.scheduling_parent(mother))[0]==mother;mother=state.scheduling_parent(mother);
    }
    auto& m=state.at(mother);bool reject=false;
    if(!scattered&&parent.angular_required&&m.angle>=0){
-    auto daughter=m.daughters[first?1:0];scattered=false;
+    auto daughter=state.scheduling_daughters(mother)[first?1:0];scattered=false;
     for(std::size_t count=0;state.at(daughter).particle.status==12;++count){
      if(count>=state.particles().size())throw std::domain_error("cyclic sibling scattering history");
-     auto& d=state.at(daughter);
-     if(state.at(state.at(d.parent).daughters[0]).particle.status!=11)scattered=true;
-     daughter=d.daughters[1];
+     if(state.at(state.scheduling_daughters(state.scheduling_parent(daughter))[0]).particle.status!=11)scattered=true;
+     daughter=state.scheduling_daughters(daughter)[1];
     }
     if(!scattered&&state.at(daughter).particle.status!=11)
-     reject=state.at(m.daughters[0]).angle>m.angle||state.at(m.daughters[1]).angle>m.angle;
+     reject=state.at(state.scheduling_daughters(mother)[0]).angle>m.angle||state.at(state.scheduling_daughters(mother)[1]).angle>m.angle;
    }
    if(reject){restore();reject_splitting(state,mother,sampler,random);return;}
   }
@@ -185,7 +195,7 @@ void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sam
  }
  parent.particle.status=status==2?13:11;
  // append can reallocate: do not retain references into state beyond this point.
- auto cid=state.append(c,true),bid=state.append(b,true);state.connect(id,cid,bid);
+ auto cid=state.append(c,true,true),bid=state.append(b,true,true);state.connect(id,cid,bid);
  restore();rotate(state.at(cid),theta_in,0);rotate(state.at(bid),theta_in,0);
  rotate(state.at(cid),0,phi_in);rotate(state.at(bid),0,phi_in);
 }

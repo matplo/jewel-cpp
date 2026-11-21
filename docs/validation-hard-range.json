@@ -1,0 +1,26 @@
+{
+  "cases": [
+    {
+      "ecm": 2760,
+      "pt_min": 50,
+      "pt_max": 400,
+      "hard_events": 100,
+      "table_energy_gev": 1380.0,
+      "native_outcome": "event"
+    },
+    {
+      "ecm": 13000,
+      "pt_min": 40,
+      "pt_max": 60,
+      "hard_events": 100,
+      "table_energy_gev": 620.7622890287992,
+      "native_outcome": "event"
+    }
+  ],
+  "invalid_inputs_rejected": 48,
+  "default_records_identical": true,
+  "executables": {
+    "jewel-pythia8-input": "60127f496ca6432d1c344a27927daaa1c8eb16ad11ac40c4644228194d66761d",
+    "jewel-run-partons": "a6df6311ca11a65053b0ff691c6242d8066771fff7fe1af3ebf44f804c584b93"
+  }
+}

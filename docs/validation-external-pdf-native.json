@@ -1,0 +1,60 @@
+{
+  "scope": "Native reduced PPJJ smoke tests, not Fortran event parity",
+  "samples": [
+    {
+      "input": "/private/tmp/jewel-ct14-vacuum20.jsonl",
+      "sha256": "31d33ce4842fce729921495da9ac42c49fba2721fa796b6ba219a747513117eb",
+      "mode": "vacuum",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15098284351715693,
+        "generator_sigma_error_mb": 0.02292399073840556,
+        "final_records": 323
+      },
+      "hadronized_final_particles": 2127,
+      "max_hadronization_momentum_residual_GeV": 1.00871305890992e-07,
+      "failure_reasons": [],
+      "audit": "passed; accounting and record integrity only"
+    },
+    {
+      "input": "/private/tmp/jewel-ct14-medium20.jsonl",
+      "sha256": "b1532df65195da8171a2d68843a70b0204209d249064eb643224614d59b9d96e",
+      "mode": "medium",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 17,
+        "evolution_failures": 3,
+        "generation_failures": 0,
+        "accepted_weight": 17,
+        "failed_weight": 3,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15098284351715693,
+        "generator_sigma_error_mb": 0.02292399073840556,
+        "final_records": 1211
+      },
+      "hadronized_final_particles": 4374,
+      "max_hadronization_momentum_residual_GeV": 9.346673035537378e-08,
+      "failure_reasons": [
+        {
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "count": 2
+        },
+        {
+          "stage": "cascade",
+          "reason": "nonfinite shower record",
+          "count": 1
+        }
+      ],
+      "audit": "passed; accounting and record integrity only"
+    }
+  ]
+}

@@ -1,0 +1,842 @@
+{
+  "scope": "Full input-chain diagnostic before cascade, not full Fortran/native equivalence",
+  "initialization": [
+    {
+      "scope": "Generated preparation/initialization diagnostic; not a Fortran full-event comparison",
+      "seed": 2600417,
+      "attempts": 1000,
+      "prepared_events": 999,
+      "outcomes": {
+        "initialized": 953,
+        "non_qcd_pair": 14,
+        "junction_colour_partner": 32
+      },
+      "initialized_pairs": 6356,
+      "junction_missing_tags": 34,
+      "unsupported_pdgs": {
+        "10441": 7,
+        "22": 1,
+        "445": 5,
+        "20443": 1
+      },
+      "maximum_pair_p4_residual_gev": 1.0532684200370568e-06,
+      "failures": [
+        {
+          "type": "failure",
+          "attempt": 273,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+        },
+        {
+          "attempt": 66,
+          "stage": "initialization",
+          "seed": 260041700066,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 109,
+          "stage": "initialization",
+          "seed": 260041700109,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 114,
+          "stage": "initialization",
+          "seed": 260041700114,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 115,
+          "stage": "initialization",
+          "seed": 260041700115,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 121,
+          "stage": "initialization",
+          "seed": 260041700121,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 146,
+          "stage": "initialization",
+          "seed": 260041700146,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 217,
+          "stage": "initialization",
+          "seed": 260041700217,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 249,
+          "stage": "initialization",
+          "seed": 260041700249,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 261,
+          "stage": "initialization",
+          "seed": 260041700261,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 268,
+          "stage": "initialization",
+          "seed": 260041700268,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 286,
+          "stage": "initialization",
+          "seed": 260041700286,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 298,
+          "stage": "initialization",
+          "seed": 260041700298,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 301,
+          "stage": "initialization",
+          "seed": 260041700301,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 302,
+          "stage": "initialization",
+          "seed": 260041700302,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 303,
+          "stage": "initialization",
+          "seed": 260041700303,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 312,
+          "stage": "initialization",
+          "seed": 260041700312,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 315,
+          "stage": "initialization",
+          "seed": 260041700315,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 352,
+          "stage": "initialization",
+          "seed": 260041700352,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 385,
+          "stage": "initialization",
+          "seed": 260041700385,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 420,
+          "stage": "initialization",
+          "seed": 260041700420,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 460,
+          "stage": "initialization",
+          "seed": 260041700460,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 462,
+          "stage": "initialization",
+          "seed": 260041700462,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 474,
+          "stage": "initialization",
+          "seed": 260041700474,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 477,
+          "stage": "initialization",
+          "seed": 260041700477,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 489,
+          "stage": "initialization",
+          "seed": 260041700489,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 491,
+          "stage": "initialization",
+          "seed": 260041700491,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 555,
+          "stage": "initialization",
+          "seed": 260041700555,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 575,
+          "stage": "initialization",
+          "seed": 260041700575,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 579,
+          "stage": "initialization",
+          "seed": 260041700579,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 654,
+          "stage": "initialization",
+          "seed": 260041700654,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 675,
+          "stage": "initialization",
+          "seed": 260041700675,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 688,
+          "stage": "initialization",
+          "seed": 260041700688,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 714,
+          "stage": "initialization",
+          "seed": 260041700714,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 733,
+          "stage": "initialization",
+          "seed": 260041700733,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 745,
+          "stage": "initialization",
+          "seed": 260041700745,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 748,
+          "stage": "initialization",
+          "seed": 260041700748,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 787,
+          "stage": "initialization",
+          "seed": 260041700787,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 818,
+          "stage": "initialization",
+          "seed": 260041700818,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 835,
+          "stage": "initialization",
+          "seed": 260041700835,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 869,
+          "stage": "initialization",
+          "seed": 260041700869,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 879,
+          "stage": "initialization",
+          "seed": 260041700879,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 909,
+          "stage": "initialization",
+          "seed": 260041700909,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 968,
+          "stage": "initialization",
+          "seed": 260041700968,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 969,
+          "stage": "initialization",
+          "seed": 260041700969,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 989,
+          "stage": "initialization",
+          "seed": 260041700989,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 995,
+          "stage": "initialization",
+          "seed": 260041700995,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        }
+      ],
+      "hashes": {
+        "/private/tmp/jewel-initialized-final-2600417.jsonl": "4c292636802bb89cea37f6663540650235302c280a7c3bb60aa51ca5c41c91c3",
+        "/private/tmp/jewel-fractions-final-2600417.jsonl": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a",
+        "/Users/ploskon/devel/jewel-cpp/tests/subsystem_initialization_audit.py": "034628f3f03889ba40c57fcb80fa39257ae2058daa6356ab977875735d1c255f"
+      }
+    },
+    {
+      "scope": "Generated preparation/initialization diagnostic; not a Fortran full-event comparison",
+      "seed": 2600418,
+      "attempts": 1000,
+      "prepared_events": 998,
+      "outcomes": {
+        "initialized": 945,
+        "junction_colour_partner": 38,
+        "non_qcd_pair": 15
+      },
+      "initialized_pairs": 6472,
+      "junction_missing_tags": 39,
+      "unsupported_pdgs": {
+        "22": 2,
+        "445": 4,
+        "10441": 8,
+        "20443": 1
+      },
+      "maximum_pair_p4_residual_gev": 2.7015437353838934e-07,
+      "failures": [
+        {
+          "type": "failure",
+          "attempt": 458,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+        },
+        {
+          "type": "failure",
+          "attempt": 613,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+        },
+        {
+          "attempt": 31,
+          "stage": "initialization",
+          "seed": 260041800031,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 34,
+          "stage": "initialization",
+          "seed": 260041800034,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 48,
+          "stage": "initialization",
+          "seed": 260041800048,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 78,
+          "stage": "initialization",
+          "seed": 260041800078,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 107,
+          "stage": "initialization",
+          "seed": 260041800107,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 117,
+          "stage": "initialization",
+          "seed": 260041800117,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 125,
+          "stage": "initialization",
+          "seed": 260041800125,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 162,
+          "stage": "initialization",
+          "seed": 260041800162,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 170,
+          "stage": "initialization",
+          "seed": 260041800170,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 182,
+          "stage": "initialization",
+          "seed": 260041800182,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 183,
+          "stage": "initialization",
+          "seed": 260041800183,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 189,
+          "stage": "initialization",
+          "seed": 260041800189,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 207,
+          "stage": "initialization",
+          "seed": 260041800207,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 210,
+          "stage": "initialization",
+          "seed": 260041800210,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 240,
+          "stage": "initialization",
+          "seed": 260041800240,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 250,
+          "stage": "initialization",
+          "seed": 260041800250,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 252,
+          "stage": "initialization",
+          "seed": 260041800252,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 263,
+          "stage": "initialization",
+          "seed": 260041800263,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 291,
+          "stage": "initialization",
+          "seed": 260041800291,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 329,
+          "stage": "initialization",
+          "seed": 260041800329,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 358,
+          "stage": "initialization",
+          "seed": 260041800358,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 372,
+          "stage": "initialization",
+          "seed": 260041800372,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 385,
+          "stage": "initialization",
+          "seed": 260041800385,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 397,
+          "stage": "initialization",
+          "seed": 260041800397,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 420,
+          "stage": "initialization",
+          "seed": 260041800420,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 443,
+          "stage": "initialization",
+          "seed": 260041800443,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 476,
+          "stage": "initialization",
+          "seed": 260041800476,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 482,
+          "stage": "initialization",
+          "seed": 260041800482,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 495,
+          "stage": "initialization",
+          "seed": 260041800495,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 513,
+          "stage": "initialization",
+          "seed": 260041800513,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 559,
+          "stage": "initialization",
+          "seed": 260041800559,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 582,
+          "stage": "initialization",
+          "seed": 260041800582,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 595,
+          "stage": "initialization",
+          "seed": 260041800595,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 628,
+          "stage": "initialization",
+          "seed": 260041800628,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 670,
+          "stage": "initialization",
+          "seed": 260041800670,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 672,
+          "stage": "initialization",
+          "seed": 260041800672,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 675,
+          "stage": "initialization",
+          "seed": 260041800675,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 684,
+          "stage": "initialization",
+          "seed": 260041800684,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 704,
+          "stage": "initialization",
+          "seed": 260041800704,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 747,
+          "stage": "initialization",
+          "seed": 260041800747,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 755,
+          "stage": "initialization",
+          "seed": 260041800755,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 762,
+          "stage": "initialization",
+          "seed": 260041800762,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 783,
+          "stage": "initialization",
+          "seed": 260041800783,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 788,
+          "stage": "initialization",
+          "seed": 260041800788,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 795,
+          "stage": "initialization",
+          "seed": 260041800795,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 798,
+          "stage": "initialization",
+          "seed": 260041800798,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 856,
+          "stage": "initialization",
+          "seed": 260041800856,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 873,
+          "stage": "initialization",
+          "seed": 260041800873,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 880,
+          "stage": "initialization",
+          "seed": 260041800880,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 892,
+          "stage": "initialization",
+          "seed": 260041800892,
+          "error": "subsystem initialization currently requires quark/gluon pairs",
+          "draws": 0
+        },
+        {
+          "attempt": 894,
+          "stage": "initialization",
+          "seed": 260041800894,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 954,
+          "stage": "initialization",
+          "seed": 260041800954,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        },
+        {
+          "attempt": 977,
+          "stage": "initialization",
+          "seed": 260041800977,
+          "error": "missing hard-parton colour partner",
+          "draws": 0
+        }
+      ],
+      "hashes": {
+        "/private/tmp/jewel-initialized-final-2600418.jsonl": "05180280b2225f04f2db5ecf4610954cc201b3f1e6817ffcb766bc9487e978a2",
+        "/private/tmp/jewel-fractions-final-2600418.jsonl": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c",
+        "/Users/ploskon/devel/jewel-cpp/tests/subsystem_initialization_audit.py": "034628f3f03889ba40c57fcb80fa39257ae2058daa6356ab977875735d1c255f"
+      }
+    }
+  ],
+  "preparation": [
+    {
+      "scope": "Generated native survivor preparation; not complete cascade or Pythia6 event equivalence",
+      "seed": 2600417,
+      "attempts": 1000,
+      "prepared_events": 999,
+      "records": 31539,
+      "values": 315390,
+      "massless_conversions": 1502,
+      "max_absolute_error": 4.0529357647756115e-11,
+      "statuses": {
+        "1": 11239,
+        "4": 20300
+      },
+      "failures": [
+        {
+          "type": "failure",
+          "attempt": 273,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+        }
+      ],
+      "mismatches": [],
+      "relative_tolerance": 2e-12,
+      "absolute_tolerance": 2e-13,
+      "hashes": {
+        "build/jewel-kinematics-reference": "2fa58e4fc1ada87c0c5c80ca179b896b1f793b3be66f37b2b87c52dbd56506be",
+        "/private/tmp/jewel-initialized-final-2600417.jsonl": "4c292636802bb89cea37f6663540650235302c280a7c3bb60aa51ca5c41c91c3",
+        "/private/tmp/jewel-initialized-final-2600417.fixtures": "b317f03d4c4f624adf2384052eff72958ce9db1c6b62d62c3472619d95404d78",
+        "/Users/ploskon/devel/jewel-cpp/tests/native_preparation_audit.py": "b5e15b517e33aad79f21cc7cb59216cb198e9f25179aff8eae0911e153649be0"
+      }
+    },
+    {
+      "scope": "Generated native survivor preparation; not complete cascade or Pythia6 event equivalence",
+      "seed": 2600418,
+      "attempts": 1000,
+      "prepared_events": 998,
+      "records": 32553,
+      "values": 325530,
+      "massless_conversions": 1537,
+      "max_absolute_error": 3.512923285597935e-11,
+      "statuses": {
+        "1": 11686,
+        "4": 20867
+      },
+      "failures": [
+        {
+          "type": "failure",
+          "attempt": 458,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+        },
+        {
+          "type": "failure",
+          "attempt": 613,
+          "stage": "mapping",
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+        }
+      ],
+      "mismatches": [],
+      "relative_tolerance": 2e-12,
+      "absolute_tolerance": 2e-13,
+      "hashes": {
+        "build/jewel-kinematics-reference": "2fa58e4fc1ada87c0c5c80ca179b896b1f793b3be66f37b2b87c52dbd56506be",
+        "/private/tmp/jewel-initialized-final-2600418.jsonl": "05180280b2225f04f2db5ecf4610954cc201b3f1e6817ffcb766bc9487e978a2",
+        "/private/tmp/jewel-initialized-final-2600418.fixtures": "bf22212162b7405fac34d95bf3c8d548f011f74922c96c61c95f29fa8473c14a",
+        "/Users/ploskon/devel/jewel-cpp/tests/native_preparation_audit.py": "b5e15b517e33aad79f21cc7cb59216cb198e9f25179aff8eae0911e153649be0"
+      }
+    }
+  ],
+  "preparation_fixtures_unchanged": true,
+  "native_executable_sha256": "93581e40986c422a5e5969330dcf617e76335b8b3de3002b77513ac84add45f5"
+}

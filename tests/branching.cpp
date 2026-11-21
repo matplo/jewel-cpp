@@ -9,6 +9,9 @@ int main(){
  auto no_phase=sampler.mass(2,1,-1,100,jewel::Channel::QQ,100,false,empty);
  check(no_phase.mass==0&&no_phase.fraction==0&&no_phase.quark_pair==false);
  check(sampler.fraction(0,0,.6,jewel::Channel::QG,empty)==.5);
+ jewel::ReplayRandom qg({.5,.5,.1}),gq({.5,.5,.1});
+ check(sampler.fraction(0,0,.1,jewel::Channel::QG,qg)==sampler.fraction(0,0,.1,jewel::Channel::GQ,gq));
+ check(qg.checkpoint()==gq.checkpoint());
  jewel::ReplayRandom narrow({.00001});
  auto threshold=sampler.mass(1,1.000001,-1,100,jewel::Channel::GC,100,false,narrow);
  check(threshold.mass==1&&threshold.fraction==.5&&threshold.quark_pair==true&&narrow.checkpoint()==1);

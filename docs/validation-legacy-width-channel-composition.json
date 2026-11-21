@@ -1,0 +1,25 @@
+{
+  "scope": "live ISUB=96 factors/PDF multiplication; native width if width_config_sha256 is present; PDF evaluation still captured",
+  "width_config_sha256": "32f1668b73bc8d9bc8e9e973d9e5e3efade62d92f4a7fab5e7b1ea3f250c2700",
+  "calls": 200,
+  "initialization_calls": 100,
+  "production_calls": 100,
+  "channels": 37580,
+  "numeric_comparisons": 75360,
+  "maximum_absolute_error": 0.0,
+  "failures": [],
+  "hepmc_byte_identical": true,
+  "baseline_hepmc_sha256": "64a5289388223a4fb5e1b272007a431c773b5125cb3277e66d6718733e275ca3",
+  "input_sha256": "ad7d58d722c85fbab45a43141388d44c86544f3690805c65e44a6a11322d5e2e",
+  "cpp_sha256": "758b4628d077b852706887b526f46ffa38678ee777214dc2419f5b3856977fff",
+  "artifacts": {
+    "pythia.f": "94083168632b6f28108b2bf308e84f2444dfb3723c80c3f63943568dd68236a2",
+    "core.f": "839bcf329ad45db42e58b9b5a6696fa517a4c6de2a17e899a47f797ceeaa0c3c",
+    "trace.f90": "a2bccbaee225782b5c7afe557ad091f57a89e1a0d576dab9285ffd8a5be7e122",
+    "reference": "745d540cafa09c2a369cba8cd445b1e110c87d4aa724ed43d444492d69844c6f",
+    "params.dat": "7fa8c025deb9ee8e55e0f0b073da5fb4cedc8521ba5cf819a444bed9746332e0",
+    "medium.dat": "35c2bee4294037cb378259c003c3847ef3735c61640525569af18747c946bdbd",
+    "run.log": "63229ecdfc78a7454d58889d0401cd9463bedbff2ce900534649006dced3cfa4",
+    "instrumentation.patch": "2ca6ecf18e9fb33cb23b2d00c95831710f571b1d5312d9dfdcfedd4b94cb2c14"
+  }
+}

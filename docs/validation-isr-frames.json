@@ -1,0 +1,63 @@
+{
+  "scope": "Pythia8 ordinary initial-initial ISR recoil reconstruction; not production-point assignment or full ISR transport",
+  "samples": [
+    {
+      "seed": 2600317,
+      "events": 1000,
+      "frames": 3935,
+      "momentum_copies": 14865,
+      "max_copy_error_gev": 3.8392045098589733e-10,
+      "max_lorentz_metric_error": 5.88418203051333e-12,
+      "max_displacement_roundtrip_error_fm": 5.652811552181447e-12,
+      "prior_fields_exactly_unchanged": true,
+      "sha256": "c8d418b59d3af9faf84ed610e60f93fe29ad343789b18b1550902b618734fe8a",
+      "input": "/private/tmp/jewel-isr-frames-2600317.jsonl"
+    },
+    {
+      "seed": 2600318,
+      "events": 1000,
+      "frames": 4018,
+      "momentum_copies": 15290,
+      "max_copy_error_gev": 4.0961367631098256e-10,
+      "max_lorentz_metric_error": 4.4716230718222505e-11,
+      "max_displacement_roundtrip_error_fm": 4.6343373583113134e-11,
+      "prior_fields_exactly_unchanged": true,
+      "sha256": "e87988898460d3c6a4db7a1b8e677205fc1ca01f15ecc738389503ae99749c1a",
+      "input": "/private/tmp/jewel-isr-frames-2600318.jsonl"
+    },
+    {
+      "seed": 2600319,
+      "events": 1000,
+      "frames": 3990,
+      "momentum_copies": 15081,
+      "max_copy_error_gev": 5.554738891078159e-10,
+      "max_lorentz_metric_error": 1.709166141949936e-11,
+      "max_displacement_roundtrip_error_fm": 7.212008767965017e-12,
+      "prior_fields_exactly_unchanged": true,
+      "sha256": "7107d23e739556dd801d79790964ec410e7e6ac35fbf82e575f0c240555218d2",
+      "input": "/private/tmp/jewel-isr-frames-2600319.jsonl"
+    }
+  ],
+  "acceptance": {
+    "copy_absolute_tolerance_GeV": 2e-09,
+    "copy_relative_tolerance": 2e-11,
+    "lorentz_metric_tolerance": 1e-09,
+    "displacement_roundtrip_tolerance_fm": 1e-09
+  },
+  "final_build_reproduces_audited_samples_byte_for_byte": true,
+  "executable_sha256": "b2a6753c88ff6570a6fa1bc14b47d2d5e29e3a77fb286ad238f453e933d53ac8",
+  "source_sha256": {
+    "adapters/pythia8_isr_frames.cpp": "b98978082eb2e166d5fa7563b3a3d75f2f753b68eb8db643802a029f96c29d68",
+    "include/jewel/pythia8_isr.hpp": "0fbb81366bffbf8ed9be4787e3ae0fbc01e476299b1c3ffce28f8b66da73f2f3",
+    "tests/pythia8_input.cpp": "151484030d8830feacc980bbb10d5d1c12486741217c1a8f2f221858d4144b9e",
+    "tests/isr_frames_audit.py": "72981a020040f8f38c32f5f62f437d3904919bd228421d9266433ee599a71137"
+  },
+  "pythia_source_sha256": "953dd8b8fee0a75b9a297f9c6e854586aed42ed66576e6a3ddb61b568b4d696f",
+  "tests": {
+    "input": "pass",
+    "isr_cli": "pass",
+    "boundary": "pass",
+    "shower_output": "pass",
+    "isr_times": "pass"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "invalid_options_rejected": 7,
+  "default_records_unchanged": true,
+  "geometry": [
+    {
+      "leg_id": 1,
+      "shower_start_id": 3,
+      "production_fm": [
+        2.0764420476404033,
+        -1.9944179890957137,
+        0,
+        0
+      ],
+      "L_geom_T_fm": 11.555289896800732,
+      "L_hot_fm": 0,
+      "L_hot_T_fm": 0,
+      "int_T3_dl": 0
+    },
+    {
+      "leg_id": 2,
+      "shower_start_id": 4,
+      "production_fm": [
+        2.0764420476404033,
+        -1.9944179890957137,
+        0,
+        0
+      ],
+      "L_geom_T_fm": 13.727883734579764,
+      "L_hot_fm": 13.155278697501647,
+      "L_hot_T_fm": 6.492145016145114,
+      "int_T3_dl": 0.41210445775148397
+    }
+  ],
+  "max_reference_error": 0.0,
+  "executables": {
+    "jewel-run-partons": "86aef230264371c19ac41e788468ef49170d86391042e1c1078d3c7f4ad2136f",
+    "jewel-medium-reference": "45c7397671dcd40f64bfd5836e005e7338f36c52641aa086caf735451aec32af"
+  }
+}

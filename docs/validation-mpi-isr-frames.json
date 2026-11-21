@@ -1,0 +1,881 @@
+{
+  "scope": "partial subsystem ISR reconstruction and staged primordial composition",
+  "reports": [
+    {
+      "path": "/private/tmp/jewel-mpi-frames-final-off-2600417.jsonl",
+      "sha256": "664bc7040d1b69f8d0c0acfb8ec45ef243c4da8dadd1895312e5144d58b80923",
+      "prior_sha256": "b5ea9700865a93b638759f4b5da1fcd1add8a2bccf83ead05dd77e9f52721e93",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "composed_final_partons": 15144
+      },
+      "rejected_events": [],
+      "composition_failures": [],
+      "max_copy_residual_gev": 0.0,
+      "max_composed_residual_gev": 3.0548790164175443e-09,
+      "max_metric_residual": 0.0
+    },
+    {
+      "path": "/private/tmp/jewel-mpi-frames-final-on-2600417.jsonl",
+      "sha256": "1460deddfce9e176c3d304f0cfbd434daaad6193e96b72d4c50792566401514a",
+      "prior_sha256": "e56e2a48f565abe77fac460d847693a1c4b44e31c7d5431523495a25e6a1c8c1",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 995,
+        "frames": 13176,
+        "copies": 40996,
+        "composed_final_partons": 26626,
+        "rejected_events": 5
+      },
+      "rejected_events": [
+        {
+          "attempt": 186,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 127 before 121 after 125 predicted 973.04854618055913 actual 973.04854611922644 error 6.1332684708759189e-08"
+        },
+        {
+          "attempt": 273,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089994868048 actual -36.796089989399192 error 5.4688555906068359e-09"
+        },
+        {
+          "attempt": 290,
+          "reason": "ISR frame requires massless collinear II incoming records"
+        },
+        {
+          "attempt": 364,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 58 before 25 after 57 predicted 398.07934545007055 actual 398.07934543809978 error 1.1970769264735281e-08"
+        },
+        {
+          "attempt": 887,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 121 before 115 after 119 predicted 34.800194976726807 actual 34.800194973652417 error 3.0743905199415167e-09"
+        }
+      ],
+      "composition_failures": [
+        {
+          "attempt": 40,
+          "subsystem": 3,
+          "root": 39,
+          "final": 72,
+          "max_absolute_error_gev": 4.4899582007928984e-07
+        },
+        {
+          "attempt": 40,
+          "subsystem": 3,
+          "root": 40,
+          "final": 73,
+          "max_absolute_error_gev": 1.1180343051364616e-07
+        },
+        {
+          "attempt": 80,
+          "subsystem": 6,
+          "root": 91,
+          "final": 184,
+          "max_absolute_error_gev": 3.302799314042204e-07
+        },
+        {
+          "attempt": 80,
+          "subsystem": 6,
+          "root": 92,
+          "final": 185,
+          "max_absolute_error_gev": 1.0002227668337582e-07
+        },
+        {
+          "attempt": 109,
+          "subsystem": 1,
+          "root": 36,
+          "final": 95,
+          "max_absolute_error_gev": 1.5161312205691502e-07
+        },
+        {
+          "attempt": 109,
+          "subsystem": 1,
+          "root": 37,
+          "final": 96,
+          "max_absolute_error_gev": 3.9405426832672674e-07
+        },
+        {
+          "attempt": 156,
+          "subsystem": 2,
+          "root": 32,
+          "final": 105,
+          "max_absolute_error_gev": 9.952009349945001e-08
+        },
+        {
+          "attempt": 156,
+          "subsystem": 2,
+          "root": 33,
+          "final": 106,
+          "max_absolute_error_gev": 9.587751037543057e-08
+        },
+        {
+          "attempt": 190,
+          "subsystem": 2,
+          "root": 44,
+          "final": 98,
+          "max_absolute_error_gev": 1.0682276752049802e-07
+        },
+        {
+          "attempt": 192,
+          "subsystem": 3,
+          "root": 23,
+          "final": 181,
+          "max_absolute_error_gev": 6.679073294435511e-08
+        },
+        {
+          "attempt": 192,
+          "subsystem": 3,
+          "root": 24,
+          "final": 182,
+          "max_absolute_error_gev": 5.509633638212108e-08
+        },
+        {
+          "attempt": 196,
+          "subsystem": 9,
+          "root": 53,
+          "final": 185,
+          "max_absolute_error_gev": 2.8080535230401438e-08
+        },
+        {
+          "attempt": 229,
+          "subsystem": 2,
+          "root": 19,
+          "final": 164,
+          "max_absolute_error_gev": 3.5875160619980306e-08
+        },
+        {
+          "attempt": 229,
+          "subsystem": 2,
+          "root": 20,
+          "final": 165,
+          "max_absolute_error_gev": 8.879271717887605e-08
+        },
+        {
+          "attempt": 245,
+          "subsystem": 7,
+          "root": 118,
+          "final": 246,
+          "max_absolute_error_gev": 5.8431552929505415e-08
+        },
+        {
+          "attempt": 245,
+          "subsystem": 7,
+          "root": 119,
+          "final": 247,
+          "max_absolute_error_gev": 4.309052314965811e-08
+        },
+        {
+          "attempt": 281,
+          "subsystem": 5,
+          "root": 60,
+          "final": 231,
+          "max_absolute_error_gev": 5.751662115471845e-07
+        },
+        {
+          "attempt": 281,
+          "subsystem": 5,
+          "root": 61,
+          "final": 232,
+          "max_absolute_error_gev": 4.1546917373125325e-07
+        },
+        {
+          "attempt": 297,
+          "subsystem": 3,
+          "root": 41,
+          "final": 129,
+          "max_absolute_error_gev": 1.0280007245455636e-07
+        },
+        {
+          "attempt": 315,
+          "subsystem": 5,
+          "root": 91,
+          "final": 160,
+          "max_absolute_error_gev": 1.8742874630106598e-07
+        },
+        {
+          "attempt": 315,
+          "subsystem": 5,
+          "root": 92,
+          "final": 161,
+          "max_absolute_error_gev": 1.989215263620281e-06
+        },
+        {
+          "attempt": 318,
+          "subsystem": 1,
+          "root": 36,
+          "final": 71,
+          "max_absolute_error_gev": 6.588868473045295e-08
+        },
+        {
+          "attempt": 318,
+          "subsystem": 1,
+          "root": 37,
+          "final": 72,
+          "max_absolute_error_gev": 4.810881648609211e-08
+        },
+        {
+          "attempt": 413,
+          "subsystem": 1,
+          "root": 15,
+          "final": 36,
+          "max_absolute_error_gev": 2.8663308171417157e-08
+        },
+        {
+          "attempt": 413,
+          "subsystem": 1,
+          "root": 16,
+          "final": 37,
+          "max_absolute_error_gev": 4.940962980981567e-07
+        },
+        {
+          "attempt": 414,
+          "subsystem": 2,
+          "root": 60,
+          "final": 101,
+          "max_absolute_error_gev": 2.659190778686593e-08
+        },
+        {
+          "attempt": 414,
+          "subsystem": 2,
+          "root": 61,
+          "final": 102,
+          "max_absolute_error_gev": 6.871550795040093e-07
+        },
+        {
+          "attempt": 417,
+          "subsystem": 6,
+          "root": 70,
+          "final": 177,
+          "max_absolute_error_gev": 5.732863428420387e-08
+        },
+        {
+          "attempt": 458,
+          "subsystem": 2,
+          "root": 33,
+          "final": 101,
+          "max_absolute_error_gev": 5.086984344870871e-08
+        },
+        {
+          "attempt": 458,
+          "subsystem": 3,
+          "root": 63,
+          "final": 106,
+          "max_absolute_error_gev": 4.393098151922459e-08
+        },
+        {
+          "attempt": 627,
+          "subsystem": 3,
+          "root": 55,
+          "final": 94,
+          "max_absolute_error_gev": 2.841417767740495e-07
+        },
+        {
+          "attempt": 627,
+          "subsystem": 3,
+          "root": 56,
+          "final": 95,
+          "max_absolute_error_gev": 8.748296522753662e-07
+        },
+        {
+          "attempt": 630,
+          "subsystem": 3,
+          "root": 79,
+          "final": 128,
+          "max_absolute_error_gev": 4.719768753602693e-08
+        },
+        {
+          "attempt": 630,
+          "subsystem": 3,
+          "root": 80,
+          "final": 129,
+          "max_absolute_error_gev": 2.6694500832036283e-08
+        },
+        {
+          "attempt": 700,
+          "subsystem": 5,
+          "root": 85,
+          "final": 139,
+          "max_absolute_error_gev": 1.9479330148897134e-07
+        },
+        {
+          "attempt": 700,
+          "subsystem": 5,
+          "root": 86,
+          "final": 140,
+          "max_absolute_error_gev": 1.9818020291495486e-07
+        },
+        {
+          "attempt": 743,
+          "subsystem": 2,
+          "root": 19,
+          "final": 149,
+          "max_absolute_error_gev": 3.5168739032087615e-08
+        },
+        {
+          "attempt": 749,
+          "subsystem": 3,
+          "root": 36,
+          "final": 274,
+          "max_absolute_error_gev": 2.1777786969323643e-06
+        },
+        {
+          "attempt": 749,
+          "subsystem": 3,
+          "root": 37,
+          "final": 275,
+          "max_absolute_error_gev": 1.2868464978055272e-06
+        },
+        {
+          "attempt": 785,
+          "subsystem": 3,
+          "root": 75,
+          "final": 105,
+          "max_absolute_error_gev": 2.4752366343250287e-06
+        },
+        {
+          "attempt": 785,
+          "subsystem": 3,
+          "root": 76,
+          "final": 106,
+          "max_absolute_error_gev": 2.5280213776568417e-05
+        },
+        {
+          "attempt": 786,
+          "subsystem": 11,
+          "root": 97,
+          "final": 283,
+          "max_absolute_error_gev": 1.3704419643545407e-07
+        },
+        {
+          "attempt": 786,
+          "subsystem": 11,
+          "root": 98,
+          "final": 284,
+          "max_absolute_error_gev": 3.974253104388481e-08
+        },
+        {
+          "attempt": 786,
+          "subsystem": 11,
+          "root": 121,
+          "final": 285,
+          "max_absolute_error_gev": 3.57988767518691e-08
+        },
+        {
+          "attempt": 791,
+          "subsystem": 8,
+          "root": 134,
+          "final": 200,
+          "max_absolute_error_gev": 4.401096191486431e-06
+        },
+        {
+          "attempt": 791,
+          "subsystem": 8,
+          "root": 135,
+          "final": 201,
+          "max_absolute_error_gev": 1.086768037339425e-06
+        },
+        {
+          "attempt": 832,
+          "subsystem": 2,
+          "root": 20,
+          "final": 158,
+          "max_absolute_error_gev": 1.660388591062656e-07
+        },
+        {
+          "attempt": 845,
+          "subsystem": 6,
+          "root": 91,
+          "final": 192,
+          "max_absolute_error_gev": 1.930446217102144e-06
+        },
+        {
+          "attempt": 845,
+          "subsystem": 6,
+          "root": 92,
+          "final": 193,
+          "max_absolute_error_gev": 1.0745386589405825e-06
+        },
+        {
+          "attempt": 879,
+          "subsystem": 6,
+          "root": 116,
+          "final": 189,
+          "max_absolute_error_gev": 9.848756121755287e-08
+        },
+        {
+          "attempt": 879,
+          "subsystem": 6,
+          "root": 117,
+          "final": 190,
+          "max_absolute_error_gev": 5.872736608125706e-08
+        },
+        {
+          "attempt": 886,
+          "subsystem": 2,
+          "root": 24,
+          "final": 91,
+          "max_absolute_error_gev": 7.935864232422318e-08
+        },
+        {
+          "attempt": 899,
+          "subsystem": 7,
+          "root": 104,
+          "final": 187,
+          "max_absolute_error_gev": 5.868146502052696e-08
+        },
+        {
+          "attempt": 899,
+          "subsystem": 7,
+          "root": 105,
+          "final": 188,
+          "max_absolute_error_gev": 6.562722205671889e-07
+        },
+        {
+          "attempt": 913,
+          "subsystem": 9,
+          "root": 125,
+          "final": 191,
+          "max_absolute_error_gev": 2.1609162104141433e-07
+        },
+        {
+          "attempt": 955,
+          "subsystem": 5,
+          "root": 42,
+          "final": 145,
+          "max_absolute_error_gev": 1.2593301335073193e-07
+        },
+        {
+          "attempt": 955,
+          "subsystem": 5,
+          "root": 43,
+          "final": 146,
+          "max_absolute_error_gev": 9.272926604353415e-08
+        },
+        {
+          "attempt": 956,
+          "subsystem": 10,
+          "root": 129,
+          "final": 227,
+          "max_absolute_error_gev": 4.98128542858467e-08
+        },
+        {
+          "attempt": 976,
+          "subsystem": 4,
+          "root": 45,
+          "final": 78,
+          "max_absolute_error_gev": 5.679077617060102e-07
+        },
+        {
+          "attempt": 976,
+          "subsystem": 4,
+          "root": 46,
+          "final": 79,
+          "max_absolute_error_gev": 1.5375295703279335e-08
+        },
+        {
+          "attempt": 987,
+          "subsystem": 6,
+          "root": 86,
+          "final": 143,
+          "max_absolute_error_gev": 5.167177619114227e-08
+        },
+        {
+          "attempt": 995,
+          "subsystem": 4,
+          "root": 44,
+          "final": 265,
+          "max_absolute_error_gev": 4.791868377651554e-07
+        },
+        {
+          "attempt": 995,
+          "subsystem": 4,
+          "root": 45,
+          "final": 266,
+          "max_absolute_error_gev": 9.198976158586447e-08
+        },
+        {
+          "attempt": 999,
+          "subsystem": 11,
+          "root": 103,
+          "final": 199,
+          "max_absolute_error_gev": 5.123694535313916e-08
+        },
+        {
+          "attempt": 999,
+          "subsystem": 11,
+          "root": 104,
+          "final": 200,
+          "max_absolute_error_gev": 9.543512646814634e-08
+        }
+      ],
+      "max_copy_residual_gev": 1.2959276318724733e-08,
+      "max_composed_residual_gev": 2.5280213776568417e-05,
+      "max_metric_residual": 4.185985744697973e-07
+    },
+    {
+      "path": "/private/tmp/jewel-mpi-frames-final-off-2600418.jsonl",
+      "sha256": "9b09c2aca2fa0a5d12ac143e6ab7ab41b33cd7fd1181dc66e4315f269c412d4f",
+      "prior_sha256": "c1eb424b1f065c943937de4ddf9e6ff9b8242dca3de084a97514f625bcbd5b63",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 1000,
+        "composed_final_partons": 14328
+      },
+      "rejected_events": [],
+      "composition_failures": [],
+      "max_copy_residual_gev": 0.0,
+      "max_composed_residual_gev": 2.83296230918495e-09,
+      "max_metric_residual": 0.0
+    },
+    {
+      "path": "/private/tmp/jewel-mpi-frames-final-on-2600418.jsonl",
+      "sha256": "b8a5cccc4ecf63eb0ec0282fa4ffb025e23f6747ef11ddb4e65d024f58bd62d3",
+      "prior_sha256": "1d9611ba5393b9111d8303d9050f8f59398bb6d1d3b806d89d9671d425aeb6f7",
+      "counts": {
+        "events": 1000,
+        "mapped_events": 993,
+        "frames": 13622,
+        "copies": 42470,
+        "composed_final_partons": 27508,
+        "rejected_events": 7
+      },
+      "rejected_events": [
+        {
+          "attempt": 12,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 118 before 95 after 116 predicted 352.65708785515613 actual 352.65708784111371 error 1.404242766511743e-08"
+        },
+        {
+          "attempt": 213,
+          "reason": "ISR frame requires massless collinear II incoming records"
+        },
+        {
+          "attempt": 317,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 36 before 30 after 34 predicted -59.779932162055623 actual -59.779932166377122 error 4.3214996026108565e-09"
+        },
+        {
+          "attempt": 458,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769138224343 actual -86.77176913153022 error 6.6941225895789103e-09"
+        },
+        {
+          "attempt": 513,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 164 before 150 after 163 predicted 363.56024756265316 actual 363.56024757321956 error 1.0566395758360159e-08"
+        },
+        {
+          "attempt": 613,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755760582866 actual 4.829175573071633 error 2.9866535911082792e-09"
+        },
+        {
+          "attempt": 815,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 79 before 54 after 78 predicted 258.04503689693922 actual 258.04503688556184 error 1.1377380815247307e-08"
+        }
+      ],
+      "composition_failures": [
+        {
+          "attempt": 23,
+          "subsystem": 1,
+          "root": 15,
+          "final": 70,
+          "max_absolute_error_gev": 6.244471819627506e-07
+        },
+        {
+          "attempt": 23,
+          "subsystem": 1,
+          "root": 16,
+          "final": 71,
+          "max_absolute_error_gev": 3.3604169402678963e-07
+        },
+        {
+          "attempt": 42,
+          "subsystem": 2,
+          "root": 24,
+          "final": 97,
+          "max_absolute_error_gev": 1.5588273782896067e-07
+        },
+        {
+          "attempt": 42,
+          "subsystem": 2,
+          "root": 25,
+          "final": 98,
+          "max_absolute_error_gev": 1.337934691036935e-06
+        },
+        {
+          "attempt": 93,
+          "subsystem": 3,
+          "root": 34,
+          "final": 118,
+          "max_absolute_error_gev": 9.645208365327562e-08
+        },
+        {
+          "attempt": 93,
+          "subsystem": 3,
+          "root": 35,
+          "final": 119,
+          "max_absolute_error_gev": 8.448327548649104e-08
+        },
+        {
+          "attempt": 159,
+          "subsystem": 7,
+          "root": 110,
+          "final": 210,
+          "max_absolute_error_gev": 3.0708633858012035e-07
+        },
+        {
+          "attempt": 159,
+          "subsystem": 7,
+          "root": 111,
+          "final": 211,
+          "max_absolute_error_gev": 2.2070242522431727e-08
+        },
+        {
+          "attempt": 161,
+          "subsystem": 1,
+          "root": 45,
+          "final": 63,
+          "max_absolute_error_gev": 1.682147967585479e-07
+        },
+        {
+          "attempt": 161,
+          "subsystem": 1,
+          "root": 46,
+          "final": 64,
+          "max_absolute_error_gev": 1.0503906366921001e-07
+        },
+        {
+          "attempt": 173,
+          "subsystem": 3,
+          "root": 36,
+          "final": 97,
+          "max_absolute_error_gev": 9.470642226006021e-08
+        },
+        {
+          "attempt": 175,
+          "subsystem": 2,
+          "root": 25,
+          "final": 69,
+          "max_absolute_error_gev": 2.213115237736929e-07
+        },
+        {
+          "attempt": 175,
+          "subsystem": 2,
+          "root": 26,
+          "final": 70,
+          "max_absolute_error_gev": 1.5524955188084277e-07
+        },
+        {
+          "attempt": 239,
+          "subsystem": 3,
+          "root": 34,
+          "final": 167,
+          "max_absolute_error_gev": 2.874226652238576e-07
+        },
+        {
+          "attempt": 239,
+          "subsystem": 3,
+          "root": 35,
+          "final": 168,
+          "max_absolute_error_gev": 5.524368589249207e-07
+        },
+        {
+          "attempt": 289,
+          "subsystem": 1,
+          "root": 21,
+          "final": 54,
+          "max_absolute_error_gev": 4.165651716903085e-07
+        },
+        {
+          "attempt": 289,
+          "subsystem": 1,
+          "root": 22,
+          "final": 55,
+          "max_absolute_error_gev": 2.6451567691765376e-07
+        },
+        {
+          "attempt": 355,
+          "subsystem": 7,
+          "root": 56,
+          "final": 163,
+          "max_absolute_error_gev": 2.1174688669134412e-07
+        },
+        {
+          "attempt": 355,
+          "subsystem": 7,
+          "root": 57,
+          "final": 164,
+          "max_absolute_error_gev": 4.0093880215863464e-07
+        },
+        {
+          "attempt": 356,
+          "subsystem": 10,
+          "root": 139,
+          "final": 256,
+          "max_absolute_error_gev": 3.7952474940539105e-08
+        },
+        {
+          "attempt": 413,
+          "subsystem": 12,
+          "root": 109,
+          "final": 253,
+          "max_absolute_error_gev": 3.900223077835108e-08
+        },
+        {
+          "attempt": 484,
+          "subsystem": 3,
+          "root": 30,
+          "final": 82,
+          "max_absolute_error_gev": 3.2808458172439714e-08
+        },
+        {
+          "attempt": 488,
+          "subsystem": 8,
+          "root": 133,
+          "final": 210,
+          "max_absolute_error_gev": 5.213672693571425e-08
+        },
+        {
+          "attempt": 488,
+          "subsystem": 8,
+          "root": 134,
+          "final": 211,
+          "max_absolute_error_gev": 2.2131553123472258e-07
+        },
+        {
+          "attempt": 577,
+          "subsystem": 7,
+          "root": 50,
+          "final": 163,
+          "max_absolute_error_gev": 2.532998735205183e-07
+        },
+        {
+          "attempt": 577,
+          "subsystem": 7,
+          "root": 51,
+          "final": 164,
+          "max_absolute_error_gev": 2.9848990834580036e-07
+        },
+        {
+          "attempt": 587,
+          "subsystem": 2,
+          "root": 49,
+          "final": 118,
+          "max_absolute_error_gev": 2.161779661946639e-07
+        },
+        {
+          "attempt": 587,
+          "subsystem": 2,
+          "root": 50,
+          "final": 119,
+          "max_absolute_error_gev": 1.4744281884304655e-07
+        },
+        {
+          "attempt": 695,
+          "subsystem": 2,
+          "root": 24,
+          "final": 138,
+          "max_absolute_error_gev": 1.3840963219990954e-07
+        },
+        {
+          "attempt": 695,
+          "subsystem": 2,
+          "root": 25,
+          "final": 139,
+          "max_absolute_error_gev": 7.392416989659978e-08
+        },
+        {
+          "attempt": 700,
+          "subsystem": 2,
+          "root": 37,
+          "final": 191,
+          "max_absolute_error_gev": 2.5953568183467723e-08
+        },
+        {
+          "attempt": 722,
+          "subsystem": 2,
+          "root": 32,
+          "final": 244,
+          "max_absolute_error_gev": 1.4770850320644513e-08
+        },
+        {
+          "attempt": 879,
+          "subsystem": 1,
+          "root": 28,
+          "final": 92,
+          "max_absolute_error_gev": 3.8956227399467025e-07
+        },
+        {
+          "attempt": 879,
+          "subsystem": 1,
+          "root": 29,
+          "final": 93,
+          "max_absolute_error_gev": 4.172139256297669e-08
+        },
+        {
+          "attempt": 880,
+          "subsystem": 2,
+          "root": 25,
+          "final": 154,
+          "max_absolute_error_gev": 1.244891905116674e-07
+        },
+        {
+          "attempt": 880,
+          "subsystem": 2,
+          "root": 26,
+          "final": 155,
+          "max_absolute_error_gev": 2.1578466657956596e-07
+        },
+        {
+          "attempt": 909,
+          "subsystem": 6,
+          "root": 57,
+          "final": 137,
+          "max_absolute_error_gev": 1.0113975008607667e-06
+        },
+        {
+          "attempt": 909,
+          "subsystem": 6,
+          "root": 58,
+          "final": 138,
+          "max_absolute_error_gev": 3.929508309852281e-07
+        },
+        {
+          "attempt": 925,
+          "subsystem": 2,
+          "root": 25,
+          "final": 114,
+          "max_absolute_error_gev": 2.0681179080384027e-07
+        },
+        {
+          "attempt": 925,
+          "subsystem": 2,
+          "root": 26,
+          "final": 115,
+          "max_absolute_error_gev": 1.1364477359165903e-07
+        },
+        {
+          "attempt": 984,
+          "subsystem": 3,
+          "root": 52,
+          "final": 216,
+          "max_absolute_error_gev": 3.429657624565152e-08
+        },
+        {
+          "attempt": 984,
+          "subsystem": 3,
+          "root": 53,
+          "final": 217,
+          "max_absolute_error_gev": 1.3290662081999471e-07
+        }
+      ],
+      "max_copy_residual_gev": 1.1490783435874619e-08,
+      "max_composed_residual_gev": 1.337934691036935e-06,
+      "max_metric_residual": 2.6980524125974625e-07
+    }
+  ],
+  "executable_sha256": "d7dc2d92a218cf74ef4498b22703c1cae9ff1a5966598416d88a063863968991",
+  "audit_sha256": "11e199fea44c6b6f5b6c5968b13200e0acf454e300aabb8356ab89c4775dc691",
+  "acceptance": {
+    "copy_absolute_gev": 2e-09,
+    "copy_relative": 2e-11,
+    "composition_absolute_gev": 1e-08,
+    "composition_relative": 1e-10,
+    "composition_passed": false
+  }
+}

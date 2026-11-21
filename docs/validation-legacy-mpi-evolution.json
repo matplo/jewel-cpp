@@ -1,0 +1,23 @@
+{
+  "scope": "composed PYMULT state transitions with injected cross sections, initial strings and no MPI showers",
+  "events": 90,
+  "steps": 7200,
+  "scalar_comparisons": 710092,
+  "maximum_absolute_error": 4.440892098500626e-16,
+  "outcomes": {
+    "1": 4809,
+    "4": 592,
+    "2": 1190,
+    "3": 609
+  },
+  "accepted_pairs": 592,
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "c807f3dd8cbc44bbfc15a263933b5fb57b2f748db5f27332e7183610421a0fc0",
+  "source_sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+  "executables": {
+    "jewel-legacy-mpi-evolution-probe": "f247f50a389ad5b1dd88cb81fac4f06e2818e005f9020504e2460221697b5f53",
+    "jewel-legacy-mpi-evolution-reference": "df5bf475758ccb7f5992c6eeda6497a96fbd8ea7d685a941888aa53be374e6e4"
+  }
+}

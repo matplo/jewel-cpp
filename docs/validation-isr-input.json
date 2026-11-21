@@ -1,0 +1,136 @@
+{
+  "scope": "Pythia8 ISR hard-input snapshots only; no JEWEL ISR transport or Fortran event parity",
+  "pythia_version": 8317,
+  "samples": [
+    {
+      "seed": 2600317,
+      "events": 1000,
+      "isr_emissions": 3935,
+      "events_without_emissions": 6,
+      "status_counts": {
+        "11": 1000,
+        "12": 2000,
+        "21": 2000,
+        "23": 2000,
+        "42": 3935,
+        "41": 3935,
+        "44": 14865,
+        "43": 3935,
+        "61": 2000,
+        "62": 5935,
+        "63": 3743
+      },
+      "max_final_momentum_closure_error_GeV": 1.2671597104940702e-09,
+      "input": "/private/tmp/jewel-isr-audit-2600317.jsonl",
+      "input_sha256": "b413f9249ca0a439ed7b239c6781183a0aa033b851c16b570fd48b6e1d635c8b",
+      "emission_pdg_counts": {
+        "5": 11,
+        "21": 3176,
+        "2": 304,
+        "-4": 41,
+        "1": 151,
+        "-5": 15,
+        "-3": 43,
+        "-1": 55,
+        "-2": 57,
+        "3": 33,
+        "4": 39,
+        "22": 10
+      }
+    },
+    {
+      "seed": 2600318,
+      "events": 1000,
+      "isr_emissions": 4018,
+      "events_without_emissions": 3,
+      "status_counts": {
+        "11": 1000,
+        "12": 2000,
+        "21": 2000,
+        "23": 2000,
+        "41": 4018,
+        "42": 4018,
+        "44": 15290,
+        "43": 4018,
+        "61": 2000,
+        "62": 6018,
+        "63": 3704
+      },
+      "max_final_momentum_closure_error_GeV": 1.5087842086813907e-09,
+      "input": "/private/tmp/jewel-isr-audit-2600318.jsonl",
+      "input_sha256": "054a53afb854a7be18aaecebd87f8b1a265abf2631a9e3b1df661a940b044851",
+      "emission_pdg_counts": {
+        "21": 3255,
+        "1": 165,
+        "2": 317,
+        "3": 34,
+        "-4": 35,
+        "4": 25,
+        "-5": 14,
+        "-1": 56,
+        "-2": 47,
+        "-3": 44,
+        "5": 13,
+        "22": 13
+      }
+    },
+    {
+      "seed": 2600319,
+      "events": 1000,
+      "isr_emissions": 3990,
+      "events_without_emissions": 4,
+      "status_counts": {
+        "11": 1000,
+        "12": 2000,
+        "21": 2000,
+        "23": 2000,
+        "41": 3990,
+        "42": 3990,
+        "44": 15081,
+        "43": 3990,
+        "61": 2000,
+        "62": 5990,
+        "63": 3702
+      },
+      "max_final_momentum_closure_error_GeV": 6.926833551190725e-10,
+      "input": "/private/tmp/jewel-isr-audit-2600319.jsonl",
+      "input_sha256": "d16f096e37eb1dcedde4653556d5167b2a60ef479afee00200fe35b82211afaf",
+      "emission_pdg_counts": {
+        "21": 3276,
+        "-5": 11,
+        "2": 289,
+        "-2": 54,
+        "1": 156,
+        "4": 31,
+        "5": 14,
+        "-4": 30,
+        "-3": 26,
+        "-1": 60,
+        "3": 32,
+        "22": 11
+      }
+    }
+  ],
+  "tests": {
+    "input_contracts": "pass",
+    "boundary_contracts": "pass",
+    "shower_output_contracts": "pass",
+    "fragmentation_contracts": "pass",
+    "cli": "pass"
+  },
+  "default_regression": {
+    "events": 100,
+    "external_pdf": "CT14nlo/0",
+    "hard_alpha_s": 0.118,
+    "order": 2,
+    "original_fields_exactly_equal": true
+  },
+  "executable_sha256": "a559ab20fb1a8f2851b571be3e1b9082aed6c6df9547350a476ac4bbe01097cb",
+  "source_sha256": {
+    "adapters/pythia8_input.cpp": "e88b652b399bc6153bf3e4d4844155a1e01d2adc661a681953f0cd305873703d",
+    "adapters/pythia8_shower_input.cpp": "d73ef4f000eec6da5725b178ff1f0bab1d92016ed17b69c023bf83d9ff30477d",
+    "include/jewel/pythia8_input.hpp": "22d6b693ffccb7066f840277f9e417584168bd80aac6b27f09cf46966a51878e",
+    "tests/pythia8_input.cpp": "9231bf412443d073af3bff60abde15ce70b697006cd627757dda0e4f24690137",
+    "tests/isr_input_cli.py": "67a7eac9a26b9fecfec0f5ff27fe02e91a1372f36f5d23fca2295bdeb31126b6"
+  }
+}

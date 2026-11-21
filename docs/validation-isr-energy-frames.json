@@ -1,0 +1,36 @@
+{
+  "scope": "Diagnose signed spacelike energies after common-final-frame transport.\n\nCounts and invariant residuals are diagnostics, not a timing prescription or\nphysics acceptance gate. This does not modify recorded momentum or virtuality.",
+  "samples": [
+    {
+      "input": "/private/tmp/jewel-primordial-2600317.jsonl",
+      "input_sha256": "0b0c9cf794bf60399182c88a787a3b043a262c00eed4730c01d67cddc3adf878",
+      "branches": 3935,
+      "negative_stage_energy": 270,
+      "negative_final_frame_energy": 250,
+      "sign_changes": 40,
+      "max_invariant_absolute_residual_gev2": 1.0698573760237196e-07,
+      "max_invariant_residual_over_max_1_q2": 6.702321416304227e-09
+    },
+    {
+      "input": "/private/tmp/jewel-primordial-2600318.jsonl",
+      "input_sha256": "b3e31f787f9bd9f98807bf4b21980bd5e0025aabdc3f5da1586849bb7f04b1d4",
+      "branches": 4018,
+      "negative_stage_energy": 246,
+      "negative_final_frame_energy": 237,
+      "sign_changes": 37,
+      "max_invariant_absolute_residual_gev2": 1.5176624401647132e-07,
+      "max_invariant_residual_over_max_1_q2": 6.856465074333932e-09
+    },
+    {
+      "input": "/private/tmp/jewel-primordial-2600319.jsonl",
+      "input_sha256": "7d38be50f31dadf8a3dcca3acfb5cd9154d05402dc122879e7ebe55d3df4b20c",
+      "branches": 3990,
+      "negative_stage_energy": 235,
+      "negative_final_frame_energy": 220,
+      "sign_changes": 27,
+      "max_invariant_absolute_residual_gev2": 1.2084514047216999e-06,
+      "max_invariant_residual_over_max_1_q2": 6.466602853815971e-08
+    }
+  ],
+  "audit_source_sha256": "e3b4c59f48532b4d4d0c1963573a50bfc6ae07b6f75f062efd28ef97f85e367f"
+}

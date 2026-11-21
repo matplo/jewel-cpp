@@ -1,0 +1,18 @@
+{
+  "scope": "Surviving ISR emission times and random consumption; no incoming timing output",
+  "cases": 64,
+  "emitted_values": 560,
+  "random_count_comparisons": 64,
+  "discarded_reference_nonfinite_values": 256,
+  "max_absolute_error": 0,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "eeecafd0e81e90a5097c69773bcc75c44abd73e4d4c40f6728b92e790705e022",
+  "executables": {
+    "jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+    "jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+  },
+  "reference_block_sha256": "fa5c8e30abefaf12830c11bab4a36e761904d8cfd28e6aa7091dad908628ca33",
+  "test_sha256": "2d77968d8782b349e37f56fe5f2b68a65c96d1544ffb1b14f4e8cb48de292826",
+  "failures": []
+}

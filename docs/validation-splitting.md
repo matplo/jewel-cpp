@@ -1,18 +1,18 @@
 # Branch construction validation
 
-All 21 reference-enabled tests and all eight C++-only contract tests pass.
+Updated 2026-11-21. The expanded splitting comparison and selected cascade checks pass; see [arithmetic regression details](validation-splitting-arithmetic.md).
 
 MAKESPLITTING is extracted unchanged from hash-verified JEWEL 2.6.0 and compared
 with C++ using identical initial event records and finite random tapes. Reference
 GETMASS, REJECTSPLITTING, medium fields and Pythia6 kinematics are original bodies;
 no C++ branch values are supplied to the Fortran calculation.
 
-All 155 cases pass: 150 construct daughter pairs, two take angular-rejection
+All 191 cases pass: 186 construct daughter pairs, two take angular-rejection
 repair paths, two discard the event and one returns without splitting. The
-comparison covers 20,202 record scalars plus particle counts, colour allocation,
+comparison covers 24,882 record scalars plus particle counts, colour allocation,
 discard flags and draw counts. All discrete results and random-draw counts match
-exactly (up to 76 draws). Maximum absolute difference is 6.3949e-13 and maximum
-relative difference is 1.7346e-11. Each value satisfies the combined tolerance
+exactly (up to 85 draws). Maximum absolute difference is 2.27374e-13 and maximum
+relative difference is 1.81821e-13. Each value satisfies the combined tolerance
 `abs(error) <= max(2e-13, 2e-12 * max(abs(C++), abs(reference)))`; near-zero differences can
 therefore have a relative error above 2e-12. Tolerances were not relaxed.
 
@@ -41,3 +41,12 @@ fractions, flags, auxiliary coordinates and decay/evolution times are compared.
 [Detailed results and source/executable hashes](validation-splitting.json).
 Full transport, recoil/colour evolution, Pythia8 integration and jet-observable
 agreement remain unvalidated.
+
+## Boosted arithmetic regression
+
+An additional 36 cases cover parent energies 20, 1000 and 10000 GeV,
+fractions 0.05/0.95 and all six angular modes. The direct reference tolerance is
+unchanged. The independent mass-shell check accounts for cancellation of
+parent-energy-scale squared terms: its absolute roundoff bound is the larger of
+5e-11 GeV² and 32 ULPs of the parent's energy squared, with relative tolerance
+1e-10. This bound is separate from the stricter C++/Fortran record comparison.

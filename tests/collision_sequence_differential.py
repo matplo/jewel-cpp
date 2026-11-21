@@ -1,4 +1,4 @@
-import hashlib,json,math,random,subprocess,sys,itertools
+import hashlib,json,math,random,subprocess,sys,itertools,os
 from pathlib import Path
 cpp,reference,output=sys.argv[1:]
 base='CONFIG\n208 3 1 .4 .59 .17 .17 .54 6.199999809265137 3 2 .45 1\nBCONFIG\n3 1 .2 1 0\n'
@@ -46,6 +46,17 @@ for index in subset:
  if expected[0][-1]:
   invalid.append(dict(case=index,input=info,cpp_rejected=bool(actual[0][-1])))
   if actual[0][-1]==1:continue
+  if actual[0][-1]==0 and any(not math.isfinite(v) for record in expected[1:1+int(expected[0][0])] for v in record):
+   # Recovery is an explicit numerical extension, not a finite-source parity case.
+   diagnostic=subprocess.run([cpp],input=base+commands[index],text=True,capture_output=True,check=True,timeout=120,env={**os.environ,'JEWEL_COLLISION_TRACE':'1'})
+   repairs=[list(map(float,line.split()[1:])) for line in diagnostic.stderr.splitlines() if line.startswith('COLLISION_ZERO_P2 ')]
+   assert repairs,(index,'recovered nonfinite reference without zero-CM repair')
+   for residue,mass2,energy in repairs:
+    assert residue<0 and mass2>0 and energy==math.sqrt(mass2)
+    assert abs(residue)<=4*sys.float_info.epsilon*mass2
+   assert all(math.isfinite(v) for record in actual for v in record)
+   invalid[-1]['zero_cm_repairs']=repairs
+   continue
  if actual[0][-1]:failures.append(dict(case=index,input=info,reason='unexpected C++ domain rejection'));continue
  if len(actual)!=len(expected):failures.append(dict(case=index,input=info,cpp_header=actual[0],fortran_header=expected[0]));continue
  n=int(expected[0][0]);max_records=max(max_records,n);maxdraws=max(maxdraws,expected[0][6]);retry_count+=int(expected[0][3])
