@@ -510,3 +510,8 @@ if(JEWEL_REFERENCE_SOURCE)
   ${CMAKE_SOURCE_DIR}/tests/recoil_fraction_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/recoil-fraction-validation.json)
 endif()
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_test(NAME runner-angular-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_angular.py $<TARGET_FILE:jewel-run-events>
+  $<TARGET_FILE:jewel-medium-probe>)
+endif()

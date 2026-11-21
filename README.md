@@ -718,3 +718,9 @@ Collision sequences preserve provisional recoil splitting sentinels until the
 source retry decision. The [retry validation](docs/validation-recoil-fraction-retries.md)
 records four finite Fortran outcomes previously rejected too early by the port;
 all now agree, while unrecovered nonfinite state remains unpublishable.
+
+The native runners accept `--angular-ordering 0..5`; omission retains mode 0,
+and mode 1 selects JEWEL's default ANGORD value. The separate AOFIRSTSPLIT
+setting remains false. [Angular-mode validation](docs/validation-angular-runner.md)
+records passing component/native-replay checks and an unresolved mode-1 event
+where C++ fails but Fortran completes. These modes are not yet fully validated.
