@@ -1,0 +1,30 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-passive-medium220.jsonl",
+  "input_sha256": "2ab2a4bafdd003c6e802951af60d41249b54a9198df2fa42da4e00503efa9faa",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 220,
+    "accepted": 220,
+    "evolution_failures": 0,
+    "generation_failures": 0,
+    "accepted_weight": 220,
+    "failed_weight": 0,
+    "generator_weight_sum": 220,
+    "generator_sigma_mb": 0.172886686694911,
+    "generator_sigma_error_mb": 0.00605443499211533,
+    "final_records": 48899
+  },
+  "junction_events": 78,
+  "failures": {},
+  "max_momentum_component_residual_gev": 6.130267138360068e-08,
+  "max_momentum_residual_over_total_energy": 1.1798799074121526e-11,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": []
+  },
+  "boundary_invariants_pass": true
+}

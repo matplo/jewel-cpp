@@ -376,11 +376,11 @@ int main() {
     jewel::ReplayRandom random(tape);
     auto value=rates->next_collision(p,mass,pdg,v,start,dt,lifetime,scale,elastic!=0,random);
     std::cout<<int(value.collision)<<' '<<value.elapsed<<' '<<random.checkpoint()<<'\n';
-   } else if(op=="HARDINIT"||op=="MPIINIT") {
+   } else if(op=="HARDINIT"||op=="MPIINIT"||op=="MPIPASSIVE") {
     if(!branching)throw std::runtime_error("BCONFIG required");
     jewel::HardInitializationConfig config;int ao;
     std::cin>>config.pt_hat>>config.x>>config.y>>config.formation_factor>>config.lifetime>>ao;config.first_angle_ordering=ao;
-    if(op=="MPIINIT"){int fsr,channel1,channel2;std::cin>>fsr>>channel1>>channel2;config.mpi_pair=true;config.mpi_fsr=fsr;
+    if(op=="MPIINIT"||op=="MPIPASSIVE"){config.inactive_nonparton_lifetime=op=="MPIPASSIVE";int fsr,channel1,channel2;std::cin>>fsr>>channel1>>channel2;config.mpi_pair=true;config.mpi_fsr=fsr;
      if((channel1!=0&&channel1!=1)||(channel2!=0&&channel2!=1))throw std::runtime_error("MPI channel must be QQ(0) or GC(1)");
      config.mpi_sampling_channels=std::array<jewel::Channel,2>{channel1?jewel::Channel::GC:jewel::Channel::QQ,channel2?jewel::Channel::GC:jewel::Channel::QQ};}
     jewel::ShowerState state(-1e6);state.colour_max=1000;

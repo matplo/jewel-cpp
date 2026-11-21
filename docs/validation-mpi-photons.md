@@ -90,3 +90,6 @@ Replay reports now parse GUARD_STATS into structured reason and branch-call
 fields. The final output-header field is a coherent-history index, not a guard
 reason; the earlier label of reason 4 was corrected to reason 1 after 29 calls.
 No numerical tolerance or acceptance gate was relaxed.
+
+Subsequent work adds [inactive massive MPI nonpartons](validation-mpi-passive.md)
+under an explicit finite-time convention; the photon results above remain historical.

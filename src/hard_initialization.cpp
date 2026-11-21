@@ -43,7 +43,8 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  for(auto* leg:{&a,&b}){
   const auto& p=leg->particle;
   bool photon=config.mpi_pair&&p.pdg==22&&p.status==4&&leg->record_mass==0&&p.colour==0&&p.anticolour==0;
-  require((parton(p.pdg)&&(p.status==1||p.status==4))||photon,"hard pair requires quarks/gluons or an inactive massless MPI photon");
+  bool passive=config.mpi_pair&&config.inactive_nonparton_lifetime&&std::abs(p.pdg)>21&&p.status==4&&leg->record_mass>=0&&p.colour==0&&p.anticolour==0;
+  require((parton(p.pdg)&&(p.status==1||p.status==4))||photon||passive,"hard pair requires quarks/gluons or an inactive massless MPI photon");
  }
  require(config.mpi_pair||config.evaluate_colour_angles||!config.first_angle_ordering,"first-angle ordering requires evaluated colour angles");
  HardInitializationResult result;result.colour_angles_evaluated=!config.mpi_pair&&config.evaluate_colour_angles;
@@ -66,17 +67,19 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  boost(a,inverse);boost(b,inverse);const double total=a.particle.momentum.energy+b.particle.momentum.energy;
  boost(a,beta);boost(b,beta);
  auto sample=[&](ShowerParticle& leg,double maximum){return sampler.mass(0,maximum,-1,energy,config.mpi_pair?(*config.mpi_sampling_channels)[&leg==&a?0:1]:(leg.particle.pdg==21?Channel::GC:Channel::QQ),energy,false,random);};
+ const double retained_a=a.record_mass,retained_b=b.record_mass;
  auto qa=sample(a,maximum_a),qb=sample(b,maximum_b);
  auto draw=[&]{double u=random.uniform();require(std::isfinite(u)&&u>0&&u<1,"invalid initialization random draw");return u;};
  for(;;){
   if(++result.trials>config.maximum_trials)throw std::runtime_error("hard initialization retries exhausted");
-  double ea=total/2+(qa.mass*qa.mass-qb.mass*qb.mass)/(2*total),eb=total/2-(qa.mass*qa.mass-qb.mass*qb.mass)/(2*total);
-  double pa=ea*ea-qa.mass*qa.mass,pb=eb*eb-qb.mass*qb.mass;
+  double ma=std::abs(a.particle.pdg)>21?retained_a:qa.mass,mb=std::abs(b.particle.pdg)>21?retained_b:qb.mass;
+  double ea=total/2+(ma*ma-mb*mb)/(2*total),eb=total/2-(ma*ma-mb*mb)/(2*total);
+  double pa=ea*ea-ma*ma,pb=eb*eb-mb*mb;
   bool rejected=draw()>1;
   if(rejected||pa<0||pb<0||ea<0||eb<0){if(qa.mass>qb.mass)qa=sample(a,qa.mass);else qb=sample(b,qb.mass);continue;}
   boost(a,inverse);boost(b,inverse);
   auto reshape=[](ShowerParticle& leg,double square,double en,double mass){auto& p=leg.particle.momentum;double old=momentum_magnitude(p);require(old>0,"zero hard momentum in rest frame");p.px=p.px*std::sqrt(square)/old;p.py=p.py*std::sqrt(square)/old;p.pz=p.pz*std::sqrt(square)/old;p.energy=en;leg.record_mass=mass;};
-  reshape(a,pa,ea,qa.mass);reshape(b,pb,eb,qb.mass);boost(a,beta);boost(b,beta);
+  reshape(a,pa,ea,ma);reshape(b,pb,eb,mb);boost(a,beta);boost(b,beta);
   auto veto=[&](const ShowerParticle& p,const MassSample& q,double maximum_angle){
    if(q.mass<=0)return false;
    double eps=.5-.5*std::sqrt(1-sampler.cutoff()*sampler.cutoff()/(q.mass*q.mass))*std::sqrt(1-q.mass*q.mass/(p.particle.momentum.energy*p.particle.momentum.energy));
@@ -91,7 +94,11 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  auto finish=[&](ShowerParticle& p,const MassSample& q){
   double z=q.fraction.value();p.angle=z>0?p.record_mass/(std::sqrt(z*(1-z))*p.particle.momentum.energy):0;
   p.fraction=z;p.quark_pair=q.quark_pair.value();p.angular_required=false;p.particle.production={config.x,config.y,0,0};
-  if(p.record_mass>0){double lambda=1./(config.formation_factor*p.particle.momentum.energy*double(.2f)/(q.mass*q.mass));p.decay_time=-std::log(1-draw())/lambda;}
+  if(p.record_mass>0&&q.mass==0&&config.inactive_nonparton_lifetime&&p.particle.status==4&&std::abs(p.particle.pdg)>21){
+   (void)draw(); // Preserve the source draw; its zero-virtuality time is infinite.
+   p.decay_time=config.lifetime; // Unused by scheduling of inactive records.
+  }
+  else if(p.record_mass>0){double lambda=1./(config.formation_factor*p.particle.momentum.energy*double(.2f)/(q.mass*q.mass));p.decay_time=-std::log(1-draw())/lambda;}
   else p.decay_time=config.lifetime;
  };
  finish(a,qa);finish(b,qb);working.validate();state=std::move(working);return result;

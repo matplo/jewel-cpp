@@ -1,0 +1,166 @@
+{
+  "seed": 2600417,
+  "attempts": 220,
+  "previous_accepted": 218,
+  "changed_pre_hadronization_records": [],
+  "recovered": [
+    66,
+    115
+  ],
+  "nonpartons": [
+    {
+      "attempt": 66,
+      "input_nonpartons": [
+        {
+          "id": 48,
+          "pdg": 10441,
+          "status": 23,
+          "final": true,
+          "colour": 0,
+          "anticolour": 0,
+          "mass": 3.4086851536218123,
+          "momentum": [
+            -0.3510162788195572,
+            -0.7902278118919374,
+            81.2647181767565,
+            81.34077223168505
+          ],
+          "vertex_mm": [
+            -1.212692567716711e-12,
+            -4.38814961546435e-12,
+            0,
+            0
+          ],
+          "mothers": [],
+          "daughters": []
+        },
+        {
+          "id": 68,
+          "pdg": 2203,
+          "status": 23,
+          "final": true,
+          "colour": 0,
+          "anticolour": 102,
+          "mass": 0.77133,
+          "momentum": [
+            0.6479499959534779,
+            -0.37074401548305447,
+            1233.446828003915,
+            1233.447295085287
+          ],
+          "vertex_mm": [
+            -1.212692567716711e-12,
+            -4.38814961546435e-12,
+            0,
+            0
+          ],
+          "mothers": [],
+          "daughters": []
+        },
+        {
+          "id": 71,
+          "pdg": 2101,
+          "status": 23,
+          "final": true,
+          "colour": 0,
+          "anticolour": 128,
+          "mass": 0.57933,
+          "momentum": [
+            0.3926807191633961,
+            -0.7782933701032999,
+            -956.3718089433974,
+            956.3723817131234
+          ],
+          "vertex_mm": [
+            -1.212692567716711e-12,
+            -4.38814961546435e-12,
+            0,
+            0
+          ],
+          "mothers": [],
+          "daughters": []
+        }
+      ],
+      "event_lifetime_fm": 62.908690318670054
+    },
+    {
+      "attempt": 115,
+      "input_nonpartons": [
+        {
+          "id": 57,
+          "pdg": 10441,
+          "status": 23,
+          "final": true,
+          "colour": 0,
+          "anticolour": 0,
+          "mass": 3.3664319302527947,
+          "momentum": [
+            4.92554054246227,
+            0.24066794408533013,
+            -4.56972094305088,
+            7.518915090166477
+          ],
+          "vertex_mm": [
+            -3.462094837384688e-14,
+            3.4280709089392824e-12,
+            0,
+            0
+          ],
+          "mothers": [],
+          "daughters": []
+        },
+        {
+          "id": 87,
+          "pdg": 2101,
+          "status": 23,
+          "final": true,
+          "colour": 0,
+          "anticolour": 155,
+          "mass": 0.57933,
+          "momentum": [
+            -0.5483934175007306,
+            0.381626270675257,
+            639.0700472007295,
+            639.070659024761
+          ],
+          "vertex_mm": [
+            -3.462094837384688e-14,
+            3.4280709089392824e-12,
+            0,
+            0
+          ],
+          "mothers": [],
+          "daughters": []
+        },
+        {
+          "id": 90,
+          "pdg": 2101,
+          "status": 23,
+          "final": true,
+          "colour": 0,
+          "anticolour": 129,
+          "mass": 0.57933,
+          "momentum": [
+            0.27633858957383994,
+            0.2426685082949928,
+            -310.1287431283354,
+            310.1295022867559
+          ],
+          "vertex_mm": [
+            -3.462094837384688e-14,
+            3.4280709089392824e-12,
+            0,
+            0
+          ],
+          "mothers": [],
+          "daughters": []
+        }
+      ],
+      "event_lifetime_fm": 62.908690318670054
+    }
+  ],
+  "hashes": {
+    "/private/tmp/jewel-mpi-photon-medium220.jsonl": "4ad33e72bb8b3e91cb612ba515c5e2766f61dd130c1e8ad8b90646d65ccebc1b",
+    "/private/tmp/jewel-passive-medium220.jsonl": "2ab2a4bafdd003c6e802951af60d41249b54a9198df2fa42da4e00503efa9faa"
+  }
+}

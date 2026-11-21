@@ -92,4 +92,18 @@ int main(){
   check(failed&&untouched.checkpoint()==0);
  }
 
+ // Native inactive-time convention retains nonparton mass and the source draw.
+ state.restore(photon_baseline);state.at(first).particle.pdg=10441;state.at(first).record_mass=3.5;
+ state.at(first).particle.momentum.energy=std::sqrt(100.+3.5*3.5);
+ double passive_total=state.at(first).particle.momentum.energy+state.at(second).particle.momentum.energy;
+ auto passive_baseline=state.snapshot();jewel::ReplayRandom strict({});bool passive_rejected=false;
+ try{jewel::initialize_hard_dijet(state,first,second,photon_config,sampler,strict);}catch(const std::domain_error&){passive_rejected=true;}
+ check(passive_rejected&&strict.checkpoint()==0);
+ photon_config.inactive_nonparton_lifetime=true;jewel::ReplayRandom passive_draws({.5,.7});
+ jewel::initialize_hard_dijet(state,first,second,photon_config,sampler,passive_draws);
+ check(passive_draws.checkpoint()==2&&state.at(first).record_mass==3.5&&state.at(first).particle.status==4);
+ check(state.at(first).decay_time==photon_config.lifetime&&state.at(first).fraction==0&&state.at(first).angle==0);
+ check(std::abs(state.at(first).particle.momentum.energy+state.at(second).particle.momentum.energy-passive_total)<1e-12);
+ state.validate();
+
 }

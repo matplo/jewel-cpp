@@ -74,7 +74,9 @@ struct SubsystemInitialization {
 // In this native policy, colour-angle diagnostics are omitted when the first-
 // splitting veto is disabled. A required junction angle is never fabricated.
 // Pairs may also contain inactive massless colourless MPI photons.
-// Massive nonpartons remain unsupported. Unsupported pairs fail before
+// Native outgoing-flavour policy also retains inactive massive colourless
+// nonpartons, with an unused finite time and the original source draw.
+// Unsupported pairs fail before
 // drawing; later failures roll back the whole state but not the random stream.
 SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord&,
  HardInitializationConfig,const BranchingSampler&,Random&,

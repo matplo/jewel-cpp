@@ -911,3 +911,11 @@ Native MPI pairs can now include inactive massless colourless photons. Their
 identity and mass survive pair initialization and hadronization.
 [Validation](docs/validation-mpi-photons.md) covers 228,960 Fortran comparisons
 and a generated photon event; massive nonpartons remain unsupported.
+
+### Inactive massive MPI particles
+
+Native MPI initialization retains colourless nonparton masses and uses an explicit
+finite placeholder for their unused shower time, preserving source random draws.
+[Validation and convention](docs/validation-mpi-passive.md) distinguish finite
+kinematic parity from the source infinite-time expression. The matched medium
+sample now completes 220/220 attempts; full physics validation remains open.

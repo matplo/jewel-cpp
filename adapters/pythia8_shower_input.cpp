@@ -175,6 +175,7 @@ SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imp
  auto require=[](bool ok,const char* why){if(!ok)throw std::domain_error(why);};
  require(policy==MpiChannelPolicy::source_primary||policy==MpiChannelPolicy::outgoing_flavour,"invalid MPI channel policy");
  imported.state.validate();require(!imported.subsystems.empty(),"initialization lacks primary subsystem");
+ if(policy==MpiChannelPolicy::outgoing_flavour)config.inactive_nonparton_lifetime=true;
  std::set<ParticleId> seen;
  for(std::size_t i=0;i<imported.subsystems.size();++i){const auto& pair=imported.subsystems[i];
   require(pair.index==int(i),"subsystem initialization requires ordered contiguous indices");
@@ -182,7 +183,8 @@ SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imp
    require(seen.insert(id).second&&imported.input_sources.count(id),"invalid or duplicated subsystem hard leg");
    const auto& node=imported.state.at(id);int pdg=node.particle.pdg;
    bool photon=i>0&&pdg==22&&node.particle.status==4&&node.record_mass==0&&node.particle.colour==0&&node.particle.anticolour==0;
-   require(pdg==21||(std::abs(pdg)>=1&&std::abs(pdg)<=5)||photon,"subsystem initialization requires quarks/gluons or inactive massless photons");
+   bool passive=i>0&&config.inactive_nonparton_lifetime&&std::abs(pdg)>21&&node.particle.status==4&&node.record_mass>=0&&node.particle.colour==0&&node.particle.anticolour==0;
+   require(pdg==21||(std::abs(pdg)>=1&&std::abs(pdg)<=5)||photon||passive,"subsystem initialization requires quarks/gluons or inactive massless photons");
    require(node.particle.status==1||(i>0&&node.particle.status==4),"subsystem initialization requires prepared hard legs");
    require(imported.roles.at(id)==(i==0?ImportedRole::primary_hard:ImportedRole::mpi_hard),"subsystem hard role mismatch");
   }

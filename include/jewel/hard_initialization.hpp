@@ -10,6 +10,8 @@ struct HardInitializationConfig {
  // Optional diagnostic only when the first-splitting angular veto is disabled.
  bool evaluate_colour_angles{true};
  bool mpi_pair{false},mpi_fsr{true};
+ // Native convention: finite unused time for inactive colourless nonpartons.
+ bool inactive_nonparton_lifetime{false};
  // Source TYPE1/TYPE2 are global: caller must supply them for an MPI pair.
  std::optional<std::array<Channel,2>> mpi_sampling_channels;
  std::size_t maximum_trials{1000000};
@@ -17,7 +19,8 @@ struct HardInitializationConfig {
 struct HardInitializationResult {std::size_t trials{};std::array<double,2> colour_angles{};bool colour_angles_evaluated{true};};
 // GETTHETAM, using source scheduling links for the partner's parent slot.
 double colour_opening_angle(const ShowerState&,ParticleId);
-// PPJJ and MPI-pair branches of FINDVIRTUALITIES. Allows quarks/gluons and inactive massless colourless MPI photons;
+// PPJJ and MPI-pair branches of FINDVIRTUALITIES. Allows quarks/gluons and
+// inactive colourless MPI photons; other nonpartons need the explicit time convention.
 // PPJJ requires complete colour partners when angles are evaluated. MPI pair discovery and
 // other production channels are not mapped. MPI sampling channels must be supplied explicitly.
 // State changes are transactional; random draws are not rewound on failure.
