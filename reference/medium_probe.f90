@@ -38,6 +38,11 @@ program mediumprobe
  double precision sudaqq(1000,2),sudaqg(1000,2),sudagg(1000,2),sudagc(1000,2)
  common /INSUDA/ sudaqq,sudaqg,sudagg,sudagc
  character(2) channel
+ double precision splitiggv(1000,1000),splitiqqv(1000,1000),splitiqgv(1000,1000),qval(1000),zmval(1000),qmax,zmmin
+ integer npoint,j
+ common /SPLITINT/ splitiggv,splitiqqv,splitiqgv,qval,zmval,qmax,zmmin,npoint
+ double precision getspliti,getsudakov,qa1,qb1,za1,eb1,high
+ character(1024) dumpfile
  character(20) op
  logfid=0
  logfid2=0
@@ -106,6 +111,28 @@ program mediumprobe
    if(trim(op)=='RRED') v=getinsudared(x,channel)
    if(trim(op)=='RFAST') v=getinsudafast(x,y,channel)
    write(*,'(ES26.17E3)') v
+  case('FCONFIG')
+   read(*,*) knf,q0,lps,emax,scalefacm,boostflag
+   boost=boostflag/=0
+   call splitfncint(emax)
+  case('FDUMP')
+   read(*,'(A)') dumpfile
+   open(unit=89,file=trim(dumpfile),access='stream',form='unformatted',status='replace')
+   write(89) qval,zmval
+   do i=1,1000
+    do j=1,1000
+     write(89) splitiqqv(i,j),splitiggv(i,j),splitiqgv(i,j)
+    enddo
+   enddo
+   close(89)
+  case('FSPLIT')
+   read(*,*) channel,qa1,qb1,za1,eb1,angord
+   v=getspliti(qa1,qb1,za1,eb1,channel)
+   write(*,'(ES26.17E3)') v
+  case('FSUDA')
+   read(*,*) channel,high,qa1,qb1,za1,eb1,angord
+   v=getsudakov(high,qa1,qb1,za1,eb1,channel,0.d0,.false.)
+   write(*,'(ES26.17E3)') v
   case('CROSS')
    call calcxsection
    do i=1,200
@@ -145,13 +172,34 @@ program mediumprobe
 end program
 function deriv(x,w) result(v)
  implicit none
- double precision x,v,medderiv,getinspliti
+ double precision x,v,medderiv,getinspliti,getspliti,alphas,pqq,pgg,pqg
+ double precision qquad,fm
+ common /INTSPLITF/ qquad,fm
+ double precision Q0,LPS,LQCD,LTIME,SCALEFACM,RECSOFTCUT,RECHARDCUT
+ integer ANGORD,NF,KINMODE,recmode
+ logical SCATRECOIL,ALLHAD,compress,mpifsr,aofirstsplit
+ common /PARAM/ Q0,LPS,LQCD,LTIME,SCALEFACM,RECSOFTCUT,RECHARDCUT, &
+ ANGORD,aofirstsplit,SCATRECOIL,ALLHAD,compress,mpifsr,NF,KINMODE,recmode
+ double precision pi
+ parameter(pi=3.141592653589793d0)
  double precision qa,za2,eb,t
  logical instate
  character(2) typ
  common /SUDAINT/ qa,za2,eb,t,instate,typ
  integer w
- if(w==5) then
+ if(w==1) then
+  if(instate) then
+   v=2*getinspliti(x,typ)/x
+  else
+   v=2*getspliti(qa,x,za2,eb,typ)/x
+  endif
+ else if(w==2) then
+  v=(1+fm)*alphas(x*(1-x)*qquad,lps)*pqq(x)/(2*pi)
+ else if(w==3) then
+  v=(1+fm)*alphas(x*(1-x)*qquad,lps)*pgg(x)/(2*pi)
+ else if(w==4) then
+  v=(1+fm)*alphas(x*(1-x)*qquad,lps)*pqg(x)/(2*pi)
+ else if(w==5) then
   v=exp(-x)/x
  else if(w==6) then
   v=2*getinspliti(x,typ)/x

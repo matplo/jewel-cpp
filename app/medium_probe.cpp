@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/radiation.hpp"
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <memory>
 #include <stdexcept>
@@ -10,6 +11,7 @@ int main() {
  std::unique_ptr<jewel::ExpandingMedium> medium;
  std::unique_ptr<jewel::InitialRadiation> radiation;
  std::unique_ptr<jewel::InitialSudakovTable> sudakov;
+ std::unique_ptr<jewel::FinalSplittingTable> final_table;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -28,7 +30,27 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="RCONFIG") {
+   if(op=="FCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad final splitting config");
+    final_table=std::make_unique<jewel::FinalSplittingTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
+   } else if(op=="FDUMP") {
+    if(!final_table)throw std::runtime_error("FCONFIG required");
+    std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);
+    for(double x:final_table->scales())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(double x:final_table->fractions())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(auto row:final_table->values())for(double x:row)out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    if(!out)throw std::runtime_error("table dump failed");
+   } else if(op=="FSPLIT"||op=="FSUDA") {
+    if(!final_table)throw std::runtime_error("FCONFIG required");
+    std::string channel;double parent,q,zeta,energy,high=0;int angular;
+    std::cin>>channel;if(op=="FSUDA")std::cin>>high;
+    if(!(std::cin>>parent>>q>>zeta>>energy>>angular))throw std::runtime_error("bad final splitting query");
+    jewel::Channel c;
+    if(channel=="QQ")c=jewel::Channel::QQ;else if(channel=="QG")c=jewel::Channel::QG;
+    else if(channel=="GG")c=jewel::Channel::GG;else if(channel=="GC")c=jewel::Channel::GC;else throw std::runtime_error("unsupported final channel");
+    std::cout<<(op=="FSPLIT"?final_table->splitting(parent,q,zeta,energy,c,angular):final_table->sudakov(high,parent,q,zeta,energy,c,angular))<<'\n';
+   } else if(op=="RCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("invalid radiation configuration");
     radiation=std::make_unique<jewel::InitialRadiation>(k,q0);
@@ -61,7 +83,27 @@ int main() {
     if(!(std::cin>>count)||count>100000) throw std::runtime_error("invalid replay size");
     std::vector<double> tape(count); for(double& r:tape) if(!(std::cin>>r)) throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="RCONFIG") {
+    if(op=="FCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad final splitting config");
+    final_table=std::make_unique<jewel::FinalSplittingTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
+   } else if(op=="FDUMP") {
+    if(!final_table)throw std::runtime_error("FCONFIG required");
+    std::string filename;std::getline(std::cin>>std::ws,filename);std::ofstream out(filename,std::ios::binary);
+    for(double x:final_table->scales())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(double x:final_table->fractions())out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    for(auto row:final_table->values())for(double x:row)out.write(reinterpret_cast<const char*>(&x),sizeof(x));
+    if(!out)throw std::runtime_error("table dump failed");
+   } else if(op=="FSPLIT"||op=="FSUDA") {
+    if(!final_table)throw std::runtime_error("FCONFIG required");
+    std::string channel;double parent,q,zeta,energy,high=0;int angular;
+    std::cin>>channel;if(op=="FSUDA")std::cin>>high;
+    if(!(std::cin>>parent>>q>>zeta>>energy>>angular))throw std::runtime_error("bad final splitting query");
+    jewel::Channel c;
+    if(channel=="QQ")c=jewel::Channel::QQ;else if(channel=="QG")c=jewel::Channel::QG;
+    else if(channel=="GG")c=jewel::Channel::GG;else if(channel=="GC")c=jewel::Channel::GC;else throw std::runtime_error("unsupported final channel");
+    std::cout<<(op=="FSPLIT"?final_table->splitting(parent,q,zeta,energy,c,angular):final_table->sudakov(high,parent,q,zeta,energy,c,angular))<<'\n';
+   } else if(op=="RCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("invalid radiation configuration");
     radiation=std::make_unique<jewel::InitialRadiation>(k,q0);

@@ -1,0 +1,251 @@
+{
+  "scope": "full final-state splitting tables and queries, not full events",
+  "groups": {
+    "full-tables": {
+      "values": 6004000,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "outside_tolerance": 0
+    },
+    "lookups-and-sudakov": {
+      "values": 816,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "outside_tolerance": 0
+    }
+  },
+  "failures": [],
+  "records": [
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "emax": 50,
+      "boost": 0,
+      "seconds": 4.490006666863337,
+      "table_sha256": "11bb06cc0a1ad8c33bd0ae74c437d1fec0adc9899e026e65d34ae66ff6ea33f1"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 3,
+      "q0": 1,
+      "lambda_shower": 0.2,
+      "emax": 50,
+      "boost": 0,
+      "seconds": 4.889701375039294,
+      "table_sha256": "11bb06cc0a1ad8c33bd0ae74c437d1fec0adc9899e026e65d34ae66ff6ea33f1"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "nf": 5,
+      "q0": 1.5,
+      "lambda_shower": 0.25,
+      "emax": 200,
+      "boost": 1,
+      "seconds": 5.404131917050108,
+      "table_sha256": "a5faf2e9ce54fe2c00835f4f6fa936e16251bf8a8b92cbc7d26f9ae88053bf73"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "nf": 5,
+      "q0": 1.5,
+      "lambda_shower": 0.25,
+      "emax": 200,
+      "boost": 1,
+      "seconds": 5.783494292059913,
+      "table_sha256": "a5faf2e9ce54fe2c00835f4f6fa936e16251bf8a8b92cbc7d26f9ae88053bf73"
+    }
+  ],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ],
+        "SPLITFNCINT": [
+          7994,
+          8075
+        ],
+        "GETSPLITI": [
+          6692,
+          6831
+        ],
+        "GETSUDAKOV": [
+          6486,
+          6539
+        ],
+        "PQQ": [
+          7927,
+          7931
+        ],
+        "PGG": [
+          7949,
+          7953
+        ],
+        "PQG": [
+          7960,
+          7964
+        ],
+        "ALPHAS": [
+          7971,
+          7987
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "f7b1e5c5df95e50ab4edcc539086924a4c961179371aee1fd62ba90e046b0c7a",
+    "jewel-medium-reference": "cdc8ea9ee54a6ca58bf019cab5177fe937e3d92950f9e4a2bad7724f6ee3a1c3"
+  }
+}

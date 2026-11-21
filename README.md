@@ -146,5 +146,32 @@ outside that interval. Extrapolation is a reference approximation, not an exact
 special-function evaluation.
 
 [Validation details](docs/validation-radiation.md) include full tables for four
-configurations, including EMAX=6,500 GeV. Final-state splitting tables, partonic
-PDF/rate tables and complete evolution remain to be integrated.
+configurations, including EMAX=6,500 GeV. Final-state splitting tables are covered below; partonic PDF/rate tables and
+complete evolution remain to be integrated.
+
+## Milestone 1e: final-state splitting and Sudakov integration
+
+`FinalSplittingTable` implements the full SPLITFNCINT grid (three 1,000 × 1,000
+arrays), GETSPLITI interpolation and final-state GETSUDAKOV integration. It
+preserves the logarithmic fraction grid, linear scale grid, kinematic cutoff,
+per-channel cap at 10, flavour weighting, angular-ordering branch and table
+extrapolation. Unsupported/undefined kinematics throw instead of propagating
+NaNs. The combined GC channel retains a separate rounding step for the QG
+contribution, required to reproduce adaptive integration.
+
+```cpp
+jewel::Kernels kernels;
+jewel::ExpandingMedium medium;
+jewel::FinalSplittingTable final_state(
+    kernels, 1.0, 200.0, 1.0, medium.maximum_scatterer(false));
+double probability = final_state.sudakov(
+    10.0, 100.0, 1.0, 0.5, 100.0, jewel::Channel::QQ, 1);
+```
+
+`final-splitting-differential` compares all six million grid values across two
+configurations plus grid coordinates and 816 queries. Run it with
+`ctest --test-dir build -L full-tables --output-on-failure`. It currently takes
+about 22 seconds on the development machine. [Validation report](docs/validation-final-splitting.md).
+
+The full end-state requirements, including all custom-JEWEL features and the
+1,000-jet/10% comparison target, are tracked in [completion gates](docs/completion-gates.md).
