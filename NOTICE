@@ -11,3 +11,9 @@ No modified Pythia6 distribution is included or reused as a standalone library.
 Positive exponential integral EIX translated from meix.f, credited upstream to
 S. Zhang and J. M. Jing, Computation of Special Functions, John Wiley & Sons
 (1996), http://jin.ece.illinois.edu. The original attribution is retained here.
+
+Kinematics preserve selected PYANGL/PYROBO/PYP numerical conventions from the
+Pythia6 version supplied with JEWEL. Pythia authors: Torbjorn Sjostrand,
+Stephen Mrenna and Peter Skands. The hash-verified modified source is supplied
+externally and extracted only for the JEWEL reference tests; its upstream
+JEWEL-only use restriction and notices remain applicable.

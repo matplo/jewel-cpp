@@ -42,7 +42,7 @@ python3 reference/freeze.py --variant stock --output validation-output/stock-001
   --file /path/to/medium.params.dat --file /path/to/pdf-member.dat
 ```
 
-The full stages 0 and 1 remain open. Next implement the remaining splitting/Sudakov/scattering grids, the run configuration and evolution state machine. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
+The full stages 0 and 1 remain open. The numerical grids are implemented below; next implement the run configuration and evolution state machine. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
 
 Pythia8 hard-event import and separate hadronization adapters follow core evolution validation. No Pythia8, TGlauberMC or JETSCAPE dependency is introduced here. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
 
@@ -93,12 +93,12 @@ MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
   a C++ contract rather than included in the Fortran parity claim.
 - Ei preserves extrapolation below the first grid knot, including the finite
   table value at zero. This is the stock approximation, not mathematical Ei(0).
-  Beyond `|x|=55` C++ throws; stock warns and extrapolates. Dependent kernels also
-  throw if they request such a value. Integration failures throw instead of
+  Beyond `|x|=55` C++ throws; stock warns and extrapolates. Initial-radiation kernels explicitly use stock extrapolation beyond this range,
+  as documented in milestone 1d. Integration failures throw instead of
   printing a warning and returning a partial result.
 
-Complete shower/scattering rate grids and transport evolution remain unimplemented.
-It is validation of medium fields and these tables, not full JEWEL event parity.
+Shower/scattering rate grids are covered by the later milestones below.
+Transport evolution remains unimplemented; these checks do not establish full JEWEL event parity.
 
 ## Milestone 1c: medium sampling and bounds
 
@@ -194,7 +194,7 @@ That case is tested and documented, not counted as numerical agreement.
 
 [PDF validation](docs/validation-pdf.md) covers four complete table sets,
 density endpoints, direct integrals and extrapolated table queries. Remaining
-work includes scattering-rate grids and their integration into evolution.
+work includes integration of the scattering-rate grids into evolution.
 
 ## Milestone 1g: scattering-rate grids and cross sections
 
@@ -248,3 +248,26 @@ expression and reproduces the observable result and draw sequence.
 [Branching validation](docs/validation-branching.md) covers 3,168 replay cases.
 This implements branch candidates, not yet the event-tree update, transport
 scheduler, colour assignment or complete shower evolution.
+
+
+## Milestone 2b: kinematics and owned shower state
+
+`kinematics.hpp` implements rotations, Lorentz boosts, momentum angles, rapidity,
+pseudorapidity and GETPOSITION propagation. These preserve the selected
+PYANGL/PYROBO/PYP conventions used by JEWEL. Boosts above the reference limit
+are rescaled to 1−1e-12 and reported to the caller. Propagation uses max(|p|, E)
+as in GETPOSITION. Undefined zero-momentum propagation throws.
+
+`shower_state.hpp` provides stable particle IDs, binary daughter links, colour
+allocation metadata, branch variables and validated snapshots for rollback.
+Physical production coordinates are stored separately from auxiliary generator
+coordinates, so temporary momentum-frame rotations need not change production
+points. ISR ancestors may be inserted after their children; ancestry cycles are
+rejected. Restoring a snapshot never reuses IDs issued after that snapshot.
+This is supporting state, not yet MAKESPLITTING or a complete shower scheduler.
+
+[Kinematics validation](docs/validation-kinematics.md) records 6,083 comparisons.
+The reference-only executable additionally requires the hash-verified
+`pythia6425mod-lhapdf6.f` supplied with JEWEL. No Pythia6 library is linked into
+the standalone C++ implementation. The probes exercise active-particle transforms
+and selected momentum observables, not the full Pythia6 API.

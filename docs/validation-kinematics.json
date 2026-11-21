@@ -1,0 +1,56 @@
+{
+  "scope": "active-particle Lorentz transforms, selected PYP fields and GETPOSITION",
+  "groups": {
+    "TRANSFORM": {
+      "values": 3645,
+      "max_absolute_error": 7.105427357601002e-15,
+      "max_relative_error": 8.753001627233484e-14
+    },
+    "OBSERVABLES": {
+      "values": 1535,
+      "max_absolute_error": 2.220446049250313e-16,
+      "max_relative_error": 8.553512327547866e-16
+    },
+    "POSITION": {
+      "values": 903,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    }
+  },
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "e5ff5a80293ee10369218cd38ecc6010b8ef47842ef8a148879e80c507b2fbde",
+  "sources": {
+    "pythia6425mod-lhapdf6.f": {
+      "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+      "routines": {
+        "PYANGL": [
+          74441,
+          74466
+        ],
+        "PYROBO": [
+          74638,
+          74735
+        ],
+        "PYP": [
+          76081,
+          76156
+        ]
+      }
+    },
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "GETPOSITION": [
+          8807,
+          8826
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-kinematics-probe": "5062e9eaae858edb5f0e76a8632a5d2c713fc8442c50d93434d9274e3a27b28b",
+    "jewel-kinematics-reference": "f6e21c06f8cd5f6f9a86655fb6d44aa3ea76933a710069f6045af47d563d4d88"
+  }
+}

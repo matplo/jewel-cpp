@@ -1,0 +1,28 @@
+{
+  "pythia6425mod-lhapdf6.f": {
+    "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+    "routines": {
+      "PYANGL": [
+        74441,
+        74466
+      ],
+      "PYROBO": [
+        74638,
+        74735
+      ],
+      "PYP": [
+        76081,
+        76156
+      ]
+    }
+  },
+  "jewel-2.6.0.f.stock": {
+    "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+    "routines": {
+      "GETPOSITION": [
+        8807,
+        8826
+      ]
+    }
+  }
+}
