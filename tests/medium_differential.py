@@ -103,6 +103,20 @@ for floor,scale in screening_configs:
     for eta in [-1.5,0,1.5]:
      commands.append(f'POINT\n0 0 {tau*math.sinh(eta):.17g} {tau*math.cosh(eta):.17g}\n')
      labels.append('screening-transition')
+# Vary the configured rapidity edge, rather than testing only eta_max=2.
+# Use identical Cartesian coordinates in both engines: conversion roundoff can
+# put a nominal boundary point on either side, so compare their actual decisions.
+rapidity_limits=[.5,1.,3.,5.]
+for eta_max in rapidity_limits:
+ for woods in [0,1]:
+  for impact in [0,7]:
+   commands.append(f'CONFIG\n208 3 {woods} .4 .59 .17 .17 .54 6.199999809265137 {impact} {eta_max} .45 1\n')
+   for tau in [.2,.4,1.,30.]:
+    for sign in [-1,1]:
+     edge=sign*eta_max
+     for eta in [edge-sign*1e-8,math.nextafter(edge,-math.inf),edge,math.nextafter(edge,math.inf),edge+sign*1e-8]:
+      commands.append(f'POINT\n1 1 {tau*math.sinh(eta):.17g} {tau*math.cosh(eta):.17g}\n')
+      labels.append('varied-rapidity-transition')
 payload=''.join(commands)
 def run(exe):
  result=subprocess.run([exe],input=payload,text=True,capture_output=True)
@@ -118,9 +132,10 @@ for i,(label,a,b) in enumerate(zip(labels,actual,expected)):
  for col,(x,y) in enumerate(zip(a,b)):
   error=abs(x-y);rel=error/max(abs(y),1e-300)
   group['values']+=1;group['max_absolute_error']=max(group['max_absolute_error'],error);group['max_relative_error']=max(group['max_relative_error'],rel)
-  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition','varied-optical-medium','screening-transition'] and col in [0,3] and ((x==0)!=(y==0))
+  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition','varied-optical-medium','screening-transition','varied-rapidity-transition'] and col in [0,3] and ((x==0)!=(y==0))
   if activity_mismatch or not math.isfinite(x) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13): failures.append({'row':i,'column':col,'label':label,'cpp':x,'fortran':y})
 report={'scope':'optical medium and numerical tables, not full events','input_sha256':hashlib.sha256(payload.encode()).hexdigest(),
+ 'rapidity_limits':rapidity_limits,
  'optical_configs_mass_density_skin_sigma':optical_configs,
  'screening_configs_floor_scale':screening_configs,
  'relative_tolerance':2e-12,'absolute_tolerance':2e-13,'groups':summary,'failures':failures,

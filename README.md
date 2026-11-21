@@ -74,16 +74,16 @@ The Ei table has 1,000 positive/negative nodes and uses stock interpolation.
 
 The `medium-differential` CTest compares every generated table entry, interpolation,
 participant density, medium samples, interpolation-knot neighbours, heating/cooling
-cutoff transitions and the three Ei-dependent kernels against
+cutoff transitions, configurable rapidity boundaries and the three Ei-dependent kernels against
 unchanged, hash-verified stock Fortran routines. The reference harness dispatches
 only DERIV modes 5 and 101 and sets parameters explicitly rather than invoking
 MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
 `build/medium-validation.json` records errors and hashes. See
 [recorded validation](docs/validation-medium.md). The
 [event-geometry comparison](docs/validation-event-geometry.md) additionally checks
-33,060 values across both initialization geometries, flow off/on, three table
-energies and six proper times, with initialized tables unchanged after event
-geometry updates.
+143,220 values across both initialization geometries, flow off/on, three table
+energies, six proper times, six transverse positions and three projectile
+directions, with all 24 initialized-table preservation checks passing.
 
 ### Preserved reference details and explicit domain policies
 

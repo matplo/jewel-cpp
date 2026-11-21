@@ -1,7 +1,7 @@
 # Expanding medium and table validation
 
 Updated on 2026-11-21, macOS arm64, Release build with AppleClang 21 and
-GNU Fortran 16.2. The medium differential suite passes **22,152 scalar
+GNU Fortran 16.2. The medium differential suite passes **24,712 scalar
 comparisons** against unchanged, hash-verified JEWEL 2.6.0 routines.
 [Machine-readable results](validation-medium.json) include source and executable
 hashes, input hash, tolerances and all comparison groups.
@@ -32,6 +32,7 @@ hashes, input hash, tolerances and all comparison groups.
 | varied-optical-medium | 240 | 0 |
 | screening-bounds | 56 | 1.4211e-14 |
 | screening-transition | 960 | 0 |
+| varied-rapidity-transition | 2,560 | 0 |
 
 Acceptance uses relative tolerance 2e-12 and absolute tolerance 2e-13.
 Temperature and density must additionally agree exactly on zero versus nonzero:
@@ -148,3 +149,25 @@ cmake --build build -j 4
 ctest --test-dir build --output-on-failure -j 3 \
   -R '^(medium|sampling|radiation|final-splitting|pdf|scattering|event-geometry|geometry-lengths)-(contracts|differential)$'
 ```
+
+## Configurable rapidity boundaries
+
+The additional 2,560 scalar comparisons vary the rapidity limit over 0.5, 1,
+3 and 5, using both flat and Woods-Saxon profiles and impact parameters 0 and
+7 fm. At transverse position (1, 1) fm, proper times 0.2, 0.4, 1 and 30 fm
+cover growth, the initial-time transition, cooling and the late cutoff.
+Both signed rapidity edges are queried at the edge, adjacent representable
+rapidities and offsets of 1e-8. Both engines receive identical Cartesian
+spacetime coordinates; rounding in the conversion can move a nominal edge
+point across the cutoff, so parity is judged on the resulting coordinates.
+
+All added values agree exactly on this platform. Temperature and density
+zero/nonzero decisions are checked independently of the unchanged absolute
+and relative tolerances. The report records the rapidity limits and input,
+source and executable hashes. No production physics code changed.
+
+After this extension, all 13 selected medium/table CTest suites passed.
+The full splitting tables retain exact agreement for 9,006,000 values and
+scattering grids for 1,203,300 values. Event geometry/rates pass all 143,220
+comparisons with maximum absolute error 1.42109e-14. These remain component
+checks, not evidence of full-generator jet-level agreement.

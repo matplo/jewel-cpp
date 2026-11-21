@@ -1,6 +1,12 @@
 {
   "scope": "optical medium and numerical tables, not full events",
-  "input_sha256": "1fe0d7bf8ca116736268d46075c78dbbf5f2aae5157c19a35582d08a30f590ed",
+  "input_sha256": "77463540976c84020d9ad4626a894c36754ead8dab06ea1c6c6c2b0a87c126ec",
+  "rapidity_limits": [
+    0.5,
+    1.0,
+    3.0,
+    5.0
+  ],
   "optical_configs_mass_density_skin_sigma": [
     [
       16,
@@ -159,6 +165,11 @@
     },
     "screening-transition": {
       "values": 960,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "varied-rapidity-transition": {
+      "values": 2560,
       "max_absolute_error": 0.0,
       "max_relative_error": 0.0
     }
@@ -471,7 +482,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "d9378e55a89b6970a126fb4dbc84962f13c7972fc43058ca34b229682f0414cc",
-    "jewel-medium-reference": "45c7397671dcd40f64bfd5836e005e7338f36c52641aa086caf735451aec32af"
+    "jewel-medium-probe": "7cd7c2fb36c90e318a4c4f3f605113a3bb0e37dee4d02f6318c8af76f3bf873c",
+    "jewel-medium-reference": "0d5f2871ffb692e3d40d0ce392e2a447dd6a4d758fc70bf0aed0da592568afaa"
   }
 }
