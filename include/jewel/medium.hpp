@@ -51,6 +51,7 @@ public:
  double intpqglow(double z,double q,const Kernels& kernels) const;
  double intpqghigh(double z,double q,const Kernels& kernels) const;
  double scatprimfunc(double t,double debye,const Kernels& kernels) const;
+ double extrapolated(double x) const; // Stock linear tail extrapolation; not exact Ei.
  double operator()(double x) const; // Stock interpolation, including below first knot.
 };
 }

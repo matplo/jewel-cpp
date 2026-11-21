@@ -113,7 +113,11 @@ ExponentialIntegral::ExponentialIntegral() {
 }
 double ExponentialIntegral::operator()(double x) const {
  check(std::isfinite(x)&&std::abs(x)<=55,"Ei outside frozen table range [-55,55]");
- int index=std::clamp(int(std::abs(x)*1000/55),1,999)-1;
+ return extrapolated(x);
+}
+double ExponentialIntegral::extrapolated(double x) const {
+ check(std::isfinite(x),"nonfinite Ei argument");
+ int index=int(std::clamp(std::abs(x)*1000/55,1.,999.))-1;
  int col=x>=0?2:1;
  const auto& a=table_[index]; const auto& b=table_[index+1];
  double slope=(b[col]-a[col])/(b[0]-a[0]), intercept=a[col]-slope*a[0];

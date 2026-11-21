@@ -33,6 +33,26 @@
       "SCATPRIMFUNC": [
         7692,
         7710
+      ],
+      "GETINSPLITI": [
+        6837,
+        6922
+      ],
+      "GETINSUDAKOV": [
+        6545,
+        6582
+      ],
+      "INSUDAINT": [
+        8235,
+        8275
+      ],
+      "GETINSUDARED": [
+        7284,
+        7359
+      ],
+      "GETINSUDAFAST": [
+        7247,
+        7278
       ]
     }
   },

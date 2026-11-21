@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#include "jewel/medium.hpp"
+#include "jewel/radiation.hpp"
 #include <iostream>
 #include <iomanip>
 #include <memory>
@@ -8,6 +8,8 @@ int main() {
  try {
  jewel::ExponentialIntegral ei;
  std::unique_ptr<jewel::ExpandingMedium> medium;
+ std::unique_ptr<jewel::InitialRadiation> radiation;
+ std::unique_ptr<jewel::InitialSudakovTable> sudakov;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -26,7 +28,24 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="BOUNDS") {
+   if(op=="RCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("invalid radiation configuration");
+    radiation=std::make_unique<jewel::InitialRadiation>(k,q0);
+    sudakov=std::make_unique<jewel::InitialSudakovTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
+   } else if(op=="RTABLE") {
+    if(!sudakov)throw std::runtime_error("RCONFIG required");
+    for(auto row:sudakov->table()) { for(double x:row)std::cout<<x<<' ';std::cout<<'\n'; }
+   } else if(op=="RSPLIT"||op=="RSUDA"||op=="RRED"||op=="RFAST") {
+    if(!sudakov)throw std::runtime_error("RCONFIG required");
+    std::string channel;double x,y;if(!(std::cin>>channel>>x>>y))throw std::runtime_error("invalid radiation probe");
+    jewel::Channel c;
+    if(channel=="QQ")c=jewel::Channel::QQ;else if(channel=="QG")c=jewel::Channel::QG;
+    else if(channel=="GG")c=jewel::Channel::GG;else if(channel=="GC")c=jewel::Channel::GC;
+    else if(channel=="GQ")c=jewel::Channel::GQ;else throw std::runtime_error("unknown channel");
+    double result=op=="RSPLIT"?radiation->splitting(x,c):op=="RSUDA"?radiation->sudakov(x,y,c):op=="RRED"?sudakov->reduced(x,c):sudakov->ratio(x,y,c);
+    std::cout<<result<<'\n';
+   } else if(op=="BOUNDS") {
     auto v=medium->bounds();std::cout<<v.temperature_max<<' '<<v.debye_max<<' '<<v.debye_min<<' '<<v.scatterer_mass_max<<' '<<v.density_at_debye_min<<' '<<v.lifetime_max<<' '<<v.density_max<<'\n';
    } else if(op=="AVERAGE"||op=="MAXIMUM") {
     jewel::SpaceTime v;int boost;
@@ -42,7 +61,24 @@ int main() {
     if(!(std::cin>>count)||count>100000) throw std::runtime_error("invalid replay size");
     std::vector<double> tape(count); for(double& r:tape) if(!(std::cin>>r)) throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="BOUNDS") {
+    if(op=="RCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("invalid radiation configuration");
+    radiation=std::make_unique<jewel::InitialRadiation>(k,q0);
+    sudakov=std::make_unique<jewel::InitialSudakovTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
+   } else if(op=="RTABLE") {
+    if(!sudakov)throw std::runtime_error("RCONFIG required");
+    for(auto row:sudakov->table()) { for(double x:row)std::cout<<x<<' ';std::cout<<'\n'; }
+   } else if(op=="RSPLIT"||op=="RSUDA"||op=="RRED"||op=="RFAST") {
+    if(!sudakov)throw std::runtime_error("RCONFIG required");
+    std::string channel;double x,y;if(!(std::cin>>channel>>x>>y))throw std::runtime_error("invalid radiation probe");
+    jewel::Channel c;
+    if(channel=="QQ")c=jewel::Channel::QQ;else if(channel=="QG")c=jewel::Channel::QG;
+    else if(channel=="GG")c=jewel::Channel::GG;else if(channel=="GC")c=jewel::Channel::GC;
+    else if(channel=="GQ")c=jewel::Channel::GQ;else throw std::runtime_error("unknown channel");
+    double result=op=="RSPLIT"?radiation->splitting(x,c):op=="RSUDA"?radiation->sudakov(x,y,c):op=="RRED"?sudakov->reduced(x,c):sudakov->ratio(x,y,c);
+    std::cout<<result<<'\n';
+   } else if(op=="BOUNDS") {
     auto v=medium->bounds();std::cout<<v.temperature_max<<' '<<v.debye_max<<' '<<v.debye_min<<' '<<v.scatterer_mass_max<<' '<<v.density_at_debye_min<<' '<<v.lifetime_max<<' '<<v.density_max<<'\n';
    } else if(op=="AVERAGE"||op=="MAXIMUM") {
     jewel::SpaceTime v;int boost;

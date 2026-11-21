@@ -1,0 +1,195 @@
+{
+  "scope": "initial-state splitting and Sudakov tables, not full events",
+  "groups": {
+    "table": {
+      "values": 20000,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "splitting": {
+      "values": 180,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "direct-sudakov": {
+      "values": 100,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "interpolation": {
+      "values": 112,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "ratio": {
+      "values": 80,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    }
+  },
+  "failures": [],
+  "input_sha256": "e77180de195301945879f9618604a8c75a3b2d2ed99d3599fdb1222e437d3c85",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ],
+        "GETINSPLITI": [
+          6837,
+          6922
+        ],
+        "GETINSUDAKOV": [
+          6545,
+          6582
+        ],
+        "INSUDAINT": [
+          8235,
+          8275
+        ],
+        "GETINSUDARED": [
+          7284,
+          7359
+        ],
+        "GETINSUDAFAST": [
+          7247,
+          7278
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ],
+        "MEDNEXTEVT": [
+          207,
+          243
+        ],
+        "PICKVTX": [
+          255,
+          278
+        ],
+        "GETSCATTERER": [
+          292,
+          368
+        ],
+        "GETTEMPMAX": [
+          527,
+          542
+        ],
+        "GETMDMAX": [
+          546,
+          554
+        ],
+        "GETMDMIN": [
+          558,
+          576
+        ],
+        "GETMSMAX": [
+          580,
+          584
+        ],
+        "GETNATMDMIN": [
+          588,
+          612
+        ],
+        "GETLTIMEMAX": [
+          616,
+          634
+        ],
+        "GETNEFFMAX": [
+          638,
+          657
+        ],
+        "AVSCATCEN": [
+          371,
+          403
+        ],
+        "MAXSCATCEN": [
+          406,
+          426
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "89e3b9bed49321d4c947f239d28e9dd6233e2914a016f54e28bdb9ba85a5d88f",
+    "jewel-medium-reference": "519d0fcdac35ba910337e89730bd07839ceceb30cf1222c40053ff43ceb197cb"
+  }
+}

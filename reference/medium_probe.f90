@@ -34,6 +34,10 @@ program mediumprobe
  logical boost
  common /boostmed/ boost
  double precision gettempmax,getmdmax,getmdmin,getmsmax,getnatmdmin,getltimemax,getneffmax
+ double precision getinspliti,getinsudakov,getinsudared,getinsudafast,emax
+ double precision sudaqq(1000,2),sudaqg(1000,2),sudagg(1000,2),sudagc(1000,2)
+ common /INSUDA/ sudaqq,sudaqg,sudagg,sudagc
+ character(2) channel
  character(20) op
  logfid=0
  logfid2=0
@@ -87,6 +91,21 @@ program mediumprobe
    boost=boostflag/=0
    call maxscatcen(px,py,pz,energy,ms)
    write(*,'(5ES26.17E3)') px,py,pz,energy,ms
+  case('RCONFIG')
+   read(*,*) knf,q0,lps,emax,scalefacm,boostflag
+   boost=boostflag/=0
+   call insudaint(emax)
+  case('RTABLE')
+   do i=1,1000
+    write(*,'(5ES26.17E3)') sudaqq(i,1),sudaqq(i,2),sudaqg(i,2),sudagg(i,2),sudagc(i,2)
+   enddo
+  case('RSPLIT','RSUDA','RRED','RFAST')
+   read(*,*) channel,x,y
+   if(trim(op)=='RSPLIT') v=getinspliti(x,channel)
+   if(trim(op)=='RSUDA') v=getinsudakov(x,y,channel)
+   if(trim(op)=='RRED') v=getinsudared(x,channel)
+   if(trim(op)=='RFAST') v=getinsudafast(x,y,channel)
+   write(*,'(ES26.17E3)') v
   case('CROSS')
    call calcxsection
    do i=1,200
@@ -126,10 +145,16 @@ program mediumprobe
 end program
 function deriv(x,w) result(v)
  implicit none
- double precision x,v,medderiv
+ double precision x,v,medderiv,getinspliti
+ double precision qa,za2,eb,t
+ logical instate
+ character(2) typ
+ common /SUDAINT/ qa,za2,eb,t,instate,typ
  integer w
  if(w==5) then
   v=exp(-x)/x
+ else if(w==6) then
+  v=2*getinspliti(x,typ)/x
  else if(w==101) then
   v=medderiv(x,w-100)
  else

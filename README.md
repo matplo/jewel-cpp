@@ -127,3 +127,24 @@ empty cumulative interval throws rather than reading past the stock table.
 
 See [sampling validation](docs/validation-sampling.md). These interfaces still
 need integration with the complete shower and run/card configuration.
+
+## Milestone 1d: initial-state radiation integrals and Sudakov tables
+
+`include/jewel/radiation.hpp` provides `InitialRadiation` and
+`InitialSudakovTable`, implementing GETINSPLITI, GETINSUDAKOV, INSUDAINT,
+GETINSUDARED and GETINSUDAFAST. Channels are `QQ`, `QG`, `GG`, `GC` and `GQ`;
+the four stored Sudakov channels exclude `GQ`, as in stock JEWEL.
+The table constructor takes Q0, EMAX, SCALEFACM and the medium's maximum
+scatterer. It retains all 1,000 nodes, the stock grid endpoints, linear
+interpolation and clamping rules. Empty/reversed Sudakov intervals return one.
+
+The constructor requires Q0 > 2 Lambda_shower, and nonfinite/invalid arguments
+throw. Ratio evaluation throws on a zero denominator rather than producing NaN.
+High-energy initial-radiation integrals explicitly use `ei.extrapolated(x)` to
+retain stock Ei extrapolation beyond |x|=55. The bounded `ei(x)` API still throws
+outside that interval. Extrapolation is a reference approximation, not an exact
+special-function evaluation.
+
+[Validation details](docs/validation-radiation.md) include full tables for four
+configurations, including EMAX=6,500 GeV. Final-state splitting tables, partonic
+PDF/rate tables and complete evolution remain to be integrated.
