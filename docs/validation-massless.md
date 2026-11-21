@@ -67,3 +67,9 @@ ctest --test-dir build --output-on-failure \
 This closes one preparation dependency. The native runner remains ISR/MPI-off;
 full history-to-evolution integration and matched jet/substructure validation
 are still outstanding.
+
+
+The [combined surviving-parton preparation](validation-preparation.md) now
+implements the source selection and ordered calls to this routine, with its
+own Fortran comparison. Wiring that block into the full ISR adapter remains
+separate work.

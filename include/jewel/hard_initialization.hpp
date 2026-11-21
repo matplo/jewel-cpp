@@ -27,4 +27,11 @@ HardInitializationResult initialize_hard_dijet(ShowerState&,ParticleId,ParticleI
 // Distinct active records are required; invalid outputs leave all three intact.
 void make_parton_massless(ShowerParticle& emitted,ShowerParticle& first,ShowerParticle& second);
 
+// GENEVENT status-selection block on surviving positive-status records, in
+// source slot order. Nominal masses are supplied by the generator adapter.
+// The first/second indices identify the hard pair within this record range.
+// Changes are transactional; no random numbers are consumed.
+void prepare_surviving_partons(std::vector<ShowerParticle>&,std::size_t first,
+ std::size_t second,const std::vector<double>& nominal_masses,double max_pseudorapidity);
+
 }

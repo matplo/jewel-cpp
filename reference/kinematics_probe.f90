@@ -1,7 +1,9 @@
 ! Reference-only probe; never linked into the C++ engine.
 program kinematics
  implicit none
- integer hpmcfid,logfid
+ integer hpmcfid,logfid,first,second
+ double precision nominal(0:10000),eta_limit,temp_mass
+ common /nominal_masses/ nominal
  common /hepmcid/ hpmcfid,logfid
  integer n,npad,k(23000,5),mstu(200),mstj(200),i,status,warnings
  double precision p(23000,5),v(23000,5),paru(200),parj(200),mv(23000,5)
@@ -11,6 +13,7 @@ program kinematics
  common /WARNINGS/ warnings
  double precision theta,phi,bx,by,bz,pyp,mass,time,x,y,z
  character(20) op
+ nominal=0
  logfid=0
  mstu=0
  mstu(4)=23000
@@ -25,6 +28,20 @@ program kinematics
   if(status<0)exit
   if(status/=0)stop 2
   select case(trim(op))
+  case('PREPARE')
+   read(*,*)n,first,second,eta_limit
+   if(n<2.or.n>23000)stop 7
+   nominal=0
+   do i=1,n
+    read(*,*)k(i,1),k(i,2),p(i,1:5),v(i,1:4),temp_mass
+    if(abs(k(i,2))>10000)stop 8
+    nominal(abs(k(i,2)))=temp_mass
+   enddo
+   call preparepartons(first,second,eta_limit)
+   do i=1,n
+    write(*,'(I0,1X,9ES26.17E3)')k(i,1),p(i,1:5),v(i,1:4)
+   enddo
+   n=1
   case('MASSLESS')
    n=3
    do i=1,3
@@ -70,5 +87,8 @@ end function
 double precision function pymass(code)
  implicit none
  integer code
- stop 6 ! Pion-mass rapidity is outside this probe's tested paths.
+ double precision nominal(0:10000)
+ common /nominal_masses/ nominal
+ if(abs(code)>10000)stop 6
+ pymass=nominal(abs(code))
 end function

@@ -676,3 +676,9 @@ if(BUILD_TESTING)
  target_link_libraries(massless-test PRIVATE jewel_core)
  add_test(NAME massless-contracts COMMAND massless-test)
 endif()
+
+if(JEWEL_REFERENCE_SOURCE AND BUILD_TESTING)
+ add_test(NAME preparation-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/preparation_differential.py $<TARGET_FILE:jewel-kinematics-probe>
+  $<TARGET_FILE:jewel-kinematics-reference> ${CMAKE_BINARY_DIR}/preparation-validation.json)
+endif()

@@ -126,4 +126,32 @@ void make_parton_massless(ShowerParticle& emitted,ShowerParticle& first,ShowerPa
  first=std::move(a);second=std::move(b);emitted=std::move(c);
 }
 
+void prepare_surviving_partons(std::vector<ShowerParticle>& records,std::size_t first,
+ std::size_t second,const std::vector<double>& nominal_masses,double eta_max){
+ require(first<records.size()&&second<records.size()&&first!=second,"invalid preparation hard pair");
+ require(nominal_masses.size()==records.size(),"missing preparation nominal masses");
+ require(std::isfinite(eta_max)&&eta_max>=0,"invalid preparation pseudorapidity limit");
+ for(std::size_t i=0;i<records.size();++i){
+  require(records[i].particle.status>0,"preparation requires surviving positive-status records");
+  require(std::isfinite(records[i].record_mass)&&std::isfinite(nominal_masses[i])&&nominal_masses[i]>=0,"invalid preparation mass");
+ }
+ auto working=records;
+ for(auto i:{first,second})if(working[i].particle.status<11)working[i].particle.status=1;
+ for(std::size_t i=0;i<working.size();++i){
+  auto& node=working[i];auto& status=node.particle.status;int pdg=node.particle.pdg;
+  // Literal ISQORG includes PDG zero and excludes top; the adapter must not
+  // insert unused padding into the surviving record range.
+  bool quark_or_gluon=(pdg>-6&&pdg<6)||pdg==21;
+  if(!quark_or_gluon&&status<11)status=4;
+  else if(i!=first&&i!=second&&status<11){
+   if(node.record_mass>nominal_masses[i]*double(1.00001f))status=1;
+   else if(quark_or_gluon&&std::abs(pseudorapidity(node.particle.momentum))<eta_max){
+    if(node.record_mass>0)make_parton_massless(node,working[first],working[second]);
+    status=1;
+   }else status=4;
+  }
+ }
+ records=std::move(working);
+}
+
 }
