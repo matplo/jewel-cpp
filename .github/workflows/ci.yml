@@ -39,9 +39,9 @@ jobs:
             -DJEWEL_PYTHIA8_ROOT="$JEWEL_CI_PACKAGES/hepyy_pythia8" \
             -DJEWEL_LHAPDF_ROOT="$JEWEL_CI_PACKAGES/hepyy_lhapdf"
       - name: Build
-        run: cmake --build build-ci --parallel 4
+        run: cmake --build build-ci --parallel 2
       - name: Run the native suite
         run: |
           ctest --test-dir build-ci --show-only=json-v1 |
             "$JEWEL_CI_PYTHON" -c 'import json, sys; n = len(json.load(sys.stdin)["tests"]); sys.exit(f"Expected at least 54 tests, found {n}" if n < 54 else 0)'
-          ctest --test-dir build-ci --parallel 4 --output-on-failure --no-tests=error
+          ctest --test-dir build-ci --parallel 2 --output-on-failure --no-tests=error --timeout 600
