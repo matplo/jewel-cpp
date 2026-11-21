@@ -103,8 +103,15 @@ void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sam
   if(newb)bmass=sampler.mass(0,bmax,theta,z*p.energy,(quark||qqbar)?Channel::QQ:Channel::GC,bmax,false,random);
   if(newc)cmass=sampler.mass(0,cmax,theta,(1-z)*p.energy,(quark||!qqbar)?Channel::GC:Channel::QQ,cmax,false,random);
   double mb=bmass.mass,mc=cmass.mass;
-  pz=(2*z*p.energy*p.energy-parent.record_mass*parent.record_mass-mb*mb+mc*mc)/(2*p.pz);
-  pts=z*z*p.energy*p.energy-pz*pz-mb*mb;
+  // MAKESPLITTING squares E before multiplying by z. Preserve the frozen
+  // GNU Fortran subtraction order: fuse the parent-mass and pz squares,
+  // while the reused daughter-mass squares are rounded independently.
+  double e2=p.energy*p.energy,mb2=mb*mb,mc2=mc*mc;
+  double numerator=std::fma(-parent.record_mass,parent.record_mass,(2*z)*e2);
+  numerator-=mb2;
+  numerator+=mc2;
+  pz=numerator/(2*p.pz);
+  pts=std::fma(-pz,pz,(z*z)*e2)-mb2;
   if(pts<0||mb+mc>parent.record_mass){
    if(mb==0&&mc==0){
     state.discarded=true;restore();

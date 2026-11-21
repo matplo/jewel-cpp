@@ -7,9 +7,9 @@ def rotate(p,theta,phi):
 def record(status,pdg,parent,children,p,mass,fraction,angle,decay,theta,phi,colour,anti,qq=0):
  return [status,pdg,parent,*children,*rotate(p,theta,phi),mass,.1,.2,.3,.4,0,0,0,.4,decay,.25,fraction,angle,qq,1,colour,anti]
 commands=[];labels=[];inputs=[];targets=[]
-def fixture(mode,pdg,qq,z,cold,reject=False,skip=False):
+def fixture(mode,pdg,qq,z,cold,reject=False,skip=False,energy=100.):
  index=len(labels);theta,phi=(.7,-1.2) if index%2 else (0,0)
- e=100.;mass=10.;share=.4;mb=2.;mc=3.;pm=math.sqrt(e*e-mass*mass)
+ e=energy;mass=10.;share=.4;mb=2.;mc=3.;pm=math.sqrt(e*e-mass*mass)
  pz=(2*share*e*e-mass*mass-mb*mb+mc*mc)/(2*pm);pt=math.sqrt(share*share*e*e-pz*pz-mb*mb)
  colour,anti=(101,102) if pdg==21 else (101,0) if pdg>0 else (0,102)
  rows=[record(11,21,0,[2,3],[0,0,pm,e],mass,share,.01 if reject else -1,1,theta,phi,101,102),
@@ -19,11 +19,16 @@ def fixture(mode,pdg,qq,z,cold,reject=False,skip=False):
  rng=random.Random(7600+index);tape=[rng.uniform(.000001,.999999) for _ in range(3000)]
  ft=1 if index%2 else 2
  commands.append(f'BCONFIG\n3 1 .2 1 {mode}\nSPLIT\n3 2 {ft} 102\n'+'\n'.join(' '.join(format(x,'.17g') for x in row) for row in rows)+'\n3000\n'+' '.join(format(x,'.17g') for x in tape)+'\n')
- labels.append([mode,pdg,qq,z,cold,reject,skip]);inputs.append(rows);targets.append(2)
+ labels.append([mode,pdg,qq,z,cold,reject,skip,energy]);inputs.append(rows);targets.append(2)
 for mode in range(6):
  for pdg,qq in [(1,0),(-1,0),(21,0),(21,1)]:
   for z in [.05,.4,.95]:
    for cold in [False,True]:fixture(mode,pdg,qq,z,cold)
+# Boosted and asymmetric daughters amplify rounding in the subtraction of
+# longitudinal momentum squared. Use common records and tapes in both engines.
+for energy in [20.,1000.,10000.]:
+ for mode in range(6):
+  for z in [.05,.95]:fixture(mode,21,0,z,False,energy=energy)
 for mode in [1,5]:fixture(mode,21,0,.4,False,True)
 fixture(0,21,0,1e-7,False)
 fixture(0,21,0,0,False)
@@ -64,7 +69,10 @@ for label,original,target,(ha,a),(hb,b) in zip(labels,inputs,targets,actual,expe
   for col in range(5,9):assert math.isclose(first[col]+second[col],parent[col],rel_tol=1e-12,abs_tol=1e-12)
   for child in [first,second]:
    invariant=child[8]**2-sum(child[col]**2 for col in [5,6,7])
-   assert math.isclose(invariant,child[9]**2,rel_tol=1e-10,abs_tol=5e-11)
+   # Daughter momentum comes from subtracting parent-scale squared terms.
+   # Bound cancellation in this independent mass-shell check at that scale;
+   # the direct C++/Fortran scalar tolerances below are unchanged.
+   assert math.isclose(invariant,child[9]**2,rel_tol=1e-10,abs_tol=max(5e-11,32*math.ulp(parent[8]**2))), (label,invariant,child[9]**2)
   flow=collections.Counter()
   for child in [first,second]:
    flow[child[24]]+=1;flow[child[25]]-=1

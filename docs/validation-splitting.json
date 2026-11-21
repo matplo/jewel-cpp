@@ -1,14 +1,14 @@
 {
   "scope": "MAKESPLITTING event construction and angular rejection",
-  "cases": 155,
-  "created": 150,
-  "scalars": 20202,
-  "max_absolute_error": 6.394884621840902e-13,
-  "max_relative_error": 1.7345749458376225e-11,
-  "max_draws": 76,
+  "cases": 191,
+  "created": 186,
+  "scalars": 24882,
+  "max_absolute_error": 2.2737367544323206e-13,
+  "max_relative_error": 1.8182127314863083e-13,
+  "max_draws": 85,
   "discarded": 2,
   "failures": [],
-  "input_sha256": "c5310e7656ae5df106c3e05c0746c060c2eede48e91c83b9cf2aa086f6d3d746",
+  "input_sha256": "cf565a014b187d2a400ba9eddae4b960be390f6530c5a5f719e19bbbd5650b16",
   "relative_tolerance": 2e-12,
   "absolute_tolerance": 2e-13,
   "sources": {
@@ -147,6 +147,75 @@
           "MAKESPLITTING": [
             3288,
             3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ],
+          "DOKINEMATICS": [
+            5643,
+            6452
+          ],
+          "MAKEINSPLIT": [
+            3871,
+            4126
+          ],
+          "DOCOHSCATTERING": [
+            4644,
+            5072
+          ],
+          "DOINSTATESCAT": [
+            4132,
+            4638
+          ],
+          "MAKECASCADE": [
+            2902,
+            2942
+          ],
+          "MAKEBRANCH": [
+            2948,
+            3282
+          ],
+          "FINDVIRTUALITIES": [
+            1893,
+            2239
+          ],
+          "GETTHETAM": [
+            2303,
+            2365
+          ],
+          "ISPARTON": [
+            8690,
+            8700
+          ],
+          "ISDIQUARK": [
+            8658,
+            8671
+          ]
+        },
+        "declaration_normalizations": {
+          "DOINSTATESCAT": [
+            {
+              "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+              "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+              "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+            }
           ]
         }
       },
@@ -279,7 +348,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "c74c837f40cf0c6d01c5749e5c33cc3dad817b731d2beace86efd69b12eba8d6",
-    "jewel-medium-reference": "b496945075f5bebab2c559fad45a73d46451959bb2b689cce1288b59633e1c2c"
+    "jewel-medium-probe": "49ee66b333faed9716b220eaf1a2cb1778750510c1fdfd62872ff4979e8f1373",
+    "jewel-medium-reference": "183549c850082bbbde7491f5f9459e64ed5b8a7a7112ffcc98c0fbaf210656d3"
   }
 }
