@@ -499,3 +499,8 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
   ${CMAKE_SOURCE_DIR}/tests/runner_recoils.py $<TARGET_FILE:jewel-run-events>
   $<TARGET_FILE:jewel-medium-probe>)
 endif()
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_test(NAME runner-recoil-controls COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_recoil_controls.py $<TARGET_FILE:jewel-run-events>
+  $<TARGET_FILE:jewel-medium-probe>)
+endif()

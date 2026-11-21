@@ -707,3 +707,9 @@ hadronization; it is not a post-clustering particle removal or thermal
 subtraction. Omission retains the previous `on` behavior. See
 [recoil validation](docs/validation-recoil-retention.md) and the
 [small native recoil-mode browser](docs/native-recoil-smoke.html).
+
+Recoil rescattering is configurable with `--recoil-rescattering on|off`, and
+fluid-rest-frame thresholds with `--recoil-cuts SOFT HARD` (multipliers of 3T).
+Defaults remain off and 0/0. [Validation and limits](docs/validation-recoil-controls.md)
+record shared nonfinite failures when rescattering becomes active; this mode
+is not yet validated for production or the full-generator comparison gate.

@@ -3,7 +3,8 @@
 Recorded 2026-11-21. Both native runners accept `--keep-recoils on|off`.
 The default is on, preserving previous native samples. This maps to stock
 JEWEL's KEEPRECOILS parameter / ALLHAD flag; it does not enable recoil
-rescattering, which remains disabled in this runner.
+rescattering. It defaults to off and is now separately configurable; see
+[rescattering controls and limitations](validation-recoil-controls.md).
 
 ## Semantics
 
