@@ -83,7 +83,7 @@ report=dict(scope='Native reduced PPJJ development samples; no Fortran compariso
  generator=None if args.generator is None else dict(path=str(args.generator.resolve()),sha256=hashlib.sha256(args.generator.read_bytes()).hexdigest()),
  selection=dict(algorithm='anti-kt',R=.4,min_pt_GeV=10,max_abs_eta=2,
  particles='all final visible particles; exclude neutrino PDG 12/14/16',
- order='full-phase-space clustering before jet cuts',recoils='included; no thermal subtraction'),
+ order='full-phase-space clustering before jet cuts',recoils='per-run keep_recoils flag (legacy missing flag means included); no thermal subtraction'),
  normalization='weighted jets per attempted event; failed events contribute zero jets; not a cross-section normalization',
  analysis_versions={'python':platform.python_version(),'hepyy':importlib.metadata.version('hepyy'),
  'cppyy':importlib.metadata.version('cppyy'),'fastjet':str(fj.gbl.fastjet.fastjet_version_string()),

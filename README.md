@@ -700,3 +700,10 @@ The [collision roundoff investigation](docs/validation-collision-roundoff.md)
 identifies a shared C++/Fortran nonfinite trigger in the flow sample. Its
 reproduction tool instruments temporary source copies and checks that event
 output remains unchanged; it does not clamp or alter the production physics.
+
+Use `--keep-recoils off` to exclude medium recoils using JEWEL's ALLHAD /
+KEEPRECOILS behavior. The setting controls collision colours as well as
+hadronization; it is not a post-clustering particle removal or thermal
+subtraction. Omission retains the previous `on` behavior. See
+[recoil validation](docs/validation-recoil-retention.md) and the
+[small native recoil-mode browser](docs/native-recoil-smoke.html).

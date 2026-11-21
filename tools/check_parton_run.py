@@ -81,6 +81,9 @@ def audit(path):
             inputs, products = event['hadronization_input'], event['hadronized_particles']
             check([p['id'] for p in inputs] == event['hadronization_sources'], 'hadronization source order')
             check(set(event['hadronization_sources']) <= ids, 'unknown hadronization source')
+            if header.get('keep_recoils') is False:
+                source_status = {p['id']: p['status'] for p in event['particles']}
+                check(all(source_status[p['id']] not in (3, 13, 22) for p in inputs), 'excluded recoil in hadronization input')
             finals = [p for p in products if p['final']]
             check(finals and all(p['colour'] == p['anticolour'] == 0 for p in finals), 'coloured hadronization output')
             total = [math.fsum(p['momentum'][j] for p in inputs) for j in range(4)]

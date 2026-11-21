@@ -494,3 +494,8 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
   ${CMAKE_SOURCE_DIR}/tests/runner_flow.py $<TARGET_FILE:jewel-run-events>
   $<TARGET_FILE:jewel-medium-probe>)
 endif()
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_test(NAME runner-recoils-contracts COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/runner_recoils.py $<TARGET_FILE:jewel-run-events>
+  $<TARGET_FILE:jewel-medium-probe>)
+endif()
