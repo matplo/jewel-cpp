@@ -1,0 +1,430 @@
+{
+  "scope": "DOKINEMATICS one-transfer momentum section, not complete routine",
+  "cases": 384,
+  "finite_cases": 381,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "conservation_tolerance": 1e-06,
+  "scalars": 20955,
+  "max_absolute_error": 3.552713678800501e-15,
+  "max_draws": 38.0,
+  "nonfinite_reference": [
+    {
+      "case": 243,
+      "input": {
+        "mode": 2,
+        "mass": -2,
+        "pdg": 1,
+        "variation": 3,
+        "p": [
+          6.029925372672534,
+          8.039900496896712,
+          17.40689518552921,
+          20
+        ],
+        "q": [
+          0.2,
+          -0.3,
+          0.4,
+          1.1357816691600546
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 255,
+      "input": {
+        "mode": 2,
+        "mass": -2,
+        "pdg": 21,
+        "variation": 3,
+        "p": [
+          6.029925372672534,
+          8.039900496896712,
+          17.40689518552921,
+          20
+        ],
+        "q": [
+          0.2,
+          -0.3,
+          0.4,
+          1.1357816691600546
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 351,
+      "input": {
+        "mode": 3,
+        "mass": -2,
+        "pdg": 21,
+        "variation": 3,
+        "p": [
+          6.029925372672534,
+          8.039900496896712,
+          17.40689518552921,
+          20
+        ],
+        "q": [
+          0.2,
+          -0.3,
+          0.4,
+          1.1357816691600546
+        ]
+      },
+      "cpp_rejected": true
+    }
+  ],
+  "conservation_residuals": [
+    {
+      "case": 207,
+      "cpp": [
+        1.160449442094702e-08,
+        -6.467291424616661e-09,
+        7.67877705865061e-09,
+        7.485957187469694e-09
+      ],
+      "fortran": [
+        1.160449442094702e-08,
+        -6.467291424616661e-09,
+        7.67877705865061e-09,
+        7.485957187469694e-09
+      ]
+    },
+    {
+      "case": 231,
+      "cpp": [
+        5.2641785930340745e-09,
+        -9.177957782657842e-09,
+        5.328678276406151e-09,
+        2.656234787679068e-09
+      ],
+      "fortran": [
+        5.2641785930340745e-09,
+        -9.177957782657842e-09,
+        5.328678276406151e-09,
+        2.656234787679068e-09
+      ]
+    }
+  ],
+  "coverage": {
+    "rejected-rest": 96,
+    "accepted-cms": 141,
+    "rejected-cms": 96,
+    "accepted-rest": 48,
+    "split-recoil": 15
+  },
+  "failures": [],
+  "input_sha256": "09f24a69aa63bd8af210aea958f29edae84145633b5988f0285018a2f20aeaef",
+  "sources": {
+    "collision-source.json": {
+      "file": "jewel-2.6.0.f.stock",
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routine": "DOKINEMATICS",
+      "declarations": {
+        "lines": [
+          5645,
+          5714
+        ],
+        "sha256": "a62416d97348d5fb6eaa979c1538e1ab925e5c4f7f5751b7ff2b07d2cae90c86"
+      },
+      "body": {
+        "lines": [
+          5752,
+          6135
+        ],
+        "sha256": "971e8fd1cb3b796d64165ad21494b46ba7bafcf3ff8192d87d8eeee305ca6b11"
+      }
+    },
+    "medium-source.json": {
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "ODEINT": [
+            8315,
+            8347
+          ],
+          "RKSTEPPER": [
+            8354,
+            8400
+          ],
+          "RK4STEP": [
+            8407,
+            8416
+          ],
+          "EI": [
+            7872,
+            7920
+          ],
+          "EIXINT": [
+            8282,
+            8308
+          ],
+          "INTPQGLOW": [
+            7784,
+            7802
+          ],
+          "INTPQGHIGH": [
+            7809,
+            7827
+          ],
+          "SCATPRIMFUNC": [
+            7692,
+            7710
+          ],
+          "GETINSPLITI": [
+            6837,
+            6922
+          ],
+          "GETINSUDAKOV": [
+            6545,
+            6582
+          ],
+          "INSUDAINT": [
+            8235,
+            8275
+          ],
+          "GETINSUDARED": [
+            7284,
+            7359
+          ],
+          "GETINSUDAFAST": [
+            7247,
+            7278
+          ],
+          "SPLITFNCINT": [
+            7994,
+            8075
+          ],
+          "GETSPLITI": [
+            6692,
+            6831
+          ],
+          "GETSUDAKOV": [
+            6486,
+            6539
+          ],
+          "PQQ": [
+            7927,
+            7931
+          ],
+          "PGG": [
+            7949,
+            7953
+          ],
+          "PQG": [
+            7960,
+            7964
+          ],
+          "ALPHAS": [
+            7971,
+            7987
+          ],
+          "GETPDF": [
+            6928,
+            7022
+          ],
+          "GETPDFXINTEXACT": [
+            7096,
+            7129
+          ],
+          "PDFINT": [
+            8082,
+            8135
+          ],
+          "GETPDFXINT": [
+            7027,
+            7090
+          ],
+          "PGQ": [
+            7938,
+            7942
+          ],
+          "XSECINT": [
+            8142,
+            8228
+          ],
+          "GETXSECINT": [
+            7135,
+            7241
+          ],
+          "GETSSCAT": [
+            7365,
+            7458
+          ],
+          "GETMASS": [
+            7465,
+            7625
+          ],
+          "GENERATEZ": [
+            7632,
+            7685
+          ],
+          "GETDELTAT": [
+            8423,
+            8554
+          ],
+          "REJECTSPLITTING": [
+            3688,
+            3865
+          ],
+          "MAKESPLITTING": [
+            3288,
+            3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ]
+        }
+      },
+      "medium-simple.f.stock": {
+        "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+        "routines": {
+          "GETTEMP": [
+            473,
+            523
+          ],
+          "GETMD": [
+            430,
+            438
+          ],
+          "GETMS": [
+            442,
+            446
+          ],
+          "GETNEFF": [
+            450,
+            469
+          ],
+          "NPART": [
+            661,
+            674
+          ],
+          "NTHICK": [
+            678,
+            716
+          ],
+          "CALCTA": [
+            720,
+            758
+          ],
+          "MEDDERIV": [
+            808,
+            829
+          ],
+          "CALCXSECTION": [
+            762,
+            804
+          ],
+          "MEDNEXTEVT": [
+            207,
+            243
+          ],
+          "PICKVTX": [
+            255,
+            278
+          ],
+          "GETSCATTERER": [
+            292,
+            368
+          ],
+          "GETTEMPMAX": [
+            527,
+            542
+          ],
+          "GETMDMAX": [
+            546,
+            554
+          ],
+          "GETMDMIN": [
+            558,
+            576
+          ],
+          "GETMSMAX": [
+            580,
+            584
+          ],
+          "GETNATMDMIN": [
+            588,
+            612
+          ],
+          "GETLTIMEMAX": [
+            616,
+            634
+          ],
+          "GETNEFFMAX": [
+            638,
+            657
+          ],
+          "AVSCATCEN": [
+            371,
+            403
+          ],
+          "MAXSCATCEN": [
+            406,
+            426
+          ]
+        }
+      },
+      "meix.f": {
+        "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "routines": {
+          "EIX": [
+            7,
+            38
+          ]
+        }
+      }
+    },
+    "kinematics-source.json": {
+      "pythia6425mod-lhapdf6.f": {
+        "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+        "routines": {
+          "PYANGL": [
+            74441,
+            74466
+          ],
+          "PYROBO": [
+            74638,
+            74735
+          ],
+          "PYP": [
+            76081,
+            76156
+          ]
+        }
+      },
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "GETPOSITION": [
+            8807,
+            8826
+          ]
+        }
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "3aea74fce04c0fc41481dc581c2c9a7cf8600ea0917b68dca963a604756abeea",
+    "jewel-medium-reference": "1c6bfa57893d886fb559e7545526e709f795cb94b6898a63edc98140db2fb26e"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "file": "jewel-2.6.0.f.stock",
+  "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+  "routine": "DOKINEMATICS",
+  "declarations": {
+    "lines": [
+      5645,
+      5714
+    ],
+    "sha256": "a62416d97348d5fb6eaa979c1538e1ab925e5c4f7f5751b7ff2b07d2cae90c86"
+  },
+  "body": {
+    "lines": [
+      5752,
+      6135
+    ],
+    "sha256": "971e8fd1cb3b796d64165ad21494b46ba7bafcf3ff8192d87d8eeee305ca6b11"
+  }
+}

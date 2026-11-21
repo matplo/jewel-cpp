@@ -3,7 +3,7 @@ project(jewel_cpp VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_library(jewel_core src/core.cpp src/medium.cpp src/radiation.cpp src/final_splitting.cpp src/partonic_pdf.cpp src/scattering.cpp src/branching.cpp src/kinematics.cpp src/shower_state.cpp src/transport.cpp src/shower.cpp src/transfer.cpp src/evolution.cpp src/recoil.cpp)
+add_library(jewel_core src/core.cpp src/medium.cpp src/radiation.cpp src/final_splitting.cpp src/partonic_pdf.cpp src/scattering.cpp src/branching.cpp src/kinematics.cpp src/shower_state.cpp src/transport.cpp src/shower.cpp src/transfer.cpp src/evolution.cpp src/recoil.cpp src/collision.cpp)
 target_include_directories(jewel_core PUBLIC include)
 target_compile_options(jewel_core PRIVATE -Wall -Wextra -Wpedantic)
 add_executable(jewel-probe app/probe.cpp)
@@ -195,4 +195,22 @@ if(JEWEL_REFERENCE_SOURCE)
  add_test(NAME recoil-differential COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/recoil_differential.py $<TARGET_FILE:jewel-recoil-probe>
   $<TARGET_FILE:jewel-recoil-reference> ${CMAKE_BINARY_DIR}/recoil-validation.json)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_collision.py
+  ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/collision-reference.f RESULT_VARIABLE collision_extracted)
+ if(NOT collision_extracted EQUAL 0)
+  message(FATAL_ERROR "Collision reference extraction failed")
+ endif()
+ target_sources(jewel-medium-reference PRIVATE ${CMAKE_BINARY_DIR}/collision-reference.f)
+ add_test(NAME collision-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/collision_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/collision-validation.json)
+endif()
+
+if(BUILD_TESTING)
+ add_executable(collision-test tests/collision.cpp)
+ target_link_libraries(collision-test PRIVATE jewel_core)
+ add_test(NAME collision-contracts COMMAND collision-test)
 endif()

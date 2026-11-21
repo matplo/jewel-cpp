@@ -456,3 +456,17 @@ Invalid dummy projections throw; callers must restore or discard partial state.
 hash-verified Fortran statements and compares every allocated slot.
 This is a dependency of collision application, not yet a complete DOKINEMATICS
 implementation or final-event recoil subtraction.
+
+## Milestone 2j: collision momentum reconstruction
+
+`scatter_pair()` in `jewel/collision.hpp` implements the one-transfer momentum
+section of DOKINEMATICS: centre-of-mass or scatterer-rest-frame reconstruction,
+KINMODE 0–3, recoil-mass sampling, kinematic retries and temperature-dependent
+recoil mass. It returns candidate records and bookkeeping without appending to
+the event. Parent/daughter links, colours, timing, recoil storage and the outer
+sequence retry still need integration.
+
+[Validation](docs/validation-collision.md) compares 381 finite reference cases
+and separately records three cases where Fortran produces NaNs and C++ throws.
+The two finite fallback cases with small conservation residuals are retained
+and reported. This remains section-level evidence, not full-event validation.

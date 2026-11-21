@@ -1,6 +1,7 @@
 ! SPDX-License-Identifier: GPL-2.0-or-later
 ! Only DERIV dispatch (modes 5/101) and initial COMMON configuration are harness code.
 program mediumprobe
+ use, intrinsic :: ieee_arithmetic
  implicit none
  double precision centrmin,centrmax,breal,centr,rau
  integer nf
@@ -83,6 +84,9 @@ program mediumprobe
  double precision allqs(10000,6),scatcentres(10000,10),qsumvec(4),qsum2
  common /COHERENT/ nstart,nend,allqs,scatcentres,qsumvec,qsum2
  double precision nowtime,lefttime,newmass
+ double precision pairtotal,pairremaining,pairtarget,pairdelta,pairdm,pairz,pairnewm
+ integer pairdir,lastflag
+ logical pairsplit,pairqq,pairreject,pairshuffle
  logical above_cutoff
  character(20) op
  logfid=0
@@ -211,6 +215,25 @@ program mediumprobe
    write(*,'(ES26.17E3)')v
   case('ECONFIG')
    read(*,*)q0,scalefacm,ftfac,ltime,xsecscalefac
+  case('PAIR')
+   read(*,*)kinmode,q0,scalefacm,pairtotal,pairremaining,pairtarget,pairdelta,lastflag
+   n=2;k=0;p=0;vertices=0;mv=0;allqs=0;scatcentres=0;mstu=0
+   mstu(4)=23000;paru(1)=3.141592653589793d0
+   read(*,*)p(2,:),k(2,2),k(2,1),mv(2,1:4),vertices(2,1:4)
+   read(*,*)vertices(1,1:4)
+   read(*,*)allqs(1,1),scatcentres(1,:)
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0;pairdm=0;pairz=0;pairdir=0;pairsplit=.false.;pairqq=.false.;pairreject=.false.;pairshuffle=.false.
+   pairnewm=pairtarget
+   call pair_reference(2,1,2-lastflag,pairtarget,pairremaining,pairtotal,pairdelta,pairdm, &
+    pairdir,pairsplit,pairz,pairqq,pairreject,pairshuffle,pairnewm)
+   write(*,'(4ES26.17E3,7I8)')pairdm,pairtotal,pairnewm,pairz,merge(1,0,pairsplit), &
+    merge(1,0,pairqq),merge(1,0,pairreject),merge(1,0,pairshuffle),pairdir,cursor,merge(0,1,all(ieee_is_finite(p(1:4,:))))
+   do i=1,4
+    write(*,'(2I8,9ES26.17E3)')k(i,1),k(i,2),p(i,:),vertices(i,1:4)
+   enddo
   case('FSTATE')
    read(*,*)nowtime,lefttime
    n=2
