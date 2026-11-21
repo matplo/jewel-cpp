@@ -87,6 +87,11 @@ program mediumprobe
  double precision pairtotal,pairremaining,pairtarget,pairdelta,pairdm,pairz,pairnewm
  integer pairdir,lastflag
  logical pairsplit,pairqq,pairreject,pairshuffle
+ integer nscatcen,maxnscatcen,scatflav(23000),putonshell,hadflag,scatflag,writeflag,subflag,cohflag
+ double precision scatcen(23000,5),dummies(23000,5),rsub
+ logical writescatcen,writedummies,dosubtraction,cohflaglogical
+ common /storescatcen/ nscatcen,maxnscatcen,scatflav,scatcen,writescatcen,writedummies,dosubtraction,putonshell,rsub
+ common /storedummies/ dummies
  logical above_cutoff
  character(20) op
  logfid=0
@@ -215,25 +220,59 @@ program mediumprobe
    write(*,'(ES26.17E3)')v
   case('ECONFIG')
    read(*,*)q0,scalefacm,ftfac,ltime,xsecscalefac
-  case('PAIR')
+  case('PAIR','HIT')
    read(*,*)kinmode,q0,scalefacm,pairtotal,pairremaining,pairtarget,pairdelta,lastflag
    n=2;k=0;p=0;vertices=0;mv=0;allqs=0;scatcentres=0;mstu=0
    mstu(4)=23000;paru(1)=3.141592653589793d0
    read(*,*)p(2,:),k(2,2),k(2,1),mv(2,1:4),vertices(2,1:4)
    read(*,*)vertices(1,1:4)
    read(*,*)allqs(1,1),scatcentres(1,:)
+   trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.
+   if(trim(op)=='HIT')then
+    read(*,*)ftfac,recsoftcut,rechardcut,hadflag,scatflag,recmode,writeflag,subflag
+    allhad=hadflag/=0;scatrecoil=scatflag/=0;writescatcen=writeflag/=0;dosubtraction=subflag/=0
+    read(*,*)zdec,qflag,mv(2,5),nowtime,scatcentres(2,10),allqs(1,6),cohflag
+    cohflaglogical=cohflag/=0
+    read(*,*)trip(2),anti(2),colmax,nscatcen,maxnscatcen
+    scatflav=-99
+    do j=1,5
+     scatcen(:,j)=dble(j);dummies(:,j)=dble(j+5)
+    enddo
+   endif
    read(*,*)count
    if(count<0.or.count>100000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0;pairdm=0;pairz=0;pairdir=0;pairsplit=.false.;pairqq=.false.;pairreject=.false.;pairshuffle=.false.
    pairnewm=pairtarget
+   if(trim(op)=='PAIR')then
    call pair_reference(2,1,2-lastflag,pairtarget,pairremaining,pairtotal,pairdelta,pairdm, &
     pairdir,pairsplit,pairz,pairqq,pairreject,pairshuffle,pairnewm)
+   else
+    call hit_reference(2,1,2-lastflag,pairtarget,pairremaining,pairtotal,pairdelta,pairdm, &
+     pairdir,pairsplit,pairz,pairqq,pairreject,pairshuffle,pairnewm,zdec,qflag/=0,nowtime,cohflaglogical)
+   endif
+   if(trim(op)=='HIT')then
+    initial_flag=merge(0,1,all(ieee_is_finite(p(1:4,:))).and.all(ieee_is_finite(mv(1:4,:))).and. &
+     all(ieee_is_finite(scatcen(1:maxnscatcen,:))).and.all(ieee_is_finite(dummies(1:maxnscatcen,:))))
+   else
+    initial_flag=merge(0,1,all(ieee_is_finite(p(1:4,:))))
+   endif
    write(*,'(4ES26.17E3,7I8)')pairdm,pairtotal,pairnewm,pairz,merge(1,0,pairsplit), &
-    merge(1,0,pairqq),merge(1,0,pairreject),merge(1,0,pairshuffle),pairdir,cursor,merge(0,1,all(ieee_is_finite(p(1:4,:))))
+    merge(1,0,pairqq),merge(1,0,pairreject),merge(1,0,pairshuffle),pairdir,cursor,initial_flag
    do i=1,4
-    write(*,'(2I8,9ES26.17E3)')k(i,1),k(i,2),p(i,:),vertices(i,1:4)
+    if(trim(op)=='PAIR')then
+     write(*,'(2I8,9ES26.17E3)')k(i,1),k(i,2),p(i,:),vertices(i,1:4)
+    else
+     write(*,'(2I8,9ES26.17E3,2I8,7ES26.17E3,2I8)')k(i,1),k(i,2),p(i,:),vertices(i,1:4), &
+      trip(i),anti(i),mv(i,:),zd(i),thetad(i),merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
+    endif
    enddo
+   if(trim(op)=='HIT')then
+    write(*,'(2I8)')colmax,nscatcen
+    do i=1,maxnscatcen
+     write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
+    enddo
+   endif
   case('FSTATE')
    read(*,*)nowtime,lefttime
    n=2

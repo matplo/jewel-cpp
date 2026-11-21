@@ -15,5 +15,12 @@
       6135
     ],
     "sha256": "971e8fd1cb3b796d64165ad21494b46ba7bafcf3ff8192d87d8eeee305ca6b11"
+  },
+  "hit_body": {
+    "lines": [
+      5752,
+      6385
+    ],
+    "sha256": "bb7fe6d49b073350963bb57549ce6ac8cf8d14e6f27c992b583f4d5fa3549639"
   }
 }

@@ -20,4 +20,10 @@ setup='''      line=l
       lpart=l
       isrecoil=k(l,1).eq.2
 '''
-output.write_text(header+section('declarations')+setup+section('body')+' 222  continue\n      end\n')
+pair=header+section('declarations')+setup+section('body')+' 222  continue\n      end\n'
+hitheader='''      subroutine hit_reference(L,N1,N2,NEWM,DMLEFT,TTOT,
+     & DELTAM,DM,DIR,SPLITREC,Z4,QQBARDEC,REJECTT,RESHUFFLE,NEWM2,
+     & Z,QQBAR,TIME,forcohscat)
+'''
+output.write_text(pair+hitheader+section('declarations')+setup+
+ '      firsttime=mv(l,5)\n'+section('hit_body')+'      end\n')

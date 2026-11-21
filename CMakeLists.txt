@@ -214,3 +214,8 @@ if(BUILD_TESTING)
  target_link_libraries(collision-test PRIVATE jewel_core)
  add_test(NAME collision-contracts COMMAND collision-test)
 endif()
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME collision-step-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/collision_step_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/collision-step-validation.json)
+endif()

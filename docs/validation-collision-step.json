@@ -1,0 +1,658 @@
+{
+  "scope": "DOKINEMATICS one-transfer momentum/colour/timing/storage step; no outer sequence retry",
+  "cases": 768,
+  "finite_cases": 750,
+  "scalars": 100500,
+  "max_absolute_error": 3.552713678800501e-15,
+  "max_draws": 23.0,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "dummy_absolute_tolerance": 2e-20,
+  "coverage": {
+    "accepted": 366,
+    "recoil_status_3": 45,
+    "recoil_status_13": 228,
+    "rejected": 384,
+    "recoil_status_2": 87,
+    "split_recoil": 31,
+    "recoil_status_1": 6
+  },
+  "nonfinite_reference": [
+    {
+      "case": 96,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 1,
+        "variant": 0,
+        "colours": [
+          10,
+          0
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 100,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 1,
+        "variant": 4,
+        "colours": [
+          10,
+          0
+        ],
+        "initial_used": 1
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 104,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 1,
+        "variant": 8,
+        "colours": [
+          10,
+          0
+        ],
+        "initial_used": 2
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 108,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 1,
+        "variant": 12,
+        "colours": [
+          10,
+          0
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 112,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": -1,
+        "variant": 0,
+        "colours": [
+          0,
+          11
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 116,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": -1,
+        "variant": 4,
+        "colours": [
+          0,
+          11
+        ],
+        "initial_used": 1
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 120,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": -1,
+        "variant": 8,
+        "colours": [
+          0,
+          11
+        ],
+        "initial_used": 2
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 124,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": -1,
+        "variant": 12,
+        "colours": [
+          0,
+          11
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 128,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 21,
+        "variant": 0,
+        "colours": [
+          10,
+          11
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 132,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 21,
+        "variant": 4,
+        "colours": [
+          10,
+          11
+        ],
+        "initial_used": 1
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 136,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 21,
+        "variant": 8,
+        "colours": [
+          10,
+          11
+        ],
+        "initial_used": 2
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 140,
+      "input": {
+        "mode": 0,
+        "recmode": 2,
+        "pdg": 21,
+        "variant": 12,
+        "colours": [
+          10,
+          11
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 148,
+      "input": {
+        "mode": 0,
+        "recmode": 3,
+        "pdg": 1,
+        "variant": 4,
+        "colours": [
+          10,
+          0
+        ],
+        "initial_used": 1
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 156,
+      "input": {
+        "mode": 0,
+        "recmode": 3,
+        "pdg": 1,
+        "variant": 12,
+        "colours": [
+          10,
+          0
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 164,
+      "input": {
+        "mode": 0,
+        "recmode": 3,
+        "pdg": -1,
+        "variant": 4,
+        "colours": [
+          0,
+          11
+        ],
+        "initial_used": 1
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 172,
+      "input": {
+        "mode": 0,
+        "recmode": 3,
+        "pdg": -1,
+        "variant": 12,
+        "colours": [
+          0,
+          11
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 180,
+      "input": {
+        "mode": 0,
+        "recmode": 3,
+        "pdg": 21,
+        "variant": 4,
+        "colours": [
+          10,
+          11
+        ],
+        "initial_used": 1
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 188,
+      "input": {
+        "mode": 0,
+        "recmode": 3,
+        "pdg": 21,
+        "variant": 12,
+        "colours": [
+          10,
+          11
+        ],
+        "initial_used": 0
+      },
+      "cpp_rejected": true
+    }
+  ],
+  "dummy_mass_cancellation": [
+    {
+      "case": 57,
+      "row": 6,
+      "cpp": 9.949268198630321e-14,
+      "fortran": 9.84725615442753e-14,
+      "signed_mass_squared_error": 2.0194839173657759e-28,
+      "roundoff_bound": 7.325133994512799e-27,
+      "within_bound": true
+    },
+    {
+      "case": 89,
+      "row": 6,
+      "cpp": 8.639943528209782e-14,
+      "fortran": 8.598862793703867e-14,
+      "signed_mass_squared_error": 7.081828257094381e-29,
+      "roundoff_bound": 7.339027634702923e-27,
+      "within_bound": true
+    },
+    {
+      "case": 441,
+      "row": 6,
+      "cpp": 4.2782339504038955e-14,
+      "fortran": 4.3946589962215973e-14,
+      "signed_mass_squared_error": 1.0097419586828951e-28,
+      "roundoff_bound": 7.105427357600995e-27,
+      "within_bound": true
+    },
+    {
+      "case": 457,
+      "row": 6,
+      "cpp": 8.492045119910221e-14,
+      "fortran": 8.281348529267493e-14,
+      "signed_mass_squared_error": 3.534096855390133e-28,
+      "roundoff_bound": 7.476657349171915e-27,
+      "within_bound": true
+    },
+    {
+      "case": 649,
+      "row": 6,
+      "cpp": 6.706789362333381e-14,
+      "fortran": 6.744323133573127e-14,
+      "signed_mass_squared_error": 5.048709793414404e-29,
+      "roundoff_bound": 7.105427357600986e-27,
+      "within_bound": true
+    }
+  ],
+  "failures": [],
+  "input_sha256": "32e837c99a06c0e4d9d81238e09a033e01f59462b2179a1b6c799433c63dac25",
+  "sources": {
+    "collision-source.json": {
+      "file": "jewel-2.6.0.f.stock",
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routine": "DOKINEMATICS",
+      "declarations": {
+        "lines": [
+          5645,
+          5714
+        ],
+        "sha256": "a62416d97348d5fb6eaa979c1538e1ab925e5c4f7f5751b7ff2b07d2cae90c86"
+      },
+      "body": {
+        "lines": [
+          5752,
+          6135
+        ],
+        "sha256": "971e8fd1cb3b796d64165ad21494b46ba7bafcf3ff8192d87d8eeee305ca6b11"
+      },
+      "hit_body": {
+        "lines": [
+          5752,
+          6385
+        ],
+        "sha256": "bb7fe6d49b073350963bb57549ce6ac8cf8d14e6f27c992b583f4d5fa3549639"
+      }
+    },
+    "medium-source.json": {
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "ODEINT": [
+            8315,
+            8347
+          ],
+          "RKSTEPPER": [
+            8354,
+            8400
+          ],
+          "RK4STEP": [
+            8407,
+            8416
+          ],
+          "EI": [
+            7872,
+            7920
+          ],
+          "EIXINT": [
+            8282,
+            8308
+          ],
+          "INTPQGLOW": [
+            7784,
+            7802
+          ],
+          "INTPQGHIGH": [
+            7809,
+            7827
+          ],
+          "SCATPRIMFUNC": [
+            7692,
+            7710
+          ],
+          "GETINSPLITI": [
+            6837,
+            6922
+          ],
+          "GETINSUDAKOV": [
+            6545,
+            6582
+          ],
+          "INSUDAINT": [
+            8235,
+            8275
+          ],
+          "GETINSUDARED": [
+            7284,
+            7359
+          ],
+          "GETINSUDAFAST": [
+            7247,
+            7278
+          ],
+          "SPLITFNCINT": [
+            7994,
+            8075
+          ],
+          "GETSPLITI": [
+            6692,
+            6831
+          ],
+          "GETSUDAKOV": [
+            6486,
+            6539
+          ],
+          "PQQ": [
+            7927,
+            7931
+          ],
+          "PGG": [
+            7949,
+            7953
+          ],
+          "PQG": [
+            7960,
+            7964
+          ],
+          "ALPHAS": [
+            7971,
+            7987
+          ],
+          "GETPDF": [
+            6928,
+            7022
+          ],
+          "GETPDFXINTEXACT": [
+            7096,
+            7129
+          ],
+          "PDFINT": [
+            8082,
+            8135
+          ],
+          "GETPDFXINT": [
+            7027,
+            7090
+          ],
+          "PGQ": [
+            7938,
+            7942
+          ],
+          "XSECINT": [
+            8142,
+            8228
+          ],
+          "GETXSECINT": [
+            7135,
+            7241
+          ],
+          "GETSSCAT": [
+            7365,
+            7458
+          ],
+          "GETMASS": [
+            7465,
+            7625
+          ],
+          "GENERATEZ": [
+            7632,
+            7685
+          ],
+          "GETDELTAT": [
+            8423,
+            8554
+          ],
+          "REJECTSPLITTING": [
+            3688,
+            3865
+          ],
+          "MAKESPLITTING": [
+            3288,
+            3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ]
+        }
+      },
+      "medium-simple.f.stock": {
+        "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+        "routines": {
+          "GETTEMP": [
+            473,
+            523
+          ],
+          "GETMD": [
+            430,
+            438
+          ],
+          "GETMS": [
+            442,
+            446
+          ],
+          "GETNEFF": [
+            450,
+            469
+          ],
+          "NPART": [
+            661,
+            674
+          ],
+          "NTHICK": [
+            678,
+            716
+          ],
+          "CALCTA": [
+            720,
+            758
+          ],
+          "MEDDERIV": [
+            808,
+            829
+          ],
+          "CALCXSECTION": [
+            762,
+            804
+          ],
+          "MEDNEXTEVT": [
+            207,
+            243
+          ],
+          "PICKVTX": [
+            255,
+            278
+          ],
+          "GETSCATTERER": [
+            292,
+            368
+          ],
+          "GETTEMPMAX": [
+            527,
+            542
+          ],
+          "GETMDMAX": [
+            546,
+            554
+          ],
+          "GETMDMIN": [
+            558,
+            576
+          ],
+          "GETMSMAX": [
+            580,
+            584
+          ],
+          "GETNATMDMIN": [
+            588,
+            612
+          ],
+          "GETLTIMEMAX": [
+            616,
+            634
+          ],
+          "GETNEFFMAX": [
+            638,
+            657
+          ],
+          "AVSCATCEN": [
+            371,
+            403
+          ],
+          "MAXSCATCEN": [
+            406,
+            426
+          ]
+        }
+      },
+      "meix.f": {
+        "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "routines": {
+          "EIX": [
+            7,
+            38
+          ]
+        }
+      }
+    },
+    "kinematics-source.json": {
+      "pythia6425mod-lhapdf6.f": {
+        "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+        "routines": {
+          "PYANGL": [
+            74441,
+            74466
+          ],
+          "PYROBO": [
+            74638,
+            74735
+          ],
+          "PYP": [
+            76081,
+            76156
+          ]
+        }
+      },
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "GETPOSITION": [
+            8807,
+            8826
+          ]
+        }
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "e4cc50ffeb372f385c0f0c0a5a332518f6f47c33ad19b51786ce44999264b4d1",
+    "jewel-medium-reference": "b07abaab3fd487e11b5efb34d9bb5bb00ed4e038466a0a28c899eba7f33ad754"
+  }
+}

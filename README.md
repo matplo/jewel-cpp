@@ -470,3 +470,19 @@ sequence retry still need integration.
 and separately records three cases where Fortran produces NaNs and C++ throws.
 The two finite fallback cases with small conservation residuals are retained
 and reported. This remains section-level evidence, not full-event validation.
+
+## Milestone 2k: collision-step colours, timing and recoil records
+
+`finish_collision()` completes each accepted momentum pair's recoil
+classification, colour assignment, splitting metadata, production/decay times
+and subtraction storage. The configuration includes formation-time and recoil
+cuts, hadronization/rescattering switches and RECMODE. Timing explicitly carries
+the original decay time, coherent end time, next transfer time and current
+transfer time. Candidate objects must be restored or discarded on exceptions.
+
+[Combined validation](docs/validation-collision-step.md) covers 750 finite
+reference cases and explicitly records 18 nonfinite reference cases. Nearly
+lightlike dummy masses have separately reported, roundoff-bounded invariant
+comparisons. Event genealogy, multi-transfer sequencing, the final lifetime
+overwrite and outer retries are still pending; full DOKINEMATICS parity is not
+yet claimed.

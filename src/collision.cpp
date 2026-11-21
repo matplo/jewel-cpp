@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
+#include <limits>
 namespace jewel {
 namespace {
 void transform(ShowerParticle& a,double theta,double phi,std::array<double,3> beta={0,0,0}){
@@ -125,5 +126,70 @@ CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,cons
   c.record_mass=std::copysign(std::sqrt(std::abs(m32)),newmass);d.record_mass=std::sqrt(m42);
  }
  from_axis(c);from_axis(d);from_axis(a);from_axis(b);result.mass_change=dm;return result;
+}
+}
+
+namespace jewel {
+void finish_collision(CollisionPair& result,int& colour_max,RecoilStorage& storage,
+ CollisionFinalizationConfig config,CollisionStepTiming timing,const Medium& medium,Random& random){
+ for(double v:{config.formation_factor,config.soft_recoil_cut,config.hard_recoil_cut,timing.total_mass_change,
+  timing.fraction,timing.first_decay_time,timing.coherent_end_time,timing.next_transfer_time,timing.transfer_time})
+  if(!std::isfinite(v))throw std::domain_error("nonfinite collision finalization input");
+ if(config.formation_factor<=0||colour_max<0||timing.fraction<0||timing.fraction>=1)
+  throw std::domain_error("invalid collision finalization input");
+ if(result.rejected)return;
+ auto& a=result.incoming;auto& b=result.centre;auto& c=result.outgoing;auto& d=result.recoil;
+ bool soft=false;
+ if(!config.hadronize_recoils)d.particle.status=13;
+ else{
+  auto point=b.particle.production;
+  if(point.t<=std::abs(point.z))throw std::domain_error("collision outside fluid rapidity domain");
+  double ys=.5*std::log((point.t+point.z)/(point.t-point.z));auto p=d.particle.momentum;
+  double longitudinal=std::sinh(-ys)*p.energy+std::cosh(-ys)*p.pz;
+  double magnitude=std::sqrt(longitudinal*longitudinal+p.px*p.px+p.py*p.py);
+  double temperature=medium.sample(point).temperature;
+  soft=magnitude<config.soft_recoil_cut*3.*temperature;
+  d.particle.status=soft?13:config.scatter_recoils&&magnitude>config.hard_recoil_cut*3.*temperature?2:3;
+ }
+ bool coloured=config.hadronize_recoils&&!soft;
+ if(coloured){
+  if(colour_max==std::numeric_limits<int>::max())throw std::domain_error("collision colour index exhausted");
+  if(c.particle.pdg==21){
+   c.particle.colour=result.colour_direction==1?colour_max+1:a.particle.colour;
+   c.particle.anticolour=result.colour_direction==1?a.particle.anticolour:colour_max+1;
+  }else if(c.particle.pdg>0){c.particle.colour=colour_max+1;c.particle.anticolour=0;}
+  else{c.particle.colour=0;c.particle.anticolour=colour_max+1;}
+  ++colour_max;
+  if(c.particle.pdg>0&&result.colour_direction>=0){d.particle.colour=a.particle.colour;d.particle.anticolour=c.particle.colour;}
+  else{d.particle.colour=c.particle.anticolour;d.particle.anticolour=a.particle.anticolour;}
+ }else{
+  c.particle.colour=a.particle.colour;c.particle.anticolour=a.particle.anticolour;
+  d.particle.colour=0;d.particle.anticolour=0;
+ }
+ if(c.particle.status==2&&timing.fraction==0){c.fraction=-1;c.angle=-1;}
+ else{c.fraction=timing.fraction;c.angle=timing.fraction==0?0:c.record_mass/(std::sqrt(timing.fraction*(1-timing.fraction))*c.particle.momentum.energy);}
+ c.quark_pair=timing.quark_pair;c.angular_required=false;
+ if(result.split_recoil){
+  if(d.particle.status==2)d.particle.status=1;
+  d.angle=d.record_mass/(std::sqrt(result.recoil_fraction*(1-result.recoil_fraction))*d.particle.momentum.energy);
+  d.fraction=result.recoil_fraction;d.quark_pair=result.recoil_pair;
+ }else{d.angle=-1;d.fraction=-1;d.quark_pair=false;}
+ d.angular_required=false;
+ c.particle.production=position_at(a.particle.momentum,a.particle.production,b.particle.production.t);
+ d.particle.production=c.particle.production;
+ if(d.record_mass>b.record_mass){
+  double lambda=1./(config.formation_factor*double(.2f)*d.particle.momentum.energy/(d.record_mass*d.record_mass));
+  d.decay_time=d.particle.production.t-std::log(1-random.uniform())/lambda;
+ }else d.decay_time=0;
+ if(!timing.last_transfer)c.decay_time=timing.next_transfer_time;
+ else if(c.record_mass>0){
+  if(timing.total_mass_change==0)c.decay_time=timing.coherent?timing.coherent_end_time:timing.first_decay_time;
+  else{
+   double lambda=1./(config.formation_factor*c.particle.momentum.energy*double(.2f)/(c.record_mass*c.record_mass));
+   c.decay_time=b.particle.production.t-std::log(1-random.uniform())/lambda;
+  }
+ }else c.decay_time=0;
+ a.decay_time=timing.transfer_time;
+ store_recoil(storage,config.storage,b.particle.pdg,b.particle.momentum,b.record_mass,d.particle.momentum,soft,false);
 }
 }
