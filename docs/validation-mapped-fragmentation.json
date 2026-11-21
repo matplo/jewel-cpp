@@ -1,0 +1,96 @@
+{
+  "scope": "Mapped explicit JEWEL fragmentation overrides: conservation and native-cascade independence, not Pythia6 parity",
+  "samples": [
+    {
+      "input": "/private/tmp/jewel-mapped-hadrons-vacuum20.jsonl",
+      "sha256": "ddcebb73ba312400a454d199b5d7fa9fb95bf3b37c466a60b048f0e18c3c2edb",
+      "mode": "vacuum",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 20,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 20,
+        "failed_weight": 0,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15199660026516534,
+        "generator_sigma_error_mb": 0.01580675911776028,
+        "final_records": 322
+      },
+      "hadronized_final_particles": 2234,
+      "max_hadronization_momentum_residual_GeV": 9.559698810335249e-09,
+      "failure_reasons": [],
+      "audit": "passed; accounting and record integrity only"
+    },
+    {
+      "input": "/private/tmp/jewel-mapped-hadrons-medium20.jsonl",
+      "sha256": "fb2156e30058bf18f585feb90f9e2939ce9eb640baa0f19adce8de9deeba2e22",
+      "mode": "medium",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 18,
+        "evolution_failures": 2,
+        "generation_failures": 0,
+        "accepted_weight": 18,
+        "failed_weight": 2,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.15199660026516534,
+        "generator_sigma_error_mb": 0.01580675911776028,
+        "final_records": 1409
+      },
+      "hadronized_final_particles": 5048,
+      "max_hadronization_momentum_residual_GeV": 9.55983503470037e-09,
+      "failure_reasons": [
+        {
+          "stage": "cascade",
+          "reason": "nonfinite kinematics input",
+          "count": 2
+        }
+      ],
+      "audit": "passed; accounting and record integrity only"
+    }
+  ],
+  "generator_sha256": "d11df7cc76a5530de91e435033bb6a8e3323600b509aa4b83ec58aaaffdb4368",
+  "mapped_settings": [
+    "Tune:pp = 14",
+    "ProcessLevel:all = off",
+    "PartonLevel:all = off",
+    "PartonLevel:FSR = off",
+    "PartonLevel:ISR = off",
+    "PartonLevel:MPI = off",
+    "PartonLevel:FSRinResonances = off",
+    "ProcessLevel:resonanceDecays = off",
+    "HadronLevel:all = on",
+    "HadronLevel:Decay = on",
+    "ColourReconnection:reconnect = off",
+    "ColourReconnection:forceHadronLevelCR = off",
+    "ParticleDecays:limitTau0 = on",
+    "ParticleDecays:tau0Max = 10",
+    "Check:event = on",
+    "Random:setSeed = on",
+    "Random:seed = 2601001",
+    "Init:showChangedSettings = off",
+    "Init:showChangedParticleData = off",
+    "Init:showProcesses = off",
+    "Next:numberShowInfo = 0",
+    "Next:numberShowProcess = 0",
+    "Next:numberShowEvent = 0",
+    "StringFlav:probQQtoQ = 0.072999998927116394",
+    "StringFlav:probStoUD = 0.20000000298023224",
+    "StringFlav:probSQtoQQ = 0.93999999761581421",
+    "StringFlav:probQQ1toQQ0 = 0.032000001519918442",
+    "StringFlav:mesonUDvector = 0.44927536732658224",
+    "StringFlav:mesonSvector = 0.66666668322351263",
+    "StringFlav:mesonCvector = 1.1739131448850337",
+    "StringFlav:mesonBvector = 1.1739131448850337",
+    "StringFlav:etaSup = 0.62999999523162842",
+    "StringFlav:etaPrimeSup = 0.11999999731779099",
+    "StringPT:sigma = 0.32499998807907104",
+    "StringZ:aLund = 0.5",
+    "StringZ:bLund = 0.60000002384185791",
+    "StringZ:rFactC = 1",
+    "StringZ:rFactB = 0.67000001668930054"
+  ]
+}

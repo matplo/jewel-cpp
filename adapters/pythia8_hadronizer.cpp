@@ -6,7 +6,21 @@
 #include <cmath>
 #include <stdexcept>
 #include <unordered_set>
+#include <iomanip>
+#include <sstream>
 namespace jewel {
+std::vector<std::string> jewel260_fragmentation_settings(){
+ auto setting=[](const char* name,double value){std::ostringstream out;out<<name<<" = "<<std::setprecision(17)<<value;return out.str();};
+ // JEWEL assigns default-REAL literals into double-precision PARJ entries.
+ const double light=double(.31f),strange=double(.4f),heavy=double(.54f);
+ return {setting("StringFlav:probQQtoQ",double(.073f)),setting("StringFlav:probStoUD",double(.2f)),
+  setting("StringFlav:probSQtoQQ",double(.94f)),setting("StringFlav:probQQ1toQQ0",double(.032f)),
+  setting("StringFlav:mesonUDvector",light/(1-light)),setting("StringFlav:mesonSvector",strange/(1-strange)),
+  setting("StringFlav:mesonCvector",heavy/(1-heavy)),setting("StringFlav:mesonBvector",heavy/(1-heavy)),
+  setting("StringFlav:etaSup",double(.63f)),setting("StringFlav:etaPrimeSup",double(.12f)),
+  setting("StringPT:sigma",double(.325f)),setting("StringZ:aLund",double(.5f)),setting("StringZ:bLund",double(.6f)),
+  setting("StringZ:rFactC",1.),setting("StringZ:rFactB",double(.67f))};
+}
 struct Pythia8Hadronizer::Impl {
  Pythia8::Pythia engine;
  std::vector<std::string> settings;
@@ -19,6 +33,8 @@ struct Pythia8Hadronizer::Impl {
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
+  if(c.fragmentation==FragmentationProfile::Jewel260Mapped){auto mapped=jewel260_fragmentation_settings();settings.insert(settings.end(),mapped.begin(),mapped.end());}
+  else if(c.fragmentation!=FragmentationProfile::Monash14)throw std::domain_error("invalid fragmentation profile");
   for(const auto& setting:settings)if(!engine.readString(setting))throw std::runtime_error("Pythia rejected setting: "+setting);
   if(!engine.init())throw std::runtime_error("standalone hadronizer initialization failed");
  }

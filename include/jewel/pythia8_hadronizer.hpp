@@ -2,7 +2,13 @@
 #pragma once
 #include "jewel/pythia8_input.hpp"
 namespace jewel {
-struct HadronizerConfig {std::string xml_directory;int seed{260001};};
+enum class FragmentationProfile {Monash14,Jewel260Mapped};
+struct HadronizerConfig {
+ std::string xml_directory;int seed{260001};
+ FragmentationProfile fragmentation{FragmentationProfile::Monash14};
+};
+// Mapped explicit INITPYTHIA overrides; not an equivalence claim for the two engines.
+std::vector<std::string> jewel260_fragmentation_settings();
 struct HadronizedSnapshot {
  std::vector<GeneratorParticle> particles;
  // Entry i+1 in the Pythia record was imported from input_sources[i].

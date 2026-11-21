@@ -659,3 +659,9 @@ than 1,000 selected jets per setting, analyzed with hepyy/cppyy: 1,081 vacuum
 and 1,295 medium jets. [Sample accounting and selection](docs/validation-native-ensemble.md)
 record 136 failed medium attempts out of 1,500. This native-only report does
 not evaluate the required Fortran/C++ ratios.
+
+An opt-in `--jewel-fragmentation` flag applies the mapped explicit JEWEL
+fragmentation overrides in `jewel-run-events`, including probability-to-ratio
+conversion for vector mesons. [Mapping, tests and remaining configuration gaps](docs/validation-fragmentation-mapping.md)
+explain why this is not yet equivalent to Pythia6 fragmentation. Existing
+native ensemble results retain their original Monash settings.
