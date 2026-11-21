@@ -36,4 +36,18 @@ int main(){
  config.mpi_sampling_channels.reset();jewel::ReplayRandom missing_channels({.5});bool missing_rejected=false;
  try{jewel::initialize_hard_dijet(state,first,second,config,sampler,missing_channels);}catch(const std::domain_error&){missing_rejected=true;}
  check(missing_rejected&&missing_channels.checkpoint()==0);
+ // GETTHETAM suppresses angles for partners attached to beam slots 1/2.
+ // Distinct incoming/original hard anchors beyond those slots retain the angle.
+ for(int parent_slot=1;parent_slot<=4;++parent_slot){
+  jewel::ShowerState angles(-1e6);angles.colour_max=101;jewel::ShowerParticle anchor;anchor.particle.status=21;
+  jewel::ParticleId parents[4];for(auto& id:parents)id=angles.append(anchor,true,true);
+  jewel::ShowerParticle selected;selected.particle.status=4;selected.particle.pdg=1;
+  selected.particle.colour=101;selected.particle.momentum={10,0,0,10};selected.parent=parents[3];
+  auto selected_id=angles.append(selected,true,true);
+  jewel::ShowerParticle partner;partner.particle.status=4;partner.particle.pdg=-1;
+  partner.particle.anticolour=101;partner.particle.momentum={0,10,0,10};partner.parent=parents[parent_slot-1];
+  angles.append(partner,true,true);angles.validate();
+  auto opening=jewel::colour_opening_angle(angles,selected_id);
+  check(parent_slot<=2?opening==-1:std::abs(opening-std::acos(0.0))<1e-15);
+ }
 }

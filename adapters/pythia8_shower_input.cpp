@@ -90,15 +90,41 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
   require(requested_order.size()==finals.size()&&std::set<ParticleId>(requested_order.begin(),requested_order.end())==finals,"import order is not a complete final-record permutation");
   order=requested_order;
  }
+ auto chains=map_subsystem_isr_ancestry(input);
  ImportedPythiaRecord result;result.state.weight=input.weight;result.junctions=input.junctions;
- result.scratch=result.state.append({});
- std::map<ParticleId,std::pair<std::size_t,std::size_t>> hard_owner;
+ auto anchor=[&](ParticleId source,ParticleId parent){const auto& p=input.particles[source-1];ShowerParticle node;
+  node.particle.pdg=p.pdg;node.particle.status=21;node.particle.momentum=p.momentum;node.record_mass=p.mass;
+  node.particle.production={x,y,0,0};node.decay_time=lifetime;node.parent=parent;
+  node.generator_vertex={p.vertex_mm[0]*1e12,p.vertex_mm[1]*1e12,p.vertex_mm[2]*1e12,p.vertex_mm[3]*1e12};
+  return result.state.append(node,true,true);
+ };
+ for(std::size_t side=0;side<2;++side){result.source_beams[side]=chains.front()[side].beam;result.beams[side]=anchor(result.source_beams[side],0);}
+ result.scratch=result.beams[0];
+ std::map<ParticleId,std::pair<std::size_t,std::size_t>> hard_owner,isr_owner;
  for(std::size_t system=0;system<pairs.size();++system){
-  ShowerParticle anchor;anchor.particle.status=17;
-  auto id=result.state.append(anchor,true,true);
-  result.subsystems.push_back({input.subsystems[system].index,id,{},pairs[system],input.subsystems[system].pt_hat});
-  for(std::size_t side=0;side<2;++side)require(hard_owner.emplace(pairs[system][side],std::make_pair(system,side)).second,"hard final belongs to multiple subsystems");
+  ImportedSubsystem native;native.index=input.subsystems[system].index;native.source_hard=pairs[system];native.pt_hat=input.subsystems[system].pt_hat;
+  for(std::size_t side=0;side<2;++side){
+   require(chains[system][side].beam==result.source_beams[side],"subsystems disagree on beam identity");
+   native.incoming[side]=anchor(chains[system][side].hard_incoming,result.beams[side]);
+   for(const auto& branch:chains[system][side].branches)require(isr_owner.emplace(branch.emitted_final,std::make_pair(system,side)).second,"ISR final belongs to multiple incoming chains");
+  }
+  for(std::size_t side=0;side<2;++side){
+   native.hard_origins[side]=anchor(input.subsystems[system].process_outgoing[side],0);
+   require(hard_owner.emplace(pairs[system][side],std::make_pair(system,side)).second,"hard final belongs to multiple subsystems");
+  }
+  result.subsystems.push_back(native);
  }
+ auto remnant_parent=[&](ParticleId source){std::set<ParticleId> visited;
+  while(source!=result.source_beams[0]&&source!=result.source_beams[1]){
+   require(visited.insert(source).second,"cyclic remnant ancestry");const auto& node=input.particles[source-1];
+   require((std::abs(node.status)==63||std::abs(node.status)==64)&&node.mothers.size()==1,"unsupported remnant ancestry");
+   auto parent=node.mothers.front();const auto& mother=input.particles[parent-1];
+   require(std::find(mother.daughters.begin(),mother.daughters.end(),source)!=mother.daughters.end(),"nonreciprocal remnant ancestry");
+   if(parent!=result.source_beams[0]&&parent!=result.source_beams[1])require(mother.pdg==node.pdg,"remnant copy changes flavour");
+   source=parent;
+  }
+  return result.beams[source==result.source_beams[0]?0:1];
+ };
  std::set<ParticleId> isr(input.isr_final.begin(),input.isr_final.end());
  for(auto source:order){const auto& p=input.particles[source-1];ShowerParticle node;
   node.particle.pdg=p.pdg;node.particle.status=4;node.particle.momentum=p.momentum;node.record_mass=p.mass;
@@ -108,14 +134,16 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
   auto hard=hard_owner.find(source);ImportedRole role=ImportedRole::remnant;
   if(hard!=hard_owner.end()){
    require(!isr.count(source),"hard final also labeled as ISR emission");
-   auto system=hard->second.first;node.parent=result.subsystems[system].process_anchor;
+   auto system=hard->second.first;node.parent=result.subsystems[system].hard_origins[hard->second.second];
    role=system==0?ImportedRole::primary_hard:ImportedRole::mpi_hard;
-  }else if(isr.count(source))role=ImportedRole::isr_emission;
+  }else if(isr.count(source)){
+   require(isr_owner.count(source),"ISR final lacks an incoming parent");auto owner=isr_owner.at(source);
+   node.parent=result.subsystems[owner.first].incoming[owner.second];role=ImportedRole::isr_emission;
+  }else node.parent=remnant_parent(source);
   result.state.colour_max=std::max({result.state.colour_max,p.colour,p.anticolour});
   auto id=result.state.append(node,true,true);result.input_sources.emplace(id,source);result.roles.emplace(id,role);
   if(hard!=hard_owner.end())result.subsystems[hard->second.first].hard[hard->second.second]=id;
  }
- for(const auto& system:result.subsystems)result.state.connect(system.process_anchor,system.hard[0],system.hard[1]);
  result.state.validate();return result;
 }
 

@@ -32,6 +32,11 @@ int main(int argc,char** argv){try{
   std::map<jewel::ParticleId,jewel::ParticleId> native_for;
   for(const auto& [id,source]:sources){native_for.emplace(source,id);auto& node=native.at(id);node.particle.production={7,8,9,10};node.decay_time=42;}
   std::array<std::size_t,4> role_counts{};for(const auto& entry:imported.roles)++role_counts[static_cast<std::size_t>(entry.second)];
+  std::array<std::size_t,2> remnant_counts{};
+  for(const auto& [id,role]:imported.roles)if(role==jewel::ImportedRole::remnant){
+   auto parent=native.at(id).parent;
+   if(parent==imported.beams[0])++remnant_counts[0];else if(parent==imported.beams[1])++remnant_counts[1];else throw std::runtime_error("invalid remnant parent");
+  }
   std::size_t count_draws=2*systems.size();for(const auto& pair:systems)for(const auto& c:pair)count_draws+=2*c.steps.size();
   jewel::ReplayRandom attach_random(std::vector<double>(count_draws,.5));jewel::IsrTimeConfig attach_config;attach_config.x=1.2;attach_config.y=-.7;attach_config.lifetime=20;
   auto bindings=jewel::attach_pythia_isr_times(native,sources,*e,systems,attach_config,attach_random);
@@ -52,13 +57,14 @@ int main(int argc,char** argv){try{
     for(const auto& step:chain.steps){negative+=step.beam_side==0&&step.incoming.momentum.energy<0;zero_mass_offshell+=step.emitted.record_mass==0&&step.emitted.nominal_mass!=0;}}
    out<<"{\"type\":\"system\",\"attempt\":"<<attempt<<",\"subsystem\":"<<system<<",\"branches\":"<<branches<<",\"negative_incoming_energies\":"<<negative<<",\"zero_mass_offshell_emissions\":"<<zero_mass_offshell<<",\"maximum_emission_copy_error_gev\":"<<closure<<",\"draws\":"<<rng.checkpoint()<<",\"timing_error\":";
    if(failure.empty())out<<"null";else out<<std::quoted(failure);
-   out<<",\"import_role_counts\":["<<role_counts[0]<<','<<role_counts[1]<<','<<role_counts[2]<<','<<role_counts[3]<<"],\"native_weight\":"<<native.weight<<",\"native_anchor_count\":"<<1+imported.subsystems.size()<<",\"source_hard_pair\":["<<imported.subsystems[system].source_hard[0]<<','<<imported.subsystems[system].source_hard[1]<<"],\"native_hard_pair\":["<<imported.subsystems[system].hard[0]<<','<<imported.subsystems[system].hard[1]<<"],\"fixture\":";
+   out<<",\"remnant_parent_counts\":["<<remnant_counts[0]<<','<<remnant_counts[1]<<"],\"incoming_native\":["<<imported.subsystems[system].incoming[0]<<','<<imported.subsystems[system].incoming[1]<<"],\"hard_origins_native\":["<<imported.subsystems[system].hard_origins[0]<<','<<imported.subsystems[system].hard_origins[1]<<"],\"hard_parents_native\":["<<native.at(imported.subsystems[system].hard[0]).parent<<','<<native.at(imported.subsystems[system].hard[1]).parent<<']';
+   out<<",\"import_role_counts\":["<<role_counts[0]<<','<<role_counts[1]<<','<<role_counts[2]<<','<<role_counts[3]<<"],\"native_weight\":"<<native.weight<<",\"native_anchor_count\":"<<native.particles().size()-sources.size()<<",\"source_hard_pair\":["<<imported.subsystems[system].source_hard[0]<<','<<imported.subsystems[system].source_hard[1]<<"],\"native_hard_pair\":["<<imported.subsystems[system].hard[0]<<','<<imported.subsystems[system].hard[1]<<"],\"fixture\":";
    if(!failure.empty()){out<<"null}\n";continue;}
    out<<fixture++<<",\"emissions\":[";bool first=true;
    for(int side=0;side<2;++side)for(std::size_t j=0;j<times[side].size();++j){const auto& t=times[side][j];if(!first)out<<',';first=false;
     auto native_id=native_for.at(chains[side].emitted_final[j]);const auto& node=native.at(native_id);
     if(node.particle.production.x!=t.production.x||node.particle.production.y!=t.production.y||node.particle.production.z!=t.production.z||node.particle.production.t!=t.production.t||node.decay_time!=t.end_time)throw std::runtime_error("native ISR timing differs from replay");
-    out<<"{\"final_id\":"<<chains[side].emitted_final[j]<<",\"native_id\":"<<native_id<<",\"production\":["<<t.production.x<<','<<t.production.y<<','<<t.production.z<<','<<t.production.t<<"],\"end_time\":"<<t.end_time<<'}';}
+    out<<"{\"final_id\":"<<chains[side].emitted_final[j]<<",\"native_id\":"<<native_id<<",\"native_parent\":"<<node.parent<<",\"production\":["<<t.production.x<<','<<t.production.y<<','<<t.production.z<<','<<t.production.t<<"],\"end_time\":"<<t.end_time<<'}';}
    out<<"]}\n";
    int next=107;std::array<int,2> roots{};
    for(int side=0;side<2;++side){roots[side]=chains[side].steps.empty()?3+side:next;next+=2*chains[side].steps.size();}

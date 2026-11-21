@@ -42,19 +42,21 @@ int main(){
   for(auto it=a->particles.rbegin();it!=a->particles.rend();++it)if(it->final)import_order.push_back(it->id);
   auto imported=jewel::import_pythia_final_record(*a,1.2,-.7,20,import_order);
   auto& native=imported.state;auto& sources=imported.input_sources;
+  check(native.particles()[0].particle.id==imported.beams[0]&&native.particles()[1].particle.id==imported.beams[1]&&imported.scratch==imported.beams[0]);
   check(native.weight==a->weight&&sources.size()==import_order.size()&&imported.junctions.size()==a->junctions.size());
   for(std::size_t j=0;j<imported.junctions.size();++j)check(imported.junctions[j].kind==a->junctions[j].kind&&imported.junctions[j].colours==a->junctions[j].colours);
   auto pairs=jewel::subsystem_hard_final_pairs(*a);check(pairs.front()==a->hard_final);
   for(std::size_t system=0;system<pairs.size();++system){const auto& pair=imported.subsystems[system];
    check(pair.source_hard==pairs[system]&&pair.index==a->subsystems[system].index&&pair.pt_hat==a->subsystems[system].pt_hat);
-   check(native.at(pair.process_anchor).daughters==pair.hard);
-   for(int side=0;side<2;++side){auto id=pair.hard[side];check(sources.at(id)==pair.source_hard[side]&&native.at(id).parent==pair.process_anchor);
+   check(pair.hard_origins[0]!=pair.hard_origins[1]);
+   for(int side=0;side<2;++side)check(native.at(pair.incoming[side]).parent==imported.beams[side]&&native.at(pair.hard_origins[side]).parent==0);
+   for(int side=0;side<2;++side){auto id=pair.hard[side];check(sources.at(id)==pair.source_hard[side]&&native.at(id).parent==pair.hard_origins[side]);
     check(imported.roles.at(id)==(system==0?jewel::ImportedRole::primary_hard:jewel::ImportedRole::mpi_hard));}
   }
   for(const auto& [id,source]:sources){auto& node=native.at(id);const auto& original=a->particles[source-1];
    check(node.particle.status==4&&node.particle.production.x==1.2&&node.particle.production.y==-.7&&node.particle.production.z==0&&node.particle.production.t==0&&node.decay_time==20);
    check(node.generator_vertex.x==original.vertex_mm[0]*1e12&&node.generator_vertex.y==original.vertex_mm[1]*1e12&&node.generator_vertex.z==original.vertex_mm[2]*1e12&&node.generator_vertex.t==original.vertex_mm[3]*1e12);
-   if(std::find(a->isr_final.begin(),a->isr_final.end(),source)!=a->isr_final.end())check(imported.roles.at(id)==jewel::ImportedRole::isr_emission&&node.parent==0);
+   if(std::find(a->isr_final.begin(),a->isr_final.end(),source)!=a->isr_final.end())check(imported.roles.at(id)==jewel::ImportedRole::isr_emission&&node.parent!=0);
    node.particle.production={7,8,9,10};node.decay_time=42;node.generator_vertex={1,2,3,4};
   }
   auto bad_order=import_order;bad_order.back()=bad_order.front();bool bad_import=false;

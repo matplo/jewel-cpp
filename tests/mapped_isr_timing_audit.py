@@ -18,7 +18,7 @@ for system in systems:
 assert next(lines,None) is None
 assert {r['attempt'] for r in rows if 'attempt' in r}==set(range(1,header['attempts']+1))
 assert rows[-1]['fixtures']==len(systems)
-seen_fixtures=set();kinematic_values=0;kinematic_max=0;attachment_records=0;hard_pair_records=0
+seen_fixtures=set();kinematic_values=0;kinematic_max=0;attachment_records=0;hard_pair_records=0;parent_links=0
 for line in Path(snapshot).open():
  e=json.loads(line)
  if e['type']=='run':assert e['settings']==header['settings'];continue
@@ -49,6 +49,16 @@ for line in Path(snapshot).open():
    nsystems=len(e['subsystems']);nisr=len(e['isr_final'])
    assert system['import_role_counts']==[2,2*(nsystems-1),nisr,len(ordered_finals)-2*nsystems-nisr]
    assert system['native_weight']==e['weight']
+  if 'incoming_native' in system:
+   assert system['native_anchor_count']==2+4*len(e['subsystems'])
+   assert system['incoming_native']==[3+4*index,4+4*index]
+   assert system['hard_origins_native']==[5+4*index,6+4*index]
+   assert system['hard_parents_native']==system['hard_origins_native'];parent_links+=2
+   beam_ids=[c['beam'] for c in e['subsystem_isr_chains'][index]]
+   owned={i for sub in e['subsystems'] for i in sub['outgoing_final']}
+   remnants=[v for v in e['particles'] if v['final'] and v['id'] not in owned]
+   assert all(v['mothers'] in [[beam_ids[0]],[beam_ids[1]]] for v in remnants)
+   assert system['remnant_parent_counts']==[sum(v['mothers']==[beam] for v in remnants) for beam in beam_ids]
   if 'source_hard_pair' in system:
    def final_copy(root):
     seen=set()
@@ -64,6 +74,9 @@ for line in Path(snapshot).open():
    if 'native_id' in emission:
     assert emission['native_id']==native_for[emission['final_id']]
     attachment_records+=1
+   if 'native_parent' in emission:
+    sides=[side for side,c in enumerate(chains) if any(b['emitted_final']==emission['final_id'] for b in c['branches'])]
+    assert len(sides)==1 and emission['native_parent']==system['incoming_native'][sides[0]];parent_links+=1
   n,actual=inputs[system['fixture']];assert n==next_id-1 and [v['final_id'] for v in system['emissions']]==finals
   for i,values in expected.items():
    for col,(x,y) in enumerate(zip(actual[i][:6],values)):
@@ -90,7 +103,7 @@ for system,(n,records) in zip(systems,inputs):
  cursor+=1+5*(n-104)
 assert cursor==len(a)
 report=dict(scope='Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence',
- native_attachment_records=attachment_records,hard_pair_records=hard_pair_records,
+ native_attachment_records=attachment_records,hard_pair_records=hard_pair_records,native_parent_links=parent_links,
  attempts=header['attempts'],systems_replayed=len(systems),emitted_values=values,max_timing_absolute_error=maximum,
  kinematic_values=kinematic_values,max_independent_kinematic_difference=kinematic_max,
  discarded_reference_nonfinite_values=discarded_nonfinite,failures=failures,

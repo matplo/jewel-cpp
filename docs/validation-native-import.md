@@ -14,8 +14,14 @@ are primary hard, MPI hard, ISR emission and remnant. The validated input
 subsystem ledger already partitions scattering/emission outputs; remaining
 finals are classified as remnants in this FSR/hadronization-off adapter.
 
-The importer creates one scratch record and one inert process anchor per
-subsystem. Each hard pair has reciprocal links to its process anchor.
+The importer creates two inert beam records in physical slots 1 and 2, with
+slot 1 also reserved for the cascade scratch record. Each subsystem has two
+incoming records parented to those beams, and two distinct original hard
+records with no parents. Hard final copies point to their respective original
+hard records; ISR emissions point to their respective incoming records;
+remnants follow reciprocal source ancestry back to a beam. Unsupported remnant
+ancestry is rejected. These records have status 21 and no fabricated daughters.
+
 All physical particles start at **inactive status 4**. Their momenta, recorded
 masses and colours are copied exactly. Auxiliary Pythia vertices are converted
 from mm to fm, while JEWEL production coordinates initialize independently at
@@ -29,14 +35,12 @@ than modifying an existing one in place.
 
 ## Explicitly incomplete evolution state
 
-This is a raw import stage, **not an evolution-ready event**. ISR and remnant
-parent links remain zero/unresolved; their original source IDs and roles are
-retained for the next ancestry step. No coherence parentage is invented, no
-parton is activated, and no virtualities are initialized. Process anchors are
-bookkeeping records, not physical Pythia scattering particles. The native
-runner's ISR/MPI guard remains in place. Source string ordering, unresolved
-parents, selection, hard/MPI virtuality initialization and cascade integration
-still need to be connected and validated.
+This is a raw import stage, **not an evolution-ready event**. Parent categories
+now follow the stock record distinction, but the compact record is not a
+one-to-one copy of Pythia6 history or its full ordering. No parton is activated
+and no virtualities are initialized. The native runner's ISR/MPI guard remains
+in place. Source string ordering, selection, hard/MPI virtuality initialization
+and cascade integration still need to be connected and validated.
 
 ## Generated-record audit
 
@@ -59,7 +63,7 @@ with exact equality, and both timing fixture files are byte-identical to the
 previous timing-only run. The three previously recorded frame failures remain
 visible and unchanged; no acceptance tolerance changed.
 
-Generated-event contracts verify hard-pair parent/daughter links, primary/MPI
+Generated-event contracts verify distinct hard-parent links, primary/MPI
 roles, source/native maps, weights, junction contents, auxiliary-vertex units,
 independent production coordinates, inactive statuses and invalid import-order
 rejection. Existing attachment and adapter-boundary checks also pass. Both
@@ -78,3 +82,22 @@ with fresh output paths, followed by:
 ctest --test-dir build-pythia8 \
   -R '^pythia8-(input|boundary)-contracts$' --output-on-failure
 ```
+
+## Parent categories and colour angles
+
+The stock 1,000-event trace after `interpretpythiaevent` distinguishes beam
+parents (slots 1/2), incoming parents (slots 3/4), and separate original hard
+parents (slots 7/8). `GETTHETAM` suppresses angles for colour partners whose
+parent slot is at most 2. A shared hard anchor or unresolved ISR/remnant parent
+would lose this distinction. The compact native layout preserves the beam
+threshold and categories; it omits the stock intermediate slots 5/6.
+
+The new two-seed audit checks 27,490 hard-parent links, 26,932 ISR-parent links,
+and beam-parent counts for all 9,670 remnants in the 1,997 mapped events.
+The same three frame failures remain recorded. All 134,660 emitted timing
+values still match Fortran exactly, and the timing fixtures are byte-identical
+to the preceding import run. A focused colour-angle contract checks beam slots
+1/2 return the sentinel while incoming/original slots give the geometric angle.
+
+[Parentage audit evidence](validation-native-parentage.json) records both runs.
+These are input-record and timing checks, not full-cascade validation.

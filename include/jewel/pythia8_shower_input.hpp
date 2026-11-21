@@ -31,20 +31,23 @@ std::vector<IsrTimingAttachment> attach_pythia_isr_times(ShowerState&,
 
 enum class ImportedRole {primary_hard,mpi_hard,isr_emission,remnant};
 struct ImportedSubsystem {
- int index{};ParticleId process_anchor{};
+ int index{};
+ std::array<ParticleId,2> incoming{},hard_origins{};
  std::array<ParticleId,2> hard{},source_hard{};
  double pt_hat{};
 };
 struct ImportedPythiaRecord {
  ShowerState state{-1e6};ParticleId scratch{};
+ std::array<ParticleId,2> beams{},source_beams{};
  std::vector<ImportedSubsystem> subsystems;
  std::map<ParticleId,ParticleId> input_sources;
  std::map<ParticleId,ImportedRole> roles; // Native IDs.
  std::vector<GeneratorJunction> junctions;
 };
 // Raw final-record import, not an evolution-ready event. All finals start at
-// status 4; process anchors connect each hard pair. ISR/remnant parents remain
-// unresolved (zero), requiring explicit handling before cascade evolution.
+// status 4. Distinct original hard records, incoming records and beam records
+// preserve parent categories; beam records occupy slots 1/2 and slot 1 is scratch.
+// Selection, virtuality assignment and evolution still remain separate stages.
 // Optional order must be a permutation of all final source IDs.
 ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot&,
  double x,double y,double lifetime,const std::vector<ParticleId>& order={});
