@@ -1,0 +1,19 @@
+{
+  "scope": "PUTPARTICLESONSHELL modes 0/1/2; injected nominal masses; safe ranges only",
+  "cases": 208,
+  "values": 4600,
+  "max_absolute_error": 4.071482734291365e-14,
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "2d689d59d739ae0f1882d070112c0c92fb3bc8210f81b2f9c8e424cd3dc940ea",
+  "source": {
+    "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+    "lines": 9697,
+    "read_name": "jewel-2.6.0.f.stock"
+  },
+  "executables": {
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-projection-probe": "7f39920b082ffb040d238c2f88c66d7a77bb8a29f4f65eb215ef6b0b56cd776e",
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-projection-reference": "a328fdefce270b24d9be4545d949105ac647d7584f01803d78b95f1788cd85b6"
+  }
+}

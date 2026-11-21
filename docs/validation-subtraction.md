@@ -4,8 +4,8 @@ Recorded 2026-11-21, AppleClang 21, macOS arm64 Release. The new
 `subtract_thermal_momenta` API in `include/jewel/subtraction.hpp` adapts the
 JEWEL 2.6.0 `subtraction.C` helpers to owned C++ vectors. It does not depend on
 Pythia, Fortran COMMON blocks or a fixed-size input array. An optional native-runner adapter now uses it; see
-[native integration](validation-native-subtraction.md). On-shell projection
-remains separate and unimplemented.
+[native integration](validation-native-subtraction.md). The [on-shell numerical core](validation-projection.md)
+is now validated separately; its runner adapter remains pending.
 
 ## Preserved numerical behaviour
 

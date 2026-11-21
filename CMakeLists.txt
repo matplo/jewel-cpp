@@ -543,3 +543,27 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
   ${CMAKE_SOURCE_DIR}/tests/runner_subtraction.py $<TARGET_FILE:jewel-run-events>
   $<TARGET_FILE:jewel-run-partons>)
 endif()
+
+target_sources(jewel_core PRIVATE src/projection.cpp)
+add_executable(jewel-projection-probe app/projection_probe.cpp)
+target_link_libraries(jewel-projection-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_projection.py
+  ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/projection-reference.f RESULT_VARIABLE projection_extracted)
+ if(NOT projection_extracted EQUAL 0)
+  message(FATAL_ERROR "Projection reference verification failed")
+ endif()
+ add_executable(jewel-projection-reference ${CMAKE_BINARY_DIR}/projection-reference.f
+  ${CMAKE_BINARY_DIR}/kinematics-reference.f reference/projection_probe.f90)
+ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(jewel-projection-reference PRIVATE -std=legacy -ffixed-line-length-none -ffree-line-length-none)
+ endif()
+ add_test(NAME projection-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/projection_differential.py $<TARGET_FILE:jewel-projection-probe>
+  $<TARGET_FILE:jewel-projection-reference> ${CMAKE_BINARY_DIR}/projection-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(projection-test tests/projection.cpp)
+ target_link_libraries(projection-test PRIVATE jewel_core)
+ add_test(NAME projection-contracts COMMAND projection-test)
+endif()
