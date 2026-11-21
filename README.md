@@ -791,3 +791,8 @@ ancestry and non-hard-parton virtualities remains outstanding.
 both incoming chains and reconstructs stage-local spacelike branch momenta.
 Recoil-frame and coordinate transport remain separate work before timing
 integration; signed spacelike energies are preserved.
+
+[ISR recoil-frame reconstruction](docs/validation-isr-frames.md) now reproduces
+ordinary initial-initial Pythia8 recoil copies and transforms spacetime
+displacements. Primordial recoil and physical production-point assignment
+remain pending.

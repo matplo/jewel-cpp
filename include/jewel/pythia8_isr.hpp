@@ -19,4 +19,19 @@ struct IsrIncomingChain {
 // chain requires further recoil/frame mapping; do not feed the result directly
 // into assign_isr_times as if all momenta belonged to one shower frame.
 std::array<IsrIncomingChain,2> map_pythia_isr_ancestry(const HardEventSnapshot&);
+struct IsrRecoilFrame {
+ ParticleId emitted{},mother{},recoiler{},old_recoiler{};
+ // Row-major Lorentz matrix ordered (energy,px,py,pz), or (dt,dx,dy,dz).
+ std::array<double,16> matrix{};
+ std::vector<std::array<ParticleId,2>> copies; // before, after
+ double maximum_copy_error{};
+};
+// Source-prescription reconstruction for ordinary initial-initial recoil only.
+// Frames are chronological. Primordial kT and IF/secondary-scattering recoil
+// require separate mappings and are not silently represented by these matrices.
+std::vector<IsrRecoilFrame> reconstruct_isr_recoil_frames(const HardEventSnapshot&);
+Momentum apply_isr_frame(const IsrRecoilFrame&,Momentum);
+// Apply to a displacement relative to an independently chosen event origin.
+// Does not choose that origin or assign a production time.
+SpaceTime apply_isr_frame_displacement(const IsrRecoilFrame&,SpaceTime);
 }

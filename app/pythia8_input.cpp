@@ -44,6 +44,12 @@ int main(int argc,char** argv){
       list(out,std::array<double,4>{b.spacelike_daughter.px,b.spacelike_daughter.py,b.spacelike_daughter.pz,b.spacelike_daughter.energy});out<<'}';}
      out<<"]}";}
    }out<<']';
+   out<<",\"isr_recoil_frames\":[";
+   if(e.initial_state_radiation){bool first_frame=true;for(const auto& f:jewel::reconstruct_isr_recoil_frames(e)){
+    if(!first_frame)out<<',';first_frame=false;
+    out<<"{\"emitted\":"<<f.emitted<<",\"mother\":"<<f.mother<<",\"recoiler\":"<<f.recoiler<<",\"old_recoiler\":"<<f.old_recoiler<<",\"maximum_copy_error_gev\":"<<f.maximum_copy_error<<",\"matrix_e_xyz\":";list(out,f.matrix);
+    out<<",\"copies\":[";bool first_copy=true;for(const auto& pair:f.copies){if(!first_copy)out<<',';first_copy=false;list(out,pair);}out<<"]}";
+   }}out<<']';
    out<<",\"particles\":[";first=true;
    for(const auto& p:e.particles){if(!first)out<<',';first=false;
     out<<"{\"id\":"<<p.id<<",\"source_index\":"<<p.source_index<<",\"pdg\":"<<p.pdg<<",\"status\":"<<p.status<<",\"final\":"<<p.final<<",\"colour\":"<<p.colour<<",\"anticolour\":"<<p.anticolour<<",\"momentum\":";list(out,std::array<double,4>{p.momentum.px,p.momentum.py,p.momentum.pz,p.momentum.energy});

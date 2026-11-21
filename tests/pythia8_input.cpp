@@ -28,6 +28,16 @@ int main(){
   emission_count+=a->isr_emissions.size();
   if(isr){
    auto chains=jewel::map_pythia_isr_ancestry(*a);unsigned branches=0;
+   auto frames=jewel::reconstruct_isr_recoil_frames(*a);check(frames.size()==a->isr_emissions.size());
+   if(!frames.empty()){
+    auto corrupted=*a;corrupted.particles[frames[0].copies[0][1]-1].momentum.energy+=1.;bool rejected=false;
+    try{jewel::reconstruct_isr_recoil_frames(corrupted);}catch(const std::domain_error&){rejected=true;}check(rejected);
+   }
+   for(const auto& f:frames){
+    auto displacement=jewel::apply_isr_frame_displacement(f,{.2,-.4,.1,1.});
+    double interval=displacement.t*displacement.t-displacement.x*displacement.x-displacement.y*displacement.y-displacement.z*displacement.z;
+    check(std::abs(interval-.79)<1e-9);
+   }
    for(std::size_t side=0;side<2;++side){const auto& chain=chains[side];
     check(chain.hard_incoming==a->hard_incoming[side]&&chain.backward_lines.front()==chain.hard_incoming);
     check(std::abs(a->particles[chain.beam-1].status)==12);branches+=chain.branches.size();
