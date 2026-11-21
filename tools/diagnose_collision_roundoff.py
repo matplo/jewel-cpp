@@ -2,7 +2,9 @@
 
 Requires the existing CMake Unix Makefiles reference build (Release settings
 are reused). Diagnostic writes occur immediately before the suspect sqrt.
-Every diagnostic run is checked against the uninstrumented stdout.
+Use --all-collisions to include positive near-zero squares, which can amplify
+roundoff without producing NaNs. Every diagnostic run is checked against the
+ uninstrumented stdout.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -35,6 +37,8 @@ def main():
     parser.add_argument('build', type=Path)
     parser.add_argument('fixture', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--all-collisions', action='store_true',
+                        help='Record every reshuffled collision, including small positive squares')
     args = parser.parse_args()
     build, fixture, output = (p.resolve() for p in [args.build, args.fixture, args.output])
     root = Path(__file__).resolve().parents[1]
@@ -52,6 +56,8 @@ def main():
     site = '  pc={std::sqrt(p32)*pc.px/p3old'
     insertion = ('  if(p32<0||p42<0)std::cerr<<std::setprecision(17)<<"NEGATIVE_COLLISION_SQUARE "'
                  "<<p32<<' '<<p42<<' '<<e3<<' '<<e4<<' '<<m32<<' '<<m42<<' '<<shat<<' '<<t<<' '<<p3old<<'\\n';\n")
+    if args.all_collisions:
+        insertion = insertion.replace('if(p32<0||p42<0)', '').replace('NEGATIVE_COLLISION_SQUARE', 'COLLISION_SQUARE')
     cpp = replace_once(cpp, site, insertion + site)
     cpp_temp = output/'collision-diagnostic.cpp'
     cpp_temp.write_text(cpp)
@@ -70,6 +76,8 @@ def main():
     insertion = ("      if(p32.lt.0.d0.or.p42.lt.0.d0)then\n"
                  "      write(0,*) 'NEGATIVE_COLLISION_SQUARE',p32,p42,E3new,E4new,\n"
                  "     & m32,m42,shat,t,p3old\n      endif\n")
+    if args.all_collisions:
+        insertion = insertion.replace('if(p32.lt.0.d0.or.p42.lt.0.d0)then', 'if(.true.)then').replace('NEGATIVE_COLLISION_SQUARE', 'COLLISION_SQUARE')
     source = replace_once(source, site, insertion + site)
     fortran_temp = output/'medium-diagnostic.f'
     fortran_temp.write_text(source)
@@ -94,9 +102,12 @@ def main():
             runs.append((stdout, stderr))
         if runs[0][0].read_bytes() != runs[1][0].read_bytes():
             raise AssertionError('diagnostic changed event stdout: '+label)
-        negative = [list(map(float, line.split()[1:])) for line in runs[1][1].read_text().splitlines()
-                    if line.strip().startswith('NEGATIVE_COLLISION_SQUARE')]
+        marker = 'COLLISION_SQUARE' if args.all_collisions else 'NEGATIVE_COLLISION_SQUARE'
+        squares = [list(map(float, line.split()[1:])) for line in runs[1][1].read_text().splitlines()
+                   if line.strip().startswith(marker)]
+        negative = [row for row in squares if row[0]<0 or row[1]<0]
         return dict(engine=label, negative_collision_squares=negative,
+                    recorded_collision_squares=squares,
                     unchanged_stdout_sha256=digest(runs[0][0]),
                     baseline_executable_sha256=digest(baseline),
                     diagnostic_executable_sha256=digest(diagnostic))
@@ -104,8 +115,8 @@ def main():
     with ThreadPoolExecutor(max_workers=2) as pool:
         results = list(pool.map(replay, [('cpp', build/'jewel-medium-probe', cpp_binary),
                                         ('fortran', build/'jewel-medium-reference', fortran_binary)]))
-    report = dict(scope='diagnostic copies; no physics changes; failed event is not parity',
-                  fixture_sha256=digest(fixture), columns=['p32','p42','e3','e4','m32','m42','shat','transfer_t','p3old'],
+    report = dict(scope='diagnostic copies; no physics changes; unchanged stdout is not reference parity',
+                  all_collisions=args.all_collisions, fixture_sha256=digest(fixture), columns=['p32','p42','e3','e4','m32','m42','shat','transfer_t','p3old'],
                   results=results, commands=commands,
                   sources={str(p):digest(p) for p in [cpp_source,fortran_source,cpp_temp,fortran_temp]})
     (output/'report.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
