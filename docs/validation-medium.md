@@ -80,7 +80,7 @@ final-splitting, PDF, scattering, event-geometry, transport and coherent-evoluti
 comparisons, plus their selected C++ contract tests. The final-splitting
 comparison checks 9,006,000 table values, and the scattering comparison checks
 1,203,300 grid values, plus their lookup/integral tests. The expanded nonzero-
-rapidity event-geometry test also passes independently: 8,430 values, maximum
+rapidity event-geometry test also passes independently: 33,060 values, maximum
 absolute error 1.42109e-14, with initialized grids unchanged byte for byte.
 No production physics code changed in this update.
 
@@ -90,3 +90,9 @@ Both reference-enabled and Pythia8 builds were rebuilt with the preceding compil
 settings. Recovering an individual cascade event under a different arithmetic
 policy is insufficient evidence to change the numerical implementation. Existing
 full-cascade discrepancies remain outside this component-validation claim.
+
+The expanded event-geometry matrix independently crosses both initialization
+geometries with both flow settings at all three table energies and includes
+proper times 0.2, 0.4, 1, 4, 20 and 100 fm. It also requires exact zero/nonzero
+agreement. All 11 related medium/table suites were rerun successfully with this
+extension; see [event-geometry evidence](validation-event-geometry.json).

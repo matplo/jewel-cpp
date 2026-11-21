@@ -3,7 +3,7 @@ import hashlib,json,math,subprocess,sys,tempfile
 from pathlib import Path
 cpp,reference,output=sys.argv[1:];reports=[];failures=[];values=0;maximum=0
 with tempfile.TemporaryDirectory() as directory:
- for table_b,boost,energy in [(b,boost,e) for b,boost in [(0,0),(7,1)] for e in [100,1.5*150*math.cosh(2),2510]]:
+ for table_b,boost,energy in [(b,boost,e) for b in [0,7] for boost in [0,1] for e in [100,1.5*150*math.cosh(2),2510]]:
   base=f'CONFIG\n208 3 1 .4 .59 .17 .17 .54 6.199999809265137 {table_b} 2 .45 1\nXCONFIG\n3 1 .2 .2 {energy:.17g} 1 {boost}\n'
   results=[]
   for exe in [cpp,reference]:
@@ -12,7 +12,7 @@ with tempfile.TemporaryDirectory() as directory:
    for b in [0,3,9,14,table_b]:
     payload+=f'EVENTB\n{b}\nBOUNDS\n'
     for x in [0,3,7]:
-     for time in [.2,1,4]:
+     for time in [.2,.4,1,4,20,100]:
       # Nonzero spacetime rapidity exercises flow after a geometry update;
       # z=0 alone cannot distinguish boost on/off. Include both hemispheres.
       for eta in [-1.5,0,1.5]:
@@ -31,8 +31,12 @@ with tempfile.TemporaryDirectory() as directory:
   a,b=results;assert len(a)==len(b)
   for i,(x,y) in enumerate(zip(a,b)):
    values+=1;maximum=max(maximum,abs(x-y))
-   if not math.isfinite(x) or not math.isfinite(y) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13):failures.append(dict(table_b=table_b,table_energy_gev=energy,index=i,cpp=x,reference=y))
+   if not math.isfinite(x) or not math.isfinite(y) or (x == 0) != (y == 0) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13):failures.append(dict(table_b=table_b,table_energy_gev=energy,index=i,cpp=x,reference=y))
 report=dict(scope='event-local medium/rates after frozen initialization tables',values=values,max_absolute_error=maximum,
+ matrix=dict(table_impact_parameters_fm=[0,7],longitudinal_boost=[0,1],
+ event_impact_parameters_fm=[0,3,9,14,'initialization value'],
+ proper_times_fm=[.2,.4,1,4,20,100],spacetime_rapidities=[-1.5,0,1.5]),
+ zero_nonzero_agreement_required=True,
  failures=failures,reports=reports,relative_tolerance=2e-12,absolute_tolerance=2e-13,
  sources=json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()),
  executables={Path(p).name:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [cpp,reference]})

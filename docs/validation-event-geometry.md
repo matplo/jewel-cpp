@@ -52,18 +52,25 @@ sampled geometry. Fixed b=0 records have null centrality.
 
 The new EVENTB reference-probe command changes BREAL without rebuilding tables.
 The corresponding native command changes the medium in both the rate and
-transfer models. Differential tests cover two initialization geometries, boost
+transfer models. Differential tests cover the full cross product of two initialization geometries and boost
 off/on, five subsequent geometry choices, local temperatures/densities,
 bounds/lifetimes and quark/gluon cross sections in local/minimum/maximum modes.
 The updated matrix includes table energies 100, 846.494030493817 and 2510 GeV,
 and spacetime rapidities −1.5, 0 and +1.5 at each sampled position/proper time.
 The nonzero rapidities exercise the longitudinal-flow setting after geometry
-changes; z=0 alone would not distinguish flow on/off.
+changes; z=0 alone would not distinguish flow on/off. Each geometry/flow
+combination runs at all three table energies (12 configurations). Proper times
+0.2, 0.4, 1, 4, 20 and 100 fm cover early heating, the initial-time transition,
+cooling and late shutoff. Zero versus nonzero agreement is required in addition
+to the numerical tolerance, preventing an inactive-medium discrepancy from
+being hidden by the absolute tolerance.
 
-**8,430 values pass** at abs=2e-13, rel=2e-12; maximum absolute difference is
+**33,060 values pass** at abs=2e-13, rel=2e-12; maximum absolute difference is
 1.42109e-14. Each engine's complete scattering grid is byte-identical before and
-after all event-geometry changes. Existing sampling reference tests and scattering
-contracts pass. [Recorded component results](validation-event-geometry.json).
+after all event-geometry changes (24 checks across the two engines). All 11 related
+medium, sampling, radiation, final-splitting, PDF and scattering differential
+and contract tests pass. This extension changes validation only, not production
+physics. [Recorded component results](validation-event-geometry.json).
 
 The fixed-b smoke rerun preserves every pre-existing field of all 20 outcomes
 exactly, including momenta, ancestry, random draws and hadronization products.

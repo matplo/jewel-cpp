@@ -1,7 +1,38 @@
 {
   "scope": "event-local medium/rates after frozen initialization tables",
-  "values": 8430,
+  "values": 33060,
   "max_absolute_error": 1.4210854715202004e-14,
+  "matrix": {
+    "table_impact_parameters_fm": [
+      0,
+      7
+    ],
+    "longitudinal_boost": [
+      0,
+      1
+    ],
+    "event_impact_parameters_fm": [
+      0,
+      3,
+      9,
+      14,
+      "initialization value"
+    ],
+    "proper_times_fm": [
+      0.2,
+      0.4,
+      1,
+      4,
+      20,
+      100
+    ],
+    "spacetime_rapidities": [
+      -1.5,
+      0,
+      1.5
+    ]
+  },
+  "zero_nonzero_agreement_required": true,
   "failures": [],
   "reports": [
     {
@@ -45,6 +76,90 @@
       "boost": 0,
       "table_energy_gev": 2510,
       "unchanged_table_sha256": "48562db27b11a58cc3cf4ba3aab51200afd6c7949fc966237ef944b5330f9c1b"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 0,
+      "boost": 1,
+      "table_energy_gev": 100,
+      "unchanged_table_sha256": "e049f5c83324e4f5afaede0f60274c6de8d48f3202c055d651ebb1216b24bcd0"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 0,
+      "boost": 1,
+      "table_energy_gev": 100,
+      "unchanged_table_sha256": "e049f5c83324e4f5afaede0f60274c6de8d48f3202c055d651ebb1216b24bcd0"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 0,
+      "boost": 1,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "a74d18b3282d2c3f34b60088c8889b2d4a09ef6b8f8d43c502fa2e3b34dccb7f"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 0,
+      "boost": 1,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "a74d18b3282d2c3f34b60088c8889b2d4a09ef6b8f8d43c502fa2e3b34dccb7f"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 0,
+      "boost": 1,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "df927163c30cb1c9c0d9ebf99ae64c3956fe78354dc1cfc25b245d38a154e428"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 0,
+      "boost": 1,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "df927163c30cb1c9c0d9ebf99ae64c3956fe78354dc1cfc25b245d38a154e428"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 7,
+      "boost": 0,
+      "table_energy_gev": 100,
+      "unchanged_table_sha256": "140e233721ea0662407ba0fccfb312e051877659f7c6925b10caedfbe978a13c"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 7,
+      "boost": 0,
+      "table_energy_gev": 100,
+      "unchanged_table_sha256": "140e233721ea0662407ba0fccfb312e051877659f7c6925b10caedfbe978a13c"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 7,
+      "boost": 0,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "158c039a248e86a5b6e262ee5334d8eeab085b11f3594fff314a6603ec0b1449"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 7,
+      "boost": 0,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "158c039a248e86a5b6e262ee5334d8eeab085b11f3594fff314a6603ec0b1449"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 7,
+      "boost": 0,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "aa7361e203b5c5fe1c255c383f5a1cb1be49501f93a49f14d55e1a5f66261297"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 7,
+      "boost": 0,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "aa7361e203b5c5fe1c255c383f5a1cb1be49501f93a49f14d55e1a5f66261297"
     },
     {
       "executable": "jewel-medium-probe",
@@ -398,7 +513,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "b426d1b910231bbfc9389fd2a84eecc19a1a2e6495ae2aa7b2713338f71c8778",
+    "jewel-medium-probe": "44824b0c9e9b6beb182821994ab3a781584ccc337fe39eb7adaf5c6c2c652460",
     "jewel-medium-reference": "183549c850082bbbde7491f5f9459e64ed5b8a7a7112ffcc98c0fbaf210656d3"
   }
 }

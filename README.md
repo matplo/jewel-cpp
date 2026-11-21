@@ -79,7 +79,11 @@ unchanged, hash-verified stock Fortran routines. The reference harness dispatche
 only DERIV modes 5 and 101 and sets parameters explicitly rather than invoking
 MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
 `build/medium-validation.json` records errors and hashes. See
-[recorded validation](docs/validation-medium.md).
+[recorded validation](docs/validation-medium.md). The
+[event-geometry comparison](docs/validation-event-geometry.md) additionally checks
+33,060 values across both initialization geometries, flow off/on, three table
+energies and six proper times, with initialized tables unchanged after event
+geometry updates.
 
 ### Preserved reference details and explicit domain policies
 
