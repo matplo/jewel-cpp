@@ -848,19 +848,24 @@ Imported Pythia8 records now support ISR timing attachment followed by the
 JEWEL survivor-selection and ordered massless-conversion step. The generated
 record replay passes 640,920 values against the JEWEL 2.6.0 Fortran routines;
 see [native preparation validation](docs/validation-native-preparation.md).
-This adapter stage is not yet connected to full ISR/MPI cascade evolution.
+These input stages are connected to the experimental ISR/MPI runner described below.
 
 Prepared records also support [primary/MPI subsystem initialization](docs/validation-subsystem-initialization.md),
-with primary sampling channels inherited by MPI calls and whole-event rollback
-on failure. This sequence remains separate from full ISR/MPI cascade execution.
+with whole-event rollback on failure. The source-replay policy inherits primary
+sampling channels. The experimental native runner instead selects each MPI
+leg's outgoing-flavour channel, avoiding flavour-inconsistent quark splitting.
+This explicit Pythia8 adapter policy is documented in
+[the MPI channel validation](docs/validation-mpi-flavour.md).
 
-### Experimental ISR/MPI parton cascades
+### Experimental ISR/MPI cascades and hadronization
 
-`jewel-run-partons --experimental-isr-mpi` connects the validated input stages
-to cascade evolution. It is an explicit diagnostic mode with substantial open
-medium failures, not a validated full generator; the hadronized runner rejects
-this option. See the [smoke samples and Fortran replays](docs/validation-experimental-cascade.md)
-for acceptance/failure accounting and reproduction commands.
+`jewel-run-partons --experimental-isr-mpi` connects the input stages to cascade
+evolution. `jewel-run-events` also accepts this option with HADROTYPE 0 and
+preserves explicit native junctions at the hadronization boundary. This remains
+a development mode with unsupported input topologies and incomplete physics
+validation. See the [initial smoke samples](docs/validation-experimental-cascade.md),
+[native junction boundary](docs/validation-native-topology.md) and
+[current MPI channel policy](docs/validation-mpi-flavour.md).
 
 The collision fallback now [resolves negative roundoff at an algebraically zero CM momentum](docs/validation-zero-cm-limit.md).
 This documented numerical extension recovers source-nonfinite cases; ordinary

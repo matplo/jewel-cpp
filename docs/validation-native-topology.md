@@ -51,3 +51,12 @@ Reproduce the boundary checks with:
 ctest --test-dir build-pythia8 --output-on-failure \
   -R '^(pythia8-shower-output|experimental-isr-mpi)-contracts$'
 ```
+
+## Subsequent MPI flavour policy
+
+The [outgoing-flavour initialization update](validation-mpi-flavour.md) resolves
+this particular malformed splitting by changing the native adapter's MPI channel
+selection. The source-compatible initialization API and the historical evidence
+above remain intact. The generated-event contract now expects all six events to
+hadronize, including attempt 6; the previous rejection was not repaired at the
+colour boundary.

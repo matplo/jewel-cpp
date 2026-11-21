@@ -8,7 +8,7 @@ payload=Path(fixtures).read_text()
 inputs=iter(payload.splitlines());assert next(inputs)=='CONFIG';next(inputs)
 assert next(inputs)=='BCONFIG';next(inputs);prepared=[]
 for event in events:
-    assert next(inputs)=='SEQINIT';config=list(map(float,next(inputs).split()))
+    assert next(inputs)==('SEQFLAV' if rows[0].get('mpi_channel_policy')=='outgoing-flavour' else 'SEQINIT');config=list(map(float,next(inputs).split()))
     n,npairs,fsr=map(int,next(inputs).split());assert npairs==event['initialization']['pairs']
     pairs=[list(map(int,next(inputs).split())) for _ in range(npairs)]
     records=[list(map(float,next(inputs).split())) for _ in range(n)]
@@ -38,7 +38,7 @@ for event,(pairs,before) in zip(events,prepared):
             native_residual=max(native_residual,abs(initial-init['records'][first-1][column]-init['records'][second-1][column]))
             reference_residual=max(reference_residual,abs(initial-reference_records[first-1][column]-reference_records[second-1][column]))
 assert next(lines,None) is None
-report=dict(scope='Full-record explicit primary/MPI sequence replay; not Pythia6 generation or cascade equivalence',native_maximum_pair_p4_residual_gev=native_residual,reference_maximum_pair_p4_residual_gev=reference_residual,events=len(events),pairs=sum(e['initialization']['pairs'] for e in events),values=values,max_absolute_error=maximum,draw_count_mismatches=draw_errors,failures=failures,relative_tolerance=2e-12,absolute_tolerance=2e-13,hashes={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [reference,sample,fixtures,__file__]})
+report=dict(mpi_channel_policy=rows[0].get('mpi_channel_policy','source-primary'),scope='Full-record explicit primary/MPI sequence replay; not Pythia6 generation or cascade equivalence',native_maximum_pair_p4_residual_gev=native_residual,reference_maximum_pair_p4_residual_gev=reference_residual,events=len(events),pairs=sum(e['initialization']['pairs'] for e in events),values=values,max_absolute_error=maximum,draw_count_mismatches=draw_errors,failures=failures,relative_tolerance=2e-12,absolute_tolerance=2e-13,hashes={p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [reference,sample,fixtures,__file__]})
 Path(output).write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({k:v for k,v in report.items() if k not in ['hashes','failures']},indent=2))
 if failures:print(failures[:10]);raise SystemExit(f'{len(failures)} mismatches')

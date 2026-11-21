@@ -62,15 +62,19 @@ ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot&,
 void prepare_imported_partons(ImportedPythiaRecord&,
  const std::function<double(int)>& nominal_mass,double max_pseudorapidity);
 
+enum class MpiChannelPolicy { source_primary, outgoing_flavour };
 struct SubsystemInitialization {
  std::array<Channel,2> primary_sampling_channels;
  std::vector<HardInitializationResult> pairs;
 };
 // Initialize the prepared primary pair, then MPI pairs in subsystem order.
-// MPI calls inherit primary TYPE1/TYPE2, not their own outgoing flavours.
+// source_primary preserves inherited TYPE1/TYPE2 for source replay.
+// outgoing_flavour selects each Pythia8 MPI leg's physical splitting channel;
+// this is an explicit adapter policy change, not stock GENEVENT equivalence.
 // Currently all pairs must be quarks/gluons. Unsupported pairs fail before
 // drawing; later failures roll back the whole state but not the random stream.
 SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord&,
- HardInitializationConfig,const BranchingSampler&,Random&);
+ HardInitializationConfig,const BranchingSampler&,Random&,
+ MpiChannelPolicy policy=MpiChannelPolicy::source_primary);
 
 }

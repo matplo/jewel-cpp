@@ -171,8 +171,9 @@ void prepare_imported_partons(ImportedPythiaRecord& imported,
 }
 
 SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imported,
- HardInitializationConfig config,const BranchingSampler& sampler,Random& random){
+ HardInitializationConfig config,const BranchingSampler& sampler,Random& random,MpiChannelPolicy policy){
  auto require=[](bool ok,const char* why){if(!ok)throw std::domain_error(why);};
+ require(policy==MpiChannelPolicy::source_primary||policy==MpiChannelPolicy::outgoing_flavour,"invalid MPI channel policy");
  imported.state.validate();require(!imported.subsystems.empty(),"initialization lacks primary subsystem");
  std::set<ParticleId> seen;
  for(std::size_t i=0;i<imported.subsystems.size();++i){const auto& pair=imported.subsystems[i];
@@ -190,6 +191,11 @@ SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imp
  auto working=imported.state;config.pt_hat=primary.pt_hat;
  config.mpi_sampling_channels=result.primary_sampling_channels;
  for(std::size_t i=0;i<imported.subsystems.size();++i){const auto& pair=imported.subsystems[i];config.mpi_pair=i>0;
+  if(policy==MpiChannelPolicy::outgoing_flavour){
+   std::array<Channel,2> channels;
+   for(std::size_t side=0;side<2;++side)channels[side]=working.at(pair.hard[side]).particle.pdg==21?Channel::GC:Channel::QQ;
+   config.mpi_sampling_channels=channels;
+  }
   result.pairs.push_back(initialize_hard_dijet(working,pair.hard[0],pair.hard[1],config,sampler,random));
  }
  working.validate();imported.state=std::move(working);return result;

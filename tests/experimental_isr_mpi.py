@@ -7,6 +7,7 @@ with tempfile.TemporaryDirectory() as tmp:
     subprocess.run([runner,str(output),'1','2600417','vacuum',str(fixtures),'--experimental-isr-mpi'],check=True,capture_output=True,timeout=90)
     rows=[json.loads(line) for line in output.open()]
     assert rows[0]['experimental_isr_mpi'] is True
+    assert rows[0]['mpi_channel_policy']=='outgoing-flavour'
     settings=rows[0]['pythia_settings']
     assert 'PartonLevel:ISR = on' in settings and 'PartonLevel:MPI = on' in settings
     event=rows[1];assert event['type']=='event',event
@@ -24,14 +25,13 @@ with tempfile.TemporaryDirectory() as tmp:
     assert medium[-1]['accepted']==20 and medium[-1]['evolution_failures']==0
     assert [r['attempt'] for r in medium if r['type']=='event']==list(range(1,21))
     # Exercise the real cascade -> explicit junction -> Pythia8 boundary.
-    # Six includes a known malformed splitting; retain it in the failure ledger.
+    # Includes the former quark/gluon MPI channel mismatch at attempt six.
     hadron_output=root/'hadrons.jsonl'
     subprocess.run([hadron_runner,str(hadron_output),'6','2600417','vacuum','--experimental-isr-mpi'],check=True,capture_output=True,timeout=90)
     hadrons=[json.loads(line) for line in hadron_output.open()]
-    assert hadrons[-1]['attempts']==6 and hadrons[-1]['accepted']==5
+    assert hadrons[-1]['attempts']==6 and hadrons[-1]['accepted']==6
     failures=[r for r in hadrons if r['type']=='evolution_failure']
-    assert len(failures)==1 and failures[0]['attempt']==6
-    assert 'unbalanced native colour/junction tag' in failures[0]['reason']
+    assert failures==[]
     assert hadrons[-1]['accepted_weight']+hadrons[-1]['failed_weight']==hadrons[-1]['generator_weight_sum']
     junction_events=0
     for e in hadrons:
@@ -51,7 +51,7 @@ with tempfile.TemporaryDirectory() as tmp:
             before=math.fsum(p['momentum'][component] for p in e['hadronization_input'])
             after=math.fsum(p['momentum'][component] for p in final)
             assert math.isclose(before,after,rel_tol=1e-9,abs_tol=1e-7),(before,after)
-    assert junction_events==2
+    assert junction_events==3
     for executable,options in [(runner,['--experimental-isr-mpi','--experimental-isr-mpi']),(hadron_runner,['--experimental-isr-mpi','--hadrotype','1'])]:
         invalid=root/'invalid.jsonl'
         result=subprocess.run([executable,str(invalid),'1','2600417','vacuum',*options],capture_output=True,timeout=10)

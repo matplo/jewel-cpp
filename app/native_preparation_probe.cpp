@@ -16,8 +16,8 @@ void initialized_record(std::ostream& out,const jewel::ShowerState& state,const 
 }
 }
 int main(int argc,char** argv){try{
- if(argc!=5&&argc!=6)throw std::runtime_error("usage: jewel-native-preparation OUTPUT FIXTURES COUNT SEED [--initialize]");
- bool initialize=argc==6;if(initialize&&std::string(argv[5])!="--initialize")throw std::runtime_error("unknown option");
+ if(argc!=5&&argc!=6)throw std::runtime_error("usage: jewel-native-preparation OUTPUT FIXTURES COUNT SEED [--initialize|--initialize-native]");
+ bool initialize=argc==6;bool native_channels=initialize&&std::string(argv[5])=="--initialize-native";if(initialize&&!native_channels&&std::string(argv[5])!="--initialize")throw std::runtime_error("unknown option");
  int count=std::stoi(argv[3]),seed=std::stoi(argv[4]);if(count<=0)throw std::runtime_error("invalid count");
  if(std::filesystem::exists(argv[1])||std::filesystem::exists(argv[2]))throw std::runtime_error("outputs already exist");
  std::ofstream out(argv[1]),fixtures(argv[2]);if(!out||!fixtures)throw std::runtime_error("cannot open outputs");
@@ -31,7 +31,7 @@ int main(int argc,char** argv){try{
  jewel::PythiaInputConfig config;config.seed=seed;config.initial_state_radiation=true;config.multiple_parton_interactions=true;
  jewel::Pythia8Input generator(config);unsigned completed=0;
  jewel::BranchingSampler sampler({},1,1,0);
- out<<"{\"type\":\"run\",\"seed\":"<<seed<<",\"attempts\":"<<count<<",\"initialize_subsystems\":"<<(initialize?"true":"false")<<",\"eta_max\":2,\"order\":\"Pythia8 final source order\",\"settings\":[";
+ out<<"{\"type\":\"run\",\"seed\":"<<seed<<",\"attempts\":"<<count<<",\"initialize_subsystems\":"<<(initialize?"true":"false")<<",\"mpi_channel_policy\":"<<std::quoted(native_channels?"outgoing-flavour":"source-primary")<<",\"eta_max\":2,\"order\":\"Pythia8 final source order\",\"settings\":[";
  bool sep=false;for(const auto& setting:generator.settings()){if(sep)out<<',';sep=true;out<<std::quoted(setting);}out<<"]}\n";
  for(int attempt=1;attempt<=count;++attempt){auto event=generator.next();
   if(!event){out<<"{\"type\":\"failure\",\"attempt\":"<<attempt<<",\"stage\":\"generation\"}\n";continue;}
@@ -68,8 +68,8 @@ int main(int argc,char** argv){try{
     out<<",\"initialization\":{\"seed\":"<<(std::uint64_t(seed)*100000+attempt);
     try{
      auto prepared=imported.state;
-     auto result=jewel::initialize_imported_subsystems(imported,init,sampler,init_random);
-     initialization_fixtures<<"SEQINIT\n"<<imported.subsystems[0].pt_hat<<" 1.2 -.7 1 20 0\n"<<prepared.particles().size()<<' '<<imported.subsystems.size()<<" 1\n";
+     auto result=jewel::initialize_imported_subsystems(imported,init,sampler,init_random,native_channels?jewel::MpiChannelPolicy::outgoing_flavour:jewel::MpiChannelPolicy::source_primary);
+     initialization_fixtures<<(native_channels?"SEQFLAV\n":"SEQINIT\n")<<imported.subsystems[0].pt_hat<<" 1.2 -.7 1 20 0\n"<<prepared.particles().size()<<' '<<imported.subsystems.size()<<" 1\n";
      for(const auto& pair:imported.subsystems)initialization_fixtures<<pair.hard[0]<<' '<<pair.hard[1]<<'\n';
      for(const auto& node:prepared.particles()){initialized_record(initialization_fixtures,prepared,node," ");initialization_fixtures<<'\n';}
      initialization_fixtures<<"-1\n"<<(std::uint64_t(seed)*100000+attempt)<<'\n';

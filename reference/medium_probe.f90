@@ -583,7 +583,7 @@ program mediumprobe
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
     endif
    enddo
-  case('HARDINIT','MPIINIT','SEQINIT')
+  case('HARDINIT','MPIINIT','SEQINIT','SEQFLAV')
    hard_mstp=0;hard_msti=0;hard_parp=0;hard_pari=0
    read(*,*)hard_pari(17),hard_x,hard_y,ftfac,ltime,aflag
    aofirstsplit=aflag/=0;mpifsr=.false.;collider='PPJJ';lme1=4;lme2=5
@@ -592,7 +592,7 @@ program mediumprobe
     mpifsr=aflag/=0
    endif
    n=6
-   if(trim(op)=='SEQINIT')then
+   if(trim(op)=='SEQINIT'.or.trim(op)=='SEQFLAV')then
     read(*,*)n,seq_count,aflag
     if(n<2.or.n>23000.or.seq_count<1.or.seq_count>11500)stop 81
     mpifsr=aflag/=0
@@ -625,8 +625,14 @@ program mediumprobe
    if(trim(op)=='HARDINIT')then
     hard_angle1=getthetam(4);hard_angle2=getthetam(5)
    endif
-   if(trim(op)=='SEQINIT')then
+   if(trim(op)=='SEQINIT'.or.trim(op)=='SEQFLAV')then
     do seq_i=1,seq_count
+     ! Harness policy: set COMMON channels per outgoing flavour; routine unchanged.
+     if(trim(op)=='SEQFLAV')then
+      type1='QQ';type2='QQ'
+      if(k(seq_pairs(1,seq_i),2)==21)type1='GC'
+      if(k(seq_pairs(2,seq_i),2)==21)type2='GC'
+     endif
      call findvirtualities(seq_pairs(1,seq_i),seq_pairs(2,seq_i),hard_x,hard_y,hard_z1,hard_z2,seq_i>1)
     enddo
     write(*,*)cursor
