@@ -1,0 +1,152 @@
+{
+  "scope": "optical medium and numerical tables, not full events",
+  "input_sha256": "e284837fb580a611640802cd22af632e1d430cfeeb127be669b4d80b9a6e4054",
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "groups": {
+    "ei-table": {
+      "values": 3000,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "ei-interpolation": {
+      "values": 18,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "LOW": {
+      "values": 300,
+      "max_absolute_error": 2.0816681711721685e-17,
+      "max_relative_error": 7.388712263632209e-16
+    },
+    "HIGH": {
+      "values": 300,
+      "max_absolute_error": 2.0816681711721685e-17,
+      "max_relative_error": 7.388712263632209e-16
+    },
+    "SCAT": {
+      "values": 75,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "thickness-table": {
+      "values": 800,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "cross-section-table": {
+      "values": 2400,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "thickness-boundary": {
+      "values": 24,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "participants": {
+      "values": 160,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "medium-sample": {
+      "values": 3440,
+      "max_absolute_error": 2.220446049250313e-16,
+      "max_relative_error": 3.739714272056119e-16
+    }
+  },
+  "failures": [],
+  "sources": {
+    "jewel-2.6.0.f.stock": {
+      "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+      "routines": {
+        "ODEINT": [
+          8315,
+          8347
+        ],
+        "RKSTEPPER": [
+          8354,
+          8400
+        ],
+        "RK4STEP": [
+          8407,
+          8416
+        ],
+        "EI": [
+          7872,
+          7920
+        ],
+        "EIXINT": [
+          8282,
+          8308
+        ],
+        "INTPQGLOW": [
+          7784,
+          7802
+        ],
+        "INTPQGHIGH": [
+          7809,
+          7827
+        ],
+        "SCATPRIMFUNC": [
+          7692,
+          7710
+        ]
+      }
+    },
+    "medium-simple.f.stock": {
+      "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+      "routines": {
+        "GETTEMP": [
+          473,
+          523
+        ],
+        "GETMD": [
+          430,
+          438
+        ],
+        "GETMS": [
+          442,
+          446
+        ],
+        "GETNEFF": [
+          450,
+          469
+        ],
+        "NPART": [
+          661,
+          674
+        ],
+        "NTHICK": [
+          678,
+          716
+        ],
+        "CALCTA": [
+          720,
+          758
+        ],
+        "MEDDERIV": [
+          808,
+          829
+        ],
+        "CALCXSECTION": [
+          762,
+          804
+        ]
+      }
+    },
+    "meix.f": {
+      "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+      "routines": {
+        "EIX": [
+          7,
+          38
+        ]
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "8562339b1f7cf512ad65824be56dccaebae9839140e0daa835d0a189ac464e27",
+    "jewel-medium-reference": "a3bd3e8a6bff289c10fcff28c37faf73c669de7ba6ee105a180c34e128bc1c14"
+  }
+}

@@ -26,7 +26,7 @@ Rows contain `operation nf a b c`; output is `value random_draw_count`. For GETT
 
 - Owned event storage with stable particle IDs, parent references, production coordinates, momentum and colour fields. It is an initial append-only graph; colour closure and evolution accounting are not implemented.
 - Explicit RNG interface and finite replay tape, checkpoint/restore, exhausted-tape errors. No claim that a standard C++ RNG reproduces PYR; callers supply a recorded tape.
-- Medium interface and zero-density vacuum implementation. The expanding optical medium and thermal-scatterer sampling remain to be ported.
+- Medium interface, zero-density vacuum implementation and expanding optical medium (see milestone 1b below). Thermal-scatterer sampling remains to be ported.
 - Direct translations of PQQ, PGQ, PGG, PQG, ALPHAS, INTPQQ, INTPGGLOW, INTPGGHIGH and GETT. GETT rejection sampling uses the same draw order and empty-interval convention.
 - ALPHAS deliberately retains the Fortran single-precision beta-function coefficient before double-precision evaluation. Changing that is a separate numerical change.
 
@@ -42,6 +42,61 @@ python3 reference/freeze.py --variant stock --output validation-output/stock-001
   --file /path/to/medium.params.dat --file /path/to/pdf-member.dat
 ```
 
-The full stages 0 and 1 remain open. Next implement optical-medium temperature/density and tables with independent probes, Ei interpolation and scattering/splitting integrals. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
+The full stages 0 and 1 remain open. Next implement the remaining splitting/Sudakov/scattering grids, medium sampling bounds, thermal-scatterer draws, centrality and vertex sampling. Then add controlled initial-state snapshots and evolution replay. Before full-generator comparisons, capture stock and custom run manifests, complete PDF provenance, seeds, event weights, cross sections and rejected-event accounting; build a statistically adequate weighted baseline. Kernel parity is not validation of a full event generator.
 
 Pythia8 hard-event import and separate hadronization adapters follow core evolution validation. No Pythia8, TGlauberMC or JETSCAPE dependency is introduced here. The full routine inventory and ordered port plan are preserved in `docs/port-plan.md` and `docs/routines.csv`.
+
+## Milestone 1b: expanding medium and numerical tables
+
+`include/jewel/medium.hpp` exposes `ExpandingMedium`, `MediumConfig` and
+`ExponentialIntegral`. Tables belong to each immutable model; there is no shared
+Fortran state. The expanding medium implements CALCTA, NTHICK, NPART, GETTEMP,
+GETMD, GETMS, GETNEFF and CALCXSECTION. The numerical layer translates ODEINT,
+RKSTEPPER, RK4STEP, EIXINT/EIX/EI, INTPQGLOW/HIGH and SCATPRIMFUNC.
+
+```cpp
+#include "jewel/medium.hpp"
+jewel::MediumConfig config;
+config.impact_parameter = 7.0; // fm
+jewel::ExpandingMedium medium(config);
+auto local = medium.sample({2.0, 1.0, 0.0, 1.0}); // x,y,z,t in fm (c=1)
+auto cross_sections = medium.cross_section_table();
+jewel::ExponentialIntegral ei;
+auto primitive = ei.scatprimfunc(10.0, 0.5, jewel::Kernels{});
+```
+
+Temperature and masses are in GeV; effective density is the stock GETNEFF value
+(in natural-unit GeV^3, including its longitudinal boost factor), not fm^-3.
+The cross-section table retains the stock three columns and normalization; the
+last column is its cumulative weight, not a normalized centrality probability.
+It is computed on request. The 100-point thickness table is built at construction.
+The Ei table has 1,000 positive/negative nodes and uses stock interpolation.
+
+The `medium-differential` CTest compares every generated table entry, interpolation,
+participant density, medium samples and the three Ei-dependent kernels against
+unchanged, hash-verified stock Fortran routines. The reference harness dispatches
+only DERIV modes 5 and 101 and sets parameters explicitly rather than invoking
+MEDINIT/card parsing. Source identities are in `reference/medium-source.json`.
+`build/medium-validation.json` records errors and hashes. See
+[recorded validation](docs/validation-medium.md).
+
+### Preserved reference details and explicit domain policies
+
+- Preserve default REAL rounding in the nuclear-radius formula, integration
+  constants, cooling exponent `0.3333`, and `sqrt(2.)` scatterer mass divisor.
+- Preserve the thickness grid's actual last radius (99/100 of `2R`), linear
+  interpolation, central participant normalization and strict `T < Tc` cutoff.
+- Preserve the Debye floor even when temperature/density vanish. A nonzero
+  screening mass alone therefore does not mean the point contains active medium.
+- Define temperature and density as zero on/outside the forward light cone;
+  stock GETNEFF is undefined there. This is a documented extension, tested as
+  a C++ contract rather than included in the Fortran parity claim.
+- Ei preserves extrapolation below the first grid knot, including the finite
+  table value at zero. This is the stock approximation, not mathematical Ei(0).
+  Beyond `|x|=55` C++ throws; stock warns and extrapolates. Dependent kernels also
+  throw if they request such a value. Integration failures throw instead of
+  printing a warning and returning a partial result.
+
+This does not yet implement medium event/vertex sampling, thermal momenta,
+medium-query bounds, complete shower/scattering rate grids or transport evolution.
+It is validation of medium fields and these tables, not full JEWEL event parity.

@@ -1,0 +1,89 @@
+{
+  "jewel-2.6.0.f.stock": {
+    "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+    "routines": {
+      "ODEINT": [
+        8315,
+        8347
+      ],
+      "RKSTEPPER": [
+        8354,
+        8400
+      ],
+      "RK4STEP": [
+        8407,
+        8416
+      ],
+      "EI": [
+        7872,
+        7920
+      ],
+      "EIXINT": [
+        8282,
+        8308
+      ],
+      "INTPQGLOW": [
+        7784,
+        7802
+      ],
+      "INTPQGHIGH": [
+        7809,
+        7827
+      ],
+      "SCATPRIMFUNC": [
+        7692,
+        7710
+      ]
+    }
+  },
+  "medium-simple.f.stock": {
+    "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+    "routines": {
+      "GETTEMP": [
+        473,
+        523
+      ],
+      "GETMD": [
+        430,
+        438
+      ],
+      "GETMS": [
+        442,
+        446
+      ],
+      "GETNEFF": [
+        450,
+        469
+      ],
+      "NPART": [
+        661,
+        674
+      ],
+      "NTHICK": [
+        678,
+        716
+      ],
+      "CALCTA": [
+        720,
+        758
+      ],
+      "MEDDERIV": [
+        808,
+        829
+      ],
+      "CALCXSECTION": [
+        762,
+        804
+      ]
+    }
+  },
+  "meix.f": {
+    "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+    "routines": {
+      "EIX": [
+        7,
+        38
+      ]
+    }
+  }
+}

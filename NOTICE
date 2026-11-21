@@ -7,3 +7,7 @@ Cite JEWEL: Eur.Phys.J. C74 (2014) 2762, arXiv:1311.0048;
 JHEP 1303 (2013) 080, arXiv:1212.1599, and applicable feature papers.
 The reference source must be supplied separately, with its original notices.
 No modified Pythia6 distribution is included or reused as a standalone library.
+
+Positive exponential integral EIX translated from meix.f, credited upstream to
+S. Zhang and J. M. Jing, Computation of Special Functions, John Wiley & Sons
+(1996), http://jin.ece.illinois.edu. The original attribution is retained here.
