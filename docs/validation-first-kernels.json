@@ -1,0 +1,110 @@
+{
+  "scope": "nine extracted stock kernels; not full events",
+  "cases": 1320,
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "da2426f1db3b69df5f96a3686d13fbd327fa2addd1ab352dfab820ae974f9bd2",
+  "source": {
+    "release": "JEWEL 2.6.0 stock",
+    "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+    "routines": {
+      "PQQ": [
+        7927,
+        7931
+      ],
+      "PGQ": [
+        7938,
+        7942
+      ],
+      "PGG": [
+        7949,
+        7953
+      ],
+      "PQG": [
+        7960,
+        7964
+      ],
+      "ALPHAS": [
+        7971,
+        7987
+      ],
+      "INTPQQ": [
+        7717,
+        7733
+      ],
+      "INTPGGLOW": [
+        7740,
+        7755
+      ],
+      "INTPGGHIGH": [
+        7762,
+        7777
+      ],
+      "GETT": [
+        7834,
+        7865
+      ]
+    }
+  },
+  "executables": {
+    "jewel-probe": "94368d6351e2d0f08354c60807eba7ce5bdbf57ac42779d5f66d8369a0228124",
+    "jewel-reference": "d6b1fccb16dba8c712c84f1bb0f1ad8393788ff9582952065884e4fb2c4a370a"
+  },
+  "kernels": {
+    "PQQ": {
+      "cases": 60,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "PGQ": {
+      "cases": 60,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "PGG": {
+      "cases": 60,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "PQG": {
+      "cases": 60,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "INTPQQ": {
+      "cases": 195,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "INTPGGHIGH": {
+      "cases": 195,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "INTPGGLOW": {
+      "cases": 185,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "ALPHAS": {
+      "cases": 90,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 0
+    },
+    "GETT": {
+      "cases": 415,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0,
+      "max_draws": 12
+    }
+  },
+  "failures": []
+}

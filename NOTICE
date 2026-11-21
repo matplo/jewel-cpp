@@ -1,0 +1,9 @@
+Research C++ translation of selected JEWEL 2.6.0 routines, not an official JEWEL release.
+Original JEWEL code: Copyright (C) 2026 Korinna C. Zapp.
+The medium model was partly implemented by Jochen Klein. Rithya (Raghav)
+Kunnawalkam Elayavalli contributed V+jet implementation. See upstream headers.
+Distributed under GPL-2.0-or-later; see LICENSE and MCnet GUIDELINES.
+Cite JEWEL: Eur.Phys.J. C74 (2014) 2762, arXiv:1311.0048;
+JHEP 1303 (2013) 080, arXiv:1212.1599, and applicable feature papers.
+The reference source must be supplied separately, with its original notices.
+No modified Pythia6 distribution is included or reused as a standalone library.
