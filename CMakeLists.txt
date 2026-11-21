@@ -125,6 +125,9 @@ endif()
 add_executable(jewel-kinematics-probe app/kinematics_probe.cpp)
 target_link_libraries(jewel-kinematics-probe PRIVATE jewel_core)
 if(JEWEL_REFERENCE_SOURCE)
+ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+  ${CMAKE_SOURCE_DIR}/reference/kinematics-source.json
+  ${CMAKE_SOURCE_DIR}/reference/extract_kinematics.py)
  execute_process(COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/reference/extract_kinematics.py
   ${JEWEL_REFERENCE_SOURCE} ${CMAKE_BINARY_DIR}/kinematics-reference.f RESULT_VARIABLE extracted_kinematics)
  if(NOT extracted_kinematics EQUAL 0)
@@ -661,4 +664,15 @@ if(JEWEL_REFERENCE_SOURCE AND BUILD_TESTING)
  add_test(NAME isr-emission-times-differential COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/isr_emission_times_differential.py $<TARGET_FILE:jewel-isr-times-probe>
   $<TARGET_FILE:jewel-isr-times-reference> ${CMAKE_BINARY_DIR}/isr-emission-times-validation.json)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE AND BUILD_TESTING)
+ add_test(NAME massless-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/massless_differential.py $<TARGET_FILE:jewel-kinematics-probe>
+  $<TARGET_FILE:jewel-kinematics-reference> ${CMAKE_BINARY_DIR}/massless-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(massless-test tests/massless.cpp)
+ target_link_libraries(massless-test PRIVATE jewel_core)
+ add_test(NAME massless-contracts COMMAND massless-test)
 endif()

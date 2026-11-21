@@ -21,4 +21,10 @@ double colour_opening_angle(const ShowerState&,ParticleId);
 // State changes are transactional; random draws are not rewound on failure.
 HardInitializationResult initialize_hard_dijet(ShowerState&,ParticleId,ParticleId,
  const HardInitializationConfig&,const BranchingSampler&,Random&);
+// Literal MAKEMASSLESS preparation of a surviving emitted parton and hard pair.
+// Preserves sequential component rescaling (not a simultaneous vector rescale).
+// Updates momenta, emitted record mass and auxiliary generator vertices only.
+// Distinct active records are required; invalid outputs leave all three intact.
+void make_parton_massless(ShowerParticle& emitted,ShowerParticle& first,ShowerParticle& second);
+
 }

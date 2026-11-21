@@ -90,4 +90,40 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
  };
  finish(a,qa);finish(b,qb);working.validate();state=std::move(working);return result;
 }
+void make_parton_massless(ShowerParticle& emitted,ShowerParticle& first,ShowerParticle& second){
+ require(&emitted!=&first && &emitted!=&second && &first!=&second,"massless preparation requires distinct records");
+ auto a=first,b=second,c=emitted;
+ for(const auto* node:{&a,&b,&c}){
+  require(node->particle.status>0,"massless preparation requires active records");
+  require(std::isfinite(node->record_mass),"nonfinite preparation mass");
+  momentum_magnitude(node->particle.momentum);
+  require(std::isfinite(node->particle.momentum.energy),"nonfinite preparation energy");
+ }
+ auto& p=a.particle.momentum;auto& q=b.particle.momentum;auto& k=c.particle.momentum;
+ double energy=p.energy+q.energy;require(energy>0,"invalid hard pair energy");
+ std::array<double,3> beta{(p.px+q.px)/energy,(p.py+q.py)/energy,(p.pz+q.pz)/energy};
+ auto inverse=beta;for(auto& x:inverse)x=-x;
+ for(auto* node:{&a,&b,&c})rotate_boost(node->particle.momentum,&node->generator_vertex,0,0,inverse);
+ double total=p.energy+q.energy+k.energy,third=momentum_magnitude(k);
+ double remaining=total-third,m1=a.record_mass,m2=b.record_mass;
+ require(remaining!=0,"zero remaining hard pair energy");
+ double square=remaining*remaining-m1*m1-m2*m2;
+ double new_square=(square*square-4.*m1*m1*m2*m2)/(4.*remaining*remaining);
+ double new_magnitude=std::sqrt(std::abs(new_square));
+ double first_energy=std::sqrt(new_square+m1*m1),second_energy=std::sqrt(new_square+m2*m2);
+ // PYP(...,8) is evaluated afresh after each assignment in the source.
+ for(auto* momentum:{&p,&q})for(double* component:{&momentum->px,&momentum->py,&momentum->pz}){
+  double denominator=momentum_magnitude(*momentum);
+  require(denominator>0,"undefined massless preparation direction");
+  *component=*component*new_magnitude/denominator;
+ }
+ p.energy=first_energy;q.energy=second_energy;k.energy=third;c.record_mass=0;
+ for(auto* node:{&a,&b,&c}){
+  rotate_boost(node->particle.momentum,&node->generator_vertex,0,0,beta);
+  const auto& v=node->particle.momentum;
+  for(double x:{v.px,v.py,v.pz,v.energy,node->generator_vertex.x,node->generator_vertex.y,node->generator_vertex.z,node->generator_vertex.t})require(std::isfinite(x),"nonfinite massless preparation output");
+ }
+ first=std::move(a);second=std::move(b);emitted=std::move(c);
+}
+
 }
