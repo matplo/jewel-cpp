@@ -724,3 +724,12 @@ and mode 1 selects JEWEL's default ANGORD value. The separate AOFIRSTSPLIT
 setting remains false. [Angular-mode validation](docs/validation-angular-runner.md)
 records passing component/native-replay checks and an unresolved mode-1 event
 where C++ fails but Fortran completes. These modes are not yet fully validated.
+
+### Thermal constituent subtraction kernel
+
+The typed `subtract_thermal_momenta` API ports the JEWEL 2.6.0 subtraction
+helpers, with 132 passing reference cases. It retains source IDs and marks
+positive residual thermal particles explicitly. It is not yet connected to the
+native runner or on-shell projection. The upstream process-offset wrapper has
+known defects and is excluded from the kernel parity claim.
+See [behaviour, validation and integration limits](docs/validation-subtraction.md).

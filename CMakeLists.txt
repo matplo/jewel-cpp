@@ -515,3 +515,25 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
   ${CMAKE_SOURCE_DIR}/tests/runner_angular.py $<TARGET_FILE:jewel-run-events>
   $<TARGET_FILE:jewel-medium-probe>)
 endif()
+
+# Thermal subtraction is independent of Pythia and the Fortran production ABI.
+target_sources(jewel_core PRIVATE src/subtraction.cpp)
+add_executable(jewel-subtraction-probe app/subtraction_probe.cpp)
+target_link_libraries(jewel-subtraction-probe PRIVATE jewel_core)
+if(JEWEL_REFERENCE_SOURCE)
+ file(SHA256 "${JEWEL_REFERENCE_SOURCE}/subtraction.C" subtraction_hash)
+ if(NOT subtraction_hash STREQUAL "5b84552df996799d9e1061d85fdddf9ee3add56aacc2e4a4655f8e7943d82d17")
+  message(FATAL_ERROR "Unrecognized JEWEL subtraction.C")
+ endif()
+ configure_file("${JEWEL_REFERENCE_SOURCE}/subtraction.C" "${CMAKE_BINARY_DIR}/subtraction.C" COPYONLY)
+ add_executable(jewel-subtraction-reference reference/subtraction_probe.cpp)
+ target_include_directories(jewel-subtraction-reference PRIVATE "${CMAKE_BINARY_DIR}")
+ add_test(NAME subtraction-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/subtraction_differential.py $<TARGET_FILE:jewel-subtraction-probe>
+  $<TARGET_FILE:jewel-subtraction-reference> ${CMAKE_BINARY_DIR}/subtraction-validation.json)
+endif()
+if(BUILD_TESTING)
+ add_executable(subtraction-test tests/subtraction.cpp)
+ target_link_libraries(subtraction-test PRIVATE jewel_core)
+ add_test(NAME subtraction-contracts COMMAND subtraction-test)
+endif()
