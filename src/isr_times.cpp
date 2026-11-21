@@ -10,12 +10,12 @@ void validate(const IsrKinematics& k,bool timed){
  for(double x:{k.momentum.px,k.momentum.py,k.momentum.pz,k.momentum.energy,k.record_mass,k.nominal_mass})
   require(std::isfinite(x),"nonfinite ISR kinematics");
  require(k.nominal_mass>=0,"negative ISR nominal mass");
- if(timed)require(k.momentum.energy>0&&k.record_mass!=0,"undefined ISR formation rate");
+ if(timed)require(k.momentum.energy!=0&&k.record_mass!=0,"undefined ISR formation rate");
 }
 double interval(const IsrKinematics& k,double factor,Random& random){
  // Stock default-REAL 0.2 is promoted into the double-precision expression.
  double rate=1./(factor*k.momentum.energy*double(.2f)/(k.record_mass*k.record_mass));
- require(std::isfinite(rate)&&rate>0,"invalid ISR formation rate");
+ require(std::isfinite(rate)&&rate!=0,"invalid ISR formation rate");
  double u=random.uniform();require(std::isfinite(u)&&u>0&&u<1,"invalid ISR random draw");
  return std::log(1.-u)/rate;
 }

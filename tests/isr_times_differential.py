@@ -6,26 +6,27 @@ rows=[];cases=[]
 for scatter in [0,1]:
  for factor in [.25,1,2.5]:
   for depths in [(0,0),(1,1),(2,3),(4,1)]:
-   for energy in [1,100,1000]:
-    for u in [1e-12,.25,.9,1-1e-12]:
-     records={};index=107
-     for side,depth in enumerate(depths):
-      sign=1 if side==0 else -1;beam=3+side;previous=105+side
-      records[previous]=[beam,energy*.1,-energy*.2,sign*energy*1.1,energy,-.75,0]
-      for i in range(depth):
-       incoming,emitted=index,index+1;index+=2
-       records[previous][0]=incoming
-       records[incoming]=[beam,.1*energy,.05*energy,sign*energy*1.2,energy,-.25*(i+1),0]
-       nominal=.13957 if i%2 else 0.
-       # Include exact equality and the adjacent representable mass above it.
-       mass=nominal if i%3==0 else math.nextafter(nominal,math.inf) if nominal else .5
-       records[emitted]=[incoming,.1,.2,sign*.3,1,mass,nominal]
-       previous=incoming
-     n=index-1;draws=2+sum(max(0,d-1) for d in depths)+sum(records[i][-2]!=records[i][-1] for i in records if i>=108 and i%2==0)
-     payload=f'{n} {factor} 1.2 -0.7 20 {scatter} 100\n'
-     payload+=''.join(' '.join(format(v,'.17g') for v in records[i])+'\n' for i in range(105,n+1))
-     payload+=' '.join(format(u,'.17g') for _ in range(100))+'\n'
-     rows.append(payload);cases.append(dict(scatter=scatter,factor=factor,depths=depths,energy=energy,u=u,n=n,expected_draws=draws))
+   for energy in [1,100,1000,-1,-100,-1000]:
+    for emitted_energy in [1,-1]:
+     for u in [1e-12,.25,.9,1-1e-12]:
+      records={};index=107
+      for side,depth in enumerate(depths):
+       sign=1 if side==0 else -1;beam=3+side;previous=105+side
+       records[previous]=[beam,energy*.1,-energy*.2,sign*energy*1.1,energy,-.75,0]
+       for i in range(depth):
+        incoming,emitted=index,index+1;index+=2
+        records[previous][0]=incoming
+        records[incoming]=[beam,.1*energy,.05*energy,sign*energy*1.2,energy,-.25*(i+1),0]
+        nominal=.13957 if i%2 else 0.
+        # Include exact equality and the adjacent representable mass above it.
+        mass=nominal if i%3==0 else math.nextafter(nominal,math.inf) if nominal else .5
+        records[emitted]=[incoming,.1,.2,sign*.3,emitted_energy,mass,nominal]
+        previous=incoming
+      n=index-1;draws=2+sum(max(0,d-1) for d in depths)+sum(records[i][-2]!=records[i][-1] for i in records if i>=108 and i%2==0)
+      payload=f'{n} {factor} 1.2 -0.7 20 {scatter} 100\n'
+      payload+=''.join(' '.join(format(v,'.17g') for v in records[i])+'\n' for i in range(105,n+1))
+      payload+=' '.join(format(u,'.17g') for _ in range(100))+'\n'
+      rows.append(payload);cases.append(dict(scatter=scatter,factor=factor,depths=depths,energy=energy,emitted_energy=emitted_energy,u=u,n=n,expected_draws=draws))
 payload=''.join(rows);results=[]
 for exe in [cpp,reference]:
  run=subprocess.run([exe],input=payload,text=True,capture_output=True,timeout=90)
@@ -43,6 +44,7 @@ for case in cases:
  cursor+=size
 assert cursor==len(a)
 report=dict(scope='backward ISR timing block only, supplied ancestry and nominal masses',cases=len(cases),
+ signed_energy_cases=sum(c['energy']<0 or c['emitted_energy']<0 for c in cases),
  values=len(a),max_absolute_error=maximum,failures=failures,relative_tolerance=2e-12,absolute_tolerance=2e-13,
  input_sha256=hashlib.sha256(payload.encode()).hexdigest(),executables={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [cpp,reference]},
  reference_sources=json.loads((Path(__file__).parents[1]/'reference/medium-source.json').read_text()))

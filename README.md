@@ -801,3 +801,8 @@ remain pending.
 completes the checked momentum-copy path for the reduced single-system samples.
 Composed ISR and primordial matrices reproduce final hard/emitted partons;
 physical production-time assignment and ISR medium evolution remain pending.
+
+The [signed-energy audit](docs/validation-isr-energy-frames.md) shows that a final-frame
+boost does not resolve all negative spacelike energies. The timing kernel now
+preserves the signed Fortran expression and passes 1152 reference cases; its
+physical use for reconstructed Pythia8 histories remains under investigation.

@@ -24,8 +24,8 @@ shower. The output deliberately does not combine stages into a timing chain.
 A spacelike vector can have either energy sign depending on the frame. **751
 of the 11943 reconstructed branches have negative energy** in their recorded
 frames. These signs are retained; neither absolute-value replacement nor an
-energy clamp is applied. The positive-energy timing API must not consume these
-raw stage-local vectors. A common frame and coordinate/recoil transport mapping
+energy clamp is applied. The timing API now preserves the source algebra for signed energies, but that
+does not make these raw stage-local vectors a validated physical timing input. A common frame and coordinate/recoil transport mapping
 are still needed, followed by non-hard-parton virtuality initialization and
 medium evolution. `jewel-run-events` continues to reject ISR snapshots.
 

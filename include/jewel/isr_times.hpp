@@ -10,6 +10,8 @@ struct IsrTimeConfig {double x{},y{},formation_factor{1},lifetime{};bool scatter
 struct IsrTimeResult {IsrTimedLine hard;std::vector<IsrTimedLine> incoming,emitted;};
 // Translation of interpretpythiaevent's backward timing block, not a Pythia8
 // ancestry mapper. The final step must reach beam_side +1/-1; prior steps use 0.
+// Signed nonzero energies reproduce the source algebra, including reversed
+// time intervals. This does not assert that such a history is physical.
 IsrTimeResult assign_isr_times(const IsrKinematics& hard,const std::vector<IsrTimeStep>&,
  const IsrTimeConfig&,Random&);
 }

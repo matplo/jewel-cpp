@@ -25,12 +25,23 @@ int main(){
  check(result.incoming[0].production.t<result.hard.production.t);
  check(result.emitted[0].end_time>result.emitted[0].production.t);
  check(result.emitted[1].production.t==result.incoming[0].production.t);
- for(int bad=0;bad<5;++bad){
+ // Negative incoming energy preserves the signed Fortran rate, without abs(E).
+ auto signed_hard=hard;signed_hard.momentum.energy=-hard.momentum.energy;
+ auto signed_incoming=incoming;signed_incoming.momentum.energy=-incoming.momentum.energy;
+ auto signed_emitted=virtual_emitted;signed_emitted.momentum.energy=-virtual_emitted.momentum.energy;
+ jewel::ReplayRandom signed_random({.5,.25,.4});
+ auto signed_result=jewel::assign_isr_times(signed_hard,{{signed_incoming,signed_emitted,0},{incoming,emitted,1}},config,signed_random);
+ check(signed_random.checkpoint()==3);
+ check(signed_result.hard.production.t>signed_result.hard.end_time);
+ check(signed_result.incoming[0].production.t>signed_result.hard.production.t);
+ check(signed_result.emitted[0].end_time<signed_result.emitted[0].production.t);
+ for(int bad=0;bad<6;++bad){
   auto h=hard;auto c=config;std::vector<jewel::IsrTimeStep> steps{{incoming,emitted,1}};
   if(bad==0)h.record_mass=0;
   if(bad==1)c.formation_factor=0;
   if(bad==2)steps[0].beam_side=0;
   if(bad==3)steps[0].beam_side=2;
+  if(bad==5)h.momentum.energy=0;
   if(bad==4)steps[0].emitted.momentum.energy=std::numeric_limits<double>::quiet_NaN();
   jewel::ReplayRandom stream({.5});bool rejected=false;
   try{jewel::assign_isr_times(h,steps,c,stream);}catch(const std::domain_error&){rejected=true;}

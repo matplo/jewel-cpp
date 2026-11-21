@@ -1,15 +1,16 @@
 {
   "scope": "backward ISR timing block only, supplied ancestry and nominal masses",
-  "cases": 288,
-  "values": 11808,
+  "cases": 1152,
+  "signed_energy_cases": 864,
+  "values": 47232,
   "max_absolute_error": 0,
   "failures": [],
   "relative_tolerance": 2e-12,
   "absolute_tolerance": 2e-13,
-  "input_sha256": "f8d9d2e253d41f1b01ef8a797e981994bb7fa0917cc725f43f8de831cf797784",
+  "input_sha256": "dc63962e619dab964d09dac5093e3a246714e4738fe9bbcd93a4bebb29070ac0",
   "executables": {
-    "build/jewel-isr-times-probe": "9ce6d8f187050498acfecc3a7105e45ef6b9efbc6bfd69d3f86f648c1509fb1a",
-    "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-isr-times-probe": "57f00371ff2d93882f0794fab5062ba410d5915b068011a1fbd7c68e8e87aa4f",
+    "/Users/ploskon/devel/jewel-cpp/build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
   },
   "reference_sources": {
     "jewel-2.6.0.f.stock": {
@@ -317,14 +318,14 @@
       }
     }
   },
-  "timing_values": 11520,
-  "draw_count_comparisons": 288,
+  "timing_values": 46080,
+  "draw_count_comparisons": 1152,
   "source_sha256": {
-    "src/isr_times.cpp": "c7cc07db48489c0ae50e322439a17873bebd94e36b8e4d6b8dab0a28660dc1fd",
-    "include/jewel/isr_times.hpp": "72d2c8bbc7ddf2ca1082159e24794430abb7c3d18fbc65e0f940c7a5e064b68d",
+    "src/isr_times.cpp": "c5ec987914b84cd3fdf28c70a0f745f87f3edbfdf3f0d802c7372f7706d22239",
+    "include/jewel/isr_times.hpp": "3d9b3bff78e6d4e0351518fd058e808e6bb5995438d0a3334dff027ee72f8cbf",
     "reference/extract_isr_times.py": "eb392c82983ebd299cd96a47ae2c81258a78541397d4771599eec128d857a32c",
     "reference/isr_times_probe.f90": "02cb752b8b7c72afee2c2c78f8fe013d9913f42d7f8833a1b22ee3f219775f20",
-    "tests/isr_times_differential.py": "32f709f8d6c816e7dae58ae62f2ab43b6a25e7e556baf218c6b65dabc85824fe",
-    "tests/isr_times.cpp": "c931f8043a5b1bf9fdd6409687c323f8308e3dd0f8f2790df56caf906cb982c0"
+    "tests/isr_times_differential.py": "a69533550771bc497bee65d1f5d2cdc45eca30461b3d25eacfbec5f15ce13a9f",
+    "tests/isr_times.cpp": "94f08f76a7cad7210383ffa56feb4082294a02c04cb79197e7571efb9069a66a"
   }
 }
