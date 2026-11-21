@@ -2,6 +2,7 @@
 #include "jewel/scattering.hpp"
 #include "jewel/branching.hpp"
 #include "jewel/shower.hpp"
+#include "jewel/transfer.hpp"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -17,6 +18,7 @@ int main() {
  std::unique_ptr<jewel::PartonicPdf> pdf;
  std::unique_ptr<jewel::ScatteringRates> rates;
  std::unique_ptr<jewel::BranchingSampler> branching;
+ std::unique_ptr<jewel::TransferSampler> transfers;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -35,7 +37,36 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="NEWMASS") {
+   if(op=="QCONFIG") {
+    jewel::Kernels k;int boost;std::cin>>k.nf>>k.lambda_shower>>k.lambda_scattering>>boost;
+    transfers=std::make_unique<jewel::TransferSampler>(k,*medium,boost!=0);
+   } else if(op=="TRANSFER") {
+    if(!transfers)throw std::runtime_error("QCONFIG required");
+    std::size_t slot;int recalc;double dt,x;std::cin>>slot>>recalc>>dt>>x;
+    if(slot==0||slot>10000)throw std::runtime_error("invalid transfer slot");
+    jewel::ShowerState state;jewel::ShowerParticle temporary,leg;leg.particle.status=1;leg.particle.pdg=21;
+    auto& p=leg.particle.momentum;auto& v=leg.generator_vertex;auto& birth=leg.particle.production;
+    std::cin>>p.px>>p.py>>p.pz>>p.energy>>leg.record_mass>>birth.x>>birth.y>>birth.z>>birth.t>>v.x>>v.y>>v.z>>v.t;
+    auto& tv=temporary.generator_vertex;std::cin>>tv.x>>tv.y>>tv.z>>tv.t;
+    auto scratch=state.append(temporary),projectile=state.append(leg);
+    jewel::TransferHistory history;history.records.resize(slot);auto& sum=history.sum;
+    std::cin>>sum.px>>sum.py>>sum.pz>>sum.energy>>history.sum_squared;
+    auto& record=history.records[slot-1];auto& q=record.momentum;auto& a=record.scatterer.momentum;auto& r=record.position;
+    std::cin>>record.invariant>>q.px>>q.py>>q.pz>>q.energy>>record.time>>record.scatterer.type
+     >>a.px>>a.py>>a.pz>>a.energy>>record.scatterer.mass>>r.x>>r.y>>r.z>>r.t;
+    std::size_t count;if(!(std::cin>>count)||count>100000)throw std::runtime_error("invalid transfer replay");
+    std::vector<double> tape(count);for(auto& value:tape)if(!(std::cin>>value))throw std::runtime_error("short replay");
+    jewel::ReplayRandom random(tape);transfers->sample(state,projectile,scratch,history,slot-1,dt,x,recalc!=0,random);
+    auto output=[](jewel::Momentum p){std::cout<<p.px<<' '<<p.py<<' '<<p.pz<<' '<<p.energy<<' ';};
+    auto position=[](jewel::SpaceTime p){std::cout<<p.x<<' '<<p.y<<' '<<p.z<<' '<<p.t<<' ';};
+    const auto& temp=state.at(scratch);const auto& result=state.at(projectile);
+    std::cout<<int(state.discarded)<<' '<<random.checkpoint()<<' '<<temp.particle.status<<' '<<temp.particle.pdg<<'\n';
+    std::cout<<record.invariant<<' ';output(record.momentum);std::cout<<record.time<<'\n';
+    std::cout<<record.scatterer.type<<' ';output(record.scatterer.momentum);std::cout<<record.scatterer.mass<<' ';position(record.position);std::cout<<'\n';
+    output(history.sum);std::cout<<history.sum_squared<<'\n';
+    output(result.particle.momentum);std::cout<<result.record_mass<<' ';position(result.generator_vertex);std::cout<<'\n';
+    output(temp.particle.momentum);std::cout<<temp.record_mass<<' ';position(temp.generator_vertex);position(temp.particle.production);std::cout<<'\n';
+   } else if(op=="NEWMASS") {
     if(!branching||!sudakov||!final_table)throw std::runtime_error("BCONFIG, RCONFIG and FCONFIG required");
     jewel::VirtualityUpdate u;int initial,pair;
     std::cin>>u.q_squared>>u.old_q_squared>>u.previous_mass>>u.record_mass>>u.energy>>u.pdg>>initial

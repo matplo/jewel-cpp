@@ -79,6 +79,9 @@ program mediumprobe
  common /COLOUR/ trip,anti,colmax
  common /WEIGHT/ evweight,sumofweights
  double precision getnewmass,getpnorad1,qnew2,qold2,previousmass,energyfraction
+ integer nstart,nend,recalcflag
+ double precision allqs(10000,6),scatcentres(10000,10),qsumvec(4),qsum2
+ common /COHERENT/ nstart,nend,allqs,scatcentres,qsumvec,qsum2
  character(20) op
  logfid=0
  logfid2=0
@@ -204,6 +207,38 @@ program mediumprobe
    read(*,*) channel,x,y
    v=getxsecint(x,y,channel)
    write(*,'(ES26.17E3)')v
+  case('QCONFIG')
+   read(*,*)knf,lps,lqcd,boostflag
+   boost=boostflag/=0
+  case('TRANSFER')
+   read(*,*)nend,recalcflag,dt,energyfraction
+   if(nend<1.or.nend>10000)stop 5
+   n=2
+   k=0
+   p=0
+   vertices=0
+   mv=0
+   mstu=0
+   mstu(4)=23000
+   paru(1)=3.141592653589793d0
+   k(2,1)=1
+   k(2,2)=21
+   discard=.false.
+   read(*,*)p(2,:),mv(2,1:4),vertices(2,1:4)
+   read(*,*)vertices(1,1:4)
+   read(*,*)qsumvec,qsum2
+   read(*,*)allqs(nend,:),scatcentres(nend,:)
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   call getqvec(2,nend,dt,energyfraction,recalcflag/=0)
+   write(*,'(4I8)')merge(1,0,discard),cursor,k(1,1),k(1,2)
+   write(*,'(6ES26.17E3)')allqs(nend,:)
+   write(*,'(10ES26.17E3)')scatcentres(nend,:)
+   write(*,'(5ES26.17E3)')qsumvec,qsum2
+   write(*,'(9ES26.17E3)')p(2,:),vertices(2,1:4)
+   write(*,'(13ES26.17E3)')p(1,:),vertices(1,1:4),mv(1,1:4)
   case('NEWMASS')
    read(*,*)qnew2,qold2,previousmass,p(1,5),p(1,4),k(1,2),initial_flag,energyfraction,zdec,qflag
    qqbardec=qflag/=0

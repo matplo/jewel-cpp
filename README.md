@@ -382,3 +382,35 @@ Undefined scattering invariants throw rather than propagate NaNs.
 all angular-ordering modes, initial/final updates, retained metadata, different
 couplings and medium boosts. Momentum-transfer sampling, coherent scattering,
 recoils and the complete evolution scheduler remain to be integrated.
+
+
+## Milestone 2g: momentum-transfer sampling and accumulation
+
+`jewel/transfer.hpp` provides `TransferSampler`, `TransferRecord` and
+`TransferHistory`, translating GETQVEC. The sampler owns its medium and coupling
+configuration. `sample()` takes the event, distinct projectile/scratch IDs,
+history, zero-based slot, elapsed time since production, energy fraction,
+recalculation switch and RNG. The slot corresponds to stock J=NEND, as in every
+stock call site. The scratch ID denotes the dedicated temporary record, not a
+physical outgoing jet parton.
+
+Fresh sampling draws a thermal scatterer, transforms to its rest frame, samples
+transfer t and azimuth, transforms the kick back and accumulates its four-vector.
+Recalculation reuses the stored scatterer and transfer limit while resetting the
+sum as in stock. Projectile momentum is restored exactly; auxiliary coordinates
+retain the reference's transform/rounding behavior. Stored scatterer coordinates
+and caller-supplied transfer time are preserved. Input/output units follow the
+core: GeV for momenta/masses, GeV² for invariants and fm for positions/times.
+
+A timelike accumulated transfer triggers retries. After the stock 1,002-attempt
+limit the stored transfer is zeroed; the scratch record still holds the final
+rejected candidate, so physics consumers must use the transfer history. The
+10,000-transfer capacity marks the event discarded. Undefined rest frames,
+missing recalculation records, nonfinite sums and invalid fractions throw.
+Exceptions can leave partial mutations; rollback must cover both event and
+transfer history. No automatic history rollback is implied by ShowerSnapshot.
+
+[Validation](docs/validation-transfer.md) checks thermal draws, both longitudinal
+directions, accumulated/recalculated transfers and the retry-limit fallback.
+This supplies transfer candidates; DOCOHSCATTERING, collision application,
+recoil/colour construction and full transport scheduling remain unfinished.

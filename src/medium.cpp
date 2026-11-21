@@ -214,7 +214,8 @@ Scatterer ExpandingMedium::sample_scatterer(SpaceTime v,Random& random,bool boos
  double ys=boost?0.5*std::log((v.t+v.z)/(v.t-v.z)):0;
  double p,e2;
  for(;;) {
-  p=std::pow(draw(random),double(0.3333333f))*10*temp;
+  // GETSCATTERER first rounds PMAX=10*TEMP, then multiplies the draw.
+  p=std::pow(draw(random),double(0.3333333f))*(10*temp);
   e2=std::sqrt(p*p+ms*ms);
   // These species-dependent signs intentionally follow stock GETSCATTERER.
   double sign=type==2?-1.:1.;
