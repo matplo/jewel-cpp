@@ -186,6 +186,9 @@ SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord& imp
    require(imported.roles.at(id)==(i==0?ImportedRole::primary_hard:ImportedRole::mpi_hard),"subsystem hard role mismatch");
   }
  }
+ // In native mode, do not evaluate an unused Pythia6 colour-partner diagnostic.
+ // Pythia8 junction legs have no ordinary partner; no junction angle is invented.
+ if(policy==MpiChannelPolicy::outgoing_flavour&&!config.first_angle_ordering)config.evaluate_colour_angles=false;
  const auto& primary=imported.subsystems.front();SubsystemInitialization result;
  for(std::size_t side=0;side<2;++side)result.primary_sampling_channels[side]=imported.state.at(primary.hard[side]).particle.pdg==21?Channel::GC:Channel::QQ;
  auto working=imported.state;config.pt_hat=primary.pt_hat;

@@ -1,0 +1,32 @@
+{
+  "scope": "Native junction boundary invariants; failed attempts retained, not generator equivalence",
+  "input": "/private/tmp/jewel-unused-angle-aligned150.jsonl",
+  "input_sha256": "ed19cc9600f8f5968b9561b38d25f6dc7c3f01a9a2803fe290050c22f69b6d72",
+  "mpi_channel_policy": "outgoing-flavour",
+  "summary": {
+    "type": "summary",
+    "attempts": 150,
+    "accepted": 148,
+    "evolution_failures": 2,
+    "generation_failures": 0,
+    "accepted_weight": 148,
+    "failed_weight": 2,
+    "generator_weight_sum": 150,
+    "generator_sigma_mb": 0.17854108860694803,
+    "generator_sigma_error_mb": 0.007675184333626705,
+    "final_records": 6616
+  },
+  "junction_events": 57,
+  "failures": {
+    "subsystem initialization currently requires quark/gluon pairs": 2
+  },
+  "max_momentum_component_residual_gev": 3.808364337949677e-08,
+  "max_momentum_residual_over_total_energy": 7.58638314266389e-12,
+  "acceptance": "abs(component residual) <= 1e-8 * max(1 GeV, total input energy)",
+  "strict_component_diagnostic": {
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance_gev": 1e-07,
+    "failures": []
+  },
+  "boundary_invariants_pass": true
+}

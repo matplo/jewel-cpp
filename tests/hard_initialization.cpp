@@ -20,6 +20,23 @@ int main(){
  jewel::SplitMixRandom random(2600100);jewel::initialize_hard_dijet(state,first,second,config,sampler,random);state.validate();
  auto a=state.at(first).particle.momentum,b=state.at(second).particle.momentum;
  check(std::abs(a.energy+b.energy-20)<1e-10&&std::abs(a.px+b.px)<1e-10);
+ // Disabling unused diagnostics preserves the entire sampled hard-leg result.
+ auto ordinary=state;auto diagnostic_draws=random.checkpoint();
+ state.restore(baseline);config.evaluate_colour_angles=false;
+ jewel::SplitMixRandom no_angles(2600100);
+ auto skipped=jewel::initialize_hard_dijet(state,first,second,config,sampler,no_angles);
+ check(!skipped.colour_angles_evaluated&&no_angles.checkpoint()==diagnostic_draws);
+ for(auto id:{first,second}){const auto& x=state.at(id);const auto& y=ordinary.at(id);
+  check(x.record_mass==y.record_mass&&x.fraction==y.fraction&&x.angle==y.angle&&x.decay_time==y.decay_time&&x.quark_pair==y.quark_pair);
+  check(x.particle.momentum.px==y.particle.momentum.px&&x.particle.momentum.py==y.particle.momentum.py&&x.particle.momentum.pz==y.particle.momentum.pz&&x.particle.momentum.energy==y.particle.momentum.energy);
+ }
+ state.restore(baseline);state.at(second).particle.anticolour=102;state.colour_max=102;
+ jewel::SplitMixRandom junction_random(2600100);
+ jewel::initialize_hard_dijet(state,first,second,config,sampler,junction_random);
+ check(junction_random.checkpoint()==diagnostic_draws);
+ config.first_angle_ordering=true;jewel::ReplayRandom forbidden({});rejected=false;
+ try{jewel::initialize_hard_dijet(state,first,second,config,sampler,forbidden);}catch(const std::domain_error&){rejected=true;}
+ check(rejected&&forbidden.checkpoint()==0);config.evaluate_colour_angles=true;
  // MPI switches override the primary hard scale and do not consult colour angles.
  state.restore(baseline);config.mpi_pair=true;config.mpi_fsr=false;config.mpi_sampling_channels=std::array<jewel::Channel,2>{jewel::Channel::QQ,jewel::Channel::QQ};config.first_angle_ordering=true;config.pt_hat=1000;
  for(auto id:{first,second}){state.at(id).particle.colour=0;state.at(id).particle.anticolour=0;}

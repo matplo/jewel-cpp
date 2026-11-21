@@ -896,3 +896,11 @@ table initialization. `zero-interaction` preserves the previous noninteracting
 expanding-background behavior and permits centrality settings. `medium` keeps
 the interacting expanding background. See [backend validation](docs/validation-vacuum-backend.md)
 and the [larger true-vacuum comparison](docs/vacuum-backend-comparison.html).
+
+### Unused colour-angle diagnostics
+
+The experimental native runner now accepts hard junction legs when the first-
+splitting angular veto is disabled, by omitting its unused colour-angle diagnostic.
+No junction angle is fabricated. Matched 150-attempt samples recover four events
+in both expanding-medium modes; [validation and limits](docs/validation-unused-colour-angles.md)
+include the remaining strict Fortran replay discrepancy.

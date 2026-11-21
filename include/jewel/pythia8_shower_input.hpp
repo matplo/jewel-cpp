@@ -71,6 +71,8 @@ struct SubsystemInitialization {
 // source_primary preserves inherited TYPE1/TYPE2 for source replay.
 // outgoing_flavour selects each Pythia8 MPI leg's physical splitting channel;
 // this is an explicit adapter policy change, not stock GENEVENT equivalence.
+// In this native policy, colour-angle diagnostics are omitted when the first-
+// splitting veto is disabled. A required junction angle is never fabricated.
 // Currently all pairs must be quarks/gluons. Unsupported pairs fail before
 // drawing; later failures roll back the whole state but not the random stream.
 SubsystemInitialization initialize_imported_subsystems(ImportedPythiaRecord&,

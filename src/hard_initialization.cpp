@@ -41,7 +41,9 @@ HardInitializationResult initialize_hard_dijet(ShowerState& state,ParticleId fir
   for(auto channel:*config.mpi_sampling_channels)require(channel==Channel::QQ||channel==Channel::GC,"unsupported MPI sampling channel");}
  auto working=state;auto& a=working.at(first);auto& b=working.at(second);
  for(auto* leg:{&a,&b})require(parton(leg->particle.pdg)&&(leg->particle.status==1||leg->particle.status==4),"hard dijet initialization requires active quarks/gluons");
- HardInitializationResult result;result.colour_angles=config.mpi_pair?std::array<double,2>{-1,-1}:std::array<double,2>{colour_opening_angle(working,first),colour_opening_angle(working,second)};
+ require(config.mpi_pair||config.evaluate_colour_angles||!config.first_angle_ordering,"first-angle ordering requires evaluated colour angles");
+ HardInitializationResult result;result.colour_angles_evaluated=!config.mpi_pair&&config.evaluate_colour_angles;
+ result.colour_angles=result.colour_angles_evaluated?std::array<double,2>{colour_opening_angle(working,first),colour_opening_angle(working,second)}:std::array<double,2>{-1,-1};
  // Source computes these scales before the pair rest-frame round trip.
  auto maximum=[&](const ShowerParticle& leg){
   if(leg.particle.status==4||(config.mpi_pair&&!config.mpi_fsr))return 0.;

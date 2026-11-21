@@ -1,0 +1,173 @@
+{
+  "seed": 2600417,
+  "previous_accepted_events": 144,
+  "unchanged_event_records": 107,
+  "changed_event_attempts": [
+    110,
+    111,
+    112,
+    113,
+    116,
+    117,
+    118,
+    119,
+    120,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    147,
+    148,
+    149,
+    150
+  ],
+  "newly_accepted_attempts": [
+    109,
+    114,
+    121,
+    146
+  ],
+  "failures": {
+    "66": "subsystem initialization currently requires quark/gluon pairs",
+    "115": "subsystem initialization currently requires quark/gluon pairs"
+  },
+  "inputs": {
+    "/private/tmp/jewel-mpi-flavour-vac1000.jsonl": "2135a42c350bbe6f214627770b3cbceb26f3d6eef67218a43c7e1bebc20629e0",
+    "/private/tmp/jewel-unused-angle-aligned150.jsonl": "ed19cc9600f8f5968b9561b38d25f6dc7c3f01a9a2803fe290050c22f69b6d72"
+  },
+  "unchanged_pre_hadronization_event_records": 144,
+  "changed_fields": {
+    "110": [
+      "hadronized_particles"
+    ],
+    "111": [
+      "hadronized_particles"
+    ],
+    "112": [
+      "hadronized_particles"
+    ],
+    "113": [
+      "hadronized_particles"
+    ],
+    "116": [
+      "hadronized_particles"
+    ],
+    "117": [
+      "hadronized_particles"
+    ],
+    "118": [
+      "hadronized_particles"
+    ],
+    "119": [
+      "hadronized_particles"
+    ],
+    "120": [
+      "hadronized_particles"
+    ],
+    "122": [
+      "hadronized_particles"
+    ],
+    "123": [
+      "hadronized_particles"
+    ],
+    "124": [
+      "hadronized_particles"
+    ],
+    "125": [
+      "hadronized_particles"
+    ],
+    "126": [
+      "hadronized_particles"
+    ],
+    "127": [
+      "hadronized_particles"
+    ],
+    "128": [
+      "hadronized_particles"
+    ],
+    "129": [
+      "hadronized_particles"
+    ],
+    "130": [
+      "hadronized_particles"
+    ],
+    "131": [
+      "hadronized_particles"
+    ],
+    "132": [
+      "hadronized_particles"
+    ],
+    "133": [
+      "hadronized_particles"
+    ],
+    "134": [
+      "hadronized_particles"
+    ],
+    "135": [
+      "hadronized_particles"
+    ],
+    "136": [
+      "hadronized_particles"
+    ],
+    "137": [
+      "hadronized_particles"
+    ],
+    "138": [
+      "hadronized_particles"
+    ],
+    "139": [
+      "hadronized_particles"
+    ],
+    "140": [
+      "hadronized_particles"
+    ],
+    "141": [
+      "hadronized_particles"
+    ],
+    "142": [
+      "hadronized_particles"
+    ],
+    "143": [
+      "hadronized_particles"
+    ],
+    "144": [
+      "hadronized_particles"
+    ],
+    "145": [
+      "hadronized_particles"
+    ],
+    "147": [
+      "hadronized_particles"
+    ],
+    "148": [
+      "hadronized_particles"
+    ],
+    "149": [
+      "hadronized_particles"
+    ],
+    "150": [
+      "hadronized_particles"
+    ]
+  },
+  "explanation": "The hadronizer has a continuous random stream. Newly accepted events consume fragmentation draws, changing subsequent hadronized_particles only; all 144 previously accepted shower records, RNG counts, and hadronization inputs are identical."
+}

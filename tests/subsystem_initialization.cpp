@@ -52,6 +52,7 @@ int main(){
   auto native_result=jewel::initialize_imported_subsystems(native,config,sampler,native_rng,jewel::MpiChannelPolicy::outgoing_flavour);
   auto native_manual=before;
   check(native_result.pairs.size()==native.subsystems.size());
+  check(!native_result.pairs.front().colour_angles_evaluated);
   for(std::size_t i=0;i<native.subsystems.size();++i){const auto& pair=native.subsystems[i];
    config.mpi_pair=i>0;
    for(int side=0;side<2;++side)channels[side]=native_manual.at(pair.hard[side]).particle.pdg==21?jewel::Channel::GC:jewel::Channel::QQ;
