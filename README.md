@@ -759,3 +759,11 @@ recording nominal masses, convergence outcomes and total four-momentum changes.
 Analysis selects the projected collection when enabled. See
 [native projection validation](docs/validation-native-projection.md) and the
 [selectable smoke report](docs/native-projection-smoke.html).
+
+## Jet substructure analysis
+
+The native hepyy/cppyy analysis includes jet mass and Soft Drop groomed mass/zg,
+with explicit untagged and out-of-range accounting. See the
+[definition and validation](docs/validation-substructure.md) and
+[selectable native sample report](docs/native-substructure-report.html).
+These remain native-only results; the matched Fortran ratio gate is outstanding.
