@@ -8,7 +8,7 @@ struct HadronizerConfig {
  FragmentationProfile fragmentation{FragmentationProfile::Monash14};
  bool pi0_decay{true};
 };
-// Mapped explicit INITPYTHIA overrides; not an equivalence claim for the two engines.
+// Mapped INITPYTHIA overrides and verified source defaults; not an equivalence claim for the two engines.
 std::vector<std::string> jewel260_fragmentation_settings();
 struct HadronizedSnapshot {
  std::vector<GeneratorParticle> particles;

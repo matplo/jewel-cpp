@@ -19,6 +19,7 @@ std::vector<std::string> jewel260_fragmentation_settings(){
   setting("StringFlav:mesonCvector",heavy/(1-heavy)),setting("StringFlav:mesonBvector",heavy/(1-heavy)),
   setting("StringFlav:etaSup",double(.63f)),setting("StringFlav:etaPrimeSup",double(.12f)),
   setting("StringPT:sigma",double(.325f)),setting("StringZ:aLund",double(.5f)),setting("StringZ:bLund",double(.6f)),
+  setting("StringZ:aExtraDiquark",.5),setting("StringZ:aExtraSQuark",0.),"StringZ:useOldAExtra = off",
   setting("StringZ:rFactC",1.),setting("StringZ:rFactB",double(.67f))};
 }
 struct Pythia8Hadronizer::Impl {

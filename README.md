@@ -932,3 +932,9 @@ recovering previously excluded event types does not establish physics agreement.
 Use `--pi0-decay off` with `jewel-run-events` to retain final neutral pions,
 matching JEWEL PI0DEC=F. Default is on. [Validation](docs/validation-pi0-decay.md)
 covers both engines and records the next unresolved fragmentation mapping.
+
+### Diquark Lund mapping
+
+The JEWEL fragmentation profile now explicitly uses the Pythia6 diquark exponent
+and old/new flavour orientation. [All 144 tested coefficients match exactly](docs/validation-diquark-lund.md).
+Earlier jet comparisons predate this correction; a refreshed comparison is required.

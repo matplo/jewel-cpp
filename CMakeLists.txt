@@ -741,3 +741,10 @@ if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING AND Python3_Interpreter_FOUND)
  add_test(NAME runner-pi0-decay-contracts COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/runner_pi0_decay.py $<TARGET_FILE:jewel-run-events> $<TARGET_FILE:jewel-run-partons>)
 endif()
+
+if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
+ add_executable(pythia8-lund-shape-test tests/pythia8_lund_shape.cpp)
+ target_include_directories(pythia8-lund-shape-test PRIVATE ${PYTHIA8_INCLUDE_DIR})
+ target_link_libraries(pythia8-lund-shape-test PRIVATE jewel_pythia8)
+ add_test(NAME pythia8-lund-shape-contracts COMMAND pythia8-lund-shape-test ${PYTHIA8_XML_DIR})
+endif()

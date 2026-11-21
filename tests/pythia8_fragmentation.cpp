@@ -7,6 +7,7 @@ void check(bool x){if(!x)throw std::runtime_error("fragmentation profile contrac
 int main(){
  std::map<std::string,double> values;
  for(const auto& line:jewel::jewel260_fragmentation_settings()){
+  if(line=="StringZ:useOldAExtra = off")continue;
   auto split=line.find(" = ");values[line.substr(0,split)]=std::stod(line.substr(split+3));
  }
  for(auto entry:{std::pair<const char*,double>{"StringFlav:mesonUDvector",double(.31f)},
