@@ -877,3 +877,13 @@ now completes 953 vacuum and 952 medium cascades, with no nonfinite failures in
 that sample. A [parton-level interactive browser](docs/stability-parton-browser.html)
 shows hepyy/cppyy jet diagnostics; this is separate from matched hadron-level
 Fortran validation, which remains unfinished.
+
+### Larger Fortran/native comparison checkpoint
+
+The [zero-interaction comparison](docs/validation-zero-interaction-comparison.md)
+now contains more than 1,000 selected hadron-level jets from each engine and
+[interactive side-by-side ratios](docs/zero-interaction-comparison.html).
+Both denominators include discarded attempts using a complete Fortran run log.
+The 10% numerical target is not met; full configuration equivalence remains
+unproven. This setting uses an expanding background with scattering disabled,
+not JEWEL's distinct vacuum medium backend.

@@ -133,7 +133,7 @@ report=dict(scope='Generator event analysis; no matched Fortran/native ratio val
  soft_drop=SOFT_DROP,mass='FastJet signed invariant mass in GeV; negative values retained',
  order='full-phase-space clustering before jet cuts',
  geometry_matching=dict(max_delta_r=.3,coordinates='pseudorapidity and azimuth',assignment='hepyy_utils.match_hard_legs: maximize matches then minimize total distance',order='all positive-pT jets before analysis cuts',unmatched_jet_geometry=None),recoils='per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles'),
- normalization='weighted jets per denominator record: attempted events for native runs, written events for imported Fortran; not cross-section normalized or directly comparable without a configuration/normalization audit',
+ normalization='weighted jets per denominator record: attempted events for native runs and ledger-backed Fortran; otherwise written Fortran events; not cross-section normalized or directly comparable without a configuration/normalization audit',
  analysis_versions={'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
  for name in ['analyze_native_events.py','jet_substructure.py','native_geometry_analysis.py']},'python':platform.python_version(),'hepyy':importlib.metadata.version('hepyy'),
  'cppyy':importlib.metadata.version('cppyy'),'fastjet':str(fj.gbl.fastjet.fastjet_version_string()),

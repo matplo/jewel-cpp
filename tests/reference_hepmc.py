@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
-from import_reference_hepmc import import_events
+from import_reference_hepmc import import_events, discard_ledger
 source,cards,medium=map(Path,sys.argv[1:])
 text=source.read_text();expected=[]
 for line in text.splitlines():
@@ -25,6 +25,36 @@ with tempfile.TemporaryDirectory() as directory:
     for raw,record in zip(expected,records[1:-1]):
         assert raw['number']==record['reference_event_number'] and raw['weight']==record['weight']
         assert raw['particles']==[(p['pdg'],p['momentum']) for p in record['final_particles']]
+    # Add one explicitly logged lost attempt between written events. Particle
+    # contents stay identical; only the original attempt association changes.
+    ledger_cards=directory/'ledger.dat'
+    ledger_cards.write_text(re.sub(r'(?m)^NEVENT\s+\d+',f'NEVENT {len(expected)+1}',cards.read_text()))
+    settings=dict(line.split(None,1) for line in ledger_cards.read_text().splitlines() if line.strip())
+    log=directory/'jewel.log'
+    log_text=f"NEVENT = {len(expected)+1}\nNJOB = {settings['NJOB']}\ndiscard event 2\ntotal number of discarded events: 1\nnumber of events for which conversion to hepmc failed: 0\n"
+    log.write_text(log_text)
+    ledger_output=directory/'ledger.jsonl'
+    import_events(source,ledger_cards,medium,'vacuum',ledger_output,log)
+    ledger=[json.loads(line) for line in ledger_output.read_text().splitlines()]
+    assert ledger[0]['denominator_scope']=='attempted-events'
+    assert ledger[2]['type']=='reference_failure' and ledger[2]['attempt']==2 and ledger[2]['weight']==1
+    assert ledger[-1]['attempts']==len(expected)+1 and ledger[-1]['accepted']==len(expected)
+    assert ledger[-1]['generator_weight_sum']==len(expected)+1
+    accepted=[r for r in ledger if r['type']=='event']
+    assert [r['attempt'] for r in accepted]==[1]+list(range(3,len(expected)+2))
+    assert [r['final_particles'] for r in accepted]==[r['final_particles'] for r in records[1:-1]]
+    for bad in [log_text.replace('discard event 2',''),log_text.replace('NEVENT =','NEVENT_BAD ='),
+                log_text.replace('failed: 0','failed: 1'),log_text.replace('discard event 2','discard event 0'),
+                log_text+'discard event 2\n',log_text.replace('discard event 2','discard event 99999')]:
+        log.write_text(bad)
+        try:discard_ledger(settings,log)
+        except ValueError:pass
+        else:raise AssertionError('accepted inconsistent discard ledger')
+    log.write_text(log_text)
+    for key,value in [('WEIGHTED','T'),('ISOCHANNEL','XX')]:
+        try:discard_ledger({**settings,key:value},log)
+        except ValueError:pass
+        else:raise AssertionError('accepted unsupported ledger policy')
     original=output.read_bytes()
     try:import_events(source,cards,medium,'vacuum',output)
     except ValueError:pass
