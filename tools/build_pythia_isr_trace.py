@@ -26,11 +26,13 @@ def rename(text):
 (args.output/'Pythia8/TraceSpaceShower.h').write_text(rename(inputs['include/Pythia8/SimpleSpaceShower.h']))
 s=rename(inputs['src/SimpleSpaceShower.cc'])
 s=s.replace('#include "Pythia8/TraceSpaceShower.h"','#include "Pythia8/TraceSpaceShower.h"\n#include "pythia_isr_trace.hpp"')
-s=s.replace('bool TraceSpaceShower::branch( Event& event) {','bool TraceSpaceShower::branch( Event& event) {\n  RotBstMatrix recordedMatrix; bool recordedMatrixValid=false;')
-s=s.replace('    Mtot.rotbst(MfromRest);','    Mtot.rotbst(MfromRest);\n    recordedMatrix=Mtot;recordedMatrixValid=true;')
+s=s.replace('bool TraceSpaceShower::branch( Event& event) {','bool TraceSpaceShower::branch( Event& event) {\n  RotBstMatrix recordedMatrix; bool recordedMatrixValid=false; double recordedPhi=0.; RotBstMatrix recordedFromRest; Vec4 recordedSisterRest; RotBstMatrix recordedRestBoost; double recordedTheta=0.;')
+s=s.replace('    Mtot.rotbst(MfromRest);','    Mtot.rotbst(MfromRest);\n    recordedMatrix=Mtot;recordedMatrixValid=true;recordedPhi=phi;recordedFromRest=MfromRest;recordedSisterRest=pSister;')
+s=s.replace('    MfromRest.bst( -betaX, 0., -betaZ);','    MfromRest.bst( -betaX, 0., -betaZ);\n    recordedRestBoost=MfromRest;')
+s=s.replace('    MfromRest.rot(-theta, phi);','    recordedTheta=theta;\n    MfromRest.rot(-theta, phi);')
 start=s.index('bool TraceSpaceShower::branch(')
 pos=s.index('  // Done without any errors.\n  return true;',start)
-s=s[:pos]+'  if(recordedMatrixValid) record_isr(iSysSel,iMother,iNewRec,iSister,recordedMatrix,event,Q2,z,m2II,x1,x2,x1New,x2New,pT2corr);\n'+s[pos:]
+s=s[:pos]+'  if(recordedMatrixValid) record_isr(iSysSel,iMother,iNewRec,iSister,recordedMatrix,event,Q2,z,m2II,x1,x2,x1New,x2New,pT2corr,recordedPhi,recordedFromRest,recordedSisterRest,recordedRestBoost,recordedTheta);\n'+s[pos:]
 (args.output/'TraceSpaceShower.cc').write_text(s)
 reference=Path(__file__).resolve().parents[1]/'reference'
 command=[args.cxx,'-O3','-std=c++17',str(args.output/'TraceSpaceShower.cc'),str(reference/'pythia_isr_trace.cpp'),

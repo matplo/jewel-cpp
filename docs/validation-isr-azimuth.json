@@ -1,0 +1,41 @@
+{
+  "scope": "azimuth reconstruction only; no acceptance or timing changes",
+  "assumptions": [
+    "IEEE binary64 round-to-nearest arithmetic without overflow or underflow",
+    "libm angle/trigonometric allowance 8*u*pi; not a certified platform-independent bound"
+  ],
+  "unit_roundoff": 1.1102230246251565e-16,
+  "dot_gamma7": 7.771561172376102e-16,
+  "reports": [
+    {
+      "events_with_identical_particles": 1000,
+      "branches": 13253,
+      "maximum_error_rad": 1.9311219290329973e-10,
+      "maximum_error_to_bound": 0.13483742630795575,
+      "worst": {
+        "attempt": 147,
+        "emitted": 21,
+        "error_rad": 8.881784197001252e-16,
+        "bound_rad": 6.587031835446124e-15
+      },
+      "failures": [],
+      "trace_sha256": "17dbbc90f0be4c1165b4c6e12923d0da558453b87e7ff20357cf641be154b623",
+      "snapshots_sha256": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a"
+    },
+    {
+      "events_with_identical_particles": 1000,
+      "branches": 13709,
+      "maximum_error_rad": 2.445217361923824e-10,
+      "maximum_error_to_bound": 0.1859912599563862,
+      "worst": {
+        "attempt": 323,
+        "emitted": 62,
+        "error_rad": 8.881784197001252e-16,
+        "bound_rad": 4.775377186586066e-15
+      },
+      "failures": [],
+      "trace_sha256": "c90f3f4ea36d7f25b4128a97ef32d65e26eb5a0759b2eb2a41e40b70b8ff1442",
+      "snapshots_sha256": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c"
+    }
+  ]
+}
