@@ -175,3 +175,23 @@ about 22 seconds on the development machine. [Validation report](docs/validation
 
 The full end-state requirements, including all custom-JEWEL features and the
 1,000-jet/10% comparison target, are tracked in [completion gates](docs/completion-gates.md).
+
+## Milestone 1f: parton-in-parton PDF tables
+
+`PartonicPdf` implements GETPDF, GETPDFXINTEXACT, PDFINT and GETPDFXINT.
+These are JEWEL's partonic evolution densities, not LHAPDF beam distributions.
+It owns the associated initial Sudakov model and builds all four 1,000-node
+integral tables. Columns are Q², QQ, GQ, QG and GG. Lookup is linear in Q²
+with the stock logarithmic bin selection, including extrapolation.
+
+`density(x, q, channel)` preserves the stock endpoint thresholds and returns
+zero for finite x outside [0,1] or q below Q0. The x=0 QQ/QG limits remain
+available; gluon endpoint singularities return zero as in stock. Nonfinite
+input and invalid channels throw. Direct integrated queries require q >= Q0.
+If a requested density integrates outside the valid Sudakov support and hits
+a zero denominator, C++ throws; the corresponding stock probe produces NaN.
+That case is tested and documented, not counted as numerical agreement.
+
+[PDF validation](docs/validation-pdf.md) covers four complete table sets,
+density endpoints, direct integrals and extrapolated table queries. Remaining
+work includes scattering-rate grids and their integration into evolution.

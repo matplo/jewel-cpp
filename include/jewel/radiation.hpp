@@ -35,4 +35,18 @@ public:
  double sudakov(double high,double parent_q,double low,double zeta,double energy,Channel,int angular_ordering) const;
 };
 
+// Parton-in-parton evolution densities, not external beam PDFs.
+class PartonicPdf {
+ Kernels kernels_; double q0_;
+ InitialRadiation radiation_;
+ InitialSudakovTable sudakov_;
+ std::array<std::array<double,5>,1000> table_{}; // Q², QQ, GQ, QG, GG.
+public:
+ PartonicPdf(Kernels,double q0,double emax,double scale,const Scatterer& maximum);
+ const auto& table() const{return table_;}
+ double density(double fraction,double q,Channel) const;
+ double integrated_exact(double q,Channel) const;
+ double integrated(double q,Channel) const;
+};
+
 }

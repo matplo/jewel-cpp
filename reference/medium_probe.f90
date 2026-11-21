@@ -43,6 +43,9 @@ program mediumprobe
  common /SPLITINT/ splitiggv,splitiqqv,splitiqgv,qval,zmval,qmax,zmmin,npoint
  double precision getspliti,getsudakov,qa1,qb1,za1,eb1,high
  character(1024) dumpfile
+ double precision qinqx(2,1000),ginqx(2,1000),qingx(2,1000),gingx(2,1000)
+ common /PDFS/ qinqx,ginqx,qingx,gingx
+ double precision getpdf,getpdfxintexact,getpdfxint
  character(20) op
  logfid=0
  logfid2=0
@@ -133,6 +136,21 @@ program mediumprobe
    read(*,*) channel,high,qa1,qb1,za1,eb1,angord
    v=getsudakov(high,qa1,qb1,za1,eb1,channel,0.d0,.false.)
    write(*,'(ES26.17E3)') v
+  case('PCONFIG')
+   read(*,*) knf,q0,lps,emax,scalefacm,boostflag
+   boost=boostflag/=0
+   call insudaint(emax)
+   call pdfint(emax)
+  case('PTABLE')
+   do i=1,1000
+    write(*,'(5ES26.17E3)') qinqx(1,i),qinqx(2,i),ginqx(2,i),qingx(2,i),gingx(2,i)
+   enddo
+  case('PDF','PEXACT','PINT')
+   read(*,*) channel,x,y
+   if(trim(op)=='PDF')v=getpdf(x,y,channel)
+   if(trim(op)=='PEXACT')v=getpdfxintexact(x,channel)
+   if(trim(op)=='PINT')v=getpdfxint(x,channel)
+   write(*,'(ES26.17E3)')v
   case('CROSS')
    call calcxsection
    do i=1,200
@@ -172,7 +190,9 @@ program mediumprobe
 end program
 function deriv(x,w) result(v)
  implicit none
- double precision x,v,medderiv,getinspliti,getspliti,alphas,pqq,pgg,pqg
+ double precision x,v,medderiv,getinspliti,getspliti,alphas,pqq,pgg,pqg,pgq,getinsudafast
+ double precision xmax,z
+ common /PDFINTV/ xmax,z
  double precision qquad,fm
  common /INTSPLITF/ qquad,fm
  double precision Q0,LPS,LQCD,LTIME,SCALEFACM,RECSOFTCUT,RECHARDCUT
@@ -203,6 +223,22 @@ function deriv(x,w) result(v)
   v=exp(-x)/x
  else if(w==6) then
   v=2*getinspliti(x,typ)/x
+ else if(w==7) then
+  v=2*getinsudafast(x,xmax,'QQ')*alphas((1-z)*x**2,lps)*pqq(z)/(2*pi*x)
+ else if(w==8) then
+  v=2*getinsudafast(x,xmax,'GC')*alphas((1-z)*x**2,lps)*pgq(z)/(2*pi*x)
+ else if(w==9) then
+  v=2*getinsudafast(x,xmax,'QQ')*alphas((1-z)*x**2,lps)*pqg(z)/(2*pi*x)
+ else if(w==10) then
+  v=2*getinsudafast(x,xmax,'GC')*alphas((1-z)*x**2,lps)*2*pgg(z)/(2*pi*x)
+ else if(w==21) then
+  v=2*getinsudafast(x,xmax,'QQ')*getinspliti(x,'QQ')/x
+ else if(w==22) then
+  v=2*getinsudafast(x,xmax,'GC')*getinspliti(x,'GQ')/x
+ else if(w==23) then
+  v=2*getinsudafast(x,xmax,'QQ')*getinspliti(x,'QG')/x
+ else if(w==24) then
+  v=2*getinsudafast(x,xmax,'GC')*2*getinspliti(x,'GG')/x
  else if(w==101) then
   v=medderiv(x,w-100)
  else

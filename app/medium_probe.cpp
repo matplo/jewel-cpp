@@ -12,6 +12,7 @@ int main() {
  std::unique_ptr<jewel::InitialRadiation> radiation;
  std::unique_ptr<jewel::InitialSudakovTable> sudakov;
  std::unique_ptr<jewel::FinalSplittingTable> final_table;
+ std::unique_ptr<jewel::PartonicPdf> pdf;
  std::string op; std::cout<<std::scientific<<std::setprecision(17);
  while(std::cin>>op) {
   if(op=="CONFIG") {
@@ -30,7 +31,21 @@ int main() {
   else if(op=="EITABLE") { for(auto row:ei.table()) std::cout<<row[0]<<' '<<row[1]<<' '<<row[2]<<'\n'; }
   else {
    if(!medium) throw std::runtime_error("CONFIG required");
-   if(op=="FCONFIG") {
+   if(op=="PCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad partonic PDF config");
+    pdf=std::make_unique<jewel::PartonicPdf>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
+   } else if(op=="PTABLE") {
+    if(!pdf)throw std::runtime_error("PCONFIG required");
+    for(auto row:pdf->table()){for(double x:row)std::cout<<x<<' ';std::cout<<'\n';}
+   } else if(op=="PDF"||op=="PEXACT"||op=="PINT") {
+    if(!pdf)throw std::runtime_error("PCONFIG required");
+    std::string name;double x,y;if(!(std::cin>>name>>x>>y))throw std::runtime_error("bad PDF query");
+    jewel::Channel c;
+    if(name=="QQ")c=jewel::Channel::QQ;else if(name=="QG")c=jewel::Channel::QG;
+    else if(name=="GQ")c=jewel::Channel::GQ;else if(name=="GG")c=jewel::Channel::GG;else throw std::runtime_error("invalid PDF channel");
+    std::cout<<(op=="PDF"?pdf->density(x,y,c):op=="PEXACT"?pdf->integrated_exact(x,c):pdf->integrated(x,c))<<'\n';
+   } else if(op=="FCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad final splitting config");
     final_table=std::make_unique<jewel::FinalSplittingTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
@@ -83,7 +98,21 @@ int main() {
     if(!(std::cin>>count)||count>100000) throw std::runtime_error("invalid replay size");
     std::vector<double> tape(count); for(double& r:tape) if(!(std::cin>>r)) throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="FCONFIG") {
+    if(op=="PCONFIG") {
+    jewel::Kernels k;double q0,emax,scale;int boost;
+    if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad partonic PDF config");
+    pdf=std::make_unique<jewel::PartonicPdf>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
+   } else if(op=="PTABLE") {
+    if(!pdf)throw std::runtime_error("PCONFIG required");
+    for(auto row:pdf->table()){for(double x:row)std::cout<<x<<' ';std::cout<<'\n';}
+   } else if(op=="PDF"||op=="PEXACT"||op=="PINT") {
+    if(!pdf)throw std::runtime_error("PCONFIG required");
+    std::string name;double x,y;if(!(std::cin>>name>>x>>y))throw std::runtime_error("bad PDF query");
+    jewel::Channel c;
+    if(name=="QQ")c=jewel::Channel::QQ;else if(name=="QG")c=jewel::Channel::QG;
+    else if(name=="GQ")c=jewel::Channel::GQ;else if(name=="GG")c=jewel::Channel::GG;else throw std::runtime_error("invalid PDF channel");
+    std::cout<<(op=="PDF"?pdf->density(x,y,c):op=="PEXACT"?pdf->integrated_exact(x,c):pdf->integrated(x,c))<<'\n';
+   } else if(op=="FCONFIG") {
     jewel::Kernels k;double q0,emax,scale;int boost;
     if(!(std::cin>>k.nf>>q0>>k.lambda_shower>>emax>>scale>>boost))throw std::runtime_error("bad final splitting config");
     final_table=std::make_unique<jewel::FinalSplittingTable>(k,q0,emax,scale,medium->maximum_scatterer(boost!=0));
