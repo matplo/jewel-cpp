@@ -1,19 +1,23 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_shower_input.hpp"
 #include <filesystem>
+#include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 int main(int argc,char** argv){try{
- if(argc!=5)throw std::runtime_error("usage: jewel-native-preparation OUTPUT FIXTURES COUNT SEED");
+ if(argc!=5&&argc!=6)throw std::runtime_error("usage: jewel-native-preparation OUTPUT FIXTURES COUNT SEED [--initialize]");
+ bool initialize=argc==6;if(initialize&&std::string(argv[5])!="--initialize")throw std::runtime_error("unknown option");
  int count=std::stoi(argv[3]),seed=std::stoi(argv[4]);if(count<=0)throw std::runtime_error("invalid count");
  if(std::filesystem::exists(argv[1])||std::filesystem::exists(argv[2]))throw std::runtime_error("outputs already exist");
  std::ofstream out(argv[1]),fixtures(argv[2]);if(!out||!fixtures)throw std::runtime_error("cannot open outputs");
  out<<std::setprecision(17);
  jewel::PythiaInputConfig config;config.seed=seed;config.initial_state_radiation=true;config.multiple_parton_interactions=true;
  jewel::Pythia8Input generator(config);unsigned completed=0;
- out<<"{\"type\":\"run\",\"seed\":"<<seed<<",\"attempts\":"<<count<<",\"eta_max\":2,\"order\":\"Pythia8 final source order\",\"settings\":[";
+ jewel::BranchingSampler sampler({},1,1,0);
+ out<<"{\"type\":\"run\",\"seed\":"<<seed<<",\"attempts\":"<<count<<",\"initialize_subsystems\":"<<(initialize?"true":"false")<<",\"eta_max\":2,\"order\":\"Pythia8 final source order\",\"settings\":[";
  bool sep=false;for(const auto& setting:generator.settings()){if(sep)out<<',';sep=true;out<<std::quoted(setting);}out<<"]}\n";
  for(int attempt=1;attempt<=count;++attempt){auto event=generator.next();
   if(!event){out<<"{\"type\":\"failure\",\"attempt\":"<<attempt<<",\"stage\":\"generation\"}\n";continue;}
@@ -43,7 +47,25 @@ int main(int argc,char** argv){try{
    out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"values\":[";sep=false;
    for(auto id:ids){const auto& n=imported.state.at(id);auto p=n.particle.momentum;auto v=n.generator_vertex;
     for(double value:{double(n.particle.status),p.px,p.py,p.pz,p.energy,n.record_mass,v.x,v.y,v.z,v.t}){if(sep)out<<',';sep=true;out<<value;}}
-   out<<"]}\n";
+   out<<']';
+   if(initialize){
+    jewel::HardInitializationConfig init;init.x=1.2;init.y=-.7;
+    jewel::SplitMixRandom init_random(std::uint64_t(seed)*100000+attempt);
+    out<<",\"initialization\":{\"seed\":"<<(std::uint64_t(seed)*100000+attempt);
+    try{
+     auto prepared=imported.state;
+     auto result=jewel::initialize_imported_subsystems(imported,init,sampler,init_random);
+     double maximum_pair_residual=0;std::size_t active=0;
+     for(const auto& pair:imported.subsystems){auto a=prepared.at(pair.hard[0]).particle.momentum,b=prepared.at(pair.hard[1]).particle.momentum;
+      auto c=imported.state.at(pair.hard[0]).particle.momentum,d=imported.state.at(pair.hard[1]).particle.momentum;
+      for(double residual:{a.px+b.px-c.px-d.px,a.py+b.py-c.py-d.py,a.pz+b.pz-c.pz-d.pz,a.energy+b.energy-c.energy-d.energy})maximum_pair_residual=std::max(maximum_pair_residual,std::abs(residual));
+     }
+     for(const auto& node:imported.state.particles())active+=node.particle.status==1;
+     out<<",\"error\":null,\"pairs\":"<<result.pairs.size()<<",\"active_records\":"<<active<<",\"maximum_pair_p4_residual\":"<<maximum_pair_residual;
+    }catch(const std::exception& error){out<<",\"error\":"<<std::quoted(error.what());}
+    out<<",\"draws\":"<<init_random.checkpoint()<<'}';
+   }
+   out<<"}\n";
   }catch(const std::domain_error& error){out<<"{\"type\":\"failure\",\"attempt\":"<<attempt<<",\"stage\":"<<std::quoted(stage)<<",\"reason\":"<<std::quoted(error.what())<<"}\n";}
  }
  out<<"{\"type\":\"summary\",\"completed\":"<<completed<<"}\n";

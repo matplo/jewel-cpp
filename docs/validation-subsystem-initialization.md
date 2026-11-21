@@ -51,3 +51,9 @@ cmake --build build-pythia8 -j 4
 ctest --test-dir build-pythia8 -R '^(subsystem-initialization|pythia8-input|pythia8-boundary|hard-initialization)-contracts$' --output-on-failure
 ctest --test-dir build -R '^(hard|mpi)-initialization-differential$' --output-on-failure
 ```
+
+## Larger full-input-chain diagnostic
+
+The [2,000-attempt diagnostic](validation-initialization-sample.md) now connects
+ISR timing, survivor preparation and this initialization sequence. It identifies
+junction colour-angle handling and non-QCD MPI pairs as concrete remaining gaps.
