@@ -1,6 +1,6 @@
 {
   "scope": "optical medium and numerical tables, not full events",
-  "input_sha256": "2173feb931c3720913b00ab034460e9a5cd4d1aab2eb82eafedfb102d8346c84",
+  "input_sha256": "e9ae46dd54a1da471d8c734efb72713d12287d4c1ea61d022b399a9411e8fd06",
   "relative_tolerance": 2e-12,
   "absolute_tolerance": 2e-13,
   "groups": {
@@ -41,6 +41,16 @@
     },
     "thickness-knot-neighbours": {
       "values": 1192,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "overlap-transition": {
+      "values": 160,
+      "max_absolute_error": 0.0,
+      "max_relative_error": 0.0
+    },
+    "rapidity-transition": {
+      "values": 160,
       "max_absolute_error": 0.0,
       "max_relative_error": 0.0
     },
@@ -249,6 +259,47 @@
         "MAKEINSPLIT": [
           3871,
           4126
+        ],
+        "DOCOHSCATTERING": [
+          4644,
+          5072
+        ],
+        "DOINSTATESCAT": [
+          4132,
+          4638
+        ],
+        "MAKECASCADE": [
+          2902,
+          2942
+        ],
+        "MAKEBRANCH": [
+          2948,
+          3282
+        ],
+        "FINDVIRTUALITIES": [
+          1893,
+          2239
+        ],
+        "GETTHETAM": [
+          2303,
+          2365
+        ],
+        "ISPARTON": [
+          8690,
+          8700
+        ],
+        "ISDIQUARK": [
+          8658,
+          8671
+        ]
+      },
+      "declaration_normalizations": {
+        "DOINSTATESCAT": [
+          {
+            "from": "TAUEST,QSUMVECOLD(4),ZDUM,WEIGHT,",
+            "to": "TAUEST,QSUMVECOLD(4),ZDUM,",
+            "reason": "WEIGHT is already declared in this same DOUBLE PRECISION declaration; GNU Fortran rejects the duplicate."
+          }
         ]
       }
     },
@@ -352,7 +403,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "504783190e63f3bc984157d73faac22a348d17ab55441b2a6f047c08b2a177b8",
-    "jewel-medium-reference": "ec28f49c85425c338df6bb4a865a948ee1fddc654aa44d8159510263b8c3b235"
+    "jewel-medium-probe": "b426d1b910231bbfc9389fd2a84eecc19a1a2e6495ae2aa7b2713338f71c8778",
+    "jewel-medium-reference": "183549c850082bbbde7491f5f9459e64ed5b8a7a7112ffcc98c0fbaf210656d3"
   }
 }

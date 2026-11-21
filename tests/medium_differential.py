@@ -38,6 +38,20 @@ for mass,nf,woods,b,taui,ti,tc in [(208,3,1,0,.4,.59,.17),(208,3,1,7,.4,.59,.17)
    # The text probe does not accept subnormal decimal input; zero is tested.
    if x==0 or x>=sys.float_info.min:
     commands.append(f'THICK\n{x:.17g} 0\n'); labels.append('thickness-knot-neighbours')
+ # Probe the overlap boundary in both nuclei at peak temperature, with a
+ # flat profile so that a temperature cutoff cannot hide a geometric mismatch.
+ commands.append(f'CONFIG\n{mass} {nf} 0 {taui} {ti} {tc} .17 .54 6.199999809265137 {b} 2.0 .45 1.0\n')
+ for sign in [-1,1]:
+  edge=sign*(knots[-1][0]-b/2)
+  for x in [edge*(1-1e-10),math.nextafter(edge,-math.inf),edge,math.nextafter(edge,math.inf),edge*(1+1e-10)]:
+   commands.append(f'POINT\n{x:.17g} 0 0 {taui:.17g}\n'); labels.append('overlap-transition')
+ # Use the same finite spacetime coordinates for both engines; adjacent
+ # rapidities need not remain adjacent after conversion through sinh/cosh.
+ for sign in [-1,1]:
+  edge=sign*2.
+  for eta in [edge-sign*1e-10,math.nextafter(edge,-math.inf),edge,math.nextafter(edge,math.inf),edge+sign*1e-10]:
+   commands.append(f'POINT\n0 0 {taui*math.sinh(eta):.17g} {taui*math.cosh(eta):.17g}\n'); labels.append('rapidity-transition')
+ commands.append(f'CONFIG\n{mass} {nf} {woods} {taui} {ti} {tc} .17 .54 6.199999809265137 {b} 2.0 .45 1.0\n')
  commands.append('CROSS\n'); labels+=['cross-section-table']*200
  commands.append('BOUNDS\n'); labels.append('medium-bounds')
  for boost in [0,1]:
@@ -80,7 +94,7 @@ for i,(label,a,b) in enumerate(zip(labels,actual,expected)):
  for col,(x,y) in enumerate(zip(a,b)):
   error=abs(x-y);rel=error/max(abs(y),1e-300)
   group['values']+=1;group['max_absolute_error']=max(group['max_absolute_error'],error);group['max_relative_error']=max(group['max_relative_error'],rel)
-  activity_mismatch=label in ['medium-sample','temperature-transition'] and col in [0,3] and ((x==0)!=(y==0))
+  activity_mismatch=label in ['medium-sample','temperature-transition','overlap-transition','rapidity-transition'] and col in [0,3] and ((x==0)!=(y==0))
   if activity_mismatch or not math.isfinite(x) or not math.isclose(x,y,rel_tol=2e-12,abs_tol=2e-13): failures.append({'row':i,'column':col,'label':label,'cpp':x,'fortran':y})
 report={'scope':'optical medium and numerical tables, not full events','input_sha256':hashlib.sha256(payload.encode()).hexdigest(),
  'relative_tolerance':2e-12,'absolute_tolerance':2e-13,'groups':summary,'failures':failures,

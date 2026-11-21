@@ -1,6 +1,6 @@
 {
   "scope": "event-local medium/rates after frozen initialization tables",
-  "values": 1010,
+  "values": 8430,
   "max_absolute_error": 1.4210854715202004e-14,
   "failures": [],
   "reports": [
@@ -8,25 +8,85 @@
       "executable": "jewel-medium-probe",
       "table_b": 0,
       "boost": 0,
+      "table_energy_gev": 100,
       "unchanged_table_sha256": "eacb6f36eddbdc6f6498af086932af5c0b6d020eb5e46d738dbe3c88c05dd580"
     },
     {
       "executable": "jewel-medium-reference",
       "table_b": 0,
       "boost": 0,
+      "table_energy_gev": 100,
       "unchanged_table_sha256": "eacb6f36eddbdc6f6498af086932af5c0b6d020eb5e46d738dbe3c88c05dd580"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 0,
+      "boost": 0,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "25ae900fcfaf601175ddb0f7eeec258ef8c69c3cdfc5dea296285ce9137cc988"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 0,
+      "boost": 0,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "25ae900fcfaf601175ddb0f7eeec258ef8c69c3cdfc5dea296285ce9137cc988"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 0,
+      "boost": 0,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "48562db27b11a58cc3cf4ba3aab51200afd6c7949fc966237ef944b5330f9c1b"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 0,
+      "boost": 0,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "48562db27b11a58cc3cf4ba3aab51200afd6c7949fc966237ef944b5330f9c1b"
     },
     {
       "executable": "jewel-medium-probe",
       "table_b": 7,
       "boost": 1,
+      "table_energy_gev": 100,
       "unchanged_table_sha256": "a538d494fa198837012bc93106164ce72ba05b4be7f0d7afb966a737d744a47c"
     },
     {
       "executable": "jewel-medium-reference",
       "table_b": 7,
       "boost": 1,
+      "table_energy_gev": 100,
       "unchanged_table_sha256": "a538d494fa198837012bc93106164ce72ba05b4be7f0d7afb966a737d744a47c"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 7,
+      "boost": 1,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "997cb5904b3850aa83bd388e8239c4f44bd6b5b16c96562b705b81b01150e946"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 7,
+      "boost": 1,
+      "table_energy_gev": 846.494030493817,
+      "unchanged_table_sha256": "997cb5904b3850aa83bd388e8239c4f44bd6b5b16c96562b705b81b01150e946"
+    },
+    {
+      "executable": "jewel-medium-probe",
+      "table_b": 7,
+      "boost": 1,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "5ac6438e0f9a23fada0ddf8d6eeb3c606b6b609140c447571d2fa37000fa92a8"
+    },
+    {
+      "executable": "jewel-medium-reference",
+      "table_b": 7,
+      "boost": 1,
+      "table_energy_gev": 2510,
+      "unchanged_table_sha256": "5ac6438e0f9a23fada0ddf8d6eeb3c606b6b609140c447571d2fa37000fa92a8"
     }
   ],
   "relative_tolerance": 2e-12,
@@ -338,7 +398,7 @@
     }
   },
   "executables": {
-    "jewel-medium-probe": "6d0ae940cc5337065812597ca881118523e3c56b1d7762de5851f5e2bbeb4e17",
-    "jewel-medium-reference": "5375102a4df137d042d1347e2493f1211d48b690e0cab5b4cb278820efdc0cfe"
+    "jewel-medium-probe": "b426d1b910231bbfc9389fd2a84eecc19a1a2e6495ae2aa7b2713338f71c8778",
+    "jewel-medium-reference": "183549c850082bbbde7491f5f9459e64ed5b8a7a7112ffcc98c0fbaf210656d3"
   }
 }

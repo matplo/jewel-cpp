@@ -55,8 +55,12 @@ The corresponding native command changes the medium in both the rate and
 transfer models. Differential tests cover two initialization geometries, boost
 off/on, five subsequent geometry choices, local temperatures/densities,
 bounds/lifetimes and quark/gluon cross sections in local/minimum/maximum modes.
+The updated matrix includes table energies 100, 846.494030493817 and 2510 GeV,
+and spacetime rapidities −1.5, 0 and +1.5 at each sampled position/proper time.
+The nonzero rapidities exercise the longitudinal-flow setting after geometry
+changes; z=0 alone would not distinguish flow on/off.
 
-**1,010 values pass** at abs=2e-13, rel=2e-12; maximum absolute difference is
+**8,430 values pass** at abs=2e-13, rel=2e-12; maximum absolute difference is
 1.42109e-14. Each engine's complete scattering grid is byte-identical before and
 after all event-geometry changes. Existing sampling reference tests and scattering
 contracts pass. [Recorded component results](validation-event-geometry.json).
@@ -91,9 +95,10 @@ python3 tools/replay_native_cascade.py build/jewel-medium-probe \
 ## Remaining full-generator gaps
 
 This connects sampled geometry; it does not establish the final jet comparison.
-The reduced runner still uses a fixed 100 GeV table energy scale, whereas stock
-INIT derives EOVEST from PTMAX, ETAMAX and SQRTS. A matched run configuration must
-make that choice explicit too. ISR, other channels, remaining tune differences,
+The reduced runner defaults to a 100 GeV table energy scale and now supports
+`--table-energy jewel` to derive EOVEST from PTMAX, ETAMAX and SQRTS;
+see [table-energy validation](validation-table-energy.md). A matched run
+configuration must make that choice explicit. ISR, other channels, remaining tune differences,
 custom outputs and known cascade discrepancies remain open. Earlier large native
 samples retain their original fixed-b settings and are not relabelled as
 centrality-sampled results.

@@ -13,9 +13,13 @@ with tempfile.TemporaryDirectory() as directory:
     payload+=f'EVENTB\n{b}\nBOUNDS\n'
     for x in [0,3,7]:
      for time in [.2,1,4]:
-      payload+=f'POINT\n{x} 0 0 {time}\n'
-      for incoming in ['Q','G']:
-       for mode in [0,1,2]:payload+=f'XSEC\n10 0 0 10 0 0 {incoming} C {x} 0 0 {time} {mode}\n'
+      # Nonzero spacetime rapidity exercises flow after a geometry update;
+      # z=0 alone cannot distinguish boost on/off. Include both hemispheres.
+      for eta in [-1.5,0,1.5]:
+       z=time*math.sinh(eta);t=time*math.cosh(eta)
+       payload+=f'POINT\n{x} 0 {z:.17g} {t:.17g}\n'
+       for incoming in ['Q','G']:
+        for mode in [0,1,2]:payload+=f'XSEC\n10 0 0 10 0 0 {incoming} C {x} 0 {z:.17g} {t:.17g} {mode}\n'
     for channel in ['QA','QB','GA','GB']:payload+=f'XINT\n{channel} 10 .8\n'
    payload+=f'XDUMP\n{after}\n'
    result=subprocess.run([exe],input=payload,text=True,capture_output=True,timeout=90)
