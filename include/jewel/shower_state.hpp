@@ -4,6 +4,7 @@
 #include <array>
 #include <unordered_map>
 namespace jewel {
+namespace detail {struct CollisionWorkspace;}
 struct ShowerParticle {
  Particle particle;
  double record_mass{}; // Pythia's signed P(:,5), distinct from computed p^2.
@@ -25,6 +26,9 @@ struct ShowerSnapshot {
  std::vector<bool> retired_medium_induced;
 };
 class ShowerState {
+ friend struct detail::CollisionWorkspace;
+ ParticleId append_impl(ShowerParticle,bool,bool,bool);
+ ShowerSnapshot snapshot_truncated_impl(std::size_t,bool) const;
  std::vector<ShowerParticle> particles_;
  std::unordered_map<ParticleId,std::size_t> slots_;
  ParticleId next_{1};

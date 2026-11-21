@@ -23,9 +23,12 @@ void fields(const ShowerParticle& s){
 }
 ShowerState::ShowerState(double unused):unused_evolution_time_(unused){require(std::isfinite(unused),"nonfinite unused evolution time");}
 ParticleId ShowerState::append(ShowerParticle s,bool inherit_evolution_time,bool inherit_medium_induced){
+ return append_impl(std::move(s),inherit_evolution_time,inherit_medium_induced,true);
+}
+ParticleId ShowerState::append_impl(ShowerParticle s,bool inherit_evolution_time,bool inherit_medium_induced,bool check_fields){
  if(inherit_evolution_time)s.evolution_time=particles_.size()<retired_evolution_.size()?retired_evolution_[particles_.size()]:unused_evolution_time_;
  if(inherit_medium_induced)s.medium_induced=particles_.size()<retired_medium_induced_.size()?retired_medium_induced_[particles_.size()]:false;
- fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
+ if(check_fields)fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
  require(s.daughters[0]==0&&s.daughters[1]==0,"append requires unattached daughters");
  auto ancestry=origins(s);for(auto origin:ancestry)at(origin);
  auto id=next_;s.particle.id=id;
@@ -100,8 +103,12 @@ void ShowerState::validate() const {
 }
 ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_};}
 ShowerSnapshot ShowerState::snapshot_truncated(std::size_t count) const {
+ return snapshot_truncated_impl(count,true);
+}
+ShowerSnapshot ShowerState::snapshot_truncated_impl(std::size_t count,bool check_fields) const {
  require(count<=particles_.size(),"invalid truncated shower size");
- auto saved=snapshot();saved.retired_evolution.resize(std::max(saved.retired_evolution.size(),particles_.size()));
+ if(check_fields)validate();
+ ShowerSnapshot saved{particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_};saved.retired_evolution.resize(std::max(saved.retired_evolution.size(),particles_.size()));
  saved.retired_medium_induced.resize(std::max(saved.retired_medium_induced.size(),particles_.size()));
  for(std::size_t i=count;i<particles_.size();++i){saved.retired_evolution[i]=particles_[i].evolution_time;saved.retired_medium_induced[i]=particles_[i].medium_induced;}
  saved.particles.resize(count);return saved;

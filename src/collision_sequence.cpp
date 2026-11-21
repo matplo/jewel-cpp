@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // DOKINEMATICS sequence orchestration, JEWEL 2.6.0.
 #include "jewel/collision.hpp"
+#include "collision_internal.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
 namespace jewel {
-CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectile,ParticleId scratch,
+static CollisionSequenceResult apply_candidates(ShowerState& state,ParticleId projectile,ParticleId scratch,
  const TransferHistory& history,RecoilStorage& ledger,CollisionSequenceRequest request,CollisionConfig config,
  CollisionFinalizationConfig finish,const BranchingSampler& sampler,const Medium& medium,Random& random){
  if(projectile==scratch||request.first>request.last||request.last>=history.records.size())throw std::domain_error("invalid collision sequence range/IDs");
@@ -24,7 +25,7 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
   auto line=projectile;result.outgoing=line;
   for(auto j=request.first;j<=result.last;++j){
    auto origin=state.at(projectile);origin.particle.status=original_status;config.last_transfer=j==result.last;
-   auto pair=scatter_pair(state.at(line),state.at(scratch),history.records[j],total,remaining,target,delta,config,sampler,medium,random,&origin,request.target_mass);
+   auto pair=detail::scatter_pair_candidate(state.at(line),state.at(scratch),history.records[j],total,remaining,target,delta,config,sampler,medium,random,&origin,request.target_mass);
    total=pair.remaining_transfer;target=pair.target_mass;
    state.at(line)=pair.incoming;state.at(scratch)=pair.centre;
    if(pair.rejected)continue;
@@ -35,7 +36,7 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
    state.at(line)=pair.incoming;state.at(scratch)=pair.centre;
    pair.recoil.coherent_partner=0;pair.recoil.parent=0;pair.recoil.collision_source=line;
    pair.outgoing.coherent_partner=0;pair.outgoing.parent=line;pair.outgoing.collision_source=0;
-   auto recoil=state.append(pair.recoil,true,true),outgoing=state.append(pair.outgoing,true,true);
+   auto recoil=detail::CollisionWorkspace::append(state,pair.recoil),outgoing=detail::CollisionWorkspace::append(state,pair.outgoing);
    state.connect_collision(line,recoil,outgoing);
    remaining-=state.at(outgoing).record_mass-state.at(line).record_mass;
    line=outgoing;result.outgoing=outgoing;last_mass=state.at(outgoing).record_mass;
@@ -58,7 +59,7 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
   if(request.energy_fraction!=1)result.retry_splitting=true;
   // Keep round-trip incoming/scratch arithmetic and the allocated recoil tail,
   // while removing rejected event nodes. Stable IDs are never reused.
-  auto rollback=state.snapshot_truncated(size);rollback.colour_max=baseline.colour_max;
+  auto rollback=detail::CollisionWorkspace::truncate(state,size);rollback.colour_max=baseline.colour_max;
   for(std::size_t i=0;i<size;++i)rollback.particles[i].daughters=baseline.particles[i].daughters;
   for(auto& p:rollback.particles)if(p.particle.id==projectile)p.particle.status=original_status;
   state.restore(rollback);ledger.used=stored;result.outgoing=projectile;
@@ -73,5 +74,18 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
   }
   for(auto i=request.first;i<=result.last;++i)if(history.records[i].invariant<0){result.last=i;break;}
  }
+}
+}
+
+namespace jewel {
+CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectile,ParticleId scratch,
+ const TransferHistory& history,RecoilStorage& ledger,CollisionSequenceRequest request,CollisionConfig config,
+ CollisionFinalizationConfig finish,const BranchingSampler& sampler,const Medium& medium,Random& random){
+ state.validate();
+ auto candidate=state;auto candidate_ledger=ledger;
+ auto result=apply_candidates(candidate,projectile,scratch,history,candidate_ledger,request,config,finish,sampler,medium,random);
+ candidate.validate();
+ state=std::move(candidate);ledger=std::move(candidate_ledger);
+ return result;
 }
 }

@@ -15,7 +15,7 @@ for nf,q0,lps,pt in [(3,1,.2,1),(5,1.5,.25,2)]:
      for minimum,maximum,energy,max2 in [(0,20,100,100),(q0,20,100,10),(q0,q0+1e-6,100,100),(2,1,100,100),(1,10,.5,100),(0,50,10,5)]:
       for repetition in range(4):
        commands.append(f'MASS\n{c} {minimum} {maximum:.17g} {theta} {energy} {max2} {initial}\n'+tape());labels.append('initial-mass' if initial else 'final-mass')
-  for c in ['QQ','GG','QG']:
+  for c in ['QQ','GG','QG','GQ']:
    for ti,energy,eps in [(0,0,.001),(q0*q0,10,.001),(4*q0*q0,10,.001),(25,5,.1),(0,0,.5),(0,0,.6)]:
     for repetition in range(4):
      commands.append(f'FRACTION\n{c} {ti:.17g} {energy} {eps}\n'+tape());labels.append('fraction')

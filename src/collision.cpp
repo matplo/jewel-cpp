@@ -2,6 +2,8 @@
 // Two-body section of DOKINEMATICS, JEWEL 2.6.0.
 #include "jewel/collision.hpp"
 #include "jewel/kinematics.hpp"
+#include "kinematics_internal.hpp"
+#include "collision_internal.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
@@ -13,7 +15,7 @@ void transform(ShowerParticle& a,double theta,double phi,std::array<double,3> be
 }
 double squared(double x){return x*x;}
 }
-CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,const TransferRecord& transfer,
+CollisionPair detail::scatter_pair_candidate(ShowerParticle projectile,ShowerParticle scratch,const TransferRecord& transfer,
  double total,double remaining,double target,double delta,CollisionConfig config,
  const BranchingSampler& sampler,const Medium& medium,Random& random,const ShowerParticle* original_projectile,std::optional<double> requested_mass){
  for(double value:{config.cutoff,config.mass_scale,total,remaining,target,delta,transfer.invariant})
@@ -126,7 +128,14 @@ CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,cons
   pd={std::sqrt(p42)*pd.px/p3old,std::sqrt(p42)*pd.py/p3old,std::sqrt(p42)*pd.pz/p3old,e4};
   c.record_mass=std::copysign(std::sqrt(std::abs(m32)),newmass);d.record_mass=std::sqrt(m42);
  }
- from_axis(c);from_axis(d);from_axis(a);from_axis(b);result.mass_change=dm;return result;
+ // Keep temporary invalid outgoing candidates until the sequence retry decision.
+ auto candidate_from_axis=[&](ShowerParticle& particle){
+  if(particle.particle.status<=0)return;
+  detail::rotate_boost_candidate(particle.particle.momentum,&particle.generator_vertex,theta,0,{0,0,0});
+  detail::rotate_boost_candidate(particle.particle.momentum,&particle.generator_vertex,0,phi,{0,0,0});
+  detail::rotate_boost_candidate(particle.particle.momentum,&particle.generator_vertex,0,0,beta);
+ };
+ candidate_from_axis(c);candidate_from_axis(d);from_axis(a);from_axis(b);result.mass_change=dm;return result;
 }
 }
 
@@ -192,5 +201,18 @@ void finish_collision(CollisionPair& result,int& colour_max,RecoilStorage& stora
  }else c.decay_time=0;
  a.decay_time=timing.transfer_time;
  store_recoil(storage,config.storage,b.particle.pdg,b.particle.momentum,b.record_mass,d.particle.momentum,soft,false);
+}
+}
+
+namespace jewel {
+CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,const TransferRecord& transfer,
+ double total,double remaining,double target,double delta,CollisionConfig config,
+ const BranchingSampler& sampler,const Medium& medium,Random& random,const ShowerParticle* original,std::optional<double> requested){
+ auto result=detail::scatter_pair_candidate(projectile,scratch,transfer,total,remaining,target,delta,config,sampler,medium,random,original,requested);
+ if(!result.rejected)for(const auto* particle:{&result.outgoing,&result.recoil}){
+  const auto& p=particle->particle.momentum;
+  for(double v:{p.px,p.py,p.pz,p.energy})if(!std::isfinite(v))throw std::domain_error("nonfinite collision candidate");
+ }
+ return result;
 }
 }

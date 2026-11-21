@@ -139,12 +139,12 @@ int main() {
     }
     for(auto r:ledger.records)std::cout<<r.flavour<<' '<<r.centre.px<<' '<<r.centre.py<<' '<<r.centre.pz<<' '<<r.centre.energy<<' '<<r.centre_mass<<' '
      <<r.dummy.px<<' '<<r.dummy.py<<' '<<r.dummy.pz<<' '<<r.dummy.energy<<' '<<r.dummy_mass<<'\n';
-   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE") {
+   } else if(op=="COHERENT"||op=="ISTATE"||op=="BRANCH"||op=="CASCADE"||op=="GCASCADE") {
     if(!rates||!transfers||!branching)throw std::runtime_error("coherent models required");
     jewel::CoherentConfig config;config.lifetime=evolution_config.lifetime;config.cross_section_scale=evolution_config.cross_section_scale;
     config.collision.cutoff=evolution_config.cutoff;config.collision.mass_scale=evolution_config.mass_scale;
     int enabled;std::size_t selected;double now,left,angle,split_time;
-    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
+    jewel::ShowerState state((op=="BRANCH"||op=="CASCADE"||op=="GCASCADE")?-1e6:0);jewel::TransferHistory history;history.records.resize(100);
     std::cin>>selected>>enabled>>now>>left>>angle>>split_time>>config.length_factor>>config.collision.kinematic_mode>>state.colour_max>>state.weight>>history.last;
     config.enabled=enabled;history.first=1;int retry_initial=0;double coherence_rejection=1;
     if(op!="COHERENT")std::cin>>retry_initial>>coherence_rejection;
@@ -165,9 +165,13 @@ int main() {
      std::cin>>r.invariant>>q.px>>q.py>>q.pz>>q.energy>>r.time>>r.scatterer.type>>a.px>>a.py>>a.pz>>a.energy>>r.scatterer.mass>>x.x>>x.y>>x.z>>x.t;
      history.sum.px+=q.px;history.sum.py+=q.py;history.sum.pz+=q.pz;history.sum.energy+=q.energy;history.sum_squared+=r.invariant;
     }
-    std::size_t count;std::cin>>count;if(count>2000000)throw std::runtime_error("bad coherent tape");
-    std::vector<double> tape(count);for(auto& v:tape)std::cin>>v;if(!std::cin)throw std::runtime_error("bad coherent input");
-    jewel::ReplayRandom random(tape);jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
+    std::int64_t count;std::cin>>count;if(count < -1||count>2000000)throw std::runtime_error("bad coherent tape");
+    std::uint64_t seed=0;std::vector<double> tape;
+    if(count==-1)std::cin>>seed;else{tape.resize(count);for(auto& v:tape)std::cin>>v;}
+    if(!std::cin)throw std::runtime_error("bad coherent input");
+    jewel::ReplayRandom replay(std::move(tape));jewel::SplitMixRandom generated(seed);
+    jewel::Random& random=count==-1?static_cast<jewel::Random&>(generated):static_cast<jewel::Random&>(replay);
+    auto checkpoint=[&]{return count==-1?generated.checkpoint():replay.checkpoint();};jewel::CoherentHistograms histograms;jewel::CoherentResult result;result.selected=selected;int invalid=0;
     jewel::InitialScatteringResult initial_result;initial_result.selected=selected;
     try{
      if(op!="COHERENT"){
@@ -190,7 +194,7 @@ int main() {
     if(op=="ISTATE")std::cerr<<"INI_STATS "<<initial_result.trials<<' '<<initial_result.unresolved_rejections<<' '<<initial_result.coherence_reversions<<'\n';
     else std::cerr<<"COH_STATS "<<result.collision_calls<<' '<<result.kinematic_calls<<' '<<result.undone_kicks<<'\n';
     auto slot=[&](jewel::ParticleId id){if(!id)return std::size_t(0);for(std::size_t i=0;i<state.particles().size();++i)if(state.particles()[i].particle.id==id)return i+1;throw std::runtime_error("dangling coherent ID");};
-    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<random.checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
+    std::cout<<state.particles().size()<<' '<<state.colour_max<<' '<<ledger.used<<' '<<slot(result.selected)<<' '<<checkpoint()<<' '<<state.discarded<<' '<<invalid<<' '<<history.last;
     if(op=="ISTATE")std::cout<<' '<<initial_result.fraction<<' '<<initial_result.virtuality<<' '<<initial_result.elapsed<<' '<<initial_result.incoming_flavour<<' '<<initial_result.above_cutoff<<' '<<bool(initial_result.coherent);
     std::cout<<'\n';
     for(const auto& s:state.particles()){auto& p=s.particle;std::cout<<p.status<<' '<<p.pdg<<' '<<slot(s.parent)<<' '<<slot(s.daughters[0])<<' '<<slot(s.daughters[1])<<' '
@@ -198,7 +202,7 @@ int main() {
      <<s.generator_vertex.x<<' '<<s.generator_vertex.y<<' '<<s.generator_vertex.z<<' '<<s.generator_vertex.t<<' '
      <<p.production.x<<' '<<p.production.y<<' '<<p.production.z<<' '<<p.production.t<<' '<<s.decay_time<<' '<<s.fraction<<' '<<s.angle<<' '
      <<s.quark_pair<<' '<<s.angular_required<<' '<<p.colour<<' '<<p.anticolour<<' '<<s.evolution_time;
-     if(op=="BRANCH"||op=="CASCADE")std::cout<<' '<<s.medium_induced;
+     if(op=="BRANCH"||op=="CASCADE"||op=="GCASCADE")std::cout<<' '<<s.medium_induced;
      std::cout<<'\n';}
     std::cout<<history.sum.px<<' '<<history.sum.py<<' '<<history.sum.pz<<' '<<history.sum.energy<<' '<<history.sum_squared<<'\n';
     for(const auto& r:history.records)std::cout<<r.invariant<<' '<<r.momentum.px<<' '<<r.momentum.py<<' '<<r.momentum.pz<<' '<<r.momentum.energy<<' '<<r.time<<' '
@@ -352,7 +356,7 @@ int main() {
     std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);jewel::Channel channel;
     if(name=="QQ")channel=jewel::Channel::QQ;else if(name=="GC")channel=jewel::Channel::GC;
-    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else throw std::runtime_error("invalid branching channel");
+    else if(name=="GG")channel=jewel::Channel::GG;else if(name=="QG")channel=jewel::Channel::QG;else if(name=="GQ")channel=jewel::Channel::GQ;else throw std::runtime_error("invalid branching channel");
     if(op=="MASS") {
      auto result=branching->mass(a,b,c,energy,channel,maxmass,initial!=0,random);
      std::cout<<result.mass<<' '<<result.fraction.value_or(-1)<<' '<<int(result.quark_pair.value_or(false))<<' '<<random.checkpoint()<<'\n';

@@ -6,6 +6,11 @@
 void check(bool ok) { if(!ok) throw std::runtime_error("contract failed"); }
 template<class F> void rejects(F f) { bool caught=false; try { f(); } catch(const std::exception&) { caught=true; } check(caught); }
 int main() {
+ jewel::SplitMixRandom generated(0);
+ for(double expected:{0x1.c4415072f63b9p-1,0x1.b9e279aa86e5ap-2,0x1.b117462002520p-6,0x1.f1177150e4991p-1,0x1.b39896a51a878p-4})check(generated.uniform()==expected);
+ auto saved_draws=generated.checkpoint();double next=generated.uniform();generated.restore(saved_draws);check(generated.uniform()==next);
+ for(int i=0;i<100000;++i){double x=generated.uniform();check(x>0&&x<1);}
+ generated.restore(std::numeric_limits<std::uint64_t>::max());rejects([&]{generated.uniform();});
  jewel::Event event;
  auto first=event.append(21,{0,0,10,10},{1,2,0,0});
  for(int i=0;i<2000;++i) event.append(21,{1,0,0,1},{},{first});

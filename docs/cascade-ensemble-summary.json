@@ -1,0 +1,615 @@
+{
+  "scope": "Controlled parton-cascade diagnostics after transactional collision retries; full generator validation incomplete",
+  "settings": {
+    "off": {
+      "scope": "controlled parton cascades only; no hard-event generation or hadronization",
+      "events_per_generator": 1000,
+      "case": 55,
+      "rng": "splitmix64-open52-v1",
+      "selection": {
+        "algorithm": "anti-kt",
+        "R": 0.4,
+        "min_pt": 5,
+        "max_abs_eta": 2,
+        "statuses": [
+          4,
+          5
+        ],
+        "recoils": "status 3 excluded"
+      },
+      "normalization": "unit weight per attempted event; invalid/discarded events count as zero jets",
+      "uncertainty": "paired event-level delta method; empty reference bins have undefined ratios",
+      "analysis_versions": {
+        "python": "3.14.7",
+        "hepyy": "0.2.30",
+        "cppyy": "3.5.0",
+        "fastjet": "FastJet version 3.5.1",
+        "hepyy_utils_loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+      },
+      "full_goal_validated": false,
+      "input_sha256": "64904c3f5ab7e8ce952d97c801a5485c6e10eb91fa074014af721a5ef5be8a99",
+      "comparisons": {
+        "pt": [
+          {
+            "low": 5,
+            "high": 10,
+            "cpp": 329,
+            "reference": 331,
+            "ratio": 0.9939577039274925,
+            "paired_standard_error": 0.018577337994323588
+          },
+          {
+            "low": 10,
+            "high": 20,
+            "cpp": 208,
+            "reference": 206,
+            "ratio": 1.0097087378640777,
+            "paired_standard_error": 0.021815764003925188
+          },
+          {
+            "low": 20,
+            "high": 30,
+            "cpp": 90,
+            "reference": 94,
+            "ratio": 0.9574468085106383,
+            "paired_standard_error": 0.036151418488118765
+          },
+          {
+            "low": 30,
+            "high": 40,
+            "cpp": 142,
+            "reference": 139,
+            "ratio": 1.0215827338129497,
+            "paired_standard_error": 0.024131791861264542
+          },
+          {
+            "low": 40,
+            "high": 50,
+            "cpp": 251,
+            "reference": 259,
+            "ratio": 0.9691119691119691,
+            "paired_standard_error": 0.01939059539696272
+          },
+          {
+            "low": 50,
+            "high": 60,
+            "cpp": 332,
+            "reference": 327,
+            "ratio": 1.0152905198776758,
+            "paired_standard_error": 0.01412779277570882
+          },
+          {
+            "low": 60,
+            "high": 70,
+            "cpp": 218,
+            "reference": 218,
+            "ratio": 1.0,
+            "paired_standard_error": 0.01298092843969446
+          },
+          {
+            "low": 70,
+            "high": 80,
+            "cpp": 6,
+            "reference": 6,
+            "ratio": 1.0,
+            "paired_standard_error": 0.0
+          },
+          {
+            "low": 80,
+            "high": 100,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          },
+          {
+            "low": 100,
+            "high": 150,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          }
+        ],
+        "girth": [
+          {
+            "low": 0,
+            "high": 0.02,
+            "cpp": 178,
+            "reference": 181,
+            "ratio": 0.9834254143646409,
+            "paired_standard_error": 0.025104478566245206
+          },
+          {
+            "low": 0.02,
+            "high": 0.04,
+            "cpp": 25,
+            "reference": 26,
+            "ratio": 0.9615384615384616,
+            "paired_standard_error": 0.08437469975843852
+          },
+          {
+            "low": 0.04,
+            "high": 0.06,
+            "cpp": 49,
+            "reference": 44,
+            "ratio": 1.1136363636363635,
+            "paired_standard_error": 0.07958525712715245
+          },
+          {
+            "low": 0.06,
+            "high": 0.08,
+            "cpp": 74,
+            "reference": 74,
+            "ratio": 1.0,
+            "paired_standard_error": 0.03824111351153233
+          },
+          {
+            "low": 0.08,
+            "high": 0.1,
+            "cpp": 149,
+            "reference": 152,
+            "ratio": 0.9802631578947368,
+            "paired_standard_error": 0.023504412460045827
+          },
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "cpp": 509,
+            "reference": 510,
+            "ratio": 0.9980392156862745,
+            "paired_standard_error": 0.012548577265076492
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "cpp": 522,
+            "reference": 525,
+            "ratio": 0.9942857142857143,
+            "paired_standard_error": 0.011246121649291597
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "cpp": 70,
+            "reference": 68,
+            "ratio": 1.0294117647058822,
+            "paired_standard_error": 0.047071550800305624
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          }
+        ],
+        "ptd": [
+          {
+            "low": 0,
+            "high": 0.2,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "cpp": 62,
+            "reference": 60,
+            "ratio": 1.0333333333333334,
+            "paired_standard_error": 0.04152043073464693
+          },
+          {
+            "low": 0.4,
+            "high": 0.5,
+            "cpp": 474,
+            "reference": 478,
+            "ratio": 0.9916317991631799,
+            "paired_standard_error": 0.01062802177075296
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "cpp": 410,
+            "reference": 413,
+            "ratio": 0.9927360774818402,
+            "paired_standard_error": 0.0158228208283109
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "cpp": 168,
+            "reference": 167,
+            "ratio": 1.0059880239520957,
+            "paired_standard_error": 0.027536987013811208
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "cpp": 199,
+            "reference": 194,
+            "ratio": 1.0257731958762886,
+            "paired_standard_error": 0.02818744254011537
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "cpp": 84,
+            "reference": 86,
+            "ratio": 0.9767441860465116,
+            "paired_standard_error": 0.03982904058216475
+          },
+          {
+            "low": 0.9,
+            "high": 1.0000001,
+            "cpp": 179,
+            "reference": 182,
+            "ratio": 0.9835164835164835,
+            "paired_standard_error": 0.023747193065407464
+          }
+        ]
+      },
+      "guard_source_sha256": "e7037917cab19b08f840635c0d4065aeb67e4ddc1478f72930e36ff141e64a40",
+      "configuration": {
+        "pdg": 21,
+        "selected": 4,
+        "left": 0.5,
+        "cross": 1,
+        "length": 1,
+        "seed": 1260055,
+        "kinmode": 1,
+        "history": 0,
+        "recmode": 0,
+        "subtract": 0,
+        "energy": 100,
+        "mass": 10,
+        "rotation": 0.8,
+        "shorten": false,
+        "weight": 1,
+        "enabled": 0,
+        "near_edge": false,
+        "nf": 3,
+        "boost": 0,
+        "retry": false,
+        "rejection": 0,
+        "force_radiation": false,
+        "selected_flavour": 21,
+        "operation": "GCASCADE",
+        "status": 1,
+        "start": 0.5,
+        "birth": 0.4,
+        "scatter_recoils": 0
+      },
+      "cpp": {
+        "seconds": 10.912019625073299,
+        "accepted": 992,
+        "selected_jets": 1576,
+        "raw_sha256": "72c944932dfff713a9be7c5a3c90e50c9a17d7d4a1be5f08f04dc3d0f8a346ef",
+        "executable_sha256": "a6f93be410838bc1124822f5a092291680fb19738e1169dd7e7ed9ea53e264c6"
+      },
+      "reference": {
+        "seconds": 10.17941466695629,
+        "accepted": 994,
+        "selected_jets": 1580,
+        "raw_sha256": "406801aaa49088a498a076e01845c27a9ae72e17eddc092b460863a2b85a32d4",
+        "executable_sha256": "42b5bf15293391f14b17a3d419409121bd8bbd22031bb7b59ebde8072d3997a4"
+      }
+    },
+    "on": {
+      "scope": "controlled parton cascades only; no hard-event generation or hadronization",
+      "events_per_generator": 1000,
+      "case": 55,
+      "rng": "splitmix64-open52-v1",
+      "selection": {
+        "algorithm": "anti-kt",
+        "R": 0.4,
+        "min_pt": 5,
+        "max_abs_eta": 2,
+        "statuses": [
+          4,
+          5
+        ],
+        "recoils": "status 3 excluded"
+      },
+      "normalization": "unit weight per attempted event; invalid/discarded events count as zero jets",
+      "uncertainty": "paired event-level delta method; empty reference bins have undefined ratios",
+      "analysis_versions": {
+        "python": "3.14.7",
+        "hepyy": "0.2.30",
+        "cppyy": "3.5.0",
+        "fastjet": "FastJet version 3.5.1",
+        "hepyy_utils_loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+      },
+      "full_goal_validated": false,
+      "input_sha256": "d6b80b815f12ce905979682ef499bd03b3fe29199bdd4baff411d0e479a1cc52",
+      "comparisons": {
+        "pt": [
+          {
+            "low": 5,
+            "high": 10,
+            "cpp": 287,
+            "reference": 290,
+            "ratio": 0.9896551724137931,
+            "paired_standard_error": 0.017148422543021076
+          },
+          {
+            "low": 10,
+            "high": 20,
+            "cpp": 207,
+            "reference": 207,
+            "ratio": 1.0,
+            "paired_standard_error": 0.0180846841534258
+          },
+          {
+            "low": 20,
+            "high": 30,
+            "cpp": 99,
+            "reference": 94,
+            "ratio": 1.053191489361702,
+            "paired_standard_error": 0.03277104216307187
+          },
+          {
+            "low": 30,
+            "high": 40,
+            "cpp": 129,
+            "reference": 132,
+            "ratio": 0.9772727272727273,
+            "paired_standard_error": 0.024854792986931655
+          },
+          {
+            "low": 40,
+            "high": 50,
+            "cpp": 238,
+            "reference": 241,
+            "ratio": 0.9875518672199171,
+            "paired_standard_error": 0.017010012440591606
+          },
+          {
+            "low": 50,
+            "high": 60,
+            "cpp": 337,
+            "reference": 338,
+            "ratio": 0.9970414201183432,
+            "paired_standard_error": 0.012186573624391402
+          },
+          {
+            "low": 60,
+            "high": 70,
+            "cpp": 231,
+            "reference": 232,
+            "ratio": 0.9956896551724138,
+            "paired_standard_error": 0.014272091162289995
+          },
+          {
+            "low": 70,
+            "high": 80,
+            "cpp": 15,
+            "reference": 15,
+            "ratio": 1.0,
+            "paired_standard_error": 0.0
+          },
+          {
+            "low": 80,
+            "high": 100,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          },
+          {
+            "low": 100,
+            "high": 150,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          }
+        ],
+        "girth": [
+          {
+            "low": 0,
+            "high": 0.02,
+            "cpp": 168,
+            "reference": 169,
+            "ratio": 0.9940828402366864,
+            "paired_standard_error": 0.021272767507479556
+          },
+          {
+            "low": 0.02,
+            "high": 0.04,
+            "cpp": 40,
+            "reference": 42,
+            "ratio": 0.9523809523809523,
+            "paired_standard_error": 0.0329158228636755
+          },
+          {
+            "low": 0.04,
+            "high": 0.06,
+            "cpp": 49,
+            "reference": 49,
+            "ratio": 1.0,
+            "paired_standard_error": 0.0
+          },
+          {
+            "low": 0.06,
+            "high": 0.08,
+            "cpp": 72,
+            "reference": 69,
+            "ratio": 1.0434782608695652,
+            "paired_standard_error": 0.03315632721836405
+          },
+          {
+            "low": 0.08,
+            "high": 0.1,
+            "cpp": 118,
+            "reference": 117,
+            "ratio": 1.0085470085470085,
+            "paired_standard_error": 0.025764705742553757
+          },
+          {
+            "low": 0.1,
+            "high": 0.15,
+            "cpp": 535,
+            "reference": 540,
+            "ratio": 0.9907407407407407,
+            "paired_standard_error": 0.011796499970522425
+          },
+          {
+            "low": 0.15,
+            "high": 0.2,
+            "cpp": 494,
+            "reference": 493,
+            "ratio": 1.002028397565923,
+            "paired_standard_error": 0.01055587441935963
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "cpp": 67,
+            "reference": 70,
+            "ratio": 0.9571428571428572,
+            "paired_standard_error": 0.03699615729275055
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          }
+        ],
+        "ptd": [
+          {
+            "low": 0,
+            "high": 0.2,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          },
+          {
+            "low": 0.2,
+            "high": 0.3,
+            "cpp": 0,
+            "reference": 0,
+            "ratio": null,
+            "paired_standard_error": null
+          },
+          {
+            "low": 0.3,
+            "high": 0.4,
+            "cpp": 59,
+            "reference": 59,
+            "ratio": 1.0,
+            "paired_standard_error": 0.041537549270836596
+          },
+          {
+            "low": 0.4,
+            "high": 0.5,
+            "cpp": 514,
+            "reference": 517,
+            "ratio": 0.9941972920696325,
+            "paired_standard_error": 0.009645691230497933
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "cpp": 379,
+            "reference": 381,
+            "ratio": 0.994750656167979,
+            "paired_standard_error": 0.01171637822262837
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "cpp": 180,
+            "reference": 179,
+            "ratio": 1.005586592178771,
+            "paired_standard_error": 0.0217089770663233
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "cpp": 183,
+            "reference": 180,
+            "ratio": 1.0166666666666666,
+            "paired_standard_error": 0.025690896482602067
+          },
+          {
+            "low": 0.8,
+            "high": 0.9,
+            "cpp": 50,
+            "reference": 51,
+            "ratio": 0.9803921568627451,
+            "paired_standard_error": 0.07003979564284137
+          },
+          {
+            "low": 0.9,
+            "high": 1.0000001,
+            "cpp": 178,
+            "reference": 182,
+            "ratio": 0.978021978021978,
+            "paired_standard_error": 0.02031462907598397
+          }
+        ]
+      },
+      "guard_source_sha256": "e7037917cab19b08f840635c0d4065aeb67e4ddc1478f72930e36ff141e64a40",
+      "configuration": {
+        "pdg": 21,
+        "selected": 4,
+        "left": 0.5,
+        "cross": 1,
+        "length": 1,
+        "seed": 1260055,
+        "kinmode": 1,
+        "history": 0,
+        "recmode": 0,
+        "subtract": 0,
+        "energy": 100,
+        "mass": 10,
+        "rotation": 0.8,
+        "shorten": false,
+        "weight": 1,
+        "enabled": 1,
+        "near_edge": false,
+        "nf": 3,
+        "boost": 0,
+        "retry": false,
+        "rejection": 0,
+        "force_radiation": false,
+        "selected_flavour": 21,
+        "operation": "GCASCADE",
+        "status": 1,
+        "start": 0.5,
+        "birth": 0.4,
+        "scatter_recoils": 0
+      },
+      "cpp": {
+        "seconds": 11.977334749884903,
+        "accepted": 988,
+        "selected_jets": 1543,
+        "raw_sha256": "a03680b61006fb07fcfe0c85a9bc63343832898d8870697b4d66d1ed358b59de",
+        "executable_sha256": "a6f93be410838bc1124822f5a092291680fb19738e1169dd7e7ed9ea53e264c6"
+      },
+      "reference": {
+        "seconds": 11.525234792148694,
+        "accepted": 993,
+        "selected_jets": 1549,
+        "raw_sha256": "cd800844c8e6afcddfd3b96b0cf7de09dea88c2d8b7e459dc14400883d0f8cc8",
+        "executable_sha256": "42b5bf15293391f14b17a3d419409121bd8bbd22031bb7b59ebde8072d3997a4"
+      }
+    }
+  }
+}

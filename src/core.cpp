@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <utility>
+#include <limits>
 namespace jewel {
 namespace {
 void require(bool ok, const char* msg) { if (!ok) throw std::domain_error(msg); }
@@ -29,6 +30,14 @@ double ReplayRandom::uniform() {
 void ReplayRandom::restore(std::size_t cursor) {
  if(cursor > tape_.size()) throw std::out_of_range("invalid RNG checkpoint");
  cursor_ = cursor;
+}
+double SplitMixRandom::uniform(){
+ if(draws_==std::numeric_limits<std::uint64_t>::max())throw std::overflow_error("RNG counter exhausted");
+ auto z=seed_+UINT64_C(0x9e3779b97f4a7c15)*(++draws_);
+ z=(z^(z>>30))*UINT64_C(0xbf58476d1ce4e5b9);
+ z=(z^(z>>27))*UINT64_C(0x94d049bb133111eb);
+ z^=z>>31;
+ return (double(z>>12)+0.5)*0x1p-52;
 }
 void Kernels::validate() const { require(nf >= 0 && nf <= 6, "nf must be in [0,6]"); }
 double Kernels::pqq(double z) const { zcheck(z); return 4*(1+z*z)/(3*(1-z)); }

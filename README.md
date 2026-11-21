@@ -588,3 +588,9 @@ ported routines into branch and cascade evolution. Validation is incomplete:
 the expanded cascade replay currently fails. See the [development checkpoint](docs/scheduler-progress.md)
 for the passing baseline, the first traced numerical divergence, and remaining
 work. This is not yet a standalone event generator.
+
+The [interactive cascade comparison](docs/cascade-ensemble-report.html) shows
+1,000 attempted showers per engine with coherence on/off, jet spectra, girth,
+pTD and failed-event accounting. See the [validation notes](docs/validation-cascade-ensemble.md)
+for reproduction and transactional collision retries and remaining discrepancies. This is a
+controlled parton-level study, not a passing full-generator comparison.

@@ -80,3 +80,24 @@ successful exclusions.
 - Add run initialization, Pythia8 hard-event import and hadronization, all custom
   JEWEL exports, and the requested final jet/substructure comparison and dynamic
   HTML report. The full thread goal remains incomplete.
+
+## Generated-stream ensemble follow-up
+
+The [ensemble validation notes](validation-cascade-ensemble.md) and
+[interactive report](cascade-ensemble-report.html) extend this checkpoint with
+a passing 42-case generated-stream baseline, bounded expanded diagnostics and
+1,000 attempted showers per engine in each coherence setting. A missing GQ
+GENERATEZ alias is fixed. Excess C++ rejections are traced to temporary
+nonfinite collision candidates that the source can recover through retries;
+transactional candidate handling remains unresolved. The report is diagnostic
+and does not satisfy the full-generator validation milestone.
+
+### Transactional collision retry follow-up
+
+`apply_collisions` now stages event and recoil storage privately, permits the
+source's temporary nonfinite outgoing candidates and validates before commit.
+The first failing seed now matches all reference values within existing
+tolerances. The refreshed ensemble report improves C++ accepted counts to
+992 (off) and 988 (on), versus 994 and 993 reference events. Remaining
+nonfinite and discrete trajectory discrepancies are still tracked; this
+does not complete the generator milestone.

@@ -68,9 +68,9 @@ if(JEWEL_REFERENCE_SOURCE)
  if(NOT extracted_medium EQUAL 0)
   message(FATAL_ERROR "Medium reference verification failed")
  endif()
- add_executable(jewel-medium-reference ${CMAKE_BINARY_DIR}/medium-reference.f reference/medium_probe.f90)
+ add_executable(jewel-medium-reference ${CMAKE_BINARY_DIR}/medium-reference.f reference/medium_probe.f90 reference/guarded_cascade.f90 reference/generated_random.cpp)
  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-  target_compile_options(jewel-medium-reference PRIVATE -std=legacy -ffixed-line-length-none)
+  target_compile_options(jewel-medium-reference PRIVATE "$<$<COMPILE_LANGUAGE:Fortran>:-std=legacy;-ffixed-line-length-none>")
  endif()
 endif()
 
@@ -312,4 +312,18 @@ if(BUILD_TESTING)
  add_executable(cascade-test tests/cascade.cpp)
  target_link_libraries(cascade-test PRIVATE jewel_core)
  add_test(NAME cascade-contracts COMMAND cascade-test)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ add_test(NAME cascade-generated-baseline COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/cascade_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-generated-baseline.json
+  --baseline --guarded --generated)
+endif()
+
+if(TARGET jewel-medium-reference)
+ add_test(NAME cascade-collision-retry COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/cascade_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/cascade-collision-retry.json
+  --generated --guarded --case 55 --seed-offset 1000500 --coherence off)
 endif()

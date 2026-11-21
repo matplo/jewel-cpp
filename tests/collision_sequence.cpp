@@ -52,6 +52,19 @@ int main(){
   for(const auto& node:coherent.particles())if(node.particle.id>merged_id)check(!node.coherent_partner&&node.particle.parents.size()==1);
   check(coherent.at(merged_id).coherent_partner==b);
  }
+ // A failure after consuming the first collision must not publish partial
+ // event or recoil mutations. The random stream deliberately is not rewound.
+ {
+  jewel::ShowerState isolated;isolated.colour_max=20;
+  auto scratch_id=isolated.append(scratch),leg_id=isolated.append(leg);
+  jewel::TransferHistory kicks=history;for(auto& r:kicks.records)r.invariant=-.2;
+  jewel::RecoilStorage storage;storage.capacity=3;
+  jewel::ReplayRandom exhausted({.3});
+  rejects([&]{jewel::apply_collisions(isolated,leg_id,scratch_id,kicks,storage,request,{},finish,sampler,medium,exhausted);});
+  isolated.validate();check(isolated.particles().size()==2&&isolated.colour_max==20);
+  check(isolated.at(leg_id).daughters==std::array<jewel::ParticleId,2>{0,0});
+  check(storage.used==0&&storage.records.empty()&&exhausted.checkpoint()==1);
+ }
  // Capacity guard occurs before consuming a random number or adding records.
  while(state.particles().size()<22990)state.append(scratch);
  auto capped=jewel::apply_collisions(state,id,tmp,history,ledger,request,{},finish,sampler,medium,empty);

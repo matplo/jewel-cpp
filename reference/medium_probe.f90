@@ -2,6 +2,7 @@
 ! Only DERIV dispatch (modes 5/101) and initial COMMON configuration are harness code.
 program mediumprobe
  use, intrinsic :: ieee_arithmetic
+ use iso_c_binding, only: c_int64_t
  implicit none
  double precision centrmin,centrmax,breal,centr,rau
  integer nf
@@ -31,6 +32,8 @@ program mediumprobe
  common /CROSSSEC/ impmax,cross
  double precision tape(2000000),px,py,pz,energy,ms
  integer count,cursor,boostflag,ptype
+ integer(c_int64_t) generated_seed
+ common /GENERATED_SEED/ generated_seed
  common /REPLAY/ tape,count,cursor
  logical boost
  common /boostmed/ boost
@@ -54,7 +57,7 @@ program mediumprobe
  character incoming,outgoing
  double precision ptfac,getmass,generatez,zdec,angle,maxmass
  common /ALPHASFAC/ ptfac
- integer initial_flag
+ integer initial_flag,guard_reason,guard_calls
  logical qqbardec
  integer n,npad,k(23000,5),errl,elastic_flag
  double precision p(23000,5),vertices(23000,5),mv(23000,5),xsecscalefac,etamax
@@ -320,7 +323,7 @@ program mediumprobe
    do i=1,maxnscatcen
     write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
    enddo
-  case('COHERENT','ISTATE','BRANCH','CASCADE')
+  case('COHERENT','ISTATE','BRANCH','CASCADE','GCASCADE')
    read(*,*)cohselected,cohflag,nowtime,lefttime,split_angle,split_time,cohlengthfac,kinmode,colmax,evweight,nend
    cohscat=cohflag/=0
    if(trim(op)/='COHERENT')then
@@ -328,7 +331,7 @@ program mediumprobe
     seqretry=aflag/=0
    endif
    n=5;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.;starttime=0;medind=.false.
-   if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE')starttime=-1d6
+   if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE')starttime=-1d6
    mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0;discard=.false.;nstart=1
    do i=1,5
     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
@@ -347,12 +350,16 @@ program mediumprobe
    enddo
    histotcoh=0;histothatcoh=0;tmin=0;timax=100;thatmin=0;thatmax=100;ntbinsaccrej=100;nthatbinsaccrej=100
    read(*,*)count
-   if(count<0.or.count>2000000)stop 5
+   if(count < -1.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
+   if(count==-1)read(*,*)generated_seed
    cursor=0
-   compress=.false.
+   compress=.false.;guard_reason=0;guard_calls=0
    if(trim(op)=='BRANCH')then
     call makebranch(cohselected)
+   else if(trim(op)=='GCASCADE')then
+    call guarded_cascade(1000000,guard_reason,guard_calls)
+    write(0,*) 'GUARD_STATS ',guard_reason,guard_calls
    else if(trim(op)=='CASCADE')then
     call makecascade
    else if(trim(op)=='ISTATE')then
@@ -364,6 +371,7 @@ program mediumprobe
    initial_flag=merge(0,1,all(ieee_is_finite(p(1:n,:))).and.all(ieee_is_finite(mv(1:n,:))).and. &
     all(ieee_is_finite(zd(1:n))).and.all(ieee_is_finite(thetad(1:n))).and. &
     all(ieee_is_finite(scatcen(1:maxnscatcen,:))).and.all(ieee_is_finite(dummies(1:maxnscatcen,:))))
+   if(guard_reason/=0)initial_flag=guard_reason
    if(trim(op)=='ISTATE')then
     write(*,'(8I8,3ES26.17E3,3I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend, &
      energyfraction,newmass,lefttime,instype,merge(1,0,above_cutoff),merge(1,0,didcohscat)
@@ -371,7 +379,7 @@ program mediumprobe
     write(*,'(8I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend
    endif
    do i=1,n
-    if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE')then
+    if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE'.or.trim(op)=='GCASCADE')then
      write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3,I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
       merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i),merge(1,0,medind(i))
     else
@@ -667,12 +675,26 @@ function deriv(x,w) result(v)
 end function
 
 function pyr(dummy) result(v)
+ use iso_c_binding, only: c_int64_t,c_double
  implicit none
+ integer(c_int64_t) generated_seed
+ common /GENERATED_SEED/ generated_seed
+ interface
+  function reference_uniform(seed,draw) bind(C) result(value)
+   import c_int64_t,c_double
+   integer(c_int64_t),value :: seed,draw
+   real(c_double) value
+  end function
+ end interface
  integer dummy,count,cursor
  double precision tape(2000000),v
  common /REPLAY/ tape,count,cursor
- if(cursor>=count) stop 6
+ if(count>=0.and.cursor>=count) stop 6
  cursor=cursor+1
- v=tape(cursor)
+ if(count==-1)then
+  v=reference_uniform(generated_seed,int(cursor,c_int64_t))
+ else
+  v=tape(cursor)
+ endif
  if(v<=0.or.v>=1) stop 7
 end function

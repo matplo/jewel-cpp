@@ -46,6 +46,8 @@ struct CollisionSequenceResult {
  double fraction{};
  bool retry_splitting{};
 };
+// Stage collision retries privately; publish only a validated event and ledger.
+// Exceptions preserve caller state/storage but do not rewind the random stream.
 CollisionSequenceResult apply_collisions(ShowerState&,ParticleId projectile,ParticleId scratch,
  const TransferHistory&,RecoilStorage&,CollisionSequenceRequest,CollisionConfig,
  CollisionFinalizationConfig,const BranchingSampler&,const Medium&,Random&);

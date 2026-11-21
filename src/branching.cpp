@@ -63,7 +63,9 @@ MassSample BranchingSampler::mass(double minimum,double maximum,double angle,dou
 }
 double BranchingSampler::fraction(double ti,double energy,double epsilon,Channel c,Random& random) const {
  check(std::isfinite(ti)&&ti>=0&&std::isfinite(energy)&&energy>=0&&std::isfinite(epsilon)&&epsilon>0,"invalid fraction query");
- check(c==Channel::QQ||c==Channel::GG||c==Channel::QG,"invalid GENERATEZ channel");
+ // Both QG (DOINSTATESCAT) and GQ (MAKEBRANCH) select the source's
+ // symmetric quark-pair branch; this alias applies only to GENERATEZ.
+ check(c==Channel::QQ||c==Channel::GG||c==Channel::QG||c==Channel::GQ,"invalid GENERATEZ channel");
  double eps=epsilon;
  if(ti!=0) {
   check(ti>=q0_*q0_&&ti<=energy*energy,"fraction kinematics outside square-root domain");

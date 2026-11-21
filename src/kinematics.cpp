@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Standard Lorentz kinematics preserving JEWEL's PYANGL/PYROBO/PYP conventions.
 #include "jewel/kinematics.hpp"
+#include "kinematics_internal.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
@@ -25,6 +26,9 @@ double pseudorapidity(Momentum p){return rapidity(p,0);}
 bool rotate_boost(Momentum& p,SpaceTime* position,double theta,double phi,std::array<double,3> beta) {
  validate(p);finite(theta);finite(phi);for(double b:beta)finite(b);
  if(position)for(double x:{position->x,position->y,position->z,position->t})finite(x);
+ return detail::rotate_boost_candidate(p,position,theta,phi,beta);
+}
+bool detail::rotate_boost_candidate(Momentum& p,SpaceTime* position,double theta,double phi,std::array<double,3> beta) {
  std::array<double,4> momentum{p.px,p.py,p.pz,p.energy},v{};
  if(position)v={position->x,position->y,position->z,position->t};
  if(theta*theta+phi*phi>1e-20) {
