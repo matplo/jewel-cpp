@@ -52,8 +52,14 @@ void reject_splitting(ShowerState& state,ParticleId mother,const BranchingSample
   if(newc)mcnew=sample(c,mc,cmax);
   if(newb)mbnew=sample(b,mb,bmax);
   if(pm.pz==0)throw std::domain_error("undefined parent splitting axis");
-  pznew=(2*m.fraction*pm.energy*pm.energy-m.record_mass*m.record_mass-mbnew*mbnew+mcnew*mcnew)/(2*pm.pz);
-  ptsnew=m.fraction*m.fraction*pm.energy*pm.energy-pznew*pznew-mbnew*mbnew;
+  // REJECTSPLITTING uses the same grouped squares and subtraction order
+  // as MAKESPLITTING in the frozen GNU Fortran reference.
+  double e2=pm.energy*pm.energy,mb2=mbnew*mbnew,mc2=mcnew*mcnew;
+  double numerator=std::fma(-m.record_mass,m.record_mass,(2*m.fraction)*e2);
+  numerator-=mb2;
+  numerator+=mc2;
+  pznew=numerator/(2*pm.pz);
+  ptsnew=std::fma(-pznew,pznew,(m.fraction*m.fraction)*e2)-mb2;
   if(ptsnew>=0)break;
   if(mbnew==0&&mcnew==0){state.discarded=true;return;}
   if(mbnew==0){cmax=mcnew;newb=false;newc=true;}

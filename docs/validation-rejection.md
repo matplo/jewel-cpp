@@ -1,24 +1,28 @@
 # Angular-rejection repair validation
 
-All 20 reference-enabled tests and all eight C++-only contract tests pass.
+Updated 2026-11-21. Expanded angular-rejection repair checks pass; see
+[arithmetic regression and event replay](validation-rejection-arithmetic.md).
 
 REJECTSPLITTING is extracted unchanged from hash-verified JEWEL 2.6.0 and run
 with the original GETMASS and selected Pythia6 kinematics. No C++ branch samples
 or momentum values are supplied to the Fortran calculation. Driver inputs are
 identical event records and finite random tapes.
 
-All 385 cases pass, comparing 36,936 record scalars plus discard flags and random
+All 1,153 cases pass, comparing 110,664 record scalars plus discard flags and random
 draw counts. Discrete fields and draw counts match exactly, with a maximum of
-52 draws. Maximum absolute floating difference is 2.8422e-14 and maximum relative
-difference 6.6677e-15. Acceptance tolerances are relative 2e-12 / absolute 2e-13.
+54 draws. Maximum absolute floating difference is 2.8422e-14 and maximum relative
+difference 2.22398e-15. Acceptance tolerances are relative 2e-12 / absolute 2e-13.
 Platform: macOS arm64, AppleClang 21.0.0 and GNU Fortran 16.2.0, Release.
 
-Cases cover ANGORD=0–5, quark/antiquark/gluon siblings, both/one/neither sibling
+Cases cover parent energies 20, 100 and 10000 GeV; ANGORD=0–5, quark/antiquark/gluon siblings, both/one/neither sibling
 requiring resampling, aligned and rotated parent momenta, and rejected-scattering
 records whose descendants become inactive. One impossible-kinematics fixture
 checks event discard and the reference's early return in the temporary frame.
 For each successful fixture, independent checks verify total four-momentum
-conservation and each daughter's mass shell. State validation checks genealogy.
+conservation and each daughter's mass shell. For boosted parents the shell check
+allows 32 ULPs of parent energy squared (or the previous 5e-11 GeV² floor) to
+account for cancellation; this does not change the direct reference tolerance.
+State validation checks genealogy.
 
 Record comparisons include status, PDG code, parent/daughter links, momentum,
 record mass, auxiliary coordinates, production coordinates, decay/evolution
