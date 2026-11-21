@@ -3,7 +3,9 @@
 Recorded on 2026-11-20 (America/Los_Angeles), macOS arm64.
 AppleClang 21.0.0.21000101; GNU Fortran 16.2.0; Release CMake build.
 
-Both CTest suites passed: core contracts and Fortran differential comparison.
+All three CTest suites passed: core contracts, reference-harness contracts and
+Fortran differential comparison. A separate C++-only Release build also passed
+its core-contract suite.
 All 1,320 numerical comparisons were identical at the printed 17-digit precision.
 All GETT draw counts matched; sampled cases used up to 12 draws.
 The machine-readable record is [validation-first-kernels.json](validation-first-kernels.json).
