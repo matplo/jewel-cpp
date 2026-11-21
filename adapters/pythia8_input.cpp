@@ -102,6 +102,10 @@ struct Pythia8Input::Impl {
 };
 Pythia8Input::Pythia8Input(PythiaInputConfig config):impl_(std::make_unique<Impl>(config)){}
 Pythia8Input::~Pythia8Input()=default;
+double Pythia8Input::nominal_mass(int pdg) const{
+ auto& data=impl_->engine.particleData;require(data.isParticle(pdg),"unknown input nominal-mass PDG");
+ double mass=data.m0(pdg);require(std::isfinite(mass)&&mass>=0,"invalid input nominal mass");return mass;
+}
 int Pythia8Input::version(){return PYTHIA_VERSION_INTEGER;}
 const std::vector<std::string>& Pythia8Input::settings() const{return impl_->settings;}
 std::optional<HardEventSnapshot> Pythia8Input::next(){

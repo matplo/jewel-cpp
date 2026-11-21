@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #pragma once
 #include "jewel/pythia8_input.hpp"
+#include "jewel/isr_times.hpp"
+#include <functional>
 namespace jewel {
 struct IsrBranchMapping {
  ParticleId mother{},daughter{},emitted{},emitted_final{};
@@ -56,4 +58,17 @@ PrimordialRecoilFrame reconstruct_primordial_recoil_frame(const HardEventSnapsho
 std::vector<PrimordialRecoilFrame> reconstruct_subsystem_primordial_frames(const HardEventSnapshot&);
 Momentum apply_primordial_frame(const PrimordialRecoilFrame&,Momentum);
 SpaceTime apply_primordial_frame_displacement(const PrimordialRecoilFrame&,SpaceTime);
+struct IsrTimingChain {
+ ParticleId hard_incoming{},beam{};
+ IsrKinematics hard;
+ std::vector<IsrTimeStep> steps;
+ std::vector<ParticleId> emitted_final;
+ double maximum_emission_copy_error{};
+};
+// Candidate common-final-frame timing inputs. Signed spacelike energies and
+// source-stage Q2 are preserved. Emission copy transport must satisfy the
+// existing composition gate. Does not assert Pythia6 history equivalence.
+std::vector<std::array<IsrTimingChain,2>> prepare_subsystem_isr_timing(
+ const HardEventSnapshot&,const std::function<double(int)>& nominal_mass);
+
 }

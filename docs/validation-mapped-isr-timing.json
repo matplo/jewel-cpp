@@ -1,0 +1,78 @@
+{
+  "scope": "Candidate common-final-frame ISR timing connection; full evolution remains disabled",
+  "reports": [
+    {
+      "scope": "Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence",
+      "attempts": 1000,
+      "systems_replayed": 6764,
+      "emitted_values": 66245,
+      "max_timing_absolute_error": 0,
+      "kinematic_values": 240156,
+      "max_independent_kinematic_difference": 6.240554739633808e-10,
+      "discarded_reference_nonfinite_values": 20340,
+      "failures": [
+        {
+          "type": "mapping_failure",
+          "attempt": 273,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 31 before 25 after 29 predicted -36.796089992676222 actual -36.796089989399192 error 3.2770302027529397e-09"
+        }
+      ],
+      "negative_incoming_energies": 1362,
+      "maximum_emission_copy_error_gev": 7.101334631443024e-09,
+      "input_hashes": {
+        "/private/tmp/jewel-fractions-final-2600417.jsonl": "510b070bee27bc1f115bc7ee96fd8b5e75eaa2a3061517c09e5a47a7d9f9e37a",
+        "/private/tmp/jewel-isr-timing1000-2600417.jsonl": "32e76a8672bdcc067c51a7229bc6b9017a6391f90f4cba244aacf2f5bff8173b",
+        "/private/tmp/jewel-isr-timing1000-2600417.fixtures": "454c91da53695dabb5ad0c40c1fdf1228900313ffbb1af55905a7dffc3250689"
+      },
+      "executable_hashes": {
+        "build/jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+        "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+      },
+      "audit_sha256": "d0880b080f25c2b337461314d0a52e07c014c48cef561ef2e1c17ec1bdd3ab4f"
+    },
+    {
+      "scope": "Candidate common-frame Pythia8 ISR timing; not validated native evolution or Pythia6 history equivalence",
+      "attempts": 1000,
+      "systems_replayed": 6981,
+      "emitted_values": 68415,
+      "max_timing_absolute_error": 0,
+      "kinematic_values": 247968,
+      "max_independent_kinematic_difference": 2.765659701253753e-09,
+      "discarded_reference_nonfinite_values": 20880,
+      "failures": [
+        {
+          "type": "mapping_failure",
+          "attempt": 458,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 46 before 24 after 45 predicted -86.771769137926697 actual -86.77176913153022 error 6.3964762375690043e-09"
+        },
+        {
+          "type": "mapping_failure",
+          "attempt": 613,
+          "reason": "reconstructed ISR frame disagrees with recorded recoil copy: emitted 159 before 153 after 157 predicted 4.8291755786595685 actual 4.829175573071633 error 5.5879354476928711e-09"
+        }
+      ],
+      "negative_incoming_energies": 1357,
+      "maximum_emission_copy_error_gev": 7.959897629916668e-09,
+      "input_hashes": {
+        "/private/tmp/jewel-fractions-final-2600418.jsonl": "b93bd7311f65e2d23e4bf5a9b890226db0eb518dbdc59ed9bd7543bd1c02782c",
+        "/private/tmp/jewel-isr-timing1000-2600418.jsonl": "f1e03b4f41283eaad27d0f1fa26f7e8202cf3bf9d0d59957647220d15d50c34e",
+        "/private/tmp/jewel-isr-timing1000-2600418.fixtures": "0ea9da39f73e3f88c7ab3101674849fe5a508dc09f73c00d1acdf5dc5e331a52"
+      },
+      "executable_hashes": {
+        "build/jewel-isr-times-probe": "ea31db19b7f043eddcd93050ce7215ca3813daf0767bd3144d7c9a4e6b75c0fd",
+        "build/jewel-isr-times-reference": "963ce3783bcef7b7826b2cb39bfa5c7fed26af43d91f5b5fb1b5cdc235a6626a"
+      },
+      "audit_sha256": "d0880b080f25c2b337461314d0a52e07c014c48cef561ef2e1c17ec1bdd3ab4f"
+    }
+  ],
+  "generator_sha256": "54708c1337b6181ebb4262ec88a1ce085bcf97bcc143ee1f5cf890d12de58f17",
+  "reference_block_sha256": "fa5c8e30abefaf12830c11bab4a36e761904d8cfd28e6aa7091dad908628ca33",
+  "source_hashes": {
+    "adapters/pythia8_isr_timing.cpp": "8381e632992764c5735d03ed931b4ef9b25ed3e80ed7d2e30a0f07edc1543dc1",
+    "app/isr_timing_probe.cpp": "cd1d5c20857a2dd4286861ae46ad25533ada110dfd8022c8b86e631ed8e6ebe2",
+    "include/jewel/pythia8_isr.hpp": "0d419a423fc63de34976c0f23c874ea8881ffa31e5313154270e4193aefd9d35",
+    "tests/mapped_isr_timing_audit.py": "d0880b080f25c2b337461314d0a52e07c014c48cef561ef2e1c17ec1bdd3ab4f"
+  },
+  "repeated_runs_byte_identical": true,
+  "pythia8_input_contracts_passed": true
+}

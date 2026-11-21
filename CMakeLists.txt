@@ -414,7 +414,7 @@ if(JEWEL_WITH_PYTHIA8)
  endif()
 endif()
 if(JEWEL_WITH_PYTHIA8)
- target_sources(jewel_pythia8 PRIVATE adapters/pythia8_hadronizer.cpp adapters/pythia8_isr.cpp adapters/pythia8_isr_frames.cpp adapters/pythia8_primordial.cpp)
+ target_sources(jewel_pythia8 PRIVATE adapters/pythia8_hadronizer.cpp adapters/pythia8_isr.cpp adapters/pythia8_isr_frames.cpp adapters/pythia8_primordial.cpp adapters/pythia8_isr_timing.cpp)
 endif()
 if(JEWEL_WITH_PYTHIA8 AND BUILD_TESTING)
  add_executable(pythia8-boundary-test tests/pythia8_boundary.cpp)
@@ -681,4 +681,9 @@ if(JEWEL_REFERENCE_SOURCE AND BUILD_TESTING)
  add_test(NAME preparation-differential COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/preparation_differential.py $<TARGET_FILE:jewel-kinematics-probe>
   $<TARGET_FILE:jewel-kinematics-reference> ${CMAKE_BINARY_DIR}/preparation-validation.json)
+endif()
+
+if(JEWEL_WITH_PYTHIA8)
+ add_executable(jewel-isr-timing app/isr_timing_probe.cpp)
+ target_link_libraries(jewel-isr-timing PRIVATE jewel_pythia8)
 endif()

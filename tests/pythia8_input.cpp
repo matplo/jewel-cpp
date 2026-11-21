@@ -23,6 +23,21 @@ int main(){
    check(x.status==y.status&&x.pdg==y.pdg&&x.mothers==y.mothers&&x.daughters==y.daughters&&x.colour==y.colour&&x.anticolour==y.anticolour);
    check(x.momentum.px==y.momentum.px&&x.momentum.py==y.momentum.py&&x.momentum.pz==y.momentum.pz&&x.momentum.energy==y.momentum.energy);
   }
+  auto timing_chains=jewel::prepare_subsystem_isr_timing(*a,[&](int pdg){return first.nominal_mass(pdg);});
+  check(timing_chains.size()==a->subsystems.size());unsigned timed_emissions=0;
+  for(const auto& pair:timing_chains)for(const auto& chain:pair){
+   jewel::ReplayRandom timing_random(std::vector<double>(2+2*chain.steps.size(),.5));
+   auto times=jewel::assign_isr_emission_times(chain.hard,chain.steps,{},timing_random);
+   check(times.size()==chain.emitted_final.size());timed_emissions+=times.size();
+   for(const auto& time:times)check(std::isfinite(time.production.t)&&std::isfinite(time.end_time));
+   std::size_t draws=1;
+   for(const auto& step:chain.steps)draws+=(step.beam_side==0)+(step.emitted.record_mass!=step.emitted.nominal_mass);
+   check(timing_random.checkpoint()==draws);
+  }
+  check(timed_emissions==a->isr_emissions.size());
+  bool invalid_mass=false;
+  try{jewel::prepare_subsystem_isr_timing(*a,[](int){return -1.;});}catch(const std::domain_error&){invalid_mass=true;}
+  check(invalid_mass);
   auto primordial=jewel::reconstruct_primordial_recoil_frame(*a);
   check(primordial.copies.size()>=4);
   auto displacement=jewel::apply_primordial_frame_displacement(primordial,{.2,-.4,.1,1.});

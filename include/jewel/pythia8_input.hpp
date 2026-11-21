@@ -76,6 +76,7 @@ public:
  GeneratorStatistics statistics() const;
  const std::vector<std::string>& settings() const;
  static int version();
+ double nominal_mass(int pdg) const;
 };
 void validate_hard_snapshot(const HardEventSnapshot&);
 }
