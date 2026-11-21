@@ -1,0 +1,112 @@
+{
+  "scope": "Pythia8 native topology hadronization integration; not full generator parity",
+  "samples": {
+    "vac": {
+      "path": "/private/tmp/jewel-native-topology-vac20.jsonl",
+      "sha256": "c6309bdc63fbb564e3c83c49e4fb51b99298572dea610fadb2bbe3b87665cec7",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 19,
+        "evolution_failures": 1,
+        "generation_failures": 0,
+        "accepted_weight": 19,
+        "failed_weight": 1,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 823
+      },
+      "junction_events": 9,
+      "colour_balance_pass": true,
+      "max_four_momentum_component_residual_gev": 6.3895716692890375e-09,
+      "failures": [
+        {
+          "type": "evolution_failure",
+          "attempt": 6,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "string construction",
+          "reason": "unbalanced native colour/junction tag",
+          "draws": 500
+        }
+      ]
+    },
+    "medium": {
+      "path": "/private/tmp/jewel-native-topology-medium20.jsonl",
+      "sha256": "f54892bd9d133e809671ab1cbfd37c932175e21b4a192e876e0b5117f2d4889d",
+      "summary": {
+        "type": "summary",
+        "attempts": 20,
+        "accepted": 19,
+        "evolution_failures": 1,
+        "generation_failures": 0,
+        "accepted_weight": 19,
+        "failed_weight": 1,
+        "generator_weight_sum": 20,
+        "generator_sigma_mb": 0.17686312855200845,
+        "generator_sigma_error_mb": 0.02387955469581008,
+        "final_records": 4105
+      },
+      "junction_events": 9,
+      "colour_balance_pass": true,
+      "max_four_momentum_component_residual_gev": 6.4064806792885065e-09,
+      "failures": [
+        {
+          "type": "evolution_failure",
+          "attempt": 6,
+          "impact_parameter_fm": 0,
+          "centrality_fraction": null,
+          "weight": 1,
+          "stage": "string construction",
+          "reason": "unbalanced native colour/junction tag",
+          "draws": 680050
+        }
+      ]
+    }
+  },
+  "failed_event_reference_replay": {
+    "scope": "Identical initialized Pythia8-derived state, not a stock Pythia6 generated event",
+    "fixture_sha256": "841eeea97ef28d68fb39691cadfb523e76fab64b3e1362ecd1661d91fe3ced51",
+    "headers": [
+      116.0,
+      167.0,
+      0.0,
+      47.0,
+      500.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "relative_tolerance": 2e-12,
+    "absolute_tolerance": 2e-13,
+    "outside_tolerance": 0,
+    "parent_slot": 79,
+    "parent_pdg": 2,
+    "parent_quark_pair": true,
+    "parent_colour": 144,
+    "daughter_slots": [
+      96,
+      97
+    ],
+    "daughter_pdgs": [
+      -1,
+      2
+    ],
+    "daughter_colours": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "output_hashes": {
+      "native": "d764871fd0e6c162edd1ed6aff3c6f8ce14aedd51d8988c60e42ffc66b7c538b",
+      "reference": "8679ec95899c40b176bc741704bb77a0dcb1900e21c26796a5614d9790276ecd"
+    }
+  }
+}

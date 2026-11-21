@@ -74,7 +74,7 @@ int main(int argc,char** argv){
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config,input_options))continue;
    if(option=="--experimental-isr-mpi"){
-    if(experimental_isr_mpi||hadronize_run)throw std::invalid_argument("experimental ISR/MPI currently requires the parton runner and one option");
+    if(experimental_isr_mpi)throw std::invalid_argument("experimental ISR/MPI option repeated");
     experimental_isr_mpi=true;input_config.initial_state_radiation=true;input_config.multiple_parton_interactions=true;continue;
    }
    if(option=="--hadrotype"){
@@ -141,6 +141,7 @@ int main(int argc,char** argv){
    else if(option.rfind("--",0)==0||!replay_directory.empty())throw std::invalid_argument("unknown or repeated runner option");
    else replay_directory=option;
   }
+  if(experimental_isr_mpi&&hadronize_run&&hadrotype!=0)throw std::invalid_argument("experimental ISR/MPI hadronization currently requires HADROTYPE 0");
   if(projection_seen&&!subtraction_radius)throw std::invalid_argument("projection requires --subtraction-radius");
   if(subtraction_radius&&!keep_recoils)throw std::invalid_argument("thermal subtraction requires retained recoils");
   if(!replay_directory.empty()&&!std::filesystem::create_directory(replay_directory))throw std::runtime_error("replay directory must be new");
@@ -220,8 +221,8 @@ int main(int argc,char** argv){
     if(!keep_recoils)for(const auto& node:prepared.state.particles())if(node.particle.status==3)prepared.state.at(node.particle.id).particle.status=22;
     const auto cascade_draws=random.checkpoint();
     std::vector<jewel::GeneratorParticle> hadron_input;std::optional<jewel::HadronizedSnapshot> hadrons;
-    if(hadronizer){stage="string construction";hadron_input=hadrotype==0?jewel::prepare_vacuum_hadronization(prepared.state,keep_recoils):jewel::prepare_minimum_hadronization(prepared.state,branching,random,medium_config.max_rapidity,keep_recoils);
-     stage="hadronization";hadrons=hadronizer->hadronize(hadron_input);if(!hadrons)throw std::runtime_error("Pythia8 hadronization failed");}
+    if(hadronizer){stage="string construction";hadron_input=experimental_isr_mpi?jewel::prepare_native_hadronization(prepared.state,hard->junctions,keep_recoils):hadrotype==0?jewel::prepare_vacuum_hadronization(prepared.state,keep_recoils):jewel::prepare_minimum_hadronization(prepared.state,branching,random,medium_config.max_rapidity,keep_recoils);
+     stage="hadronization";hadrons=hadronizer->hadronize(hadron_input,experimental_isr_mpi?hard->junctions:std::vector<jewel::GeneratorJunction>{});if(!hadrons)throw std::runtime_error("Pythia8 hadronization failed");}
     std::optional<jewel::SubtractionResult> subtracted;
     const auto subtraction_seed=static_cast<std::uint64_t>(seed)+2000000+100*attempt;
     jewel::SplitMixRandom subtraction_random(subtraction_seed);
@@ -273,6 +274,8 @@ int main(int argc,char** argv){
      for(std::size_t i=0;i<hadron_input.size();++i){if(i)out<<',';int source=hadron_input[i].source_index;
       if(source<0)out<<"null";else out<<prepared.state.particles().at(source).particle.id;}out<<']';}
     if(hadrons){out<<",\"hadronization_input\":[";comma=false;for(const auto& p:hadron_input){if(comma)out<<',';comma=true;generator_particle(out,p);}
+     out<<"],\"hadronization_junctions\":[";comma=false;
+     if(experimental_isr_mpi)for(const auto& j:hard->junctions){if(comma)out<<',';comma=true;out<<"{\"kind\":"<<j.kind<<",\"colours\":["<<j.colours[0]<<','<<j.colours[1]<<','<<j.colours[2]<<"]}";}
      out<<"],\"hadronized_particles\":[";comma=false;for(const auto& p:hadrons->particles){if(comma)out<<',';comma=true;generator_particle(out,p);}
      out<<"],\"hadronization_sources\":[";comma=false;for(auto id:hadrons->input_sources){if(comma)out<<',';comma=true;out<<id;}out<<']';}out<<"}\n";
    }catch(const std::domain_error& error){++failed;failed_weight+=hard->weight;out<<"{\"type\":\"evolution_failure\",\"attempt\":"<<attempt<<",\"impact_parameter_fm\":"<<event_b<<",\"centrality_fraction\":";if(event_centrality)out<<*event_centrality;else out<<"null";out<<",\"weight\":"<<hard->weight<<",\"stage\":"<<std::quoted(stage)<<",\"reason\":"<<std::quoted(error.what())<<",\"draws\":"<<random.checkpoint()<<"}\n";

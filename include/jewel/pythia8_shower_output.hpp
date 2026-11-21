@@ -9,6 +9,10 @@ namespace jewel {
 // Stable IDs/colour/vertices come from native sources, not CLEANUP's stale slots.
 std::vector<GeneratorParticle> prepare_vacuum_hadronization(const ShowerState&,
  bool hadronize_recoils=true,bool compress=true);
+// Native Pythia8 topology boundary: preserve all final colour tags and explicit
+// outgoing junctions (kinds 1/2). No Pythia6 string ordering or colour repair.
+std::vector<GeneratorParticle> prepare_native_hadronization(const ShowerState&,
+ const std::vector<GeneratorJunction>&,bool hadronize_recoils=true);
 // HADROTYPE=1: IDs are local to the ordered output; source_index identifies the
 // native input slot, or -1 for artificial endpoints. Does not mutate state.
 std::vector<GeneratorParticle> prepare_minimum_hadronization(const ShowerState&,

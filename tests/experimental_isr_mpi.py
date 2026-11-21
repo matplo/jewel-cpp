@@ -1,5 +1,5 @@
 """Experimental full-input runner must preserve settings, ledger and replay."""
-import json,subprocess,sys,tempfile
+import collections,json,math,subprocess,sys,tempfile
 from pathlib import Path
 runner,probe,hadron_runner=[str(Path(p).resolve()) for p in sys.argv[1:]]
 with tempfile.TemporaryDirectory() as tmp:
@@ -23,7 +23,36 @@ with tempfile.TemporaryDirectory() as tmp:
     medium=[json.loads(line) for line in medium_output.open()]
     assert medium[-1]['accepted']==20 and medium[-1]['evolution_failures']==0
     assert [r['attempt'] for r in medium if r['type']=='event']==list(range(1,21))
-    for executable,options in [(runner,['--experimental-isr-mpi','--experimental-isr-mpi']),(hadron_runner,['--experimental-isr-mpi'])]:
+    # Exercise the real cascade -> explicit junction -> Pythia8 boundary.
+    # Six includes a known malformed splitting; retain it in the failure ledger.
+    hadron_output=root/'hadrons.jsonl'
+    subprocess.run([hadron_runner,str(hadron_output),'6','2600417','vacuum','--experimental-isr-mpi'],check=True,capture_output=True,timeout=90)
+    hadrons=[json.loads(line) for line in hadron_output.open()]
+    assert hadrons[-1]['attempts']==6 and hadrons[-1]['accepted']==5
+    failures=[r for r in hadrons if r['type']=='evolution_failure']
+    assert len(failures)==1 and failures[0]['attempt']==6
+    assert 'unbalanced native colour/junction tag' in failures[0]['reason']
+    assert hadrons[-1]['accepted_weight']+hadrons[-1]['failed_weight']==hadrons[-1]['generator_weight_sum']
+    junction_events=0
+    for e in hadrons:
+        if e['type']!='event':continue
+        junction_events+=bool(e['hadronization_junctions'])
+        counts=collections.defaultdict(lambda:[0,0])
+        for p in e['hadronization_input']:
+            for side,key in enumerate(['colour','anticolour']):
+                if p[key]:counts[p[key]][side]+=1
+        for j in e['hadronization_junctions']:
+            assert j['kind'] in [1,2]
+            for tag in j['colours']:counts[tag][1 if j['kind']==1 else 0]+=1
+        assert all(v==[1,1] for v in counts.values())
+        final=[p for p in e['hadronized_particles'] if p['final']]
+        assert final
+        for component in range(4):
+            before=math.fsum(p['momentum'][component] for p in e['hadronization_input'])
+            after=math.fsum(p['momentum'][component] for p in final)
+            assert math.isclose(before,after,rel_tol=1e-9,abs_tol=1e-7),(before,after)
+    assert junction_events==2
+    for executable,options in [(runner,['--experimental-isr-mpi','--experimental-isr-mpi']),(hadron_runner,['--experimental-isr-mpi','--hadrotype','1'])]:
         invalid=root/'invalid.jsonl'
         result=subprocess.run([executable,str(invalid),'1','2600417','vacuum',*options],capture_output=True,timeout=10)
         assert result.returncode!=0 and not invalid.exists()

@@ -32,6 +32,29 @@ std::vector<GeneratorParticle> prepare_vacuum_hadronization(const ShowerState& s
  for(const auto& entry:colours)if(entry.second!=std::pair<int,int>{1,1})throw std::domain_error("unbalanced or repeated hadronization colour tag");
  return output;
 }
+std::vector<GeneratorParticle> prepare_native_hadronization(const ShowerState& state,
+ const std::vector<GeneratorJunction>& junctions,bool recoils){
+ state.validate();if(state.discarded)throw std::domain_error("discarded native hadronization input");
+ std::vector<GeneratorParticle> output;std::map<int,std::pair<int,int>> colours;int slot=-1;
+ for(const auto& node:state.particles()){
+  ++slot;const auto& p=node.particle;
+  if(p.status==1||p.status==2)throw std::domain_error("unfinished native shower before hadronization");
+  if((p.status!=3&&p.status!=4&&p.status!=5)||(!recoils&&p.status==3))continue;
+  GeneratorParticle out;out.id=p.id;out.source_index=slot;out.pdg=p.pdg;out.status=23;out.final=true;
+  out.colour=p.colour;out.anticolour=p.anticolour;out.momentum=p.momentum;out.mass=node.record_mass;
+  out.vertex_mm={p.production.x*1e-12,p.production.y*1e-12,p.production.z*1e-12,p.production.t*1e-12};
+  if(out.colour)++colours[out.colour].first;if(out.anticolour)++colours[out.anticolour].second;output.push_back(out);
+ }
+ for(const auto& j:junctions){
+  if(j.kind!=1&&j.kind!=2)throw std::domain_error("native boundary requires outgoing junction kind 1 or 2");
+  for(auto tag:j.colours){if(tag<=0)throw std::domain_error("invalid native junction colour");
+   if(j.kind==1)++colours[tag].second;else ++colours[tag].first;
+  }
+ }
+ for(const auto& entry:colours)if(entry.second!=std::pair<int,int>{1,1})throw std::domain_error("unbalanced native colour/junction tag");
+ if(output.empty())throw std::domain_error("empty native hadronization input");
+ return output;
+}
 std::vector<GeneratorParticle> prepare_minimum_hadronization(const ShowerState& state,
  const BranchingSampler& sampler,Random& random,double eta,bool recoils,bool compress){
  state.validate();if(state.discarded)throw std::domain_error("discarded hadronization input");
