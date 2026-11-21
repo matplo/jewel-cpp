@@ -213,19 +213,24 @@ int main() {
     jewel::Momentum p;jewel::SpaceTime v;double mass;int pdg;
     if(!(std::cin>>p.px>>p.py>>p.pz>>p.energy>>mass>>pdg>>v.x>>v.y>>v.z>>v.t))throw std::runtime_error("invalid radiation query");
     std::cout<<rates->no_initial_radiation(p,mass,pdg,v)<<'\n';
-   } else if(op=="REJECT"||op=="SPLIT") {
+   } else if(op=="REJECT"||op=="SPLIT"||op=="ISPLIT") {
     if(!branching)throw std::runtime_error("BCONFIG required");
     std::size_t n; jewel::ParticleId mother;std::cin>>n>>mother;
     if(n>23000||n==0)throw std::runtime_error("invalid event size");
     jewel::ShowerState state;double formation=1;
-    if(op=="SPLIT")std::cin>>formation>>state.colour_max;
+    if(op!="REJECT")std::cin>>formation>>state.colour_max;
+    jewel::InitialSplitRequest initial;bool invalid=false;
+    if(op=="ISPLIT"){
+     initial.formation_factor=formation;
+     std::cin>>initial.fraction>>initial.transfer_sum>>initial.virtuality>>initial.incoming_flavour>>initial.time>>initial.radiation_time>>initial.mass_scale;
+    }
     std::vector<std::array<jewel::ParticleId,2>> links;
     for(std::size_t i=0;i<n;++i){
      jewel::ShowerParticle a;std::array<jewel::ParticleId,2> daughters;auto& p=a.particle.momentum;auto& v=a.generator_vertex;auto& x=a.particle.production;int qq,ao;
      std::cin>>a.particle.status>>a.particle.pdg>>a.parent>>daughters[0]>>daughters[1]
       >>p.px>>p.py>>p.pz>>p.energy>>a.record_mass>>v.x>>v.y>>v.z>>v.t
       >>x.x>>x.y>>x.z>>x.t>>a.decay_time>>a.evolution_time>>a.fraction>>a.angle>>qq>>ao;
-     if(op=="SPLIT")std::cin>>a.particle.colour>>a.particle.anticolour;
+     if(op!="REJECT")std::cin>>a.particle.colour>>a.particle.anticolour;
      if(!std::cin)throw std::runtime_error("bad shower record");
      a.quark_pair=qq!=0;a.angular_required=ao!=0;state.append(a);links.push_back(daughters);
     }
@@ -234,11 +239,16 @@ int main() {
     if(count>100000)throw std::runtime_error("bad replay size");
     std::vector<double> tape(count);for(auto& x:tape)if(!(std::cin>>x))throw std::runtime_error("short replay");
     jewel::ReplayRandom random(tape);
-    if(op=="SPLIT")jewel::make_splitting(state,mother,*branching,*medium,formation,random);
+    if(op=="ISPLIT"){
+     try{initial.fraction=jewel::make_initial_splitting(state,mother,initial,*branching,random).fraction;}
+     catch(const std::domain_error&){invalid=true;}
+    }
+    else if(op=="SPLIT")jewel::make_splitting(state,mother,*branching,*medium,formation,random);
     else jewel::reject_splitting(state,mother,*branching,random);
-    state.validate();
+    if(!invalid)state.validate();
     std::cout<<int(state.discarded)<<' '<<random.checkpoint();
-    if(op=="SPLIT")std::cout<<' '<<state.particles().size()<<' '<<state.colour_max;
+    if(op!="REJECT")std::cout<<' '<<state.particles().size()<<' '<<state.colour_max;
+    if(op=="ISPLIT")std::cout<<' '<<initial.fraction<<' '<<invalid;
     std::cout<<'\n';
     for(const auto& a:state.particles()){
      auto p=a.particle.momentum;auto v=a.generator_vertex;auto x=a.particle.production;
@@ -247,7 +257,7 @@ int main() {
       <<v.x<<' '<<v.y<<' '<<v.z<<' '<<v.t<<' '<<x.x<<' '<<x.y<<' '<<x.z<<' '<<x.t<<' '
       <<a.decay_time<<' '<<a.evolution_time<<' '<<a.fraction<<' '<<a.angle<<' '
       <<int(a.quark_pair)<<' '<<int(a.angular_required);
-     if(op=="SPLIT")std::cout<<' '<<a.particle.colour<<' '<<a.particle.anticolour;
+     if(op!="REJECT")std::cout<<' '<<a.particle.colour<<' '<<a.particle.anticolour;
      std::cout<<'\n';
     }
    } else if(op=="TIME") {

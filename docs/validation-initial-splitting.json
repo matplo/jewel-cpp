@@ -1,0 +1,1736 @@
+{
+  "scope": "Full MAKEINSPLIT calls",
+  "cases": 840,
+  "finite_cases": 781,
+  "scalars": 51044,
+  "max_absolute_error": 5.329070518200751e-15,
+  "max_draws": 80.0,
+  "coverage": {
+    "accepted": 501,
+    "timelike_or_massless_continuing": 72,
+    "spacelike_continuing": 429,
+    "massive_emission": 207,
+    "rejected": 280
+  },
+  "nonfinite_reference": [
+    {
+      "case": 1,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 3,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.4,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 5,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 7,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 9,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.4,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 11,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 23,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 41,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 2,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 47,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 2,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 53,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 2,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 71,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 2.3,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 107,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 8,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 113,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 1,
+        "mass": 8,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 121,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 125,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 127,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 131,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 137,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 143,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 203,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 2.3,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 209,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 2.3,
+        "virtuality": 12,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 227,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": -1,
+        "mass": 8,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 241,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 245,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 247,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 249,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.4,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 257,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 263,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 293,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 2,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 347,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 21,
+        "mass": 8,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 363,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.4,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 377,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 0,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 407,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 2,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 413,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 2,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 431,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 2.3,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 443,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 2.3,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 473,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": 1,
+        "mass": 8,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 481,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 491,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 503,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 0,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 521,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 2,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 527,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 2,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 551,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 2.3,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 557,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 2.3,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 599,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 21,
+        "typ": -1,
+        "mass": 8,
+        "virtuality": 12,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          10,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 601,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 617,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 641,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 21,
+        "mass": 2,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 677,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 21,
+        "mass": 2.3,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 707,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": 1,
+        "typ": 21,
+        "mass": 8,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          10,
+          0
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 721,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.05,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 723,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 0,
+        "x": 0.4,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 729,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.4,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 731,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 737,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 0,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          12.0,
+          16.0,
+          34.64101615137754,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 761,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 2,
+        "virtuality": 1,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 767,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 2,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.984990613262907,
+          15.979987484350543,
+          34.597687784012386,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 797,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 2.3,
+        "virtuality": 3.7,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.980146075904083,
+          15.973528101205444,
+          34.5837028092713,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    },
+    {
+      "case": 833,
+      "input": {
+        "nf": 3,
+        "angular": 0,
+        "pdg": -1,
+        "typ": 21,
+        "mass": 8,
+        "virtuality": 4,
+        "x": 0.9,
+        "status": 2,
+        "p": [
+          11.757550765359253,
+          15.67673435381234,
+          33.94112549695428,
+          40.0
+        ],
+        "colours": [
+          0,
+          11
+        ]
+      },
+      "cpp_rejected": true
+    }
+  ],
+  "failures": [],
+  "relative_tolerance": 2e-12,
+  "absolute_tolerance": 2e-13,
+  "input_sha256": "471425233d2e99c810d42142e7911bf4b6a48940b796c5c7fe3a7addade97117",
+  "sources": {
+    "medium-source.json": {
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "ODEINT": [
+            8315,
+            8347
+          ],
+          "RKSTEPPER": [
+            8354,
+            8400
+          ],
+          "RK4STEP": [
+            8407,
+            8416
+          ],
+          "EI": [
+            7872,
+            7920
+          ],
+          "EIXINT": [
+            8282,
+            8308
+          ],
+          "INTPQGLOW": [
+            7784,
+            7802
+          ],
+          "INTPQGHIGH": [
+            7809,
+            7827
+          ],
+          "SCATPRIMFUNC": [
+            7692,
+            7710
+          ],
+          "GETINSPLITI": [
+            6837,
+            6922
+          ],
+          "GETINSUDAKOV": [
+            6545,
+            6582
+          ],
+          "INSUDAINT": [
+            8235,
+            8275
+          ],
+          "GETINSUDARED": [
+            7284,
+            7359
+          ],
+          "GETINSUDAFAST": [
+            7247,
+            7278
+          ],
+          "SPLITFNCINT": [
+            7994,
+            8075
+          ],
+          "GETSPLITI": [
+            6692,
+            6831
+          ],
+          "GETSUDAKOV": [
+            6486,
+            6539
+          ],
+          "PQQ": [
+            7927,
+            7931
+          ],
+          "PGG": [
+            7949,
+            7953
+          ],
+          "PQG": [
+            7960,
+            7964
+          ],
+          "ALPHAS": [
+            7971,
+            7987
+          ],
+          "GETPDF": [
+            6928,
+            7022
+          ],
+          "GETPDFXINTEXACT": [
+            7096,
+            7129
+          ],
+          "PDFINT": [
+            8082,
+            8135
+          ],
+          "GETPDFXINT": [
+            7027,
+            7090
+          ],
+          "PGQ": [
+            7938,
+            7942
+          ],
+          "XSECINT": [
+            8142,
+            8228
+          ],
+          "GETXSECINT": [
+            7135,
+            7241
+          ],
+          "GETSSCAT": [
+            7365,
+            7458
+          ],
+          "GETMASS": [
+            7465,
+            7625
+          ],
+          "GENERATEZ": [
+            7632,
+            7685
+          ],
+          "GETDELTAT": [
+            8423,
+            8554
+          ],
+          "REJECTSPLITTING": [
+            3688,
+            3865
+          ],
+          "MAKESPLITTING": [
+            3288,
+            3682
+          ],
+          "GETNEWMASS": [
+            5253,
+            5360
+          ],
+          "GETPNORAD1": [
+            5366,
+            5431
+          ],
+          "GETQVEC": [
+            5437,
+            5638
+          ],
+          "GETT": [
+            7834,
+            7865
+          ],
+          "DOFISTATESCAT": [
+            5080,
+            5247
+          ],
+          "DOKINEMATICS": [
+            5643,
+            6452
+          ],
+          "MAKEINSPLIT": [
+            3871,
+            4126
+          ]
+        }
+      },
+      "medium-simple.f.stock": {
+        "sha256": "a5f5a16d984cf84d28c2c789f72557a64b85cb6ae51bc9f395b1f2a7f4e2bd38",
+        "routines": {
+          "GETTEMP": [
+            473,
+            523
+          ],
+          "GETMD": [
+            430,
+            438
+          ],
+          "GETMS": [
+            442,
+            446
+          ],
+          "GETNEFF": [
+            450,
+            469
+          ],
+          "NPART": [
+            661,
+            674
+          ],
+          "NTHICK": [
+            678,
+            716
+          ],
+          "CALCTA": [
+            720,
+            758
+          ],
+          "MEDDERIV": [
+            808,
+            829
+          ],
+          "CALCXSECTION": [
+            762,
+            804
+          ],
+          "MEDNEXTEVT": [
+            207,
+            243
+          ],
+          "PICKVTX": [
+            255,
+            278
+          ],
+          "GETSCATTERER": [
+            292,
+            368
+          ],
+          "GETTEMPMAX": [
+            527,
+            542
+          ],
+          "GETMDMAX": [
+            546,
+            554
+          ],
+          "GETMDMIN": [
+            558,
+            576
+          ],
+          "GETMSMAX": [
+            580,
+            584
+          ],
+          "GETNATMDMIN": [
+            588,
+            612
+          ],
+          "GETLTIMEMAX": [
+            616,
+            634
+          ],
+          "GETNEFFMAX": [
+            638,
+            657
+          ],
+          "AVSCATCEN": [
+            371,
+            403
+          ],
+          "MAXSCATCEN": [
+            406,
+            426
+          ]
+        }
+      },
+      "meix.f": {
+        "sha256": "a3c069469578ae216ff5c6333cb4781e099af6f48b3c9a912c1f5d6b3c70f817",
+        "routines": {
+          "EIX": [
+            7,
+            38
+          ]
+        }
+      }
+    },
+    "kinematics-source.json": {
+      "pythia6425mod-lhapdf6.f": {
+        "sha256": "9fcfed664e4ac34462aa63679f2dd3e935c9f6f63f7cd6a785b73ccb82740ed9",
+        "routines": {
+          "PYANGL": [
+            74441,
+            74466
+          ],
+          "PYROBO": [
+            74638,
+            74735
+          ],
+          "PYP": [
+            76081,
+            76156
+          ]
+        }
+      },
+      "jewel-2.6.0.f.stock": {
+        "sha256": "78b39f19513c3633c00d45b22f0803c0873a93d98a536d66efc9277255bf5b81",
+        "routines": {
+          "GETPOSITION": [
+            8807,
+            8826
+          ]
+        }
+      }
+    }
+  },
+  "executables": {
+    "jewel-medium-probe": "504783190e63f3bc984157d73faac22a348d17ab55441b2a6f047c08b2a177b8",
+    "jewel-medium-reference": "ec28f49c85425c338df6bb4a865a948ee1fddc654aa44d8159510263b8c3b235"
+  }
+}

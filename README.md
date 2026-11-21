@@ -508,3 +508,17 @@ wholly finite reference calls and separately records 30 nonfinite reference
 cases and 12 guarded/exhausted runs. These are explicit limitations, not successful
 collision outputs. This completes the collision-application component; complete
 shower evolution and final-event validation are still in progress.
+
+## Milestone 2m: initial-state split construction
+
+`make_initial_splitting()` in `jewel/shower.hpp` implements MAKEINSPLIT, including
+all four flavour transitions, colour topology, signed continuing virtuality,
+emission-mass fallback, returned X=1 rejection, production points and lifetimes.
+It returns stable daughter IDs and the updated fraction; rejected splits append
+no records. The caller supplies the physical split request and a sampler with
+matching run settings.
+
+[Full-routine validation](docs/validation-initial-splitting.md) checks 781 finite
+cases and explicitly records 59 reference NaN cases rejected by C++. This is the
+initial-state split constructor; initial-state/coherent evolution and complete
+shower scheduling remain outstanding.

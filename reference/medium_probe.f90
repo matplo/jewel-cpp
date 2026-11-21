@@ -92,6 +92,8 @@ program mediumprobe
  logical writescatcen,writedummies,dosubtraction,cohflaglogical
  common /storescatcen/ nscatcen,maxnscatcen,scatflav,scatcen,writescatcen,writedummies,dosubtraction,putonshell,rsub
  common /storedummies/ dummies
+ double precision insvirt,instaurad
+ integer instype
  integer seqfirst,seqlast
  logical seqretry
  logical above_cutoff
@@ -402,9 +404,10 @@ program mediumprobe
    errl=1
    collision=getdeltat(1,start,dt,elapsed,elastic_flag/=0)
    write(*,'(I2,1X,ES26.17E3,1X,I8)')merge(1,0,collision),elapsed,cursor
-  case('REJECT','SPLIT')
-   if(trim(op)=='SPLIT')then
+  case('REJECT','SPLIT','ISPLIT')
+   if(trim(op)/='REJECT')then
     read(*,*)n,mother,ftfac,colmax
+    if(trim(op)=='ISPLIT')read(*,*)energyfraction,dt,insvirt,instype,nowtime,instaurad,scalefacm
     k=0
     p=0
     vertices=0
@@ -425,7 +428,7 @@ program mediumprobe
    paru(1)=3.141592653589793d0
    discard=.false.
    do i=1,n
-    if(trim(op)=='SPLIT')then
+    if(trim(op)/='REJECT')then
      read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i),qflag,aflag,trip(i),anti(i)
     else
      read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i),qflag,aflag
@@ -437,7 +440,12 @@ program mediumprobe
    if(count<0.or.count>100000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
-   if(trim(op)=='SPLIT')then
+   if(trim(op)=='ISPLIT')then
+    call makeinsplit(mother,energyfraction,dt,insvirt,instype,nowtime,instaurad)
+    initial_flag=merge(0,1,all(ieee_is_finite(p(1:n,:))).and.all(ieee_is_finite(mv(1:n,:))).and. &
+     all(ieee_is_finite(zd(1:n))).and.all(ieee_is_finite(thetad(1:n))))
+    write(*,'(4I8,ES26.17E3,I8)')merge(1,0,discard),cursor,n,colmax,energyfraction,initial_flag
+   else if(trim(op)=='SPLIT')then
     call makesplitting(mother)
     write(*,'(4I8)')merge(1,0,discard),cursor,n,colmax
    else
@@ -445,7 +453,7 @@ program mediumprobe
     write(*,'(2I8)')merge(1,0,discard),cursor
    endif
    do i=1,n
-    if(trim(op)=='SPLIT')then
+    if(trim(op)/='REJECT')then
      write(*,'(5I8,17ES26.17E3,4I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i), &
       merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i)
     else
