@@ -79,4 +79,7 @@ public:
  double nominal_mass(int pdg) const;
 };
 void validate_hard_snapshot(const HardEventSnapshot&);
+// Final copies of the two process outgoing lines in each Pythia subsystem.
+// Uses reciprocal copy ancestry, never momentum ranking.
+std::vector<std::array<ParticleId,2>> subsystem_hard_final_pairs(const HardEventSnapshot&);
 }

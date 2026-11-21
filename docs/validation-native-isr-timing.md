@@ -78,3 +78,9 @@ ctest --test-dir build-pythia8 \
 The native event runner remains ISR/MPI-off pending construction of the full
 surviving record and its ancestry, preparation/virtuality initialization and
 cascade integration. Full jet/substructure agreement has not been established.
+
+
+The probe now uses the reusable [native final-record importer](validation-native-import.md)
+with one process anchor per subsystem. The independent audit reads the recorded
+anchor count when reconstructing native IDs. The earlier attachment results
+above remain the evidence for their recorded source/probe hashes.

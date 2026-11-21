@@ -38,15 +38,27 @@ int main(){
    check(timing_random.checkpoint()==draws);chain_draws.push_back(draws);
   }
   check(timed_emissions==a->isr_emissions.size());
-  jewel::ShowerState native(-1e6);std::map<jewel::ParticleId,jewel::ParticleId> sources;
-  jewel::ShowerParticle anchor;anchor.particle.status=17;native.append(anchor);
-  for(auto it=a->particles.rbegin();it!=a->particles.rend();++it)if(it->final){
-   jewel::ShowerParticle node;node.particle.pdg=it->pdg;node.particle.status=4;node.particle.momentum=it->momentum;node.record_mass=it->mass;
-   node.particle.colour=it->colour;node.particle.anticolour=it->anticolour;
-   node.particle.production={7,8,9,10};node.generator_vertex={1,2,3,4};node.decay_time=42;
-   native.colour_max=std::max({native.colour_max,it->colour,it->anticolour});
-   sources.emplace(native.append(node,true,true),it->id);
+  std::vector<jewel::ParticleId> import_order;
+  for(auto it=a->particles.rbegin();it!=a->particles.rend();++it)if(it->final)import_order.push_back(it->id);
+  auto imported=jewel::import_pythia_final_record(*a,1.2,-.7,20,import_order);
+  auto& native=imported.state;auto& sources=imported.input_sources;
+  check(native.weight==a->weight&&sources.size()==import_order.size()&&imported.junctions.size()==a->junctions.size());
+  for(std::size_t j=0;j<imported.junctions.size();++j)check(imported.junctions[j].kind==a->junctions[j].kind&&imported.junctions[j].colours==a->junctions[j].colours);
+  auto pairs=jewel::subsystem_hard_final_pairs(*a);check(pairs.front()==a->hard_final);
+  for(std::size_t system=0;system<pairs.size();++system){const auto& pair=imported.subsystems[system];
+   check(pair.source_hard==pairs[system]&&pair.index==a->subsystems[system].index&&pair.pt_hat==a->subsystems[system].pt_hat);
+   check(native.at(pair.process_anchor).daughters==pair.hard);
+   for(int side=0;side<2;++side){auto id=pair.hard[side];check(sources.at(id)==pair.source_hard[side]&&native.at(id).parent==pair.process_anchor);
+    check(imported.roles.at(id)==(system==0?jewel::ImportedRole::primary_hard:jewel::ImportedRole::mpi_hard));}
   }
+  for(const auto& [id,source]:sources){auto& node=native.at(id);const auto& original=a->particles[source-1];
+   check(node.particle.status==4&&node.particle.production.x==1.2&&node.particle.production.y==-.7&&node.particle.production.z==0&&node.particle.production.t==0&&node.decay_time==20);
+   check(node.generator_vertex.x==original.vertex_mm[0]*1e12&&node.generator_vertex.y==original.vertex_mm[1]*1e12&&node.generator_vertex.z==original.vertex_mm[2]*1e12&&node.generator_vertex.t==original.vertex_mm[3]*1e12);
+   if(std::find(a->isr_final.begin(),a->isr_final.end(),source)!=a->isr_final.end())check(imported.roles.at(id)==jewel::ImportedRole::isr_emission&&node.parent==0);
+   node.particle.production={7,8,9,10};node.decay_time=42;node.generator_vertex={1,2,3,4};
+  }
+  auto bad_order=import_order;bad_order.back()=bad_order.front();bool bad_import=false;
+  try{jewel::import_pythia_final_record(*a,0,0,20,bad_order);}catch(const std::domain_error&){bad_import=true;}check(bad_import);
   auto native_before=native;std::size_t expected_draws=0;for(auto draws:chain_draws)expected_draws+=draws;
   auto incomplete=sources;incomplete.erase(incomplete.begin());jewel::ReplayRandom unused({.5});bool attachment_rejected=false;
   try{jewel::attach_pythia_isr_times(native,incomplete,*a,timing_chains,{},unused);}catch(const std::domain_error&){attachment_rejected=true;}

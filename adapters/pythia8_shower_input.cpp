@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <set>
+#include <cmath>
 namespace jewel {
 PreparedDijet prepare_pythia_dijet(const HardEventSnapshot& input,HardInitializationConfig config,
  const BranchingSampler& sampler,Random& random){
@@ -76,6 +77,46 @@ std::vector<IsrTimingAttachment> attach_pythia_isr_times(ShowerState& state,
  }
  require(binding==bindings.size(),"ISR timing output count mismatch");working.validate();
  state=std::move(working);return bindings;
+}
+
+ImportedPythiaRecord import_pythia_final_record(const HardEventSnapshot& input,
+ double x,double y,double lifetime,const std::vector<ParticleId>& requested_order){
+ auto require=[](bool ok,const char* why){if(!ok)throw std::domain_error(why);};
+ auto pairs=subsystem_hard_final_pairs(input);
+ require(std::isfinite(x)&&std::isfinite(y)&&std::isfinite(lifetime)&&lifetime>=0,"invalid imported record spacetime");
+ std::vector<ParticleId> order;std::set<ParticleId> finals;
+ for(const auto& p:input.particles)if(p.final){order.push_back(p.id);finals.insert(p.id);}
+ if(!requested_order.empty()){
+  require(requested_order.size()==finals.size()&&std::set<ParticleId>(requested_order.begin(),requested_order.end())==finals,"import order is not a complete final-record permutation");
+  order=requested_order;
+ }
+ ImportedPythiaRecord result;result.state.weight=input.weight;result.junctions=input.junctions;
+ result.scratch=result.state.append({});
+ std::map<ParticleId,std::pair<std::size_t,std::size_t>> hard_owner;
+ for(std::size_t system=0;system<pairs.size();++system){
+  ShowerParticle anchor;anchor.particle.status=17;
+  auto id=result.state.append(anchor,true,true);
+  result.subsystems.push_back({input.subsystems[system].index,id,{},pairs[system],input.subsystems[system].pt_hat});
+  for(std::size_t side=0;side<2;++side)require(hard_owner.emplace(pairs[system][side],std::make_pair(system,side)).second,"hard final belongs to multiple subsystems");
+ }
+ std::set<ParticleId> isr(input.isr_final.begin(),input.isr_final.end());
+ for(auto source:order){const auto& p=input.particles[source-1];ShowerParticle node;
+  node.particle.pdg=p.pdg;node.particle.status=4;node.particle.momentum=p.momentum;node.record_mass=p.mass;
+  node.particle.colour=p.colour;node.particle.anticolour=p.anticolour;
+  node.particle.production={x,y,0,0};node.decay_time=lifetime;
+  node.generator_vertex={p.vertex_mm[0]*1e12,p.vertex_mm[1]*1e12,p.vertex_mm[2]*1e12,p.vertex_mm[3]*1e12};
+  auto hard=hard_owner.find(source);ImportedRole role=ImportedRole::remnant;
+  if(hard!=hard_owner.end()){
+   require(!isr.count(source),"hard final also labeled as ISR emission");
+   auto system=hard->second.first;node.parent=result.subsystems[system].process_anchor;
+   role=system==0?ImportedRole::primary_hard:ImportedRole::mpi_hard;
+  }else if(isr.count(source))role=ImportedRole::isr_emission;
+  result.state.colour_max=std::max({result.state.colour_max,p.colour,p.anticolour});
+  auto id=result.state.append(node,true,true);result.input_sources.emplace(id,source);result.roles.emplace(id,role);
+  if(hard!=hard_owner.end())result.subsystems[hard->second.first].hard[hard->second.second]=id;
+ }
+ for(const auto& system:result.subsystems)result.state.connect(system.process_anchor,system.hard[0],system.hard[1]);
+ result.state.validate();return result;
 }
 
 }

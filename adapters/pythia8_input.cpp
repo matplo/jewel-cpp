@@ -148,12 +148,21 @@ std::optional<HardEventSnapshot> Pythia8Input::next(){
   for(int j=0;j<p.partonSystems.sizeOut(i);++j){auto id=static_cast<ParticleId>(p.partonSystems.getOut(i,j)+1);system.outgoing.push_back(id);system.outgoing_final.push_back(final_copy(result,id));}
   for(const auto& node:result.particles)if(std::abs(node.status)==23||std::abs(node.status)==33){
    auto final=final_copy(result,node.id);
-   if(std::find(system.outgoing_final.begin(),system.outgoing_final.end(),final)!=system.outgoing_final.end())system.process_outgoing.push_back(node.id);
+   if(std::find(system.outgoing_final.begin(),system.outgoing_final.end(),final)!=system.outgoing_final.end()){
+    require(final==static_cast<ParticleId>(p.event[node.id-1].iBotCopy()+1),"Pythia subsystem hard-copy navigation disagrees");
+    system.process_outgoing.push_back(node.id);
+   }
   }
   result.subsystems.push_back(std::move(system));
  }
  for(int i=0;i<p.event.sizeJunction();++i)result.junctions.push_back({p.event.kindJunction(i),{p.event.colJunction(i,0),p.event.colJunction(i,1),p.event.colJunction(i,2)}});
  validate_hard_snapshot(result);++impl_->returned;return result;
+}
+std::vector<std::array<ParticleId,2>> subsystem_hard_final_pairs(const HardEventSnapshot& input){
+ validate_hard_snapshot(input);std::vector<std::array<ParticleId,2>> result;
+ for(const auto& system:input.subsystems)result.push_back({final_copy(input,system.process_outgoing[0]),final_copy(input,system.process_outgoing[1])});
+ require(!result.empty()&&result.front()==input.hard_final,"primary subsystem hard-copy mismatch");
+ return result;
 }
 GeneratorStatistics Pythia8Input::statistics() const {
  const auto& i=impl_->engine.info;

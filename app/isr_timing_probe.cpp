@@ -25,17 +25,13 @@ int main(int argc,char** argv){try{
   std::vector<std::array<jewel::IsrTimingChain,2>> systems;
   try{systems=jewel::prepare_subsystem_isr_timing(*e,[&](int pdg){return generator.nominal_mass(pdg);});}
   catch(const std::domain_error& error){out<<"{\"type\":\"mapping_failure\",\"attempt\":"<<attempt<<",\"reason\":"<<std::quoted(error.what())<<"}\n";continue;}
-  jewel::ShowerState native(-1e6);native.weight=e->weight;
-  std::map<jewel::ParticleId,jewel::ParticleId> sources,native_for;
-  jewel::ShowerParticle anchor;anchor.particle.status=17;native.append(anchor);
-  for(auto it=e->particles.rbegin();it!=e->particles.rend();++it)if(it->final){
-   jewel::ShowerParticle node;node.particle.pdg=it->pdg;node.particle.status=4;node.particle.momentum=it->momentum;node.record_mass=it->mass;
-   node.particle.colour=it->colour;node.particle.anticolour=it->anticolour;
-   node.particle.production={7,8,9,10};node.decay_time=42;
-   node.generator_vertex={it->vertex_mm[0]*1e12,it->vertex_mm[1]*1e12,it->vertex_mm[2]*1e12,it->vertex_mm[3]*1e12};
-   native.colour_max=std::max({native.colour_max,it->colour,it->anticolour});
-   auto id=native.append(node,true,true);sources.emplace(id,it->id);native_for.emplace(it->id,id);
-  }
+  std::vector<jewel::ParticleId> import_order;
+  for(auto it=e->particles.rbegin();it!=e->particles.rend();++it)if(it->final)import_order.push_back(it->id);
+  auto imported=jewel::import_pythia_final_record(*e,1.2,-.7,20,import_order);
+  auto& native=imported.state;const auto& sources=imported.input_sources;
+  std::map<jewel::ParticleId,jewel::ParticleId> native_for;
+  for(const auto& [id,source]:sources){native_for.emplace(source,id);auto& node=native.at(id);node.particle.production={7,8,9,10};node.decay_time=42;}
+  std::array<std::size_t,4> role_counts{};for(const auto& entry:imported.roles)++role_counts[static_cast<std::size_t>(entry.second)];
   std::size_t count_draws=2*systems.size();for(const auto& pair:systems)for(const auto& c:pair)count_draws+=2*c.steps.size();
   jewel::ReplayRandom attach_random(std::vector<double>(count_draws,.5));jewel::IsrTimeConfig attach_config;attach_config.x=1.2;attach_config.y=-.7;attach_config.lifetime=20;
   auto bindings=jewel::attach_pythia_isr_times(native,sources,*e,systems,attach_config,attach_random);
@@ -56,7 +52,7 @@ int main(int argc,char** argv){try{
     for(const auto& step:chain.steps){negative+=step.beam_side==0&&step.incoming.momentum.energy<0;zero_mass_offshell+=step.emitted.record_mass==0&&step.emitted.nominal_mass!=0;}}
    out<<"{\"type\":\"system\",\"attempt\":"<<attempt<<",\"subsystem\":"<<system<<",\"branches\":"<<branches<<",\"negative_incoming_energies\":"<<negative<<",\"zero_mass_offshell_emissions\":"<<zero_mass_offshell<<",\"maximum_emission_copy_error_gev\":"<<closure<<",\"draws\":"<<rng.checkpoint()<<",\"timing_error\":";
    if(failure.empty())out<<"null";else out<<std::quoted(failure);
-   out<<",\"fixture\":";
+   out<<",\"import_role_counts\":["<<role_counts[0]<<','<<role_counts[1]<<','<<role_counts[2]<<','<<role_counts[3]<<"],\"native_weight\":"<<native.weight<<",\"native_anchor_count\":"<<1+imported.subsystems.size()<<",\"source_hard_pair\":["<<imported.subsystems[system].source_hard[0]<<','<<imported.subsystems[system].source_hard[1]<<"],\"native_hard_pair\":["<<imported.subsystems[system].hard[0]<<','<<imported.subsystems[system].hard[1]<<"],\"fixture\":";
    if(!failure.empty()){out<<"null}\n";continue;}
    out<<fixture++<<",\"emissions\":[";bool first=true;
    for(int side=0;side<2;++side)for(std::size_t j=0;j<times[side].size();++j){const auto& t=times[side][j];if(!first)out<<',';first=false;
