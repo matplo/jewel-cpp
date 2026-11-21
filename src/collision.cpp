@@ -140,12 +140,12 @@ CollisionPair detail::scatter_pair_candidate(ShowerParticle projectile,ShowerPar
 }
 
 namespace jewel {
-void finish_collision(CollisionPair& result,int& colour_max,RecoilStorage& storage,
+void detail::finish_collision_candidate(CollisionPair& result,int& colour_max,RecoilStorage& storage,
  CollisionFinalizationConfig config,CollisionStepTiming timing,const Medium& medium,Random& random){
  for(double v:{config.formation_factor,config.soft_recoil_cut,config.hard_recoil_cut,timing.total_mass_change,
   timing.fraction,timing.first_decay_time,timing.coherent_end_time,timing.next_transfer_time,timing.transfer_time})
   if(!std::isfinite(v))throw std::domain_error("nonfinite collision finalization input");
- if(config.formation_factor<=0||colour_max<0||timing.fraction<0||timing.fraction>=1)
+ if(config.formation_factor<=0||colour_max<0)
   throw std::domain_error("invalid collision finalization input");
  if(result.rejected)return;
  auto& a=result.incoming;auto& b=result.centre;auto& c=result.outgoing;auto& d=result.recoil;
@@ -205,6 +205,14 @@ void finish_collision(CollisionPair& result,int& colour_max,RecoilStorage& stora
 }
 
 namespace jewel {
+// The public single-step API retains its strict physical-fraction contract.
+// Full sequences use the private candidate path so source retries can discard
+// temporary invalid records before apply_collisions validates publication.
+void finish_collision(CollisionPair& result,int& colour_max,RecoilStorage& storage,
+ CollisionFinalizationConfig config,CollisionStepTiming timing,const Medium& medium,Random& random){
+ if(timing.fraction<0||timing.fraction>=1)throw std::domain_error("invalid collision finalization input");
+ detail::finish_collision_candidate(result,colour_max,storage,config,timing,medium,random);
+}
 CollisionPair scatter_pair(ShowerParticle projectile,ShowerParticle scratch,const TransferRecord& transfer,
  double total,double remaining,double target,double delta,CollisionConfig config,
  const BranchingSampler& sampler,const Medium& medium,Random& random,const ShowerParticle* original,std::optional<double> requested){

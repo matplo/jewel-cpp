@@ -65,6 +65,20 @@ int main(){
   check(isolated.at(leg_id).daughters==std::array<jewel::ParticleId,2>{0,0});
   check(storage.used==0&&storage.records.empty()&&exhausted.checkpoint()==1);
  }
+ // A negative sentinel may exist in private candidates, but unrecovered
+ // nonfinite angles must never publish records or recoil bookkeeping.
+ {
+  jewel::ShowerState isolated;isolated.colour_max=20;
+  auto scratch_id=isolated.append(scratch),leg_id=isolated.append(leg);
+  jewel::TransferHistory kicks=history;for(auto& r:kicks.records)r.invariant=-.2;
+  jewel::RecoilStorage storage;storage.capacity=3;
+  auto invalid_fraction=request;invalid_fraction.fraction=-1;
+  jewel::ReplayRandom tape({.3,.4});
+  rejects([&]{jewel::apply_collisions(isolated,leg_id,scratch_id,kicks,storage,invalid_fraction,{},finish,sampler,medium,tape);});
+  isolated.validate();check(isolated.particles().size()==2&&isolated.colour_max==20);
+  check(isolated.at(leg_id).daughters==std::array<jewel::ParticleId,2>{0,0});
+  check(storage.used==0&&storage.records.empty()&&tape.checkpoint()==2);
+ }
  // Capacity guard occurs before consuming a random number or adding records.
  while(state.particles().size()<22990)state.append(scratch);
  auto capped=jewel::apply_collisions(state,id,tmp,history,ledger,request,{},finish,sampler,medium,empty);

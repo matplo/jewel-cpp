@@ -71,3 +71,13 @@ No clamp, sentinel reinterpretation or failed-event filtering has been added.
 A successful actively rescattering hadronized sample has not been established
 by these checks. This mode therefore remains experimental; full feature
 validation and the >=1000-jet, 10% comparison gate remain open.
+
+## Follow-up: provisional fraction retries
+
+The [retry correction](validation-recoil-fraction-retries.md) fixes an early
+native rejection of temporary negative fractions when Fortran can discard and
+rebuild the provisional records. It recovers four controlled finite cases.
+The 20-attempt sample still accepts 14 events, exactly unchanged; its four
+negative-fraction failures now reach final state validation, with RNG cursors
+matching their guarded Fortran failures. Historical precondition diagnostics
+above describe the earlier implementation, not the current rejection boundary.

@@ -6,6 +6,10 @@ namespace jewel::detail {
 CollisionPair scatter_pair_candidate(ShowerParticle,ShowerParticle,const TransferRecord&,
  double,double,double,double,CollisionConfig,const BranchingSampler&,const Medium&,Random&,
  const ShowerParticle*,std::optional<double>);
+// Provisional splitting sentinels may produce a nonfinite angle that a source
+// sequence retry subsequently removes. Publish only through validated state.
+void finish_collision_candidate(CollisionPair&,int&,RecoilStorage&,
+ CollisionFinalizationConfig,CollisionStepTiming,const Medium&,Random&);
 struct CollisionWorkspace {
  static ParticleId append(ShowerState& state,ShowerParticle particle) {
   return state.append_impl(std::move(particle),true,true,false);

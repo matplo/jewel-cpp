@@ -713,3 +713,8 @@ fluid-rest-frame thresholds with `--recoil-cuts SOFT HARD` (multipliers of 3T).
 Defaults remain off and 0/0. [Validation and limits](docs/validation-recoil-controls.md)
 record shared nonfinite failures when rescattering becomes active; this mode
 is not yet validated for production or the full-generator comparison gate.
+
+Collision sequences preserve provisional recoil splitting sentinels until the
+source retry decision. The [retry validation](docs/validation-recoil-fraction-retries.md)
+records four finite Fortran outcomes previously rejected too early by the port;
+all now agree, while unrecovered nonfinite state remains unpublishable.

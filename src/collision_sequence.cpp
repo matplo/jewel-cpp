@@ -32,7 +32,7 @@ static CollisionSequenceResult apply_candidates(ShowerState& state,ParticleId pr
    CollisionStepTiming timing{delta,result.fraction,first_decay,request.time,
     j<result.last?history.records[j+1].position.t:0,history.records[j].time,
     request.quark_pair,request.coherent,j==result.last};
-   finish_collision(pair,state.colour_max,ledger,finish,timing,medium,random);
+   detail::finish_collision_candidate(pair,state.colour_max,ledger,finish,timing,medium,random);
    state.at(line)=pair.incoming;state.at(scratch)=pair.centre;
    pair.recoil.coherent_partner=0;pair.recoil.parent=0;pair.recoil.collision_source=line;
    pair.outgoing.coherent_partner=0;pair.outgoing.parent=line;pair.outgoing.collision_source=0;
