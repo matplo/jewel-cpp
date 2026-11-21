@@ -303,3 +303,25 @@ and exhausted random tapes also throw.
 [Transport sampling validation](docs/validation-transport.md) covers both channel
 modes, quark/gluon projectiles, medium exits and replay draw counts. This does not
 yet apply collisions or recoils to the event, and is not full transport validation.
+
+
+## Milestone 2d: angular-rejection repair
+
+`reject_splitting(state, mother, sampler, random)` in `jewel/shower.hpp`
+translates REJECTSPLITTING. It resamples sibling masses, repairs their momenta,
+updates branch fractions and angles, adjusts decay/evolution times and marks
+rejected-scattering descendants inactive. The sampler must use the run's kernel,
+cutoff and angular-ordering configuration. Production coordinates remain separate
+from auxiliary generator coordinates, which follow the reference rotations.
+
+The state is mutated in place. As in stock, impossible kinematics marks the event
+as discarded and returns before restoring the temporary frame. A discarded event
+must not be consumed as a valid final state. Exceptions likewise require caller
+handling; use an explicit snapshot if rollback is wanted. Undefined zero-axis or
+zero-transverse-rescaling inputs throw; they are not included in reference parity.
+A one-million-trial guard replaces an otherwise unbounded rejection loop.
+
+[Validation](docs/validation-rejection.md) compares full repaired records and
+random consumption, with independent momentum-conservation and mass-shell checks.
+This prepares the rejection path needed by MAKESPLITTING; accepted branch
+construction and the complete shower scheduler remain to be implemented.

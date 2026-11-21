@@ -125,6 +125,10 @@
       "GETDELTAT": [
         8423,
         8554
+      ],
+      "REJECTSPLITTING": [
+        3688,
+        3865
       ]
     }
   },

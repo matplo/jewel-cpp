@@ -64,6 +64,15 @@ program mediumprobe
  common /scalfac/ xsecscalefac
  common /rapmax/ etamax
  logical getdeltat,collision
+ double precision zd(23000),thetad(23000),starttime(23000),wdisc
+ logical qqbard(23000),aoreq(23000),medind(23000),discard
+ integer ndisc,nstrange,ngood,errcount,mother,qflag,aflag
+ common /ANGOR/ zd,thetad,qqbard,aoreq
+ common /evoltimes/ starttime,medind
+ common /DISC/ ndisc,nstrange,ngood,errcount,wdisc,discard
+ integer mstu(200),mstj(200)
+ double precision paru(200),parj(200)
+ common /PYDAT1/ mstu,paru,mstj,parj
  character(20) op
  logfid=0
  logfid2=0
@@ -202,6 +211,28 @@ program mediumprobe
    errl=1
    collision=getdeltat(1,start,dt,elapsed,elastic_flag/=0)
    write(*,'(I2,1X,ES26.17E3,1X,I8)')merge(1,0,collision),elapsed,cursor
+  case('REJECT')
+   read(*,*) n,mother
+   if(n>23000.or.n<1)stop 5
+   mstu=0
+   mstu(4)=23000
+   paru(1)=3.141592653589793d0
+   discard=.false.
+   do i=1,n
+    read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i),qflag,aflag
+    qqbard(i)=qflag/=0
+    aoreq(i)=aflag/=0
+   enddo
+   read(*,*)count
+   if(count<0.or.count>100000)stop 5
+   if(count>0)read(*,*)tape(1:count)
+   cursor=0
+   call rejectsplitting(k(mother,4),mother)
+   write(*,'(2I8)')merge(1,0,discard),cursor
+   do i=1,n
+    write(*,'(5I8,17ES26.17E3,2I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),starttime(i),zd(i),thetad(i), &
+     merge(1,0,qqbard(i)),merge(1,0,aoreq(i))
+   enddo
   case('BCONFIG')
    read(*,*) knf,q0,lps,ptfac,angord
   case('MASS')

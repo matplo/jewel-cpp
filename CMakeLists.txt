@@ -3,7 +3,7 @@ project(jewel_cpp VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_library(jewel_core src/core.cpp src/medium.cpp src/radiation.cpp src/final_splitting.cpp src/partonic_pdf.cpp src/scattering.cpp src/branching.cpp src/kinematics.cpp src/shower_state.cpp src/transport.cpp)
+add_library(jewel_core src/core.cpp src/medium.cpp src/radiation.cpp src/final_splitting.cpp src/partonic_pdf.cpp src/scattering.cpp src/branching.cpp src/kinematics.cpp src/shower_state.cpp src/transport.cpp src/shower.cpp)
 target_include_directories(jewel_core PUBLIC include)
 target_compile_options(jewel_core PRIVATE -Wall -Wextra -Wpedantic)
 add_executable(jewel-probe app/probe.cpp)
@@ -136,4 +136,11 @@ if(JEWEL_REFERENCE_SOURCE)
  add_test(NAME transport-differential COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/transport_differential.py $<TARGET_FILE:jewel-medium-probe>
   $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/transport-validation.json)
+endif()
+
+if(JEWEL_REFERENCE_SOURCE)
+ target_sources(jewel-medium-reference PRIVATE ${CMAKE_BINARY_DIR}/kinematics-reference.f reference/pythia_probe_stubs.f90)
+ add_test(NAME rejection-differential COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/rejection_differential.py $<TARGET_FILE:jewel-medium-probe>
+  $<TARGET_FILE:jewel-medium-reference> ${CMAKE_BINARY_DIR}/rejection-validation.json)
 endif()
