@@ -8,6 +8,16 @@
 void check(bool b){if(!b)throw std::runtime_error("state/kinematics contract failed");}
 template<class F>void rejects(F f){bool threw=false;try{f();}catch(const std::exception&){threw=true;}check(threw);}
 int main(){
+ {
+  jewel::ShowerState slots(-1e6);jewel::ShowerParticle p;
+  auto first=slots.append(p,true,true);check(slots.at(first).evolution_time==-1e6);
+  auto original=slots.snapshot();p.evolution_time=4;p.medium_induced=true;slots.append(p);
+  slots.restore(slots.snapshot_truncated(1));p.evolution_time=9;p.medium_induced=false;
+  auto reused=slots.append(p,false,true);check(slots.at(reused).evolution_time==9&&slots.at(reused).medium_induced);
+  slots.restore(original);auto fresh=slots.append(p,true,true);
+  check(slots.at(fresh).evolution_time==-1e6&&!slots.at(fresh).medium_induced);
+ }
+
  // Partial rollback retains physical-slot times without recycling particle IDs.
  {
   jewel::ShowerState slots;jewel::ShowerParticle p;slots.append(p);auto clean=slots.snapshot();

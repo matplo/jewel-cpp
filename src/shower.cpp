@@ -185,7 +185,7 @@ void make_splitting(ShowerState& state,ParticleId id,const BranchingSampler& sam
  }
  parent.particle.status=status==2?13:11;
  // append can reallocate: do not retain references into state beyond this point.
- auto cid=state.append(c,true),bid=state.append(b,true);state.connect(id,cid,bid);
+ auto cid=state.append(c,true,true),bid=state.append(b,true,true);state.connect(id,cid,bid);
  restore();rotate(state.at(cid),theta_in,0);rotate(state.at(bid),theta_in,0);
  rotate(state.at(cid),0,phi_in);rotate(state.at(bid),0,phi_in);
 }

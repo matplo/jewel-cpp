@@ -20,18 +20,23 @@ struct ShowerSnapshot {
  int colour_max{};
  double weight{1};
  bool discarded{};
+ double unused_evolution_time{};
  std::vector<double> retired_evolution; // Physical-slot metadata retained by partial rollback.
+ std::vector<bool> retired_medium_induced;
 };
 class ShowerState {
  std::vector<ShowerParticle> particles_;
  std::unordered_map<ParticleId,std::size_t> slots_;
  ParticleId next_{1};
  std::vector<double> retired_evolution_;
+ std::vector<bool> retired_medium_induced_;
+ double unused_evolution_time_{};
 public:
+ explicit ShowerState(double unused_evolution_time=0);
  int colour_max{};
  double weight{1};
  bool discarded{};
- ParticleId append(ShowerParticle,bool inherit_evolution_time=false);
+ ParticleId append(ShowerParticle,bool inherit_evolution_time=false,bool inherit_medium_induced=false);
  const ShowerParticle& at(ParticleId) const;
  ShowerParticle& at(ParticleId);
  const auto& particles() const{return particles_;}

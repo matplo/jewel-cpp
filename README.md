@@ -580,3 +580,11 @@ source evolution-time slot metadata while preserving stable particle IDs.
 The reference needs one documented duplicate-declaration normalization; its
 executable statements remain unchanged. Complete shower scheduling and Pythia8
 integration remain pending.
+
+## Scheduler integration (in progress)
+
+`Cascade::branch()` and `Cascade::evolve()` in `jewel/cascade.hpp` connect the
+ported routines into branch and cascade evolution. Validation is incomplete:
+the expanded cascade replay currently fails. See the [development checkpoint](docs/scheduler-progress.md)
+for the passing baseline, the first traced numerical divergence, and remaining
+work. This is not yet a standalone event generator.

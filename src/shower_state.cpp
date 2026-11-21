@@ -21,8 +21,10 @@ void fields(const ShowerParticle& s){
  require(s.particle.colour>=0&&s.particle.anticolour>=0,"negative colour index");
 }
 }
-ParticleId ShowerState::append(ShowerParticle s,bool inherit_evolution_time){
- if(inherit_evolution_time&&particles_.size()<retired_evolution_.size())s.evolution_time=retired_evolution_[particles_.size()];
+ShowerState::ShowerState(double unused):unused_evolution_time_(unused){require(std::isfinite(unused),"nonfinite unused evolution time");}
+ParticleId ShowerState::append(ShowerParticle s,bool inherit_evolution_time,bool inherit_medium_induced){
+ if(inherit_evolution_time)s.evolution_time=particles_.size()<retired_evolution_.size()?retired_evolution_[particles_.size()]:unused_evolution_time_;
+ if(inherit_medium_induced)s.medium_induced=particles_.size()<retired_medium_induced_.size()?retired_medium_induced_[particles_.size()]:false;
  fields(s);require(next_!=std::numeric_limits<ParticleId>::max(),"particle ID space exhausted");
  require(s.daughters[0]==0&&s.daughters[1]==0,"append requires unattached daughters");
  auto ancestry=origins(s);for(auto origin:ancestry)at(origin);
@@ -96,15 +98,16 @@ void ShowerState::validate() const {
   }
  }
 }
-ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded,retired_evolution_};}
+ShowerSnapshot ShowerState::snapshot() const {validate();return {particles_,colour_max,weight,discarded,unused_evolution_time_,retired_evolution_,retired_medium_induced_};}
 ShowerSnapshot ShowerState::snapshot_truncated(std::size_t count) const {
  require(count<=particles_.size(),"invalid truncated shower size");
  auto saved=snapshot();saved.retired_evolution.resize(std::max(saved.retired_evolution.size(),particles_.size()));
- for(std::size_t i=count;i<particles_.size();++i)saved.retired_evolution[i]=particles_[i].evolution_time;
+ saved.retired_medium_induced.resize(std::max(saved.retired_medium_induced.size(),particles_.size()));
+ for(std::size_t i=count;i<particles_.size();++i){saved.retired_evolution[i]=particles_[i].evolution_time;saved.retired_medium_induced[i]=particles_[i].medium_induced;}
  saved.particles.resize(count);return saved;
 }
 void ShowerState::restore(const ShowerSnapshot& snapshot){
- ShowerState candidate;candidate.particles_=snapshot.particles;candidate.colour_max=snapshot.colour_max;candidate.weight=snapshot.weight;candidate.discarded=snapshot.discarded;candidate.retired_evolution_=snapshot.retired_evolution;
+ ShowerState candidate(snapshot.unused_evolution_time);candidate.particles_=snapshot.particles;candidate.colour_max=snapshot.colour_max;candidate.weight=snapshot.weight;candidate.discarded=snapshot.discarded;candidate.retired_evolution_=snapshot.retired_evolution;candidate.retired_medium_induced_=snapshot.retired_medium_induced;
  ParticleId maximum=0;
  for(std::size_t i=0;i<candidate.particles_.size();++i){auto id=candidate.particles_[i].particle.id;require(id>0&&candidate.slots_.emplace(id,i).second,"invalid snapshot IDs");maximum=std::max(maximum,id);}
  require(maximum<std::numeric_limits<ParticleId>::max(),"snapshot ID space exhausted");candidate.next_=std::max(next_,maximum+1);candidate.validate();

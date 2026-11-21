@@ -29,7 +29,7 @@ program mediumprobe
  ANGORD,aofirstsplit,SCATRECOIL,ALLHAD,compress,mpifsr,KNF,KINMODE,recmode
  double precision impmax,cross(200,3),intpqglow,intpqghigh,scatprimfunc
  common /CROSSSEC/ impmax,cross
- double precision tape(100000),px,py,pz,energy,ms
+ double precision tape(2000000),px,py,pz,energy,ms
  integer count,cursor,boostflag,ptype
  common /REPLAY/ tape,count,cursor
  logical boost
@@ -127,7 +127,7 @@ program mediumprobe
   case('EVENT')
    read(*,*) centrmin,centrmax
    read(*,*) count
-   if(count<1.or.count>100000) stop 5
+   if(count<1.or.count>2000000) stop 5
    read(*,*) tape(1:count)
    cursor=0
    call calcxsection
@@ -136,7 +136,7 @@ program mediumprobe
   case('VERTEX')
    read(*,*) breal,rau
    read(*,*) count
-   if(count<1.or.count>100000) stop 5
+   if(count<1.or.count>2000000) stop 5
    read(*,*) tape(1:count)
    cursor=0
    call pickvtx(x,y)
@@ -144,7 +144,7 @@ program mediumprobe
   case('SCATTER')
    read(*,*) x,y,z,t,boostflag
    read(*,*) count
-   if(count<1.or.count>100000) stop 5
+   if(count<1.or.count>2000000) stop 5
    read(*,*) tape(1:count)
    cursor=0
    boost=boostflag/=0
@@ -256,7 +256,7 @@ program mediumprobe
     enddo
    endif
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0;pairdm=0;pairz=0;pairdir=0;pairsplit=.false.;pairqq=.false.;pairreject=.false.;pairshuffle=.false.
    pairnewm=pairtarget
@@ -305,7 +305,7 @@ program mediumprobe
     read(*,*)allqs(i,1),allqs(i,6),scatcentres(i,:)
    enddo
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0;seqretry=.false.
    call dokinematics(2,2,seqfirst,seqlast,pairtarget,seqretry,nowtime,energyfraction,zdec,qflag/=0,cohflag/=0)
@@ -320,14 +320,15 @@ program mediumprobe
    do i=1,maxnscatcen
     write(*,'(I8,10ES26.17E3)')scatflav(i),scatcen(i,:),dummies(i,:)
    enddo
-  case('COHERENT','ISTATE')
+  case('COHERENT','ISTATE','BRANCH','CASCADE')
    read(*,*)cohselected,cohflag,nowtime,lefttime,split_angle,split_time,cohlengthfac,kinmode,colmax,evweight,nend
    cohscat=cohflag/=0
-   if(trim(op)=='ISTATE')then
+   if(trim(op)/='COHERENT')then
     read(*,*)aflag,pcohrej
     seqretry=aflag/=0
    endif
    n=5;k=0;p=0;vertices=0;mv=0;trip=0;anti=0;zd=-1;thetad=0;qqbard=.false.;aoreq=.false.;starttime=0;medind=.false.
+   if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE')starttime=-1d6
    mstu=0;mstu(4)=23000;paru(1)=3.141592653589793d0;discard=.false.;nstart=1
    do i=1,5
     read(*,*)k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i),qflag,aflag,trip(i),anti(i),starttime(i)
@@ -346,10 +347,15 @@ program mediumprobe
    enddo
    histotcoh=0;histothatcoh=0;tmin=0;timax=100;thatmin=0;thatmax=100;ntbinsaccrej=100;nthatbinsaccrej=100
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
-   if(trim(op)=='ISTATE')then
+   compress=.false.
+   if(trim(op)=='BRANCH')then
+    call makebranch(cohselected)
+   else if(trim(op)=='CASCADE')then
+    call makecascade
+   else if(trim(op)=='ISTATE')then
     energyfraction=1;newmass=0;instype=k(cohselected,2);above_cutoff=.false.
     call doinstatescat(cohselected,energyfraction,instype,newmass,nowtime,lefttime,above_cutoff,seqretry)
    else
@@ -365,8 +371,13 @@ program mediumprobe
     write(*,'(8I8)')n,colmax,nscatcen,cohselected,cursor,merge(1,0,discard),initial_flag,nend
    endif
    do i=1,n
+    if(trim(op)=='BRANCH'.or.trim(op)=='CASCADE')then
+     write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3,I8)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
+      merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i),merge(1,0,medind(i))
+    else
     write(*,'(5I8,16ES26.17E3,4I8,ES26.17E3)')k(i,:),p(i,:),vertices(i,1:4),mv(i,:),zd(i),thetad(i), &
      merge(1,0,qqbard(i)),merge(1,0,aoreq(i)),trip(i),anti(i),starttime(i)
+    endif
    enddo
    write(*,'(5ES26.17E3)')qsumvec,qsum2
    do i=1,100
@@ -403,7 +414,7 @@ program mediumprobe
     read(*,*)allqs(i,:),scatcentres(i,:)
    enddo
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    call dofistatescat(2,nowtime,lefttime,elapsed,newmass,above_cutoff,zdec,qqbardec)
@@ -436,7 +447,7 @@ program mediumprobe
    read(*,*)qsumvec,qsum2
    read(*,*)allqs(nend,:),scatcentres(nend,:)
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    call getqvec(2,nend,dt,energyfraction,recalcflag/=0)
@@ -451,7 +462,7 @@ program mediumprobe
    qqbardec=qflag/=0
    mv(1,4)=0
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    v=getnewmass(1,qnew2,qold2,previousmass,initial_flag/=0,energyfraction,zdec,qqbardec)
@@ -467,7 +478,7 @@ program mediumprobe
   case('TIME')
    read(*,*)p(1,1:5),k(1,2),mv(1,1:4),start,dt,ltime,xsecscalefac,elastic_flag
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    errl=1
@@ -506,7 +517,7 @@ program mediumprobe
     aoreq(i)=aflag/=0
    enddo
    read(*,*)count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    if(trim(op)=='ISPLIT')then
@@ -535,7 +546,7 @@ program mediumprobe
   case('MASS')
    read(*,*) channel,x,y,angle,energy,maxmass,initial_flag
    read(*,*) count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    zdec=-1.d0
@@ -545,7 +556,7 @@ program mediumprobe
   case('FRACTION')
    read(*,*) channel,x,y,z
    read(*,*) count
-   if(count<0.or.count>100000)stop 5
+   if(count<0.or.count>2000000)stop 5
    if(count>0)read(*,*)tape(1:count)
    cursor=0
    v=generatez(x,y,z,channel)
@@ -658,7 +669,7 @@ end function
 function pyr(dummy) result(v)
  implicit none
  integer dummy,count,cursor
- double precision tape(100000),v
+ double precision tape(2000000),v
  common /REPLAY/ tape,count,cursor
  if(cursor>=count) stop 6
  cursor=cursor+1

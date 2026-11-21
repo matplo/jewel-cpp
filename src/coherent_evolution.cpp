@@ -111,7 +111,7 @@ CoherentResult evolve_coherent(ShowerState& state,ParticleId selected,ParticleId
  b.evolution_time=selected==init.second?init.second_before.evolution_time:end;
  parent.particle.status=21;parent.decay_time=end;parent.particle.momentum=pair.parent;parent.generator_vertex=pair.generator_vertex;
  state.at(current)=parent;
- auto first=state.append(a),second=state.append(b);state.connect(current,first,second);
+ auto first=state.append(a,false,true),second=state.append(b,false,true);state.connect(current,first,second);
  result.selected=selected==init.first?first:second;return result;
 }
 }

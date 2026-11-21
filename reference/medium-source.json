@@ -169,6 +169,14 @@
       "DOINSTATESCAT": [
         4132,
         4638
+      ],
+      "MAKECASCADE": [
+        2902,
+        2942
+      ],
+      "MAKEBRANCH": [
+        2948,
+        3282
       ]
     },
     "declaration_normalizations": {

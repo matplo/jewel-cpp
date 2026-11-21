@@ -35,7 +35,7 @@ CollisionSequenceResult apply_collisions(ShowerState& state,ParticleId projectil
    state.at(line)=pair.incoming;state.at(scratch)=pair.centre;
    pair.recoil.coherent_partner=0;pair.recoil.parent=0;pair.recoil.collision_source=line;
    pair.outgoing.coherent_partner=0;pair.outgoing.parent=line;pair.outgoing.collision_source=0;
-   auto recoil=state.append(pair.recoil,true),outgoing=state.append(pair.outgoing,true);
+   auto recoil=state.append(pair.recoil,true,true),outgoing=state.append(pair.outgoing,true,true);
    state.connect_collision(line,recoil,outgoing);
    remaining-=state.at(outgoing).record_mass-state.at(line).record_mass;
    line=outgoing;result.outgoing=outgoing;last_mass=state.at(outgoing).record_mass;
