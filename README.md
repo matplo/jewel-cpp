@@ -938,3 +938,10 @@ covers both engines and records the next unresolved fragmentation mapping.
 The JEWEL fragmentation profile now explicitly uses the Pythia6 diquark exponent
 and old/new flavour orientation. [All 144 tested coefficients match exactly](docs/validation-diquark-lund.md).
 Earlier jet comparisons predate this correction; a refreshed comparison is required.
+
+### Corrected-profile comparison
+
+The [latest vacuum report](docs/lund-vacuum-comparison.html) compares the source-
+derived diquark profile with both historical samples. All 1500 events complete,
+but [spectrum and substructure gates still fail](docs/validation-lund-vacuum.md).
+The effective Pythia6/Pythia8 hard and ISR couplings are the next audit priority.
