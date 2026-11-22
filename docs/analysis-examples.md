@@ -8,6 +8,16 @@ Deliver each example as a runnable generator card or shell command, a Python ana
 2. Convert the pp spectrum to a cross section per jet pT bin. Establish the Pb–Pb yield per inelastic event in the selected centrality class, with the hard sample normalized consistently. Use the class-averaged nuclear overlap `<T_AA>` with consistent units in `R_AA = (dN_AA/dpT) / (<T_AA> dσ_pp/dpT)`.
 3. Validate the normalization with quenching disabled and binary collision scaling enforced, then show recoil inclusion and the chosen background subtraction policy. Report statistical and overlap uncertainties separately. The existing interactive report measures event-weighted medium/vacuum jet yields and can serve as a regression baseline for the numerators and denominators.
 
+### First closure run
+
+The [README example](../README.md#inclusive-jet-r_aa) uses one hard-scale window and a mean overlap for the centrality class. In the hepyy wheel environment, independent 3,500-attempt pp and zero-interaction Pb–Pb samples selected 7,388 and 7,575 jets, respectively. Seven bins met the 50-jet threshold. The largest deviation was 1.35 standard errors. At 60–80 GeV the control gave `R_AA = 1.037 ± 0.110`. The 300-attempt quenched sample exercised the output format.
+
+### TGlauberMC integration
+
+TGlauberMC runs through ROOT. Start with a versioned hepyy recipe that pins the upstream source, depends on the existing ROOT recipe, and exposes a seeded Pb–Pb run through PyROOT. Validate minimum-bias centrality percentiles and `<T_AA> = <N_coll> / sigma_NN_inelastic` against published tables. Record the nuclear density, cross section and centrality policy alongside the result. Use that output to supply the mean overlap and, later, to validate impact-parameter weights against the chosen JEWEL geometry. [TGlauberMC reference](https://arxiv.org/abs/1710.07098)
+
+Python access through the recipe is the first useful milestone. Wheels add a separate ROOT ABI and packaging task. Confirm the upstream code redistribution terms, choose a compatible ROOT distribution, and test library and dictionary loading for each supported platform before publishing wheels. The class-averaged input in the README lets the R_AA example run independently of that work.
+
 ## Soft Drop in central Pb–Pb
 
 Use the [ATLAS substructure-dependent jet suppression measurement](https://doi.org/10.1103/PhysRevC.107.054909) at 5.02 TeV as the reference for `R_AA(pT, r_g)`. Start with anti-kt R=0.4, Cambridge/Aachen reclustering, Soft Drop beta=0 and zcut=0.2, then match the publication's particle and jet acceptance, centrality and bin definitions. Keep the ATLAS untagged `r_g=0` category separate.
