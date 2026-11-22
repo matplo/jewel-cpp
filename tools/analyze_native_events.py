@@ -68,7 +68,7 @@ def analyze(path):
             if record['type']=='run':
                 assert header is None
                 header=record
-                assert header['schema'] in ['jewel-parton-development-v1','jewel-hadron-development-v1','jewel-fortran-hepmc-analysis-v1']
+                assert header['schema'] in ['jewel-parton-development-v1','jewel-hadron-development-v1','jewel-fortran-hepmc-analysis-v1','pythia8-standalone-hadron-v1']
                 schema=header['schema']
                 subtraction=header.get('subtraction',{})
                 if args.exclude_thermal_residuals and not subtraction:

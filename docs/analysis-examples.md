@@ -38,12 +38,4 @@ The [validation output](lhapdf-steering-validation.json) records CT18ANLO and CT
 
 ## Steering compared with standalone Pythia8
 
-| Component | Current controls and ownership |
-|---|---|
-| Hard input | Pythia8 HardQCD and Monash tune 14. Use `--ecm`, `--pt-min`, `--pt-max`, `--pthat-bias`, the seed argument, and the LHAPDF and hard coupling flags. |
-| Initial-state radiation | Use `--isr-only`, `--experimental-isr-mpi`, or `--native-mpi` to enable the relevant input mode. The ISR coupling flags include `--isr-alpha-s`, `--isr-alpha-s-order`, `--alpha-s-nfmax`, and `--isr-alpha-s-cmw`. |
-| Multiple interactions | The experimental Pythia8 MPI path exposes `--mpi-alpha-s`, `--mpi-alpha-s-order`, `--mpi-screening` and `--mpi-double-gaussian`. Native MPI uses a separate initializer audited at 5020 GeV and a 20–100 GeV hard window. |
-| Final-state shower and medium | The JEWEL C++ cascade owns final-state evolution. Select `medium`, `vacuum`, or `zero-interaction` and use the JEWEL controls for centrality, angular ordering, recoils, and subtraction. |
-| Hadronization | Pythia8 hadronizes the supplied string configuration. Select the default Monash profile or `--jewel-fragmentation`. Use `--pi0-decay on\|off` and the supported `--hadrotype` modes. |
-
-The CLI exposes a selected set of controls. General Pythia8 cards, arbitrary `readString` settings, and beam identity changes require extending the adapter. For the demonstration, record both configurations, match the hard cuts and particle selection, and compare the vacuum and zero-interaction cases before enabling quenching.
+The [README example](../README.md#compare-with-standalone-pythia8) runs matched HardQCD inputs with ISR only and ISR plus Pythia8 MPI. A same-seed hard-input replay checks the Pythia8 boundary. The independent hadron-level samples compare the JEWEL cascade and standalone Pythia8 with the same fragmentation profile, decay settings and jet selection. [Measured comparisons](pythia8-steering-comparison.md)

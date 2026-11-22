@@ -178,11 +178,41 @@ python tools/validate_lhapdf_steering.py "$input" --output lhapdf-validation.jso
 
 With Pythia 8.317 and LHAPDF 6.5.5, all 1,000 free-proton events matched exactly. Across eight configurations, all 16,000 hard PDF values agreed with LHAPDF, with a maximum absolute difference of `7.11e-15`. [Validation output](docs/lhapdf-steering-validation.json)
 
+## Compare with standalone Pythia8
+
+Run pp HardQCD at 5.02 TeV with a 50–150 GeV hard-scattering window, CT14nlo/0, Monash fragmentation and power-5 pThat bias. Activate the hepyy wheel environment above. Use the same Pythia8 build for the C++ runner and the standalone Python example.
+
+```bash
+runner=build-pythia8/jewel-run-events
+steering=(--compact-hadrons --ecm 5020 --pt-min 50 --pt-max 150
+  --pthat-bias 5 --table-energy jewel --lhapdf CT14nlo/0
+  --hard-alpha-s 0.118 --hard-alpha-s-order 2
+  --isr-alpha-s 0.118 --isr-alpha-s-order 2 --isr-alpha-s-cmw off)
+"$runner" jewel-isr.jsonl 3500 2601201 vacuum "${steering[@]}" --isr-only
+"$runner" jewel-mpi.jsonl 3500 2601202 vacuum "${steering[@]}" --experimental-isr-mpi
+python tools/pythia8_steering_example.py generate jewel-isr.jsonl pythia-isr.jsonl --seed 2601211
+python tools/pythia8_steering_example.py generate jewel-mpi.jsonl pythia-mpi.jsonl --seed 2601212
+python tools/analyze_native_events.py jewel-isr.jsonl pythia-isr.jsonl jewel-mpi.jsonl pythia-mpi.jsonl \
+  --output steering-jets.json
+python tools/pythia8_steering_example.py compare steering-jets.json steering-comparison.json
+```
+
+The standalone script first repeats the JEWEL hard input with the same seed and checks the acceptance, event weights, pThat and hard cross section. It then enables Pythia8 final-state radiation and hadronization and uses an independent seed for the jet comparison. The comparison uses the same FastJet anti-kt R=0.4 clustering, |η| < 2 and neutrino rejection. It reports the cross-section-normalized jet spectrum and weighted jet mass and pTD means. [Measured comparisons](docs/pythia8-steering-comparison.md)
+
+| Stage | jewel-cpp | Standalone Pythia8 |
+|---|---|---|
+| Hard process | HardQCD with proton beams and tune 14. Steer `--ecm`, `--pt-min`, `--pt-max`, `--pthat-bias`, the positional seed, the [LHAPDF options](#steer-proton-and-nuclear-pdfs-with-lhapdf) and `--hard-alpha-s` / `--hard-alpha-s-order`. | `HardQCD:all`, `Beams:*`, `PhaseSpace:pTHatMin/Max`, `PhaseSpace:bias2Selection*`, `Random:seed`, `PDF:*` and `SigmaProcess:alphaS*`. |
+| ISR | `--isr-only`, `--experimental-isr-mpi` and `--native-mpi` enable Pythia8 ISR. Set `--isr-alpha-s`, `--isr-alpha-s-order`, `--isr-alpha-s-cmw` and `--alpha-s-nfmax`. | `PartonLevel:ISR`, `SpaceShower:alphaS*` and `StandardModel:alphaSnfmax`. |
+| MPI | `--experimental-isr-mpi` uses Pythia8 MPI, with `--mpi-alpha-s`, `--mpi-alpha-s-order`, `--mpi-screening` and `--mpi-double-gaussian`. `--native-mpi` uses JEWEL's separate initializer and evolution, currently restricted to the audited 5.02 TeV, 20–100 GeV hard window. | `PartonLevel:MPI` and `MultipartonInteractions:*` control Pythia8 MPI. |
+| Final-state shower | JEWEL evolves the imported partons in `vacuum`, `zero-interaction` or `medium` mode. `--angular-ordering` steers the JEWEL cascade. | `PartonLevel:FSR` and `TimeShower:*` steer the Pythia8 cascade. With ISR and MPI enabled, Pythia8 interleaves all three. |
+| Hadronization | A separate Pythia8 instance fragments the JEWEL strings. Select Monash or `--jewel-fragmentation`. Use `--pi0-decay`, `--decay-tau0-max` and the supported `--hadrotype` modes. The ISR/MPI import path uses `--hadrotype 0`. | `HadronLevel:all`, the tune, `StringFlav:*`, `StringPT:*`, `StringZ:*`, `ParticleDecays:*` and particle decay switches. The example copies the JEWEL fragmentation and decay settings and disables colour reconnection in both runs. |
+
+The runner exposes the settings above as command-line flags. The standalone script passes the recorded settings to Pythia8 through `readString`. Both configurations are recorded in the comparison JSON. [Pythia 8.3 manual](https://arxiv.org/abs/2203.11601)
+
 ## Planned analysis examples
 
 | Example | Scope |
 |---|---|
 | Inclusive jet `R_AA` | The quickstart above implements binary scaling, Glauber-weighted impact parameters and closure. The plan extends it to broader hard-scale coverage. |
-| Pythia8 steering | Compare the same hard process with standalone Pythia8 and document which controls affect the hard input, ISR, MPI, and hadronization. |
 
 The [demonstration plan](docs/analysis-examples.md) records the analysis definitions, steering options, and implementation gates. The [porting history](docs/porting-notes.md), [port plan](docs/port-plan.md), and [routine inventory](docs/routines.csv) contain the numerical validation and implementation details.

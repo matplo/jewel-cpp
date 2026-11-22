@@ -1,0 +1,700 @@
+{
+  "pythia8_version": 8317,
+  "selection": {
+    "algorithm": "anti-kt",
+    "R": 0.4,
+    "min_pt_GeV": 10,
+    "max_abs_eta": 2,
+    "exclude_thermal_residuals": false,
+    "raw_hadrons": false,
+    "particles": "per-sample particle_level: native partons use status 3/4/5; hadron samples use final flag; exclude neutrino PDG 12/14/16",
+    "soft_drop": {
+      "algorithm": "Soft Drop",
+      "reclustering": "Cambridge/Aachen",
+      "recombination": "E scheme",
+      "zcut": 0.1,
+      "beta": 0.0,
+      "R0": 0.4,
+      "reclustering_R": 1000.0,
+      "condition": "z > zcut (delta_R/R0)^beta",
+      "untagged": "null zg, rg, theta_g and groomed_mass; counted separately"
+    },
+    "mass": "FastJet signed invariant mass in GeV; negative values retained",
+    "order": "full-phase-space clustering before jet cuts",
+    "geometry_matching": {
+      "max_delta_r": 0.3,
+      "coordinates": "pseudorapidity and azimuth",
+      "assignment": "hepyy_utils.match_hard_legs: maximize matches then minimize total distance",
+      "order": "all positive-pT jets before analysis cuts",
+      "unmatched_jet_geometry": null
+    },
+    "recoils": "per-run keep_recoils flag; use projected_particles when projection is enabled, otherwise subtracted_particles when subtraction is enabled, otherwise raw hadronized_particles"
+  },
+  "analysis_versions": {
+    "source_sha256": {
+      "analyze_native_events.py": "474ba6f0fd70b8b07799aecf273a53d025bb3d3bea12315806fc81a07bea7e76",
+      "jet_substructure.py": "c58f9bb3b8f0ded758c0f7ebb5bdf4409200c891847803afa46bc381fb9489e8",
+      "native_geometry_analysis.py": "4aaedd47f717d92601274a37b027a03f0daebc3d9bd2bd480ae81597ce2c0ee4"
+    },
+    "python": "3.15.2",
+    "hepyy": "0.2.32",
+    "cppyy": "3.5.0",
+    "fastjet": "FastJet version 3.5.3",
+    "matching_sha256": "064807f4c9767d71e01f2cca61f0a59e70767e6b1076abdde36b41729d72582f",
+    "loader_sha256": "c6c7248e3ec2750ef6febaa4130b0a38d7999ce8a8588a17d89ace9e501c23e6"
+  },
+  "normalization": "Generated hard cross section times weighted jets divided by generated weight and bin width.",
+  "uncertainties": "Event-level errors and independent generator cross-section errors.",
+  "comparisons": [
+    {
+      "pythia8_mpi": false,
+      "hard_input_check": {
+        "exact": true,
+        "weight_comparisons": 3500,
+        "pthat_comparisons": 3500,
+        "events_with_additional_mpi": 0,
+        "summary": {
+          "type": "summary",
+          "attempts": 3500,
+          "accepted": 3500,
+          "evolution_failures": 0,
+          "generation_failures": 0,
+          "accepted_weight": 1.733424605333947e-06,
+          "generator_weight_sum": 1.733424605333947e-06,
+          "generator_sigma_mb": 0.003417395906833787,
+          "generator_sigma_error_mb": 2.264094545423914e-05
+        }
+      },
+      "jewel": {
+        "seed": 2601201,
+        "input_sha256": "61a433400e85c14cc0276686905b8ca7ab94e0bb1b39f65d49f5a0700140e953",
+        "settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 50",
+          "PhaseSpace:pTHatMax = 150",
+          "PDF:pSet = LHAPDF6:CT14nlo/0",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = off",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2601201",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "PhaseSpace:bias2Selection = on",
+          "PhaseSpace:bias2SelectionPow = 5",
+          "PhaseSpace:bias2SelectionRef = 1",
+          "SigmaProcess:alphaSvalue = 0.11799999999999999",
+          "SigmaProcess:alphaSorder = 2",
+          "SpaceShower:alphaSvalue = 0.11799999999999999",
+          "SpaceShower:alphaSorder = 2",
+          "SpaceShower:alphaSuseCMW = off"
+        ],
+        "hadronizer_settings": [
+          "Tune:pp = 14",
+          "ProcessLevel:all = off",
+          "PartonLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = off",
+          "PartonLevel:MPI = off",
+          "PartonLevel:FSRinResonances = off",
+          "ProcessLevel:resonanceDecays = off",
+          "HadronLevel:all = on",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2601201",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "111:mayDecay = on"
+        ],
+        "summary": {
+          "type": "summary",
+          "attempts": 3500,
+          "accepted": 3500,
+          "evolution_failures": 0,
+          "generation_failures": 0,
+          "accepted_weight": 1.7334246053339472e-06,
+          "failed_weight": 0,
+          "generator_weight_sum": 1.733424605333947e-06,
+          "generator_sigma_mb": 0.003417395906833787,
+          "generator_sigma_error_mb": 2.264094545423914e-05,
+          "final_records": 94090
+        },
+        "means_60_100_GeV": {
+          "mass": {
+            "mean": 10.343634468021808,
+            "standard_error": 0.12458262775034365
+          },
+          "ptd": {
+            "mean": 0.384538690715495,
+            "standard_error": 0.0038376221996505987
+          },
+          "raw_jets": 2570
+        }
+      },
+      "pythia8": {
+        "seed": 2601211,
+        "input_sha256": "f74f297d10d799a21b495c51b0d2ea13dfa698dfa8078402962701c92758aaba",
+        "settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 50",
+          "PhaseSpace:pTHatMax = 150",
+          "PDF:pSet = LHAPDF6:CT14nlo/0",
+          "HadronLevel:all = on",
+          "PartonLevel:FSR = on",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = off",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2601211",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "PhaseSpace:bias2Selection = on",
+          "PhaseSpace:bias2SelectionPow = 5",
+          "PhaseSpace:bias2SelectionRef = 1",
+          "SigmaProcess:alphaSvalue = 0.11799999999999999",
+          "SigmaProcess:alphaSorder = 2",
+          "SpaceShower:alphaSvalue = 0.11799999999999999",
+          "SpaceShower:alphaSorder = 2",
+          "SpaceShower:alphaSuseCMW = off",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "111:mayDecay = on"
+        ],
+        "summary": {
+          "type": "summary",
+          "attempts": 3500,
+          "accepted": 3500,
+          "evolution_failures": 0,
+          "generation_failures": 0,
+          "accepted_weight": 1.7134459903830841e-06,
+          "generator_weight_sum": 1.7134459903830841e-06,
+          "generator_sigma_mb": 0.0034583520413223536,
+          "generator_sigma_error_mb": 2.2948548729962095e-05,
+          "events_with_additional_mpi": 0
+        },
+        "means_60_100_GeV": {
+          "mass": {
+            "mean": 10.633308886645493,
+            "standard_error": 0.11545608407225956
+          },
+          "ptd": {
+            "mean": 0.3777551908191121,
+            "standard_error": 0.0033017560433275667
+          },
+          "raw_jets": 2581
+        }
+      },
+      "jet_spectrum": [
+        {
+          "pt_GeV": [
+            40,
+            50
+          ],
+          "jewel": {
+            "raw_jets": 859,
+            "weighted_jets": 7.775946632651842e-07,
+            "dsigma_mb_per_GeV": 0.00015330051340227142,
+            "spectrum_standard_error_mb_per_GeV": 6.519206969849492e-06,
+            "generator_sigma_error_mb_per_GeV": 1.0156471935566396e-06
+          },
+          "pythia8": {
+            "raw_jets": 796,
+            "weighted_jets": 7.446852518237914e-07,
+            "dsigma_mb_per_GeV": 0.00015030434430043926,
+            "spectrum_standard_error_mb_per_GeV": 6.818588201768232e-06,
+            "generator_sigma_error_mb_per_GeV": 9.973728898301374e-07
+          },
+          "ratio": 1.0199340153192324,
+          "ratio_standard_error": 0.06413723157040714
+        },
+        {
+          "pt_GeV": [
+            50,
+            60
+          ],
+          "jewel": {
+            "raw_jets": 833,
+            "weighted_jets": 6.345149195741206e-07,
+            "dsigma_mb_per_GeV": 0.0001250927604411053,
+            "spectrum_standard_error_mb_per_GeV": 5.59265852606709e-06,
+            "generator_sigma_error_mb_per_GeV": 8.287650723182715e-07
+          },
+          "pythia8": {
+            "raw_jets": 767,
+            "weighted_jets": 5.678083501332402e-07,
+            "dsigma_mb_per_GeV": 0.00011460420566417387,
+            "spectrum_standard_error_mb_per_GeV": 5.38490994034729e-06,
+            "generator_sigma_error_mb_per_GeV": 7.604778712283066e-07
+          },
+          "ratio": 1.0915198069402983,
+          "ratio_standard_error": 0.07153010889499498
+        },
+        {
+          "pt_GeV": [
+            60,
+            80
+          ],
+          "jewel": {
+            "raw_jets": 1440,
+            "weighted_jets": 4.959630451592843e-07,
+            "dsigma_mb_per_GeV": 4.888883183187634e-05,
+            "spectrum_standard_error_mb_per_GeV": 2.14590827232606e-06,
+            "generator_sigma_error_mb_per_GeV": 3.2389849025497143e-07
+          },
+          "pythia8": {
+            "raw_jets": 1449,
+            "weighted_jets": 6.00944469930757e-07,
+            "dsigma_mb_per_GeV": 6.0646134922576795e-05,
+            "spectrum_standard_error_mb_per_GeV": 2.38064935529831e-06,
+            "generator_sigma_error_mb_per_GeV": 4.0242889269955756e-07
+          },
+          "ratio": 0.8061326891530634,
+          "ratio_standard_error": 0.04806817502996041
+        },
+        {
+          "pt_GeV": [
+            80,
+            100
+          ],
+          "jewel": {
+            "raw_jets": 1130,
+            "weighted_jets": 1.482024131873352e-07,
+            "dsigma_mb_per_GeV": 1.4608836134286828e-05,
+            "spectrum_standard_error_mb_per_GeV": 9.142387901120495e-07,
+            "generator_sigma_error_mb_per_GeV": 9.678652139919971e-08
+          },
+          "pythia8": {
+            "raw_jets": 1132,
+            "weighted_jets": 1.773490963016177e-07,
+            "dsigma_mb_per_GeV": 1.789772227031936e-05,
+            "spectrum_standard_error_mb_per_GeV": 1.0097758195002203e-06,
+            "generator_sigma_error_mb_per_GeV": 1.1876371947336627e-07
+          },
+          "ratio": 0.8162399613560521,
+          "ratio_standard_error": 0.06919994115931327
+        },
+        {
+          "pt_GeV": [
+            100,
+            125
+          ],
+          "jewel": {
+            "raw_jets": 1046,
+            "weighted_jets": 6.18373627199504e-08,
+            "dsigma_mb_per_GeV": 4.87642207450593e-06,
+            "spectrum_standard_error_mb_per_GeV": 3.0821425296150553e-07,
+            "generator_sigma_error_mb_per_GeV": 3.2307291636873356e-08
+          },
+          "pythia8": {
+            "raw_jets": 1086,
+            "weighted_jets": 6.386092933016762e-08,
+            "dsigma_mb_per_GeV": 5.155775590226817e-06,
+            "spectrum_standard_error_mb_per_GeV": 2.945625353413782e-07,
+            "generator_sigma_error_mb_per_GeV": 3.421212356617941e-08
+          },
+          "ratio": 0.9458173632982739,
+          "ratio_standard_error": 0.08106997985364627
+        },
+        {
+          "pt_GeV": [
+            125,
+            150
+          ],
+          "jewel": {
+            "raw_jets": 484,
+            "weighted_jets": 1.529205406909975e-08,
+            "dsigma_mb_per_GeV": 1.2059134922168633e-06,
+            "spectrum_standard_error_mb_per_GeV": 8.647379486321346e-08,
+            "generator_sigma_error_mb_per_GeV": 7.98942304144949e-09
+          },
+          "pythia8": {
+            "raw_jets": 545,
+            "weighted_jets": 1.587318733554911e-08,
+            "dsigma_mb_per_GeV": 1.281512697389785e-06,
+            "spectrum_standard_error_mb_per_GeV": 8.399618746197531e-08,
+            "generator_sigma_error_mb_per_GeV": 8.503719758058444e-09
+          },
+          "ratio": 0.94100783759154,
+          "ratio_standard_error": 0.09184386094707206
+        },
+        {
+          "pt_GeV": [
+            150,
+            200
+          ],
+          "jewel": {
+            "raw_jets": 116,
+            "weighted_jets": 3.6592961132072595e-09,
+            "dsigma_mb_per_GeV": 1.4428390505923523e-07,
+            "spectrum_standard_error_mb_per_GeV": 1.8907516569771463e-08,
+            "generator_sigma_error_mb_per_GeV": 9.559103227806518e-10
+          },
+          "pythia8": {
+            "raw_jets": 125,
+            "weighted_jets": 3.6576076855021657e-09,
+            "dsigma_mb_per_GeV": 1.4764743185963725e-07,
+            "spectrum_standard_error_mb_per_GeV": 1.8284194762624495e-08,
+            "generator_sigma_error_mb_per_GeV": 9.797424450719244e-10
+          },
+          "ratio": 0.9772191987490877,
+          "ratio_standard_error": 0.1764306452397095
+        }
+      ]
+    },
+    {
+      "pythia8_mpi": true,
+      "hard_input_check": {
+        "exact": true,
+        "weight_comparisons": 3500,
+        "pthat_comparisons": 3500,
+        "events_with_additional_mpi": 2795,
+        "summary": {
+          "type": "summary",
+          "attempts": 3500,
+          "accepted": 3500,
+          "evolution_failures": 0,
+          "generation_failures": 0,
+          "accepted_weight": 1.686630057162439e-06,
+          "generator_weight_sum": 1.686630057162439e-06,
+          "generator_sigma_mb": 0.0033918328398133656,
+          "generator_sigma_error_mb": 2.244094680575518e-05
+        }
+      },
+      "jewel": {
+        "seed": 2601202,
+        "input_sha256": "94de5261d08013049f312685d6c983b004c0af6ae349dde4185fe340f9ac6aab",
+        "settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 50",
+          "PhaseSpace:pTHatMax = 150",
+          "PDF:pSet = LHAPDF6:CT14nlo/0",
+          "HadronLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2601202",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "PhaseSpace:bias2Selection = on",
+          "PhaseSpace:bias2SelectionPow = 5",
+          "PhaseSpace:bias2SelectionRef = 1",
+          "SigmaProcess:alphaSvalue = 0.11799999999999999",
+          "SigmaProcess:alphaSorder = 2",
+          "SpaceShower:alphaSvalue = 0.11799999999999999",
+          "SpaceShower:alphaSorder = 2",
+          "SpaceShower:alphaSuseCMW = off"
+        ],
+        "hadronizer_settings": [
+          "Tune:pp = 14",
+          "ProcessLevel:all = off",
+          "PartonLevel:all = off",
+          "PartonLevel:FSR = off",
+          "PartonLevel:ISR = off",
+          "PartonLevel:MPI = off",
+          "PartonLevel:FSRinResonances = off",
+          "ProcessLevel:resonanceDecays = off",
+          "HadronLevel:all = on",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2601202",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "111:mayDecay = on"
+        ],
+        "summary": {
+          "type": "summary",
+          "attempts": 3500,
+          "accepted": 3500,
+          "evolution_failures": 0,
+          "generation_failures": 0,
+          "accepted_weight": 1.6866300571624422e-06,
+          "failed_weight": 0,
+          "generator_weight_sum": 1.686630057162439e-06,
+          "generator_sigma_mb": 0.0033918328398133656,
+          "generator_sigma_error_mb": 2.244094680575518e-05,
+          "final_records": 137361
+        },
+        "means_60_100_GeV": {
+          "mass": {
+            "mean": 10.820368001193458,
+            "standard_error": 0.1123816525623393
+          },
+          "ptd": {
+            "mean": 0.3826423687070276,
+            "standard_error": 0.0034255056717960117
+          },
+          "raw_jets": 2635
+        }
+      },
+      "pythia8": {
+        "seed": 2601212,
+        "input_sha256": "24747986a0f89524a7591d091797c3db10104c7f5cb628cb82205bcbd30734e8",
+        "settings": [
+          "Tune:pp = 14",
+          "Beams:idA = 2212",
+          "Beams:idB = 2212",
+          "Beams:eCM = 5020",
+          "HardQCD:all = on",
+          "PhaseSpace:pTHatMin = 50",
+          "PhaseSpace:pTHatMax = 150",
+          "PDF:pSet = LHAPDF6:CT14nlo/0",
+          "HadronLevel:all = on",
+          "PartonLevel:FSR = on",
+          "PartonLevel:ISR = on",
+          "PartonLevel:MPI = on",
+          "Check:event = on",
+          "Random:setSeed = on",
+          "Random:seed = 2601212",
+          "Init:showChangedSettings = off",
+          "Init:showChangedParticleData = off",
+          "Init:showProcesses = off",
+          "Next:numberShowInfo = 0",
+          "Next:numberShowProcess = 0",
+          "Next:numberShowEvent = 0",
+          "PhaseSpace:bias2Selection = on",
+          "PhaseSpace:bias2SelectionPow = 5",
+          "PhaseSpace:bias2SelectionRef = 1",
+          "SigmaProcess:alphaSvalue = 0.11799999999999999",
+          "SigmaProcess:alphaSorder = 2",
+          "SpaceShower:alphaSvalue = 0.11799999999999999",
+          "SpaceShower:alphaSorder = 2",
+          "SpaceShower:alphaSuseCMW = off",
+          "HadronLevel:Decay = on",
+          "ColourReconnection:reconnect = off",
+          "ColourReconnection:forceHadronLevelCR = off",
+          "ParticleDecays:limitTau0 = on",
+          "ParticleDecays:tau0Max = 10",
+          "111:mayDecay = on"
+        ],
+        "summary": {
+          "type": "summary",
+          "attempts": 3500,
+          "accepted": 3500,
+          "evolution_failures": 0,
+          "generation_failures": 0,
+          "accepted_weight": 1.7365639513248365e-06,
+          "generator_weight_sum": 1.7365639513248365e-06,
+          "generator_sigma_mb": 0.003412881476573948,
+          "generator_sigma_error_mb": 2.278688475772747e-05,
+          "events_with_additional_mpi": 2830
+        },
+        "means_60_100_GeV": {
+          "mass": {
+            "mean": 11.333321174237032,
+            "standard_error": 0.12539727023558847
+          },
+          "ptd": {
+            "mean": 0.37822763205634363,
+            "standard_error": 0.004112436576103659
+          },
+          "raw_jets": 2515
+        }
+      },
+      "jet_spectrum": [
+        {
+          "pt_GeV": [
+            40,
+            50
+          ],
+          "jewel": {
+            "raw_jets": 798,
+            "weighted_jets": 6.846575519578898e-07,
+            "dsigma_mb_per_GeV": 0.00013768543723594642,
+            "spectrum_standard_error_mb_per_GeV": 6.4710928194681035e-06,
+            "generator_sigma_error_mb_per_GeV": 9.109504267636703e-07
+          },
+          "pythia8": {
+            "raw_jets": 790,
+            "weighted_jets": 7.144799839663416e-07,
+            "dsigma_mb_per_GeV": 0.00014041725908229766,
+            "spectrum_standard_error_mb_per_GeV": 6.258492718266623e-06,
+            "generator_sigma_error_mb_per_GeV": 9.375279870299796e-07
+          },
+          "ratio": 0.980544971008513,
+          "ratio_standard_error": 0.06417750474223008
+        },
+        {
+          "pt_GeV": [
+            50,
+            60
+          ],
+          "jewel": {
+            "raw_jets": 788,
+            "weighted_jets": 5.577444746949247e-07,
+            "dsigma_mb_per_GeV": 0.00011216306844889247,
+            "spectrum_standard_error_mb_per_GeV": 5.4564530972491986e-06,
+            "generator_sigma_error_mb_per_GeV": 7.420900650193519e-07
+          },
+          "pythia8": {
+            "raw_jets": 820,
+            "weighted_jets": 6.585493725889413e-07,
+            "dsigma_mb_per_GeV": 0.0001294251762743044,
+            "spectrum_standard_error_mb_per_GeV": 5.874655108222176e-06,
+            "generator_sigma_error_mb_per_GeV": 8.641368288803621e-07
+          },
+          "ratio": 0.8666248073031283,
+          "ratio_standard_error": 0.05823316651174037
+        },
+        {
+          "pt_GeV": [
+            60,
+            80
+          ],
+          "jewel": {
+            "raw_jets": 1446,
+            "weighted_jets": 5.118957417096723e-07,
+            "dsigma_mb_per_GeV": 5.147141721796874e-05,
+            "spectrum_standard_error_mb_per_GeV": 2.173120389805229e-06,
+            "generator_sigma_error_mb_per_GeV": 3.405437090669908e-07
+          },
+          "pythia8": {
+            "raw_jets": 1350,
+            "weighted_jets": 5.727502178218783e-07,
+            "dsigma_mb_per_GeV": 5.628150370208677e-05,
+            "spectrum_standard_error_mb_per_GeV": 2.311941192030099e-06,
+            "generator_sigma_error_mb_per_GeV": 3.7577634841819725e-07
+          },
+          "ratio": 0.9145352172966251,
+          "ratio_standard_error": 0.05455332687288968
+        },
+        {
+          "pt_GeV": [
+            80,
+            100
+          ],
+          "jewel": {
+            "raw_jets": 1189,
+            "weighted_jets": 1.7174910910935898e-07,
+            "dsigma_mb_per_GeV": 1.726947370622211e-05,
+            "spectrum_standard_error_mb_per_GeV": 1.0331650369629375e-06,
+            "generator_sigma_error_mb_per_GeV": 1.1425779485820494e-07
+          },
+          "pythia8": {
+            "raw_jets": 1165,
+            "weighted_jets": 1.8460417296591438e-07,
+            "dsigma_mb_per_GeV": 1.8140194662366663e-05,
+            "spectrum_standard_error_mb_per_GeV": 1.0281656018727736e-06,
+            "generator_sigma_error_mb_per_GeV": 1.2111716392479173e-07
+          },
+          "ratio": 0.9520004623792193,
+          "ratio_standard_error": 0.07896444486566154
+        },
+        {
+          "pt_GeV": [
+            100,
+            125
+          ],
+          "jewel": {
+            "raw_jets": 1032,
+            "weighted_jets": 6.105490802927429e-08,
+            "dsigma_mb_per_GeV": 4.911285464315254e-06,
+            "spectrum_standard_error_mb_per_GeV": 3.1176315023543813e-07,
+            "generator_sigma_error_mb_per_GeV": 3.2493905524731504e-08
+          },
+          "pythia8": {
+            "raw_jets": 1105,
+            "weighted_jets": 6.972034325084741e-08,
+            "dsigma_mb_per_GeV": 5.480875445782766e-06,
+            "spectrum_standard_error_mb_per_GeV": 3.6727563283789577e-07,
+            "generator_sigma_error_mb_per_GeV": 3.659432008165842e-08
+          },
+          "ratio": 0.896076824386553,
+          "ratio_standard_error": 0.08313893412876036
+        },
+        {
+          "pt_GeV": [
+            125,
+            150
+          ],
+          "jewel": {
+            "raw_jets": 517,
+            "weighted_jets": 1.487353077377398e-08,
+            "dsigma_mb_per_GeV": 1.1964337978734978e-06,
+            "spectrum_standard_error_mb_per_GeV": 8.01297212947002e-08,
+            "generator_sigma_error_mb_per_GeV": 7.915810855868762e-09
+          },
+          "pythia8": {
+            "raw_jets": 593,
+            "weighted_jets": 1.7920001429428136e-08,
+            "dsigma_mb_per_GeV": 1.4087322471945943e-06,
+            "spectrum_standard_error_mb_per_GeV": 9.712342158228915e-08,
+            "generator_sigma_error_mb_per_GeV": 9.405723460265654e-09
+          },
+          "ratio": 0.8492982255897982,
+          "ratio_standard_error": 0.08202258641406031
+        },
+        {
+          "pt_GeV": [
+            150,
+            200
+          ],
+          "jewel": {
+            "raw_jets": 112,
+            "weighted_jets": 3.246515665119641e-09,
+            "dsigma_mb_per_GeV": 1.305756220951872e-07,
+            "spectrum_standard_error_mb_per_GeV": 1.5653392193435773e-08,
+            "generator_sigma_error_mb_per_GeV": 8.639106724751572e-10
+          },
+          "pythia8": {
+            "raw_jets": 129,
+            "weighted_jets": 3.187371696422015e-09,
+            "dsigma_mb_per_GeV": 1.2528328499938969e-07,
+            "spectrum_standard_error_mb_per_GeV": 1.4108631360011373e-08,
+            "generator_sigma_error_mb_per_GeV": 8.364825432544621e-10
+          },
+          "ratio": 1.0422429623857907,
+          "ratio_standard_error": 0.17170590912393105
+        }
+      ]
+    }
+  ]
+}
