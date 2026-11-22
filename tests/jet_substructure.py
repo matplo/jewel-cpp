@@ -3,24 +3,28 @@ import math
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
-from jet_substructure import soft_drop
+from jet_substructure import SOFT_DROP, soft_drop
 from hepyy_utils.fastjet import require_fastjet
 fj=require_fastjet()
 
-def check(inputs):
+def check(inputs, **settings):
     particles=fj.gbl.std.vector[fj.PseudoJet]()
     for pt,phi in inputs:
         particles.push_back(fj.PseudoJet(pt*math.cos(phi),pt*math.sin(phi),0,pt))
     sequence=fj.ClusterSequence(particles,fj.JetDefinition(fj.antikt_algorithm,.4))
     jets=list(sequence.inclusive_jets(0))
     assert len(jets)==1
-    return soft_drop(jets[0],fj),jets[0].m()
+    return soft_drop(jets[0],fj,dict(SOFT_DROP, **settings)),jets[0].m()
 
 r,m=check([(80,0),(20,.2)])
 assert r['soft_drop_tagged'] and math.isclose(r['zg'],.2,abs_tol=1e-15)
 expected=math.sqrt(2*80*20*(1-math.cos(.2)))
 assert math.isclose(r['groomed_mass'],expected,rel_tol=1e-12)
 assert r['soft_drop_dropped_branches']==0
+assert math.isclose(r['rg'], .2, abs_tol=1e-15)
+assert math.isclose(r['theta_g'], .5, abs_tol=1e-15)
+r,_=check([(85,0),(15,.2)], zcut=.2)
+assert not r['soft_drop_tagged'] and r['rg'] is None and r['theta_g'] is None
 r,m=check([(40,-.05),(40,.05),(1,.3)])
 assert r['soft_drop_tagged'] and math.isclose(r['zg'],.5,abs_tol=1e-15)
 assert r['soft_drop_dropped_branches']==1
@@ -35,7 +39,7 @@ print('hepyy Soft Drop: analytic two-body, soft-branch removal, singleton, stric
 if '--contrib' in sys.argv:
     import hepyy,random
     hepyy.load('fjcontrib')
-    reference=fj.gbl.fastjet.contrib.SoftDrop(0.,.1,.4)
+    references = {zcut: fj.gbl.fastjet.contrib.SoftDrop(0., zcut, .4) for zcut in (.1, .2)}
     rng=random.Random(2601001)
     compared=0
     for n in [1,2,3,8,30]:
@@ -51,12 +55,14 @@ if '--contrib' in sys.argv:
             sequence=fj.ClusterSequence(particles,fj.JetDefinition(fj.antikt_algorithm,.4))
             jets=list(sequence.inclusive_jets(0))
             assert len(jets)==1
-            actual=soft_drop(jets[0],fj)
-            expected=reference(jets[0])
+            zcut = .2 if case % 4 < 2 else .1
+            actual=soft_drop(jets[0],fj,dict(SOFT_DROP, zcut=zcut))
+            expected=references[zcut](jets[0])
             structure=expected.structure_of[fj.gbl.fastjet.contrib.SoftDrop]()
             assert actual['soft_drop_tagged']==structure.has_substructure()
             if actual['soft_drop_tagged']:
                 assert math.isclose(actual['zg'],structure.symmetry(),rel_tol=2e-12,abs_tol=2e-13)
                 assert math.isclose(actual['groomed_mass'],expected.m(),rel_tol=2e-12,abs_tol=2e-13)
+                assert math.isclose(actual['rg'],structure.delta_R(),rel_tol=2e-12,abs_tol=2e-13)
             compared+=1
     print(f'FastJet-contrib differential: {compared} jets passed')

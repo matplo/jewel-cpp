@@ -62,7 +62,7 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--pthat-bias POWER] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--glauber-events CSV] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--pthat-bias POWER] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--glauber-events CSV] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--decay-tau0-max MM] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"&&mode!="zero-interaction"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
@@ -80,6 +80,7 @@ int main(int argc,char** argv){
   bool scatter_recoils=false,scatter_option_seen=false,cuts_option_seen=false;double soft_cut=0,hard_cut=0;
   std::optional<double> subtraction_radius;int projection_mode=0;bool projection_seen=false;
   bool pi0_decay=true,pi0_option_seen=false;
+  std::optional<double> decay_tau0_max;
   bool jewel_fragmentation=false;std::optional<std::array<double,2>> centrality;
   for(int i=5;i<argc;++i){std::string option=argv[i];
    if(input_option(argc,argv,i,input_config,input_options))continue;
@@ -176,6 +177,12 @@ int main(int argc,char** argv){
     for(auto& value:range){std::string token=argv[++i];std::size_t used=0;value=std::stod(token,&used);if(used!=token.size()||!std::isfinite(value))throw std::invalid_argument("invalid centrality");}
     if(range[0]<0||range[1]>100||range[0]>=range[1])throw std::invalid_argument("centrality requires 0 <= MIN < MAX <= 100");centrality=range;
    }
+   else if(option=="--decay-tau0-max"){
+    if(!hadronize_run||decay_tau0_max||i+1>=argc)throw std::invalid_argument("decay lifetime requires jewel-run-events and one value in mm");
+    const std::string token=argv[++i];std::size_t used=0;const double value=std::stod(token,&used);
+    if(used!=token.size()||!std::isfinite(value)||value<=0)throw std::invalid_argument("invalid maximum decay lifetime");
+    decay_tau0_max=value;
+   }
    else if(option=="--pi0-decay"){
     if(!hadronize_run||pi0_option_seen||i+1>=argc)throw std::invalid_argument("pi0 decay requires jewel-run-events and one on/off value");
     const std::string value=argv[++i];if(value!="on"&&value!="off")throw std::invalid_argument("pi0 decay requires on or off");
@@ -186,8 +193,8 @@ int main(int argc,char** argv){
    else replay_directory=option;
   }
   if(mpi_longitudinal_recoil&&!native_mpi)throw std::invalid_argument("longitudinal recoil requires native MPI");
-  if(compact_hadrons&&(!hadronize_run||geometry_step||subtraction_radius||!replay_directory.empty()))
-   throw std::invalid_argument("compact hadrons requires the hadron runner without geometry, subtraction or replay export");
+  if(compact_hadrons&&(!hadronize_run||geometry_step||projection_mode||!replay_directory.empty()))
+   throw std::invalid_argument("compact hadrons requires the hadron runner without geometry, on-shell projection or replay export");
   if(!glauber_events.empty()&&(!centrality||mode=="vacuum"))
    throw std::invalid_argument("Glauber CSV requires explicit non-vacuum centrality");
   if(mode=="vacuum"&&centrality)throw std::invalid_argument("vacuum has no centrality; use zero-interaction for a noninteracting expanding background");
@@ -205,7 +212,7 @@ int main(int argc,char** argv){
 #endif
   jewel::Pythia8Input input(input_config);
   std::unique_ptr<jewel::Pythia8Hadronizer> hadronizer;
-  if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14,pi0_decay});
+  if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14,pi0_decay,decay_tau0_max.value_or(10.)});
   jewel::Kernels kernels;jewel::MediumConfig medium_config;medium_config.max_rapidity=2;jewel::MediumModel medium=mode=="vacuum"?jewel::MediumModel{}:jewel::MediumModel(jewel::ExpandingMedium(medium_config));
   std::optional<jewel::GeometrySampler> geometry;
   std::optional<jewel::GlauberGeometry> glauber;
@@ -344,7 +351,20 @@ int main(int argc,char** argv){
       out<<"{\"pdg\":"<<p.pdg<<",\"final\":true,\"momentum\":";
       momentum(out,p.momentum);out<<'}';
      }
-     out<<"]}\n";
+     out<<']';
+     if(subtracted){
+      out<<",\"subtraction_skipped_particles\":"<<subtracted->skipped_particles
+         <<",\"subtraction_skipped_thermals\":"<<subtracted->skipped_thermals
+         <<",\"subtracted_particles\":[";
+      bool first_subtracted=true;
+      for(const auto& p:subtracted->particles){
+       if(!first_subtracted)out<<',';first_subtracted=false;
+       out<<"{\"pdg\":"<<p.pdg<<",\"final\":true,\"thermal_residual\":"<<(p.thermal_residual?"true":"false")<<",\"momentum\":";
+       momentum(out,p.momentum);out<<'}';
+      }
+      out<<']';
+     }
+     out<<"}\n";
      for(const auto& p:prepared.state.particles())if(p.particle.status==3||p.particle.status==4||p.particle.status==5)++final_count;
      continue;
     }

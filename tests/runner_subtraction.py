@@ -27,6 +27,12 @@ with tempfile.TemporaryDirectory() as directory:
    residuals+=1;assert p['source_id']==0 and p['pdg'] in [211,-211,111]
   else:assert p['source_id'] in source and p['pdg']==source[p['source_id']]['pdg']
  assert event['subtraction_draws']==residuals
+ compact=run('compact',['--subtraction-radius','.4','--compact-hadrons'])
+ assert compact[0]['subtraction']==settings and compact[-1]==subtracted[-1]
+ assert compact[1]['hadronized_particles']==[
+  {k:p[k] for k in ('pdg','final','momentum')} for p in source.values()]
+ assert compact[1]['subtracted_particles']==[
+  {k:p[k] for k in ('pdg','final','thermal_residual','momentum')} for p in event['subtracted_particles']]
  if reference:
   selected=list(source.values());thermal=raw['thermal_references']
   payload=f'{len(selected)} {len(thermal)} .4 2600\n'
@@ -45,7 +51,7 @@ with tempfile.TemporaryDirectory() as directory:
    else:assert math.isclose(p['mass'],row[5],rel_tol=2e-12,abs_tol=2e-13)
   assert repaired==event['subtraction_spacelike_mass_fields']
   print(json.dumps(dict(reference_particles=len(rows)-1,max_momentum_error=maximum,spacelike_mass_fields=repaired,residual_thermal_particles=residuals)))
- for index,args in enumerate([['--subtraction-radius'],['--subtraction-radius','-1'],['--subtraction-radius','nan'],['--subtraction-radius','inf'],['--subtraction-radius','1x'],['--subtraction-radius','.4','--subtraction-radius','.3'],['--subtraction-radius','.4','--keep-recoils','off']]):
+ for index,args in enumerate([['--subtraction-radius'],['--subtraction-radius','-1'],['--subtraction-radius','nan'],['--subtraction-radius','inf'],['--subtraction-radius','1x'],['--subtraction-radius','.4','--subtraction-radius','.3'],['--subtraction-radius','.4','--keep-recoils','off'],['--subtraction-radius','.4','--compact-hadrons','--put-on-shell','1']]):
   path=root/f'invalid{index}.jsonl';r=subprocess.run([runner,str(path),'1','2601001','medium',*args],capture_output=True,timeout=10)
   assert r.returncode and not path.exists()
  path=root/'parton.jsonl';r=subprocess.run([parton,str(path),'1','2601001','medium','--subtraction-radius','.4'],capture_output=True,timeout=10)

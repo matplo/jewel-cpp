@@ -8,6 +8,7 @@ struct HadronizerConfig {
  std::string xml_directory;int seed{260001};
  FragmentationProfile fragmentation{FragmentationProfile::Monash14};
  bool pi0_decay{true};
+ double decay_tau0_max_mm{10};
 };
 // Mapped INITPYTHIA overrides and verified source defaults; not an equivalence claim for the two engines.
 std::vector<std::string> jewel260_fragmentation_settings();

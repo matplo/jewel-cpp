@@ -42,6 +42,13 @@ declares subtraction; it never silently falls back to raw hadrons. Otherwise it
 uses raw hadrons as before. The generated HTML labels raw/subtracted settings
 and displays the policy in provenance.
 
+For the [ATLAS example](atlas-soft-drop-comparison.html), `--compact-hadrons`
+keeps the raw and subtracted final-state collections with PDG IDs, four-momenta
+and the residual thermal flag. The full event format retains the thermal ledger,
+IDs, mass fields and diagnostics. Compact subtraction supports the direct
+kernel output with `put_on_shell=0`. Pass `--exclude-thermal-residuals` for
+the subtracted jet calculation and `--raw-hadrons` for its same-event diagnostic.
+
 ## Signed mass metadata, not a numerical clamp
 
 Real hadronized records expose a source issue not covered by the original

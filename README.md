@@ -72,14 +72,68 @@ The runner samples Glauber rows within the requested class with probability prop
 
 For each jet pT bin, multiply the weighted jet count by the Pythia hard-process cross section and divide by total generated weight and bin width. A failed evolution contributes zero jets and retains its generated weight in the denominator. For Pb–Pb, multiply the resulting per-nucleon-pair spectrum by the **unweighted** minimum-bias class mean `T_AA` recorded in the run header. Its fixed-bin statistical error scales the Pb–Pb yield and cancels in the model ratio. If using the optical-only runner, supply `--taa` and `--taa-source` explicitly to retain the class-mean-only calculation.
 
-The example uses pp hard input and one hard-scale window. The closure gate uses at least three bins with 50 jets or more per sample and requires consistency with unity within three standard errors. Empty denominator bins have no ratio. See the [closure results](docs/analysis-examples.md#inclusive-jet-nuclear-modification-factor).
+The example uses pp hard input and one hard-scale window. The closure gate uses at least three bins with 50 jets or more per sample and requires consistency with unity within three standard errors. Empty denominator bins have no ratio. See the [Glauber and R_AA validation report](docs/glauber-raa-validation.html).
+
+## Soft Drop in 0–10% Pb–Pb at 5.02 TeV
+
+Activate the same hepyy environment and reuse `common`, `runner`, `glauber`, and `raa-pp.jsonl` from the inclusive example. Use a fresh filename for the larger quenched sample.
+
+```bash
+"$runner" soft-drop-medium.jsonl 3500 2600514 medium "${common[@]}" \
+  --centrality 0 10 --glauber-events "$glauber"
+python tools/analyze_native_events.py raa-pp.jsonl soft-drop-medium.jsonl \
+  --generator "$runner" --soft-drop-zcut 0.2 --output soft-drop-jets.json
+python tools/jet_soft_drop.py soft-drop-jets.json --pt-edges 40 60 80 100 \
+  --output soft-drop.json
+```
+
+The analyzer uses hepyy FastJet to cluster anti-kt R=0.4 jets, then declusters their Cambridge/Aachen trees with Soft Drop β=0. It records the accepted momentum split `zg`, the rapidity–azimuth angle `rg`, and `theta_g = rg/R`. Each shape ratio divides the Pb–Pb tagged-jet density by the pp tagged-jet density in the same jet pT interval, with `rg < 0.4` in both samples. Tagging fractions are reported separately.
+
+The same output includes ATLAS-style `R_AA(pT, rg)` from cross sections and Glauber-normalized yields, with a separate untagged category. The result uses the model's 20–100 GeV hard window and |η| < 2. ATLAS measures jet pT > 158 GeV and |y| < 2.1, so the comparison is qualitative. The [Soft Drop report](docs/glauber-soft-drop.html) shows the quenched ratios alongside an independent zero-interaction control. [ATLAS measurement](https://arxiv.org/abs/2211.11470)
+
+### Direct ATLAS comparison with thermal subtraction
+
+The [ATLAS comparison report](docs/atlas-soft-drop-comparison.html) shows 158–200, 200–315, and 315–501 GeV jets from HEPData Table 18, with finer jet-pT bins from Table 14. The two hard-scattering windows are 100–700 GeV for the lower bins and 150–1000 GeV for the highest bin. Both use `--isr-only` because the native MPI calibration is limited to 20–100 GeV. The lifetime setting of 8.994 mm corresponds to 30 ps. The jet analyzer applies |y| < 2.1 and excludes muons and neutrinos.
+
+Keep recoil hadronization enabled. The runner subtracts the stored incoming thermal momenta of the scatterers after hadronization. The analysis drops leftover thermal entries before jet clustering and Soft Drop. The raw comparison reuses the same events and weights.
+
+```bash
+atlas=(--isr-only --compact-hadrons --pthat-bias 5 --table-energy jewel
+  --longitudinal-boost on --jewel-fragmentation --ecm 5020
+  --lhapdf CT14nlo/0 --hard-alpha-s 0.11754434294459773 --hard-alpha-s-order 1
+  --isr-alpha-s 0.11754434294459773 --isr-alpha-s-order 1 --alpha-s-nfmax 5
+  --isr-alpha-s-cmw off --decay-tau0-max 8.99377374 --subtraction-radius 0.4)
+analysis=(--generator "$runner" --atlas-particle-level --soft-drop-zcut 0.2)
+atlas_sample() {
+  local name=$1 lower=$2 upper=$3 seed=$4
+  local hard=(--pt-min "$lower" --pt-max "$upper")
+  local geometry=(--centrality 0 10 --glauber-events "$glauber")
+  "$runner" "$name-pp.jsonl" 8000 "$seed" vacuum "${atlas[@]}" "${hard[@]}" || return
+  "$runner" "$name-medium.jsonl" 8000 "$((seed+1))" medium "${atlas[@]}" "${hard[@]}" "${geometry[@]}" || return
+  "$runner" "$name-control.jsonl" 8000 "$((seed+2))" zero-interaction "${atlas[@]}" "${hard[@]}" "${geometry[@]}" || return
+  python tools/analyze_native_events.py "$name-pp.jsonl" "$name-medium.jsonl" "${analysis[@]}" \
+    --exclude-thermal-residuals --output "$name-medium-jets.json" || return
+  python tools/analyze_native_events.py "$name-pp.jsonl" "$name-control.jsonl" "${analysis[@]}" \
+    --exclude-thermal-residuals --output "$name-control-jets.json" || return
+  python tools/analyze_native_events.py "$name-pp.jsonl" "$name-medium.jsonl" "${analysis[@]}" \
+    --raw-hadrons --output "$name-raw-jets.json"
+}
+atlas_sample atlas 100 700 2600921
+atlas_sample atlas-high 150 1000 2601021
+
+curl -fsSL 'https://www.hepdata.net/download/table/ins2512925/Table%2014/json' -o atlas-table-14.json
+curl -fsSL 'https://www.hepdata.net/download/table/ins2512925/Table%2018/json' -o atlas-table-18.json
+# The HTML renderer uses matplotlib.
+python tools/atlas_soft_drop_report.py atlas-medium-jets.json atlas-control-jets.json atlas-raw-jets.json \
+  atlas-table-14.json atlas-table-18.json atlas-soft-drop-comparison.html \
+  --high-samples atlas-high-medium-jets.json atlas-high-control-jets.json atlas-high-raw-jets.json
+```
 
 ## Planned analysis examples
 
 | Example | Scope |
 |---|---|
 | Inclusive jet `R_AA` | The quickstart above implements binary scaling, Glauber-weighted impact parameters and closure. The plan extends it to broader hard-scale coverage. |
-| Soft Drop `z_g` and `theta_g` | Make central Pb–Pb medium/vacuum distributions and a separate ATLAS-style `r_g`-differential suppression comparison. |
 | Proton and nuclear PDFs | Switch installed proton sets or members through LHAPDF, then validate a bound-nucleon configuration with explicit beam and isospin policy. |
 | Pythia8 steering | Compare the same hard process with standalone Pythia8 and document which controls affect the hard input, ISR, MPI, and hadronization. |
 

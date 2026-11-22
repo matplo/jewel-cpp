@@ -28,9 +28,12 @@ struct Pythia8Hadronizer::Impl {
  std::uint64_t attempts{},returned{};
  explicit Impl(const HadronizerConfig& c):engine(c.xml_directory.empty()?JEWEL_PYTHIA8_XML:c.xml_directory,false){
   if(c.seed<=0||c.seed>900000000)throw std::domain_error("invalid hadronization seed");
+  if(!std::isfinite(c.decay_tau0_max_mm)||c.decay_tau0_max_mm<=0)throw std::domain_error("invalid maximum decay lifetime");
+  std::ostringstream lifetime_setting;
+  lifetime_setting<<"ParticleDecays:tau0Max = "<<std::setprecision(17)<<c.decay_tau0_max_mm;
   settings={"Tune:pp = 14","ProcessLevel:all = off","PartonLevel:all = off","PartonLevel:FSR = off","PartonLevel:ISR = off","PartonLevel:MPI = off",
    "PartonLevel:FSRinResonances = off","ProcessLevel:resonanceDecays = off","HadronLevel:all = on",
-   "HadronLevel:Decay = on","ColourReconnection:reconnect = off","ColourReconnection:forceHadronLevelCR = off","ParticleDecays:limitTau0 = on","ParticleDecays:tau0Max = 10",
+   "HadronLevel:Decay = on","ColourReconnection:reconnect = off","ColourReconnection:forceHadronLevelCR = off","ParticleDecays:limitTau0 = on",lifetime_setting.str(),
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};

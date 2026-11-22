@@ -43,11 +43,25 @@ def validate_pair(pp, aa):
     for key in ("pythia_version", "hadrotype", "native_mpi", "mpi_remnant_policy", "mpi_production_pt0_gev",
                 "table_energy_gev", "angular_ordering", "first_angle_ordering", "coherence",
                 "compression", "keep_recoils", "recoil_rescattering", "recoil_soft_cut_3T",
-                "recoil_hard_cut_3T", "longitudinal_scatterer_boost", "subtraction"):
+                "recoil_hard_cut_3T", "longitudinal_scatterer_boost"):
         require(pp_run.get(key) == aa_run.get(key), f"unmatched {key}")
+    # The random seed base identifies a sample, while the remaining fields define the policy.
+    for run in (pp_run, aa_run):
+        subtraction = run.get("subtraction")
+        if subtraction and "seed_base" in subtraction:
+            require(subtraction["seed_base"] == run["seed"] + 2000000, "invalid subtraction seed base")
+    def subtraction_policy(run):
+        return {key: value for key, value in (run.get("subtraction") or {}).items() if key != "seed_base"}
+    require(subtraction_policy(pp_run) == subtraction_policy(aa_run), "unmatched subtraction")
 
 
-def spectrum(sample, edges):
+def spectrum(sample, edges, bin_index=None):
+    if bin_index is None:
+        def bin_index(jet):
+            pt = jet["pt"]
+            require(math.isfinite(pt), "nonfinite jet pT")
+            return bisect_right(edges, pt) - 1
+
     summary = sample["summary"]
     records = sample["events"]
     require(len(records) == summary["attempts"] == sample["run"]["attempts_requested"],
@@ -68,10 +82,8 @@ def spectrum(sample, edges):
             accepted_count += 1
             accepted_weights.append(weight)
             for jet in event["jets"]:
-                pt = jet["pt"]
-                require(math.isfinite(pt), "nonfinite jet pT")
-                index = bisect_right(edges, pt) - 1
-                if 0 <= index < len(counts):
+                index = bin_index(jet)
+                if index is not None and 0 <= index < len(counts):
                     counts[index] += 1
         else:
             require(not event["jets"], "failed attempt has selected jets")

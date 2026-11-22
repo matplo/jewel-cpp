@@ -16,7 +16,7 @@ The [README example](../README.md#inclusive-jet-r_aa) uses one hard-scale window
 
 The standalone ROOT-free Glauber CSV supplies minimum-bias Pb–Pb rows. The runner selects the centrality class and samples its impact parameters in proportion to event N_coll. The same class supplies the unweighted mean T_AA. This places the binary-collision weight in the geometry sampling once, while retaining Pythia's bias weights for the hard event. JEWEL still uses its optical medium and vertex sampler at the selected impact parameter.
 
-For 0–10% Pb–Pb the 3,659 minimum-bias rows give T_AA = 23.1472 ± 0.0573 inverse mb, with the fixed-bin Monte Carlo error. The 3,500 zero-interaction events had mean b = 3.138 ± 0.020 fm, compared with 3.140 fm expected from N_coll weighting and 3.308 fm before weighting. The pp and zero-interaction runs selected 7,388 and 7,612 jets. All seven eligible bins passed the closure gate. The largest deviation was 1.19 standard errors, and the 60–80 GeV bin gave R_AA = 1.042 ± 0.111. A separate 300-attempt quenched sample exercised the full calculation.
+For 0–10% Pb–Pb the 3,659 minimum-bias rows give T_AA = 23.1472 ± 0.0573 inverse mb, with the fixed-bin Monte Carlo error. The 3,500 zero-interaction events had mean b = 3.138 ± 0.020 fm, compared with 3.140 fm expected from N_coll weighting and 3.308 fm before weighting. The pp and zero-interaction runs selected 7,388 and 7,612 jets. All seven eligible bins passed the closure gate. The largest deviation was 1.19 standard errors, and the 60–80 GeV bin gave R_AA = 1.042 ± 0.111. The [HTML validation report](glauber-raa-validation.html) adds the 3,500-attempt quenched run, which gave R_AA = 0.772 ± 0.084 in the 60–80 GeV bin.
 
 ### TGlauberMC integration
 
@@ -26,9 +26,9 @@ Python access through the recipe is the first useful milestone. Wheels add a sep
 
 ## Soft Drop in central Pb–Pb
 
-Use the [ATLAS substructure-dependent jet suppression measurement](https://doi.org/10.1103/PhysRevC.107.054909) at 5.02 TeV as the reference for `R_AA(pT, r_g)`. Start with anti-kt R=0.4, Cambridge/Aachen reclustering, Soft Drop beta=0 and zcut=0.2, then match the publication's particle and jet acceptance, centrality and bin definitions. Keep the ATLAS untagged `r_g=0` category separate.
+The [runnable example](../README.md#soft-drop-in-010-pbpb-at-502-tev) uses anti-kt R=0.4 jets, Cambridge/Aachen reclustering, and Soft Drop β=0 with zcut=0.2. The shape ratios divide separately normalized tagged-jet densities in each jet pT interval. They use tagged jets with r_g < 0.4 and record the overall tagging fraction and r_g overflow. The r_g-dependent R_AA retains the absolute yield and cross section, with untagged jets in a separate category.
 
-Extend the analysis to expose the accepted splitting angle `r_g = ΔR` and `theta_g = r_g/R` alongside the existing `z_g`. Make grooming and selection configurable, and check tagged fractions and empty bins before forming ratios. Show both the change in yield and the tagged-jet shape ratio, identifying each normalization. For measured `z_g` and `theta_g` shape comparisons, use the observable definitions and fiducial cuts in the [ALICE measurement](https://arxiv.org/abs/2107.12984).
+The [Soft Drop report](glauber-soft-drop.html) compares quenched and zero-interaction samples to the same pp baseline. The [ATLAS measurement](https://arxiv.org/abs/2211.11470) provides the reference for r_g-differential R_AA. Its jet momentum and acceptance differ from the example. The [ALICE measurement](https://arxiv.org/abs/2107.12984) provides measured Soft Drop shapes under its own charged-jet selection.
 
 ## LHAPDF inputs and nuclear beams
 
