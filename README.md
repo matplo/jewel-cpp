@@ -129,12 +129,60 @@ python tools/atlas_soft_drop_report.py atlas-medium-jets.json atlas-control-jets
   --high-samples atlas-high-medium-jets.json atlas-high-control-jets.json atlas-high-raw-jets.json
 ```
 
+## Steer proton and nuclear PDFs with LHAPDF
+
+Use a Pythia8 build with LHAPDF6 enabled. Activate the hepyy wheel environment used in the examples above and make the desired grids visible through `LHAPDF_DATA_PATH`. Each PDF flag takes `SET/MEMBER`. Member 0 is the central fit for the sets below. Member 1 selects the first error member.
+
+```bash
+for set in CT14nlo CT18ANLO EPPS21nlo_CT18Anlo_Pb208; do
+  lhapdf install "$set"
+done
+input=build-pythia8/jewel-pythia8-input
+hard=(--ecm 5020 --pt-min 50 --pt-max 150 --isr on
+  --hard-alpha-s 0.118 --hard-alpha-s-order 2
+  --isr-alpha-s 0.118 --isr-alpha-s-order 2)
+"$input" ct18-central.jsonl 1000 2601101 "${hard[@]}" --lhapdf CT18ANLO/0
+"$input" ct18-member1.jsonl 1000 2601101 "${hard[@]}" --lhapdf CT18ANLO/1
+"$input" ct14-central.jsonl 1000 2601101 "${hard[@]}" --lhapdf CT14nlo/0
+
+lead=EPPS21nlo_CT18Anlo_Pb208/0
+"$input" lead-hard.jsonl 1000 2601101 "${hard[@]}" --lhapdf CT18ANLO/0 \
+  --lhapdf-hard-a "$lead" --lhapdf-hard-b "$lead"
+```
+
+| Option | Pythia8 setting and scope |
+|---|---|
+| `--lhapdf SET/MEMBER` | Sets `PDF:pSet` for the common proton baseline, including ISR and the hard process by default. |
+| `--lhapdf-hard-a SET/MEMBER` | Enables `PDF:useHard` and sets `PDF:pHardSet` for beam A. |
+| `--lhapdf-hard-b SET/MEMBER` | Enables `PDF:useHard` and sets `PDF:pHardSetB` for beam B. |
+
+A beam without a hard override uses the common baseline even when the other beam has an override. Either hard flag can take a proton or nuclear set. For an EPPS21 nuclear error member, change `$lead` to `EPPS21nlo_CT18Anlo_Pb208/1` on both beams. Those grids already average protons and neutrons per nucleon in lead, so there is no extra isospin weighting. Beam IDs remain proton IDs in the event record. The nuclear override applies to the hard process. ISR uses the baseline PDF and the native MPI path has its own CT14nlo setup. [EPPS21 grid conventions](https://research.hip.fi/qcdtheory/nuclear-pdfs/epps21/) · [Pythia8 PDF settings](https://pythia.org/latest-manual/PDFSelection.html)
+
+External PDF choices require explicit `--hard-alpha-s` and `--hard-alpha-s-order`. Keep the hard and ISR couplings fixed when isolating the PDF change. HardQCD uses leading-order matrix elements in this example.
+
+The same hard PDF flags work in the hadron-level runner. Reuse `runner`, `glauber`, and `lead` from above to combine the lead hard PDFs with the 0–10% Pb–Pb medium.
+
+```bash
+"$runner" lead-medium.jsonl 100 2601102 medium --compact-hadrons --isr-only \
+  --ecm 5020 --pt-min 50 --pt-max 150 --table-energy jewel \
+  --lhapdf CT18ANLO/0 --lhapdf-hard-a "$lead" --lhapdf-hard-b "$lead" \
+  --hard-alpha-s 0.118 --hard-alpha-s-order 2 --isr-alpha-s 0.118 --isr-alpha-s-order 2 \
+  --centrality 0 10 --glauber-events "$glauber"
+```
+
+To check the free-proton limit, run the validation script with the same hepyy environment. It replaces both hard PDFs with the same free-proton baseline and checks that the same-seed event records and cross section are identical. It also checks the recorded beam densities against direct LHAPDF queries for sets, members, and one- or two-sided overrides.
+
+```bash
+python tools/validate_lhapdf_steering.py "$input" --output lhapdf-validation.json
+```
+
+With Pythia 8.317 and LHAPDF 6.5.5, all 1,000 free-proton events matched exactly. Across eight configurations, all 16,000 hard PDF values agreed with LHAPDF, with a maximum absolute difference of `7.11e-15`. [Validation output](docs/lhapdf-steering-validation.json)
+
 ## Planned analysis examples
 
 | Example | Scope |
 |---|---|
 | Inclusive jet `R_AA` | The quickstart above implements binary scaling, Glauber-weighted impact parameters and closure. The plan extends it to broader hard-scale coverage. |
-| Proton and nuclear PDFs | Switch installed proton sets or members through LHAPDF, then validate a bound-nucleon configuration with explicit beam and isospin policy. |
 | Pythia8 steering | Compare the same hard process with standalone Pythia8 and document which controls affect the hard input, ISR, MPI, and hadronization. |
 
 The [demonstration plan](docs/analysis-examples.md) records the analysis definitions, steering options, and implementation gates. The [porting history](docs/porting-notes.md), [port plan](docs/port-plan.md), and [routine inventory](docs/routines.csv) contain the numerical validation and implementation details.

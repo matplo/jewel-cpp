@@ -82,9 +82,16 @@ struct Pythia8Input::Impl {
   require(std::isfinite(c.ecm)&&std::isfinite(c.pt_min)&&std::isfinite(c.pt_max)&&c.ecm>0&&c.pt_min>0&&c.pt_max>c.pt_min&&2*c.pt_min<c.ecm,"invalid hard-process energy range");
   require(c.seed>0&&c.seed<=900000000,"Pythia seed must be between 1 and 900000000");
   require(c.pdf_set==13&&c.pp_tune==14,"base tune 14 and internal PDF 13 are required; use external_pdf for an LHAPDF override");
-  require(c.external_pdf.empty()||std::regex_match(c.external_pdf,std::regex("[A-Za-z0-9_-]+/[0-9]+")),"external PDF requires set/member with no whitespace");
+  const std::regex set_member("[A-Za-z0-9_-]+/[0-9]+");
+  for(const auto* pdf:{&c.external_pdf,&c.hard_external_pdfs[0],&c.hard_external_pdfs[1]})
+   require(pdf->empty()||std::regex_match(*pdf,set_member),"external PDF requires set/member with no whitespace");
+  const bool use_hard_pdf=!c.hard_external_pdfs[0].empty()||!c.hard_external_pdfs[1].empty();
   require(c.hard_alpha_s.has_value()==c.hard_alpha_s_order.has_value(),"hard alpha_s value and order must be specified together");
-  require(c.external_pdf.empty()||c.hard_alpha_s.has_value(),"external PDF requires explicit hard alpha_s and running order");
+  require((c.external_pdf.empty()&&!use_hard_pdf)||c.hard_alpha_s.has_value(),"external PDF requires explicit hard alpha_s and running order");
+  const std::string base_pdf=c.external_pdf.empty()?"13":"LHAPDF6:"+c.external_pdf;
+  std::array<std::string,2> hard_pdf{base_pdf,base_pdf};
+  for(std::size_t beam=0;beam<hard_pdf.size();++beam)
+   if(!c.hard_external_pdfs[beam].empty())hard_pdf[beam]="LHAPDF6:"+c.hard_external_pdfs[beam];
   if(c.hard_alpha_s)require(std::isfinite(*c.hard_alpha_s)&&*c.hard_alpha_s>=.06&&*c.hard_alpha_s<=.25&&*c.hard_alpha_s_order>=0&&*c.hard_alpha_s_order<=3,"invalid hard alpha_s policy");
   require(c.isr_alpha_s.has_value()==c.isr_alpha_s_order.has_value(),"ISR alpha_s value and order must be specified together");
   if(c.isr_alpha_s)require(std::isfinite(*c.isr_alpha_s)&&*c.isr_alpha_s>=.06&&*c.isr_alpha_s<=.25&&*c.isr_alpha_s_order>=0&&*c.isr_alpha_s_order<=3,"invalid ISR alpha_s policy");
@@ -97,10 +104,16 @@ struct Pythia8Input::Impl {
    require(std::isfinite(v[0])&&std::isfinite(v[1])&&v[0]>=0&&v[0]<=1&&v[1]>=.1&&v[1]<=1,"invalid MPI double-Gaussian profile");}
   settings={"Tune:pp = 14","Beams:idA = 2212","Beams:idB = 2212","Beams:eCM = "+number(c.ecm),
    "HardQCD:all = on","PhaseSpace:pTHatMin = "+number(c.pt_min),"PhaseSpace:pTHatMax = "+number(c.pt_max),
-   "PDF:pSet = "+(c.external_pdf.empty()?std::string("13"):"LHAPDF6:"+c.external_pdf),"HadronLevel:all = off","PartonLevel:FSR = off",std::string("PartonLevel:ISR = ")+(c.initial_state_radiation?"on":"off"),std::string("PartonLevel:MPI = ")+(c.multiple_parton_interactions?"on":"off"),
+   "PDF:pSet = "+base_pdf,"HadronLevel:all = off","PartonLevel:FSR = off",std::string("PartonLevel:ISR = ")+(c.initial_state_radiation?"on":"off"),std::string("PartonLevel:MPI = ")+(c.multiple_parton_interactions?"on":"off"),
    "Check:event = on","Random:setSeed = on","Random:seed = "+std::to_string(c.seed),
    "Init:showChangedSettings = off","Init:showChangedParticleData = off","Init:showProcesses = off",
    "Next:numberShowInfo = 0","Next:numberShowProcess = 0","Next:numberShowEvent = 0"};
+  if(use_hard_pdf){
+   settings.push_back("PDF:useHard = on");
+   settings.push_back("PDF:pHardSet = "+hard_pdf[0]);
+   // Set B explicitly since Pythia otherwise inherits the hard PDF of A.
+   settings.push_back("PDF:pHardSetB = "+hard_pdf[1]);
+  }
   if(c.pthat_bias_power){
    require(std::isfinite(*c.pthat_bias_power)&&*c.pthat_bias_power>=0&&*c.pthat_bias_power<=10,
     "pThat bias power must be in [0,10]");
@@ -134,7 +147,9 @@ struct Pythia8Input::Impl {
    require(engine.settings.mode("MultipartonInteractions:pT0parametrization")==0&&engine.settings.parm("MultipartonInteractions:pT0Ref")==v[0]&&engine.settings.parm("MultipartonInteractions:ecmRef")==v[1]&&engine.settings.parm("MultipartonInteractions:ecmPow")==v[2],"Pythia changed explicit MPI screening settings");}
   if(c.mpi_double_gaussian){const auto& v=*c.mpi_double_gaussian;
    require(engine.settings.mode("MultipartonInteractions:bProfile")==2&&engine.settings.parm("MultipartonInteractions:coreFraction")==v[0]&&engine.settings.parm("MultipartonInteractions:coreRadius")==v[1],"Pythia changed explicit MPI overlap settings");}
-  if(!c.external_pdf.empty())require(engine.settings.word("PDF:pSet")=="LHAPDF6:"+c.external_pdf,"Pythia changed explicit external PDF");
+  if(!c.external_pdf.empty())require(engine.settings.word("PDF:pSet")==base_pdf,"Pythia changed explicit external PDF");
+  if(use_hard_pdf)require(engine.settings.flag("PDF:useHard")&&engine.settings.word("PDF:pHardSet")==hard_pdf[0]
+    &&engine.settings.word("PDF:pHardSetB")==hard_pdf[1],"Pythia changed explicit hard PDFs");
  }
 };
 Pythia8Input::Pythia8Input(PythiaInputConfig config):impl_(std::make_unique<Impl>(config)){}
@@ -153,6 +168,7 @@ std::optional<HardEventSnapshot> Pythia8Input::next(){
  const auto& info=p.info;result.process_code=info.code();result.weight=info.weight();result.pt_hat=info.pTHat();
  result.incoming_id1=info.id1();result.incoming_id2=info.id2();result.x1=info.x1();result.x2=info.x2();
  result.q_factorization=info.QFac();result.q_renormalization=info.QRen();
+ result.hard_pdfs={HardPdfSample{info.id1pdf(),info.x1pdf(),info.pdf1()},HardPdfSample{info.id2pdf(),info.x2pdf(),info.pdf2()}};
  std::vector<ParticleId> incoming,outgoing;
  result.particles=detail::capture_particles(p.event);
  require(impl_->capture->momenta.size()==result.particles.size(),"missing pre-repair parton record");

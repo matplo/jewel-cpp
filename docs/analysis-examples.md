@@ -32,9 +32,9 @@ The [Soft Drop report](glauber-soft-drop.html) compares quenched and zero-intera
 
 ## LHAPDF inputs and nuclear beams
 
-For an installed proton set, pass `--lhapdf SET/MEMBER` with explicit `--hard-alpha-s` and `--hard-alpha-s-order`. For a clean PDF-only study, hold the explicit coupling and other settings fixed and use `--isr-only` in the hadron runner. Compare `CT14nlo/0` with another installed member or a second proton set. Inspect the recorded `PDF:pSet` and coupling settings and track the event weights and cross section.
+The [runnable LHAPDF example](../README.md#steer-proton-and-nuclear-pdfs-with-lhapdf) uses the common proton PDF for ISR and supports separate LHAPDF grids for the hard process on beams A and B. For lead, the example uses the published EPPS21 per-nucleon grids. The hard input retains proton beam IDs, and the Glauber CSV supplies the centrality and impact parameters for medium evolution independently of the PDF choice. The example uses ISR with MPI disabled.
 
-The current hard input uses proton beam IDs on both sides. The optical Pb–Pb geometry controls medium evolution. The native MPI setup uses its own internal CT14nlo choice. A nuclear PDF demonstration therefore needs explicit per-beam bound-proton PDF selection, proton/neutron composition and isospin handling, plus a coordinated MPI PDF policy when native MPI is enabled. Validate the free-proton limit, the beam flavour mixtures and the hard cross sections before claiming a Pb–Pb nuclear-PDF prediction.
+The [validation output](lhapdf-steering-validation.json) records CT18ANLO and CT14nlo proton steering, EPPS21 central and error members, and one-sided nuclear overrides on each beam. Using the same central proton PDF on both hard beams reproduces the baseline event records and hard cross section exactly.
 
 ## Steering compared with standalone Pythia8
 

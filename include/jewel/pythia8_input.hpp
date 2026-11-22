@@ -26,6 +26,8 @@ struct PythiaInputConfig {
  std::optional<std::array<double,3>> mpi_screening;
  // Double-Gaussian matter core fraction and core/outer radius ratio.
  std::optional<std::array<double,2>> mpi_double_gaussian;
+ // Hard process only, ordered as beams A and B. Empty entries inherit the base PDF.
+ std::array<std::string,2> hard_external_pdfs{};
 };
 struct GeneratorParticle {
  ParticleId id{};
@@ -52,6 +54,7 @@ struct GeneratorIsrFractions {
  ParticleId emitted{},mother{},recoiler{};
  std::array<double,2> before{},after{}; // Beam A/B fractions around accepted ISR.
 };
+struct HardPdfSample {int flavour{};double x{},xf{};};
 struct HardEventSnapshot {
  std::vector<GeneratorIsrFractions> isr_fractions;
  std::uint64_t attempt{};
@@ -64,6 +67,7 @@ struct HardEventSnapshot {
  std::array<ParticleId,2> hard_incoming{},hard_outgoing{},hard_final{};
  std::vector<GeneratorParticle> particles;
  std::vector<GeneratorJunction> junctions;
+ std::array<HardPdfSample,2> hard_pdfs{}; // Pythia hard-process PDF values, beam A then B.
 };
 struct GeneratorStatistics {
  std::uint64_t attempts{},returned{},failed{};

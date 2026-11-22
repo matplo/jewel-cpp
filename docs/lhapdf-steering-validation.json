@@ -1,0 +1,162 @@
+{
+  "pythia_version": 8317,
+  "lhapdf_version": "6.5.5",
+  "attempts_per_case": 1000,
+  "ecm_GeV": 5020,
+  "pthat_GeV": [
+    50,
+    150
+  ],
+  "alpha_s_mz": 0.118,
+  "alpha_s_order": 2,
+  "seed": 2601101,
+  "isr": true,
+  "mpi": false,
+  "free_proton_limit_exact": true,
+  "cases": [
+    {
+      "case": "free-proton",
+      "base_pdf": "CT18ANLO/0",
+      "hard_pdf_a": "CT18ANLO/0",
+      "hard_pdf_b": "CT18ANLO/0",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 3.552713678800501e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.0033495043261179453,
+        "sigma_error_mb": 5.246690933417443e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "free-proton-hard-override",
+      "base_pdf": "CT18ANLO/0",
+      "hard_pdf_a": "CT18ANLO/0",
+      "hard_pdf_b": "CT18ANLO/0",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 3.552713678800501e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.0033495043261179453,
+        "sigma_error_mb": 5.246690933417443e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "proton-member",
+      "base_pdf": "CT18ANLO/1",
+      "hard_pdf_a": "CT18ANLO/1",
+      "hard_pdf_b": "CT18ANLO/1",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 3.552713678800501e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.0034064455299527307,
+        "sigma_error_mb": 5.474962368936271e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "proton-set",
+      "base_pdf": "CT14nlo/0",
+      "hard_pdf_a": "CT14nlo/0",
+      "hard_pdf_b": "CT14nlo/0",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 3.552713678800501e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.003414790416378562,
+        "sigma_error_mb": 5.333391458233791e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "lead-a",
+      "base_pdf": "CT18ANLO/0",
+      "hard_pdf_a": "EPPS21nlo_CT18Anlo_Pb208/0",
+      "hard_pdf_b": "CT18ANLO/0",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 7.105427357601002e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.0035523663226731763,
+        "sigma_error_mb": 5.6452647696904805e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "lead-b",
+      "base_pdf": "CT18ANLO/0",
+      "hard_pdf_a": "CT18ANLO/0",
+      "hard_pdf_b": "EPPS21nlo_CT18Anlo_Pb208/0",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 5.329070518200751e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.0033423219842003524,
+        "sigma_error_mb": 5.4288410617125384e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "lead-central",
+      "base_pdf": "CT18ANLO/0",
+      "hard_pdf_a": "EPPS21nlo_CT18Anlo_Pb208/0",
+      "hard_pdf_b": "EPPS21nlo_CT18Anlo_Pb208/0",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 1.7763568394002505e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.0034666543643143794,
+        "sigma_error_mb": 5.364832587645082e-05,
+        "weight_sum": 1000
+      }
+    },
+    {
+      "case": "lead-member",
+      "base_pdf": "CT18ANLO/0",
+      "hard_pdf_a": "EPPS21nlo_CT18Anlo_Pb208/1",
+      "hard_pdf_b": "EPPS21nlo_CT18Anlo_Pb208/1",
+      "compared_pdf_values": 2000,
+      "maximum_absolute_xf_difference": 3.552713678800501e-15,
+      "summary": {
+        "type": "summary",
+        "attempts": 1000,
+        "returned": 1000,
+        "failed": 0,
+        "pythia_accepted": 1000,
+        "sigma_mb": 0.003476038537648572,
+        "sigma_error_mb": 5.377557690353211e-05,
+        "weight_sum": 1000
+      }
+    }
+  ]
+}

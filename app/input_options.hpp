@@ -50,11 +50,13 @@ inline bool input_option(int argc,char** argv,int& i,jewel::PythiaInputConfig& c
   }
   return true;
  }
- if(option!="--lhapdf"&&option!="--hard-alpha-s"&&option!="--hard-alpha-s-order")return false;
+ if(option!="--lhapdf"&&option!="--lhapdf-hard-a"&&option!="--lhapdf-hard-b"&&option!="--hard-alpha-s"&&option!="--hard-alpha-s-order")return false;
  if(i+1>=argc)throw std::invalid_argument("missing value for "+option);
  std::string value=argv[++i];if(value.empty())throw std::invalid_argument("empty input option");std::size_t used=0;
- if(option=="--lhapdf"){
-  if(!config.external_pdf.empty())throw std::invalid_argument("repeated external PDF");config.external_pdf=value;
+ if(option=="--lhapdf"||option=="--lhapdf-hard-a"||option=="--lhapdf-hard-b"){
+  if(!state.hard_range_seen.insert(option).second)throw std::invalid_argument("repeated "+option);
+  if(option=="--lhapdf")config.external_pdf=value;
+  else config.hard_external_pdfs[option=="--lhapdf-hard-a"?0:1]=value;
  }else if(option=="--hard-alpha-s"){
   if(config.hard_alpha_s)throw std::invalid_argument("repeated hard alpha_s");
   config.hard_alpha_s=std::stod(value,&used);if(used!=value.size())throw std::invalid_argument("invalid hard alpha_s");
