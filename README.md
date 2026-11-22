@@ -49,34 +49,36 @@ printf '%s\n' "$packages/hepyy_pythia8" "$packages/hepyy_lhapdf"
 
 On macOS, the native wheels were tested with Apple Clang. If Conda injects compiler flags or an alternate C++ runtime, use a fresh CMake build directory and configure with `env -u CXXFLAGS -u CPPFLAGS -u LDFLAGS cmake ... -DCMAKE_CXX_COMPILER="$(xcrun --find clang++)"`. The tested analysis environment used Python 3.14 and a source-built cppyy backend.
 
-From the repository root, reuse the Bash `common` array from the quickstart. This runs independent pp and zero-interaction Pb–Pb samples for closure, plus a smaller quenched sample to demonstrate the output.
+From the repository root, reuse the Bash `common` array from the quickstart. Obtain `events.csv` from a complete minimum-bias run of the standalone [ROOT-free glauber-cpp generator](https://github.com/matplo/glauber-cpp), or use its bundled validation sample. The example uses its Pb–Pb sample at 5.02 TeV, validated against TGlauberMC. Set `glauber` to that sample or to a new run with the same profile and energy. The requested centrality boundaries must align with the CSV bins.
 
 ```bash
 runner=build-pythia8/jewel-run-events
+glauber=../glauber-cpp/validation/native-run/events.csv
 "$runner" raa-pp.jsonl 3500 2600611 vacuum "${common[@]}"
-"$runner" raa-control.jsonl 3500 2600612 zero-interaction "${common[@]}" --centrality 0 10
-"$runner" raa-medium.jsonl 300 2600514 medium "${common[@]}" --centrality 0 10
-taa=(--taa 23.35 --taa-error 0.20 --taa-source 'ATLAS arXiv:1805.05635 Table 1 (0–10%)')
+"$runner" raa-control.jsonl 3500 2600612 zero-interaction "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
+"$runner" raa-medium.jsonl 300 2600514 medium "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
 
 python tools/analyze_native_events.py raa-pp.jsonl raa-control.jsonl \
   --generator "$runner" --output raa-control-jets.json
-python tools/jet_raa.py raa-control-jets.json "${taa[@]}" \
+python tools/jet_raa.py raa-control-jets.json \
   --validate-no-quenching --output raa-closure.json
 
 python tools/analyze_native_events.py raa-pp.jsonl raa-medium.jsonl \
   --generator "$runner" --output raa-medium-jets.json
-python tools/jet_raa.py raa-medium-jets.json "${taa[@]}" --output raa.json
+python tools/jet_raa.py raa-medium-jets.json --output raa.json
 ```
 
-For each jet pT bin, the tool multiplies the weighted jet count by Pythia's hard-process cross section and divides by the total generated weight and bin width. Failed evolution attempts retain their generated weight and contribute zero jets. The Pb–Pb yield per inelastic event is the per-nucleon-pair spectrum times the class-averaged `T_AA`. The example uses `23.35 ± 0.20 mb⁻¹` from [ATLAS Table 1](https://arxiv.org/pdf/1805.05635). The overlap uncertainty scales the yield and cancels in the model ratio because the same factor appears in its denominator.
+The runner samples Glauber rows within the requested class with probability proportional to `N_coll`. This gives the Pb–Pb hard events their binary-collision-weighted impact-parameter distribution. JEWEL still samples the hard production point and evolves the jet using its optical medium at that impact parameter. The analysis uses the original Pythia event weights, since the impact-parameter weight has already been applied by sampling.
 
-This is a particle-level binary-scaling example for one hard-scale window with pp hard input in both samples. It uses a constant class mean overlap and does not reweight the medium by the event's impact parameter. The closure check requires at least three bins with 50 jets or more in each sample and checks consistency with unity within three standard errors. Empty denominator bins have no ratio. See the [closure results and Glauber follow-up](docs/analysis-examples.md#inclusive-jet-nuclear-modification-factor).
+For each jet pT bin, multiply the weighted jet count by the Pythia hard-process cross section and divide by total generated weight and bin width. A failed evolution contributes zero jets and retains its generated weight in the denominator. For Pb–Pb, multiply the resulting per-nucleon-pair spectrum by the **unweighted** minimum-bias class mean `T_AA` recorded in the run header. Its fixed-bin statistical error scales the Pb–Pb yield and cancels in the model ratio. If using the optical-only runner, supply `--taa` and `--taa-source` explicitly to retain the class-mean-only calculation.
+
+The example uses pp hard input and one hard-scale window. The closure gate uses at least three bins with 50 jets or more per sample and requires consistency with unity within three standard errors. Empty denominator bins have no ratio. See the [closure results](docs/analysis-examples.md#inclusive-jet-nuclear-modification-factor).
 
 ## Planned analysis examples
 
 | Example | Scope |
 |---|---|
-| Inclusive jet `R_AA` | The quickstart above implements binary scaling and closure. The plan extends it to broader hard-scale coverage and impact-parameter weighting. |
+| Inclusive jet `R_AA` | The quickstart above implements binary scaling, Glauber-weighted impact parameters and closure. The plan extends it to broader hard-scale coverage. |
 | Soft Drop `z_g` and `theta_g` | Make central Pb–Pb medium/vacuum distributions and a separate ATLAS-style `r_g`-differential suppression comparison. |
 | Proton and nuclear PDFs | Switch installed proton sets or members through LHAPDF, then validate a bound-nucleon configuration with explicit beam and isospin policy. |
 | Pythia8 steering | Compare the same hard process with standalone Pythia8 and document which controls affect the hard input, ISR, MPI, and hadronization. |

@@ -12,11 +12,17 @@ Deliver each example as a runnable generator card or shell command, a Python ana
 
 The [README example](../README.md#inclusive-jet-r_aa) uses one hard-scale window and a mean overlap for the centrality class. In the hepyy wheel environment, independent 3,500-attempt pp and zero-interaction Pb–Pb samples selected 7,388 and 7,575 jets, respectively. Seven bins met the 50-jet threshold. The largest deviation was 1.35 standard errors. At 60–80 GeV the control gave `R_AA = 1.037 ± 0.110`. The 300-attempt quenched sample exercised the output format.
 
+### Glauber-weighted closure
+
+The standalone ROOT-free Glauber CSV supplies minimum-bias Pb–Pb rows. The runner selects the centrality class and samples its impact parameters in proportion to event N_coll. The same class supplies the unweighted mean T_AA. This places the binary-collision weight in the geometry sampling once, while retaining Pythia's bias weights for the hard event. JEWEL still uses its optical medium and vertex sampler at the selected impact parameter.
+
+For 0–10% Pb–Pb the 3,659 minimum-bias rows give T_AA = 23.1472 ± 0.0573 inverse mb, with the fixed-bin Monte Carlo error. The 3,500 zero-interaction events had mean b = 3.138 ± 0.020 fm, compared with 3.140 fm expected from N_coll weighting and 3.308 fm before weighting. The pp and zero-interaction runs selected 7,388 and 7,612 jets. All seven eligible bins passed the closure gate. The largest deviation was 1.19 standard errors, and the 60–80 GeV bin gave R_AA = 1.042 ± 0.111. A separate 300-attempt quenched sample exercised the full calculation.
+
 ### TGlauberMC integration
 
 TGlauberMC runs through ROOT. Start with a versioned hepyy recipe that pins the upstream source, depends on the existing ROOT recipe, and exposes a seeded Pb–Pb run through PyROOT. Validate minimum-bias centrality percentiles and `<T_AA> = <N_coll> / sigma_NN_inelastic` against published tables. Record the nuclear density, cross section and centrality policy alongside the result. Use that output to supply the mean overlap and, later, to validate impact-parameter weights against the chosen JEWEL geometry. [TGlauberMC reference](https://arxiv.org/abs/1710.07098)
 
-Python access through the recipe is the first useful milestone. Wheels add a separate ROOT ABI and packaging task. Confirm the upstream code redistribution terms, choose a compatible ROOT distribution, and test library and dictionary loading for each supported platform before publishing wheels. The class-averaged input in the README lets the R_AA example run independently of that work.
+Python access through the recipe is the first useful milestone. Wheels add a separate ROOT ABI and packaging task. Confirm the upstream code redistribution terms, choose a compatible ROOT distribution, and test library and dictionary loading for each supported platform before publishing wheels. The README uses the validated ROOT-free CSV as the geometry interface. Packaging the Glauber generator and exposing its API to Python can proceed independently of the JEWEL integration.
 
 ## Soft Drop in central Pb–Pb
 

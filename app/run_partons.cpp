@@ -4,6 +4,7 @@
 #include "jewel/subtraction.hpp"
 #include "jewel/projection.hpp"
 #include "input_options.hpp"
+#include "glauber_geometry.hpp"
 #ifdef JEWEL_NATIVE_MPI_RUNNER
 #include "native_mpi_runner.hpp"
 #endif
@@ -61,11 +62,11 @@ unsigned long integer(const char* value){std::string s=value;std::size_t end=0;a
 }
 int main(int argc,char** argv){
  try{
-  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--pthat-bias POWER] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
+  if(argc<5){std::cerr<<"Usage: "<<(hadronize_run?"jewel-run-events":"jewel-run-partons")<<" output.jsonl attempts seed vacuum|medium|zero-interaction [new-replay-directory] [--experimental-isr-mpi|--native-mpi|--isr-only] [--compact-hadrons] [--pthat-bias POWER] [--hadrotype 0|1] [--geometry-step FM] [--centrality MIN MAX] [--glauber-events CSV] [--table-energy GEV|jewel] [--longitudinal-boost on|off] [--keep-recoils on|off] [--recoil-rescattering on|off] [--recoil-cuts SOFT HARD] [--angular-ordering 0..5] [--subtraction-radius R] [--put-on-shell 0|1|2] [--jewel-fragmentation] [--pi0-decay on|off] [--ecm GEV --pt-min GEV --pt-max GEV] [--lhapdf SET/MEMBER --hard-alpha-s VALUE --hard-alpha-s-order ORDER] [--isr-alpha-s VALUE --isr-alpha-s-order ORDER] [--alpha-s-nfmax 5|6] [--isr-alpha-s-cmw on|off] [--mpi-alpha-s VALUE --mpi-alpha-s-order ORDER] [--mpi-screening PT0REF ECMREF POWER] [--mpi-double-gaussian FRACTION RADIUS]\nDevelopment PPJJ runner: ISR/MPI off by default; experimental mode is not validated full physics.\n";return 2;}
   auto attempts=integer(argv[2]),seed=integer(argv[3]);std::string mode=argv[4];
   if(!attempts||attempts>1000000||!seed||seed>900000000||(mode!="vacuum"&&mode!="medium"&&mode!="zero-interaction"))throw std::invalid_argument("invalid runner arguments");
   if(std::filesystem::exists(argv[1]))throw std::runtime_error("refusing to overwrite output");
-  std::filesystem::path replay_directory;
+  std::filesystem::path replay_directory,glauber_events;
   InputOptionState input_options;jewel::PythiaInputConfig input_config;input_config.seed=static_cast<int>(seed);
   std::optional<double> geometry_step;double table_energy=100;std::optional<std::string> table_energy_option;
   bool experimental_isr_mpi=false;
@@ -163,6 +164,12 @@ int main(int argc,char** argv){
     const std::string value=argv[++i];if(value.size()!=1||value[0]<'0'||value[0]>'2')throw std::invalid_argument("projection mode must be 0, 1 or 2");
     projection_mode=value[0]-'0';projection_seen=true;
    }
+   else if(option=="--glauber-events"){
+    if(!glauber_events.empty()||i+1>=argc)throw std::invalid_argument("Glauber geometry requires one CSV file");
+    glauber_events=argv[++i];
+    if(glauber_events.empty()||glauber_events.string().find_first_of("\t\r\n")!=std::string::npos)
+     throw std::invalid_argument("invalid Glauber CSV path");
+   }
    else if(option=="--centrality"){
     if(centrality||i+2>=argc)throw std::invalid_argument("centrality requires one MIN MAX pair");
     std::array<double,2> range;
@@ -181,6 +188,8 @@ int main(int argc,char** argv){
   if(mpi_longitudinal_recoil&&!native_mpi)throw std::invalid_argument("longitudinal recoil requires native MPI");
   if(compact_hadrons&&(!hadronize_run||geometry_step||subtraction_radius||!replay_directory.empty()))
    throw std::invalid_argument("compact hadrons requires the hadron runner without geometry, subtraction or replay export");
+  if(!glauber_events.empty()&&(!centrality||mode=="vacuum"))
+   throw std::invalid_argument("Glauber CSV requires explicit non-vacuum centrality");
   if(mode=="vacuum"&&centrality)throw std::invalid_argument("vacuum has no centrality; use zero-interaction for a noninteracting expanding background");
   if(experimental_isr_mpi&&hadronize_run&&hadrotype!=0)throw std::invalid_argument("experimental ISR/MPI hadronization currently requires HADROTYPE 0");
   if(projection_seen&&!subtraction_radius)throw std::invalid_argument("projection requires --subtraction-radius");
@@ -198,10 +207,21 @@ int main(int argc,char** argv){
   std::unique_ptr<jewel::Pythia8Hadronizer> hadronizer;
   if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14,pi0_decay});
   jewel::Kernels kernels;jewel::MediumConfig medium_config;medium_config.max_rapidity=2;jewel::MediumModel medium=mode=="vacuum"?jewel::MediumModel{}:jewel::MediumModel(jewel::ExpandingMedium(medium_config));
-  std::optional<jewel::GeometrySampler> geometry;double table_b=0;
+  std::optional<jewel::GeometrySampler> geometry;
+  std::optional<jewel::GlauberGeometry> glauber;
+  double table_b=0;
   const auto geometry_seed=static_cast<std::uint64_t>(seed)+500000;
-  if(centrality){geometry.emplace(medium.cross_section_table());jewel::SplitMixRandom stream(geometry_seed);
-   table_b=geometry->sample((*centrality)[0],(*centrality)[1],stream).impact_parameter;medium=medium.with_impact_parameter(table_b);}
+  if(centrality){
+   jewel::SplitMixRandom stream(geometry_seed);
+   if(!glauber_events.empty()){
+    glauber.emplace(glauber_events,(*centrality)[0],(*centrality)[1]);
+    table_b=glauber->sample(stream);
+   }else{
+    geometry.emplace(medium.cross_section_table());
+    table_b=geometry->sample((*centrality)[0],(*centrality)[1],stream).impact_parameter;
+   }
+   medium=medium.with_impact_parameter(table_b);
+  }
   // INIT: EOVEST uses the hard upper pT cut and ETAMAX (here max_rapidity).
   if(table_energy_option=="jewel")table_energy=input_config.pt_max>0?std::min(1.5*(input_config.pt_max+50.)*std::cosh(medium_config.max_rapidity),input_config.ecm/2.):input_config.ecm/2.;
   auto maximum=medium.maximum_scatterer(longitudinal_boost);double lifetime=medium.bounds().lifetime_max;
@@ -225,6 +245,10 @@ int main(int argc,char** argv){
       <<",\"mpi_production_pt0_gev\":"<<std::sqrt(mpi.secondary.back().scale_shift);
   }
 #endif
+  if(glauber)out<<",\"glauber\":{\"source\":"<<std::quoted(glauber_events.string())
+   <<",\"sampling\":\"ncoll-proportional\",\"minimum_bias_events\":"<<glauber->size()
+   <<",\"taa_mb_inverse\":"<<glauber->mean_overlap()
+   <<",\"taa_fixed_bin_se_mb_inverse\":"<<glauber->overlap_se()<<'}';
   if(compact_hadrons)out<<",\"compact_hadrons\":true";
   if(native_mpi)out<<",\"native_mpi\":true,\"mpi_remnant_policy\":"<<std::quoted(
    mpi_longitudinal_recoil?"longitudinal-rest-frame-recoil":"pythia8-remnants-with-system-recoil");
@@ -240,9 +264,10 @@ int main(int argc,char** argv){
    const auto shower_seed=static_cast<std::uint64_t>(seed)+1000000+100*attempt;
    jewel::SplitMixRandom random(shower_seed);std::string stage="geometry";double event_b=0;std::optional<double> event_centrality;
    try{
-    if(geometry){auto sampled=geometry->sample((*centrality)[0],(*centrality)[1],random);event_b=sampled.impact_parameter;event_centrality=sampled.centrality_fraction;}
+    if(glauber)event_b=glauber->sample(random);
+    else if(geometry){auto sampled=geometry->sample((*centrality)[0],(*centrality)[1],random);event_b=sampled.impact_parameter;event_centrality=sampled.centrality_fraction;}
     auto event_medium=medium.with_impact_parameter(event_b);double event_lifetime=event_medium.bounds().lifetime_max;
-    std::optional<jewel::ScatteringRates> rebound;if(geometry)rebound.emplace(rates.with_event_impact_parameter(event_b));
+    std::optional<jewel::ScatteringRates> rebound;if(geometry||glauber)rebound.emplace(rates.with_event_impact_parameter(event_b));
     const auto& event_rates=rebound?*rebound:rates;
     jewel::TransferSampler transfers(kernels,event_medium,longitudinal_boost);
     auto event_config=config;event_config.evolution.lifetime=event_lifetime;event_config.coherent.lifetime=event_lifetime;
@@ -310,7 +335,9 @@ int main(int argc,char** argv){
     }
     ++accepted;accepted_weight+=hard->weight;
     if(compact_hadrons){
-     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat<<",\"hadronized_particles\":[";
+     out<<"{\"type\":\"event\",\"attempt\":"<<attempt<<",\"weight\":"<<hard->weight<<",\"pt_hat\":"<<hard->pt_hat;
+     if(glauber)out<<",\"impact_parameter_fm\":"<<event_b;
+     out<<",\"hadronized_particles\":[";
      bool first=true;
      for(const auto& p:hadrons->particles)if(p.final){
       if(!first)out<<',';first=false;

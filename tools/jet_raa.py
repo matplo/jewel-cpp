@@ -138,6 +138,11 @@ def calculate(analysis, taa, taa_error, taa_source, edges, check_closure=False):
     validate_pair(pp, aa)
     require(not check_closure or aa["run"]["mode"] == "zero-interaction",
             "closure requires a zero-interaction PbPb sample")
+    glauber = aa["run"].get("glauber")
+    if glauber:
+        require(glauber["sampling"] == "ncoll-proportional" and
+                math.isclose(taa, glauber["taa_mb_inverse"], rel_tol=1e-12),
+                "T_AA must match the minimum-bias mean of the supplied Glauber class")
     pp_metadata, pp_bins = spectrum(pp, edges)
     aa_metadata, aa_bins = spectrum(aa, edges)
     bins = []
@@ -164,8 +169,9 @@ def calculate(analysis, taa, taa_error, taa_source, edges, check_closure=False):
         selection=analysis["selection"], analysis_versions=analysis["analysis_versions"],
         generator=analysis.get("generator"),
         centrality_percent=aa["run"]["centrality_percent"],
-        normalization="Pythia sigmaGen times weighted jets divided by full generated weight and bin width. "
-                      "The PbPb per-event yield uses binary scaling with a constant class mean T_AA.",
+        normalization="Pythia sigmaGen times weighted jets divided by full generated weight and bin width. " +
+                      ("PbPb geometry is sampled proportional to Ncoll and its per-event yield uses the minimum-bias class mean T_AA."
+                       if glauber else "The PbPb per-event yield uses binary scaling with a constant class mean T_AA."),
         uncertainty="Event-level weighted spectrum errors. Pythia cross-section errors use independent "
                     "first-order propagation with covariance neglected. The common T_AA cancels in model R_AA. Ratio errors are omitted if either sample has no jets in a bin.",
         taa=dict(value_mb_inverse=taa, uncertainty_mb_inverse=taa_error, source=taa_source),
@@ -178,15 +184,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("analysis", type=Path, help="jet analysis JSON with vacuum and PbPb samples, in that order")
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--taa", type=float, required=True, help="class-averaged T_AA in inverse mb")
-    parser.add_argument("--taa-error", type=float, default=0.0, help="T_AA uncertainty in inverse mb")
-    parser.add_argument("--taa-source", required=True, help="citation or provenance for the input T_AA")
+    parser.add_argument("--taa", type=float, help="class-averaged T_AA in inverse mb, or use the recorded Glauber mean")
+    parser.add_argument("--taa-error", type=float, help="T_AA uncertainty in inverse mb, defaulting to the Glauber fixed-bin statistical error")
+    parser.add_argument("--taa-source", help="citation or provenance for the input T_AA")
     parser.add_argument("--pt-edges", nargs="+", type=float, default=PT_EDGES)
     parser.add_argument("--validate-no-quenching", action="store_true", help="require statistical closure for zero-interaction PbPb")
     args = parser.parse_args()
     try:
-        report = calculate(json.loads(args.analysis.read_text()), args.taa, args.taa_error,
-                           args.taa_source, args.pt_edges, args.validate_no_quenching)
+        analysis = json.loads(args.analysis.read_text())
+        require(len(analysis["samples"]) == 2, "supply exactly two samples, pp first")
+        glauber = analysis["samples"][1]["run"].get("glauber")
+        taa, error, source = args.taa, args.taa_error, args.taa_source
+        if glauber:
+            taa = glauber["taa_mb_inverse"] if taa is None else taa
+            error = glauber["taa_fixed_bin_se_mb_inverse"] if error is None else error
+            source = source or glauber["source"]
+        require(taa is not None and source is not None, "provide --taa and --taa-source for optical inputs")
+        report = calculate(analysis, taa, error if error is not None else 0., source,
+                           args.pt_edges, args.validate_no_quenching)
     except (KeyError, TypeError, ValueError) as error:
         parser.error(str(error))
     with args.output.open("x") as stream:
