@@ -37,29 +37,41 @@ Jet analysis uses FastJet through hepyy/cppyy in an environment with `hepyy[cppy
 ## Generate JEWEL events in Python
 
 Activate the Conda environment or virtual environment you’ll use to run JEWEL.
-If it already has a working cppyy, install the native dependencies with
-`python -m pip install 'hepyy[hepbundle]'`. If it needs cppyy as well, use
-`python -m pip install 'hepyy[cppyy,hepbundle]'`.
-
-The hepyy recipe builds the C++ library against the environment’s Pythia8 and
-LHAPDF wheels and registers it as `jewel_cpp`. The build requires Git, CMake,
-a C++17 compiler, and GitHub SSH access to this repository.
+With cppyy available in that environment, install JEWEL and the hepbundle wheels
+from PyPI:
 
 ```bash
-hepyy recipe update
-hepyy install jewel-cpp
+pip install 'hepyy[hepbundle,jewel-cpp]'
 python -c 'import hepyy; hepyy.load("jewel_cpp"); import jewel_cpp'
 ```
+
+If your environment needs cppyy from pip, use
+`pip install 'hepyy[cppyy,hepbundle,jewel-cpp]'`.
 
 From this checkout, run the [FastJet script](examples/jewel_fastjet.py) with
 `python examples/jewel_fastjet.py --events 10`, or open the
 [FastJet notebook](examples/jewel_fastjet.ipynb) with a kernel from the same
 environment.
 
+### hepyy recipe fallback
+
+The recipe builds the library against the environment’s Pythia8 and LHAPDF
+wheels and registers it as `jewel_cpp`. It requires Git, CMake, a C++17
+compiler, and GitHub SSH access.
+
+```bash
+pip install 'hepyy[hepbundle]'
+hepyy recipe update
+hepyy install jewel-cpp
+```
+
+Use `hepyy[cppyy,hepbundle]` in the pip command if your source-build environment
+needs cppyy from pip.
+
 ### Manual CMake fallback
 
-Use this setup to build from a checkout. Install the hepyy dependencies above
-first and use that same environment to run the examples.
+Install the same `hepyy[hepbundle]` dependencies as for the recipe, then run
+the examples in that environment.
 
 Run the commands below from the root of the `jewel-cpp` checkout. On macOS, see the Apple Clang setup under [Inclusive jet R_AA](#inclusive-jet-r_aa) if Conda supplies its own compiler flags.
 
