@@ -93,6 +93,16 @@ Both examples use `hepyy.load(["jewel_cpp", "fastjet"])`. Each call to `jewel_cp
 
 The in-process API uses the same JEWEL cascade and string preparation as the command-line runner. It supports vacuum, a fixed-impact-parameter expanding medium, and a zero-interaction control. Set `config.mode = "medium"` and `config.impact_parameter_fm` for the expanding medium. Configure the proton hard input, PDFs, ISR and Pythia8 MPI through `config.input`. Final particles use GeV. Use the command-line runner for Glauber event sampling, native MPI, geometry sidecars, and thermal subtraction.
 
+### Jet-aligned medium geometry
+
+The [medium geometry notebook](examples/jewel_medium_geometry.ipynb) generates a
+0–10% Pb–Pb sample at 5.02 TeV and selects reconstructed anti-`k_t` jets near
+100 GeV. It aligns the leading jet north and shows the optical energy density,
+the hard production vertex, the estimated hot portions of both hard-parton
+rays, and recoil production sites. It also plots weighted event averages and
+the stored thermal-reference momenta. Build `jewel-run-events` and
+`jewel-medium-probe` to run it. [Path-length definitions](docs/validation-geometry-lengths.md)
+
 ## Inclusive jet R_AA
 
 Activate a Conda environment with the [hepyy wheel bundle](https://github.com/matplo/hepyy/tree/main/demos), a working cppyy runtime and `hepyy-utils`. For example, start with `conda activate /Users/ploskon/hepbundle`. Check the runtime with `python -c 'import hepyy; hepyy.load("fastjet")'`. Use the wheel prefixes for the build above if compiling against this environment.
