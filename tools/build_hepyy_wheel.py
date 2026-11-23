@@ -17,7 +17,7 @@ from wheel.wheelfile import WheelFile
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_VERSION = "0.2.0"
-WHEEL_VERSION = f"{PROJECT_VERSION}.1"
+WHEEL_VERSION = f"{PROJECT_VERSION}.2"
 DIST_NAME = "hepyy-jewel-cpp"
 PAYLOAD = "hepyy_jewel_cpp"
 DEPENDENCIES = ("lhapdf", "pythia8")
