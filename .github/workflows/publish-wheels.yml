@@ -24,6 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python -m pip install "hepyy[hepbundle]==$HEPYY_RELEASE" wheel cmake auditwheel patchelf twine
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: python tools/build_hepyy_wheel.py --output raw-wheels --source-revision "$GITHUB_SHA"
       - name: Audit the wheel and keep Pythia8 in its own distribution
         run: |
