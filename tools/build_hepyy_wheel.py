@@ -67,7 +67,7 @@ def build_payload(work, prefix, deps, jobs):
     return f"py3-none-{platform_tag}"
 
 
-def write_wheel(output, prefix, tag, deps):
+def write_wheel(output, prefix, tag, deps, source_revision):
     manifest = dict(
         schema_version=1, name="jewel_cpp", version=PROJECT_VERSION,
         distribution_version=WHEEL_VERSION, cppyy_namespace="jewel",
@@ -82,15 +82,25 @@ def write_wheel(output, prefix, tag, deps):
         "Requires-Python: >=3.10\n"
         "Summary: Native JEWEL C++ generator for hepyy/cppyy\n"
         "License-Expression: GPL-2.0-or-later\n"
+        "Description-Content-Type: text/markdown\n"
+        "Project-URL: Repository, https://github.com/matplo/jewel-cpp\n"
     )
     metadata += "".join(f"License-File: {name}\n" for name in licenses)
     metadata += "".join(
         f"Requires-Dist: hepyy-{name}=={rec['distribution_version']}\n"
         for name, rec in deps.items()
     )
+    if source_revision:
+        metadata += f"Project-URL: Corresponding source, https://github.com/matplo/jewel-cpp/tree/{source_revision}\n"
+    description = (
+        "# hepyy-jewel-cpp\n\n"
+        "Native C++ JEWEL generator for hepyy and cppyy. It reuses the hepbundle "
+        "Pythia8 and LHAPDF libraries and includes the FastJet script and notebook. "
+        "Load the generator with `hepyy.load(\"jewel_cpp\")`.\n"
+    )
     path = output / f"{PAYLOAD}-{WHEEL_VERSION}-{tag}.whl"
     with WheelFile(path, "w") as wheel:
-        wheel.writestr(f"{info}/METADATA", metadata + "\n")
+        wheel.writestr(f"{info}/METADATA", metadata + "\n" + description)
         wheel.writestr(f"{info}/WHEEL", f"Wheel-Version: 1.0\nRoot-Is-Purelib: false\nTag: {tag}\n")
         wheel.writestr(f"{PAYLOAD}/manifest.json", json.dumps(manifest, indent=2) + "\n")
         for name in licenses:
@@ -105,14 +115,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--jobs", type=int, default=4)
+    parser.add_argument("--source-revision", help="Git commit to link as corresponding source")
     args = parser.parse_args()
+    if args.source_revision:
+        head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+        dirty = subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, text=True,
+        )
+        if args.source_revision != head or dirty:
+            parser.error("--source-revision requires a clean checkout at the specified full commit")
     args.output.mkdir(parents=True, exist_ok=True)
     deps = dependency_records()
     with tempfile.TemporaryDirectory(prefix="jewel-wheel-") as tmp:
         work = Path(tmp)
         prefix = work / "payload"
         tag = build_payload(work, prefix, deps, args.jobs)
-        print(write_wheel(args.output, prefix, tag, deps))
+        print(write_wheel(args.output, prefix, tag, deps, args.source_revision))
 
 
 if __name__ == "__main__":
