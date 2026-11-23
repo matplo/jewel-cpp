@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "jewel/pythia8_shower_input.hpp"
-#include "jewel/cascade.hpp"
+#include "event_physics.hpp"
 #include "jewel/subtraction.hpp"
 #include "jewel/projection.hpp"
 #include "input_options.hpp"
@@ -213,7 +213,7 @@ int main(int argc,char** argv){
   jewel::Pythia8Input input(input_config);
   std::unique_ptr<jewel::Pythia8Hadronizer> hadronizer;
   if(hadronize_run)hadronizer=std::make_unique<jewel::Pythia8Hadronizer>(jewel::HadronizerConfig{"",static_cast<int>(seed),jewel_fragmentation?jewel::FragmentationProfile::Jewel260Mapped:jewel::FragmentationProfile::Monash14,pi0_decay,decay_tau0_max.value_or(10.)});
-  jewel::Kernels kernels;jewel::MediumConfig medium_config;medium_config.max_rapidity=2;jewel::MediumModel medium=mode=="vacuum"?jewel::MediumModel{}:jewel::MediumModel(jewel::ExpandingMedium(medium_config));
+  jewel::MediumConfig medium_config;medium_config.max_rapidity=2;jewel::MediumModel medium=mode=="vacuum"?jewel::MediumModel{}:jewel::MediumModel(jewel::ExpandingMedium(medium_config));
   std::optional<jewel::GeometrySampler> geometry;
   std::optional<jewel::GlauberGeometry> glauber;
   double table_b=0;
@@ -230,11 +230,9 @@ int main(int argc,char** argv){
    medium=medium.with_impact_parameter(table_b);
   }
   // INIT: EOVEST uses the hard upper pT cut and ETAMAX (here max_rapidity).
-  if(table_energy_option=="jewel")table_energy=input_config.pt_max>0?std::min(1.5*(input_config.pt_max+50.)*std::cosh(medium_config.max_rapidity),input_config.ecm/2.):input_config.ecm/2.;
-  auto maximum=medium.maximum_scatterer(longitudinal_boost);double lifetime=medium.bounds().lifetime_max;
-  jewel::InitialSudakovTable sudakov(kernels,1,table_energy,1,maximum);jewel::FinalSplittingTable splitting(kernels,1,table_energy,1,maximum);
-  jewel::PartonicPdf pdf(kernels,1,table_energy,1,maximum);jewel::ScatteringRates rates(kernels,1,table_energy,1,medium,longitudinal_boost);
-  jewel::BranchingSampler branching(kernels,1,1,angular_ordering);
+  if(table_energy_option=="jewel")table_energy=jewel::jewel_table_energy(input_config,medium_config.max_rapidity);
+  double lifetime=medium.bounds().lifetime_max;
+  jewel::EventPhysics physics(medium,table_energy,longitudinal_boost,angular_ordering);
   jewel::InitialEvolutionConfig config;config.evolution.lifetime=lifetime;config.evolution.cross_section_scale=mode=="medium"?1:0;
   config.coherent.lifetime=lifetime;config.coherent.cross_section_scale=config.evolution.cross_section_scale;
   config.coherent.finalization.hadronize_recoils=keep_recoils;
@@ -268,43 +266,23 @@ int main(int argc,char** argv){
   std::uint64_t accepted=0,failed=0,generated_failed=0,final_count=0;double accepted_weight=0,failed_weight=0;
   for(unsigned long attempt=1;attempt<=attempts;++attempt){auto hard=input.next();
    if(!hard){++generated_failed;out<<"{\"type\":\"generation_failure\",\"attempt\":"<<attempt<<"}\n";continue;}
-   const auto shower_seed=static_cast<std::uint64_t>(seed)+1000000+100*attempt;
+   const auto shower_seed=jewel::jewel_shower_seed(seed,attempt);
    jewel::SplitMixRandom random(shower_seed);std::string stage="geometry";double event_b=0;std::optional<double> event_centrality;
    try{
     if(glauber)event_b=glauber->sample(random);
     else if(geometry){auto sampled=geometry->sample((*centrality)[0],(*centrality)[1],random);event_b=sampled.impact_parameter;event_centrality=sampled.centrality_fraction;}
     auto event_medium=medium.with_impact_parameter(event_b);double event_lifetime=event_medium.bounds().lifetime_max;
-    std::optional<jewel::ScatteringRates> rebound;if(geometry||glauber)rebound.emplace(rates.with_event_impact_parameter(event_b));
-    const auto& event_rates=rebound?*rebound:rates;
-    jewel::TransferSampler transfers(kernels,event_medium,longitudinal_boost);
-    auto event_config=config;event_config.evolution.lifetime=event_lifetime;event_config.coherent.lifetime=event_lifetime;
-    jewel::InitialScatteringEvolution initial(event_config,kernels,branching,sudakov,splitting,pdf,event_rates,transfers,event_medium);
-    jewel::ScatteringEvolution final(event_config.evolution,branching,sudakov,splitting,event_rates,transfers);
-    jewel::Cascade cascade({event_config.evolution,event_config.coherent.collision,event_config.coherent.finalization,1000000,true},initial,final,branching,event_medium);
-    auto vertex=event_medium.sample_vertex(random);stage="hard initialization";
-    jewel::HardInitializationConfig hard_config;hard_config.x=vertex.x;hard_config.y=vertex.y;hard_config.lifetime=event_lifetime;
-    jewel::PreparedDijet prepared;
+    auto vertex=event_medium.sample_vertex(random);
     unsigned native_pairs=0;
-    if(experimental_isr_mpi){
-     stage="ISR mapping";
-     auto chains=jewel::prepare_subsystem_isr_timing(*hard,[&](int pdg){return input.nominal_mass(pdg);});
-     auto imported=jewel::import_pythia_final_record(*hard,vertex.x,vertex.y,event_lifetime);
-     stage="ISR timing";jewel::IsrTimeConfig timing;timing.x=vertex.x;timing.y=vertex.y;timing.lifetime=event_lifetime;
-     jewel::attach_pythia_isr_times(imported.state,imported.input_sources,*hard,chains,timing,random);
+    std::function<void(jewel::ImportedPythiaRecord&)> add_native_mpi;
 #ifdef JEWEL_NATIVE_MPI_RUNNER
-     if(native){
-      stage="native MPI and remnant recoil";
-      native_pairs=native->add(imported,*hard,vertex,event_lifetime,random,mpi_longitudinal_recoil);
-     }
+    if(native)add_native_mpi=[&](jewel::ImportedPythiaRecord& imported){
+     stage="native MPI and remnant recoil";
+     native_pairs=native->add(imported,*hard,vertex,event_lifetime,random,mpi_longitudinal_recoil);
+    };
 #endif
-     stage="survivor preparation";
-     jewel::prepare_imported_partons(imported,[&](int pdg){return input.nominal_mass(pdg);},medium_config.max_rapidity);
-     stage="subsystem initialization";
-     auto initialized=jewel::initialize_imported_subsystems(imported,hard_config,branching,random,jewel::MpiChannelPolicy::outgoing_flavour);
-     prepared.hard=imported.subsystems.front().hard;prepared.hard_process=imported.subsystems.front().hard_origins[0];
-     prepared.scratch=imported.scratch;prepared.weight=imported.state.weight;prepared.initialization=initialized.pairs.front();
-     prepared.input_sources=std::move(imported.input_sources);prepared.state=std::move(imported.state);
-    }else prepared=jewel::prepare_pythia_dijet(*hard,hard_config,branching,random);
+    auto prepared=physics.prepare(*hard,input,vertex,event_lifetime,medium_config.max_rapidity,
+                                  experimental_isr_mpi,random,stage,add_native_mpi);
     auto initial_hard=std::array<jewel::ShowerParticle,2>{prepared.state.at(prepared.hard[0]),prepared.state.at(prepared.hard[1])};
     std::array<jewel::PathLengths,2> path_lengths;
     if(geometry_step){stage="geometry estimate";for(int leg=0;leg<2;++leg)
@@ -312,15 +290,12 @@ int main(int argc,char** argv){
       mode=="medium"?event_medium.thickness_table().back()[0]:0,event_lifetime,
       initial_hard[leg].particle.momentum,*geometry_step,event_medium);}
     if(!replay_directory.empty()){stage="replay export";replay_fixture(replay_directory/(std::to_string(attempt)+".input"),prepared,event_lifetime,config.evolution.cross_section_scale,shower_seed,random.checkpoint(),table_b,event_b,table_energy,longitudinal_boost,keep_recoils,scatter_recoils,soft_cut,hard_cut,angular_ordering,mode=="vacuum");}
-    jewel::TransferHistory history;history.records.resize(100);jewel::RecoilStorage ledger;stage="cascade";
-    auto evolved=cascade.evolve(prepared.state,prepared.scratch,history,ledger,random);prepared.state.validate();
-    if(prepared.state.discarded)throw std::runtime_error("cascade discarded event");
-    for(const auto& s:prepared.state.particles())if(s.particle.status==1||s.particle.status==2)throw std::runtime_error("unfinished cascade record");
-    // GENEVENT excludes any residual status-3 centres before string construction.
-    if(!keep_recoils)for(const auto& node:prepared.state.particles())if(node.particle.status==3)prepared.state.at(node.particle.id).particle.status=22;
+    jewel::RecoilStorage ledger;stage="cascade";
+    const std::optional<double> rebound=geometry||glauber?std::optional<double>(event_b):std::nullopt;
+    auto evolved=physics.evolve(prepared,event_medium,config,event_lifetime,rebound,ledger,random);
     const auto cascade_draws=random.checkpoint();
     std::vector<jewel::GeneratorParticle> hadron_input;std::optional<jewel::HadronizedSnapshot> hadrons;
-    if(hadronizer){stage="string construction";hadron_input=experimental_isr_mpi?jewel::prepare_native_hadronization(prepared.state,hard->junctions,keep_recoils):hadrotype==0?jewel::prepare_vacuum_hadronization(prepared.state,keep_recoils):jewel::prepare_minimum_hadronization(prepared.state,branching,random,medium_config.max_rapidity,keep_recoils);
+    if(hadronizer){stage="string construction";hadron_input=physics.strings(prepared.state,*hard,experimental_isr_mpi,keep_recoils,hadrotype,medium_config.max_rapidity,random);
      stage="hadronization";hadrons=hadronizer->hadronize(hadron_input,experimental_isr_mpi?hard->junctions:std::vector<jewel::GeneratorJunction>{});if(!hadrons)throw std::runtime_error("Pythia8 hadronization failed");}
     std::optional<jewel::SubtractionResult> subtracted;
     const auto subtraction_seed=static_cast<std::uint64_t>(seed)+2000000+100*attempt;

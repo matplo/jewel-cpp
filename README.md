@@ -34,6 +34,30 @@ python tools/analyze_native_events.py medium.jsonl vacuum.jsonl --output jets.js
 
 Jet analysis uses FastJet through hepyy/cppyy in an environment with `hepyy[cppyy,hepbundle]` and `hepyy-utils`. The small sample is a smoke test. See the [interactive Pb–Pb report](docs/central-pbpb-bias5.html) for statistically larger weighted medium/vacuum comparisons.
 
+## Generate JEWEL events in Python
+
+Build and install the Python library from this `jewel-cpp` checkout with CMake. There is currently no `hepyy-recipes/jewel-cpp` recipe. The `jewel` recipes install the Fortran generator. The CMake install below writes a hepyy registry entry for `jewel_cpp` alongside the shared library and headers.
+
+Activate your Conda environment or virtual environment first. If it already has a working cppyy, install the dependencies with `python -m pip install 'hepyy[hepbundle]'`. In a venv that needs cppyy as well, use `python -m pip install 'hepyy[cppyy,hepbundle]'`. The wheel bundle supplies Pythia8, LHAPDF, and FastJet. Use the same Pythia8 and LHAPDF installations for the C++ build and the Python session.
+
+Run the commands below from the root of the `jewel-cpp` checkout. On macOS, see the Apple Clang setup under [Inclusive jet R_AA](#inclusive-jet-r_aa) if Conda supplies its own compiler flags.
+
+```bash
+packages=$(python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
+cmake -S . -B build-cppyy -DCMAKE_BUILD_TYPE=Release \
+  -DJEWEL_WITH_PYTHIA8=ON -DJEWEL_WITH_CPPYY=ON \
+  -DJEWEL_PYTHIA8_ROOT="$packages/hepyy_pythia8" \
+  -DJEWEL_LHAPDF_ROOT="$packages/hepyy_lhapdf"
+cmake --build build-cppyy --parallel 4
+cmake --install build-cppyy --prefix "$PWD/install-cppyy"
+export HEPYY_SYSTEM_PACKAGES_DIR="$PWD/install-cppyy/share/jewel-cpp/hepyy${HEPYY_SYSTEM_PACKAGES_DIR:+:$HEPYY_SYSTEM_PACKAGES_DIR}"
+python examples/jewel_fastjet.py --events 10
+```
+
+Set `HEPYY_SYSTEM_PACKAGES_DIR` in each shell that runs the examples. Open the [script](examples/jewel_fastjet.py) or [notebook](examples/jewel_fastjet.ipynb). Launch Jupyter from the configured environment so its kernel inherits the registry path. Both examples use `hepyy.load(["jewel_cpp", "fastjet"])`. Each call to `jewel_cpp.EventGenerator.next()` attempts one event and returns its weight, hard scale, and final particles. The event owns its particle collection, so you can retain it across calls. A rejected hard event or failed cascade or hadronization returns `accepted=False` with a stage and error message. `hard_statistics()` reports the Pythia8 hard-input counters and cross section.
+
+The in-process API uses the same JEWEL cascade and string preparation as the command-line runner. It supports vacuum, a fixed-impact-parameter expanding medium, and a zero-interaction control. Set `config.mode = "medium"` and `config.impact_parameter_fm` for the expanding medium. Configure the proton hard input, PDFs, ISR and Pythia8 MPI through `config.input`. Final particles use GeV. Use the command-line runner for Glauber event sampling, native MPI, geometry sidecars, and thermal subtraction.
+
 ## Inclusive jet R_AA
 
 Activate a Conda environment with the [hepyy wheel bundle](https://github.com/matplo/hepyy/tree/main/demos), a working cppyy runtime and `hepyy-utils`. For example, start with `conda activate /Users/ploskon/hepbundle`. Check the runtime with `python -c 'import hepyy; hepyy.load("fastjet")'`. Use the wheel prefixes for the build above if compiling against this environment.
