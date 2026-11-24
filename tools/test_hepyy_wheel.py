@@ -1,10 +1,13 @@
 """Exercise the installed wheel and confirm that it shares the bundle libraries."""
 
 import ctypes
+import json
 from pathlib import Path
 import os
 import subprocess
 import sys
+import sysconfig
+import tempfile
 
 from nbclient import NotebookClient
 import nbformat
@@ -35,7 +38,33 @@ def event_rows(text):
     return rows
 
 
+def check_runner():
+    env = os.environ.copy()
+    env.pop("PYTHIA8DATA", None)
+    env.pop("LHAPDF_DATA_PATH", None)
+    scripts = Path(sysconfig.get_path("scripts"))
+    with tempfile.TemporaryDirectory(prefix="jewel-runner-test-") as tmp:
+        geometry = Path(tmp) / "pbpb"
+        subprocess.run(
+            [scripts / "glauber-pbpb", geometry, "600", "72913"],
+            cwd=tmp, check=True,
+        )
+        output = Path(tmp) / "events.jsonl"
+        subprocess.run(
+            [scripts / "jewel-run-events", output, "2", "2600611", "zero-interaction",
+             "--compact-hadrons", "--centrality", "0", "10", "--glauber-events",
+             geometry / "events.csv"],
+            cwd=tmp, env=env, check=True,
+        )
+        run, *events, summary = map(json.loads, output.read_text().splitlines())
+        assert run["mode"] == "zero-interaction" and len(events) == 2
+        assert run["centrality_percent"] == [0, 10]
+        assert run["glauber"]["sampling"] == "ncoll-proportional"
+        assert summary["accepted"] == 2, summary
+
+
 def main():
+    check_runner()
     registry = get_registry_path()
     assert not registry.exists()
     hepyy.load(["jewel_cpp", "fastjet"])

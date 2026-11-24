@@ -17,7 +17,7 @@ from wheel.wheelfile import WheelFile
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_VERSION = "0.2.0"
-WHEEL_VERSION = f"{PROJECT_VERSION}.2"
+WHEEL_VERSION = f"{PROJECT_VERSION}.3"
 DIST_NAME = "hepyy-jewel-cpp"
 PAYLOAD = "hepyy_jewel_cpp"
 DEPENDENCIES = ("lhapdf", "pythia8")
@@ -55,7 +55,8 @@ def build_payload(work, prefix, deps, jobs):
         "-DJEWEL_CPPYY_WHEEL=ON", *flags,
     ], env=env, check=True)
     subprocess.run([
-        "cmake", "--build", str(build), "--target", "jewel_generator", "--parallel", str(jobs),
+        "cmake", "--build", str(build), "--target", "jewel_generator", "jewel-run-events",
+        "--parallel", str(jobs),
     ], env=env, check=True)
     subprocess.run(["cmake", "--install", str(build)], env=env, check=True)
 
@@ -63,6 +64,12 @@ def build_payload(work, prefix, deps, jobs):
     examples.mkdir(parents=True)
     for filename in ("jewel_fastjet.py", "jewel_fastjet.ipynb"):
         shutil.copy2(ROOT / "examples" / filename, examples / filename)
+    analysis = examples.parent / "tools"
+    analysis.mkdir()
+    for filename in ("analyze_native_events.py", "jet_raa.py", "jet_substructure.py",
+                     "native_geometry_analysis.py"):
+        shutil.copy2(ROOT / "tools" / filename, analysis / filename)
+    shutil.copy2(ROOT / "tools/wheel_cli.py", prefix / "cli.py")
     shutil.copy2(ROOT / "README.md", examples.parent / "README.md")
     return f"py3-none-{platform_tag}"
 
@@ -95,13 +102,16 @@ def write_wheel(output, prefix, tag, deps, source_revision):
     description = (
         "# hepyy-jewel-cpp\n\n"
         "Native C++ JEWEL generator for hepyy and cppyy. It reuses the hepbundle "
-        "Pythia8 and LHAPDF libraries and includes the FastJet script and notebook. "
+        "Pythia8 and LHAPDF libraries and includes the FastJet examples, the "
+        "jewel-run-events command, and the jet R_AA analysis scripts. "
         "Load the generator with `hepyy.load(\"jewel_cpp\")`.\n"
     )
     path = output / f"{PAYLOAD}-{WHEEL_VERSION}-{tag}.whl"
     with WheelFile(path, "w") as wheel:
         wheel.writestr(f"{info}/METADATA", metadata + "\n" + description)
         wheel.writestr(f"{info}/WHEEL", f"Wheel-Version: 1.0\nRoot-Is-Purelib: false\nTag: {tag}\n")
+        wheel.writestr(f"{info}/entry_points.txt",
+                       "[console_scripts]\njewel-run-events = hepyy_jewel_cpp.cli:main\n")
         wheel.writestr(f"{PAYLOAD}/manifest.json", json.dumps(manifest, indent=2) + "\n")
         for name in licenses:
             wheel.write(ROOT / name, f"{info}/licenses/{name}")

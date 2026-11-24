@@ -75,7 +75,7 @@ needs cppyy from pip.
 Install the same `hepyy[hepbundle]` dependencies as for the recipe, then run
 the examples in that environment.
 
-Run the commands below from the root of the `jewel-cpp` checkout. On macOS, see the Apple Clang note under [Inclusive jet R_AA](#inclusive-jet-r_aa) if Conda supplies its own compiler flags.
+Run the commands below from the root of the `jewel-cpp` checkout. On macOS, if Conda supplies its own compiler flags, prefix the configure command with `env -u CXXFLAGS -u CPPFLAGS -u LDFLAGS` and set `-DCMAKE_CXX_COMPILER="$(xcrun --find clang++)"`.
 
 ```bash
 packages=$(python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
@@ -129,7 +129,9 @@ the matched jet pT by −2.21 ± 0.09 GeV on average before hadron-level cuts.
 ## Inclusive jet R_AA
 
 Activate a Python environment and install the JEWEL, Glauber, and hepbundle
-wheels. The analysis also uses `hepyy-utils` and needs cppyy for FastJet.
+wheels. The event runner and analysis scripts are included in
+`hepyy-jewel-cpp` 0.2.0.3 or newer. The analysis also uses `hepyy-utils` and
+needs cppyy for FastJet. Run the example in a directory for your outputs.
 
 ```bash
 pip install 'hepyy[hepbundle,jewel-cpp,glauber-cpp]'
@@ -138,7 +140,7 @@ pip install hepyy-utils
 pip install 'hepyy[cppyy]'
 ```
 
-From the repository root, generate minimum-bias Pb–Pb geometry at 5.02 TeV
+Generate minimum-bias Pb–Pb geometry at 5.02 TeV
 with the [ROOT-free Glauber CLI](https://matplo.github.io/glauber-cpp/#run).
 The command writes `events.csv`, `centrality.csv`, and `metadata.json` into a
 new directory. The default 5% bins align with the 0–10% selection below.
@@ -148,30 +150,17 @@ glauber-pbpb pbpb-5020 60000 72913
 glauber=pbpb-5020/events.csv
 ```
 
-Build the `jewel-run-events` command from the checkout against the Pythia8
-and LHAPDF wheels. The JEWEL wheel provides the in-process Python API, and
-this example uses the command-line runner for Glauber sampling and native MPI.
 Make the CT14nlo grid visible through `LHAPDF_DATA_PATH` before generating events.
+The installed runner finds Pythia8's XML data and LHAPDF's base configuration
+in the hepbundle wheels.
 
 ```bash
-packages=$(python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
-cmake -S . -B build-raa -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
-  -DJEWEL_WITH_PYTHIA8=ON \
-  -DJEWEL_PYTHIA8_ROOT="$packages/hepyy_pythia8" \
-  -DJEWEL_LHAPDF_ROOT="$packages/hepyy_lhapdf"
-cmake --build build-raa --target jewel-run-events --parallel 4
-
 # If CT14nlo is missing, download the grid into a local PDF data directory.
 mkdir -p pdfsets
 curl -fL https://lhapdfsets.web.cern.ch/current/CT14nlo.tar.gz -o pdfsets/CT14nlo.tar.gz
 tar -xzf pdfsets/CT14nlo.tar.gz -C pdfsets
-export LHAPDF_DATA_PATH="$PWD/pdfsets:$packages/hepyy_lhapdf/share/LHAPDF${LHAPDF_DATA_PATH:+:$LHAPDF_DATA_PATH}"
+export LHAPDF_DATA_PATH="$PWD/pdfsets${LHAPDF_DATA_PATH:+:$LHAPDF_DATA_PATH}"
 ```
-
-On macOS, if Conda injects compiler flags or an alternate C++ runtime, use a
-fresh build directory, prefix the configure command with
-`env -u CXXFLAGS -u CPPFLAGS -u LDFLAGS`, and add
-`-DCMAKE_CXX_COMPILER="$(xcrun --find clang++)"`.
 
 On macOS, use a working Conda cppyy runtime if you already have one. With
 pip cppyy on a Mac using the macOS 26 SDK, select a compatible SDK for the
@@ -187,41 +176,46 @@ ln -s "$CONDA_PREFIX/lib/libzstd.1.dylib" "$cppyy_lib_dir/libzstd.1.dylib"
 export DYLD_LIBRARY_PATH="$cppyy_lib_dir${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
 ```
 
-Reuse the Bash `common` array from [the matched sample](#generate-and-analyze-a-small-matched-sample).
 Run the pp and zero-interaction samples for the closure test, then generate
-the quenched sample for the medium prediction.
+the quenched sample for the medium prediction. Run these commands in Bash.
 
 ```bash
-runner=build-raa/jewel-run-events
+runner=$(command -v jewel-run-events)
+generator=$(python -c 'from hepyy_jewel_cpp.cli import NATIVE_RUNNER; print(NATIVE_RUNNER)')
+analysis_tools=$(python -c 'from hepyy_jewel_cpp.cli import ANALYSIS_TOOLS; print(ANALYSIS_TOOLS)')
+common=(--native-mpi --compact-hadrons --pthat-bias 5 --table-energy jewel
+  --longitudinal-boost on --jewel-fragmentation --ecm 5020 --pt-min 20 --pt-max 100
+  --lhapdf CT14nlo/0 --hard-alpha-s 0.11754434294459773 --hard-alpha-s-order 1
+  --isr-alpha-s 0.11754434294459773 --isr-alpha-s-order 1 --alpha-s-nfmax 5 --isr-alpha-s-cmw off)
 "$runner" raa-pp.jsonl 3500 2600611 vacuum "${common[@]}"
 "$runner" raa-control.jsonl 3500 2600612 zero-interaction "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
 
-python tools/analyze_native_events.py raa-pp.jsonl raa-control.jsonl \
-  --generator "$runner" --output raa-control-jets.json
-python tools/jet_raa.py raa-control-jets.json \
+python "$analysis_tools/analyze_native_events.py" raa-pp.jsonl raa-control.jsonl \
+  --generator "$generator" --output raa-control-jets.json
+python "$analysis_tools/jet_raa.py" raa-control-jets.json \
   --validate-no-quenching --output raa-closure.json
 
 "$runner" raa-medium.jsonl 300 2600514 medium "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
-python tools/analyze_native_events.py raa-pp.jsonl raa-medium.jsonl \
-  --generator "$runner" --output raa-medium-jets.json
-python tools/jet_raa.py raa-medium-jets.json --output raa.json
+python "$analysis_tools/analyze_native_events.py" raa-pp.jsonl raa-medium.jsonl \
+  --generator "$generator" --output raa-medium-jets.json
+python "$analysis_tools/jet_raa.py" raa-medium-jets.json --output raa.json
 ```
 
 The runner samples Glauber rows within the requested class with probability proportional to `N_coll`. This gives the Pb–Pb hard events their binary-collision-weighted impact-parameter distribution. JEWEL still samples the hard production point and evolves the jet using its optical medium at that impact parameter. The analysis uses the original Pythia event weights, since the impact-parameter weight has already been applied by sampling.
 
 For each jet pT bin, multiply the weighted jet count by the Pythia hard-process cross section and divide by total generated weight and bin width. A failed evolution contributes zero jets and retains its generated weight in the denominator. For Pb–Pb, multiply the resulting per-nucleon-pair spectrum by the **unweighted** minimum-bias class mean `T_AA` recorded in the run header. Its fixed-bin statistical error scales the Pb–Pb yield and cancels in the model ratio. If using the optical-only runner, supply `--taa` and `--taa-source` explicitly to retain the class-mean-only calculation.
 
-The example uses pp hard input and one hard-scale window. The closure gate uses at least three bins with 50 jets or more per sample and requires consistency with unity within three standard errors. Empty denominator bins have no ratio. See the [Glauber and R_AA validation report](docs/glauber-raa-validation.html).
+The example uses pp hard input and one hard-scale window. The closure gate uses at least three bins with 50 jets or more per sample and requires consistency with unity within three standard errors. Empty denominator bins have no ratio. See the [Glauber and R_AA validation report](https://matplo.github.io/jewel-cpp/glauber-raa-validation.html).
 
 ## Soft Drop in 0–10% Pb–Pb at 5.02 TeV
 
-Activate the same hepyy environment and reuse `common`, `runner`, `glauber`, and `raa-pp.jsonl` from the inclusive example. Use a fresh filename for the larger quenched sample.
+Activate the same hepyy environment and reuse `common`, `runner`, `generator`, `glauber`, and `raa-pp.jsonl` from the inclusive example. Use a fresh filename for the larger quenched sample.
 
 ```bash
 "$runner" soft-drop-medium.jsonl 3500 2600514 medium "${common[@]}" \
   --centrality 0 10 --glauber-events "$glauber"
 python tools/analyze_native_events.py raa-pp.jsonl soft-drop-medium.jsonl \
-  --generator "$runner" --soft-drop-zcut 0.2 --output soft-drop-jets.json
+  --generator "$generator" --soft-drop-zcut 0.2 --output soft-drop-jets.json
 python tools/jet_soft_drop.py soft-drop-jets.json --pt-edges 40 60 80 100 \
   --output soft-drop.json
 ```
