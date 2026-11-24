@@ -75,7 +75,7 @@ needs cppyy from pip.
 Install the same `hepyy[hepbundle]` dependencies as for the recipe, then run
 the examples in that environment.
 
-Run the commands below from the root of the `jewel-cpp` checkout. On macOS, see the Apple Clang setup under [Inclusive jet R_AA](#inclusive-jet-r_aa) if Conda supplies its own compiler flags.
+Run the commands below from the root of the `jewel-cpp` checkout. On macOS, see the Apple Clang note under [Inclusive jet R_AA](#inclusive-jet-r_aa) if Conda supplies its own compiler flags.
 
 ```bash
 packages=$(python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
@@ -128,33 +128,80 @@ the matched jet pT by −2.21 ± 0.09 GeV on average before hadron-level cuts.
 
 ## Inclusive jet R_AA
 
-Activate a Conda environment with the [hepyy wheel bundle](https://github.com/matplo/hepyy/tree/main/demos), a working cppyy runtime and `hepyy-utils`. For example, start with `conda activate /Users/ploskon/hepbundle`. Check the runtime with `python -c 'import hepyy; hepyy.load("fastjet")'`. Use the wheel prefixes for the build above if compiling against this environment.
+Activate a Python environment and install the JEWEL, Glauber, and hepbundle
+wheels. The analysis also uses `hepyy-utils` and needs cppyy for FastJet.
+
+```bash
+pip install 'hepyy[hepbundle,jewel-cpp,glauber-cpp]'
+pip install hepyy-utils
+# Run this if cppyy is missing from your environment.
+pip install 'hepyy[cppyy]'
+```
+
+From the repository root, generate minimum-bias Pb–Pb geometry at 5.02 TeV
+with the [ROOT-free Glauber CLI](https://matplo.github.io/glauber-cpp/#run).
+The command writes `events.csv`, `centrality.csv`, and `metadata.json` into a
+new directory. The default 5% bins align with the 0–10% selection below.
+
+```bash
+glauber-pbpb pbpb-5020 60000 72913
+glauber=pbpb-5020/events.csv
+```
+
+Build the `jewel-run-events` command from the checkout against the Pythia8
+and LHAPDF wheels. The JEWEL wheel provides the in-process Python API, and
+this example uses the command-line runner for Glauber sampling and native MPI.
+Make the CT14nlo grid visible through `LHAPDF_DATA_PATH` before generating events.
 
 ```bash
 packages=$(python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
-export LHAPDF_DATA_PATH="$packages/hepyy_lhapdf/share/LHAPDF${LHAPDF_DATA_PATH:+:$LHAPDF_DATA_PATH}"
-# Run this if CT14nlo is missing from your LHAPDF data paths.
-lhapdf install CT14nlo
-# Use these as the Pythia8 and LHAPDF roots in the CMake command above.
-printf '%s\n' "$packages/hepyy_pythia8" "$packages/hepyy_lhapdf"
+cmake -S . -B build-raa -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF \
+  -DJEWEL_WITH_PYTHIA8=ON \
+  -DJEWEL_PYTHIA8_ROOT="$packages/hepyy_pythia8" \
+  -DJEWEL_LHAPDF_ROOT="$packages/hepyy_lhapdf"
+cmake --build build-raa --target jewel-run-events --parallel 4
+
+# If CT14nlo is missing, download the grid into a local PDF data directory.
+mkdir -p pdfsets
+curl -fL https://lhapdfsets.web.cern.ch/current/CT14nlo.tar.gz -o pdfsets/CT14nlo.tar.gz
+tar -xzf pdfsets/CT14nlo.tar.gz -C pdfsets
+export LHAPDF_DATA_PATH="$PWD/pdfsets:$packages/hepyy_lhapdf/share/LHAPDF${LHAPDF_DATA_PATH:+:$LHAPDF_DATA_PATH}"
 ```
 
-On macOS, the native wheels were tested with Apple Clang. If Conda injects compiler flags or an alternate C++ runtime, use a fresh CMake build directory and configure with `env -u CXXFLAGS -u CPPFLAGS -u LDFLAGS cmake ... -DCMAKE_CXX_COMPILER="$(xcrun --find clang++)"`. The tested analysis environment used Python 3.14 and a source-built cppyy backend.
+On macOS, if Conda injects compiler flags or an alternate C++ runtime, use a
+fresh build directory, prefix the configure command with
+`env -u CXXFLAGS -u CPPFLAGS -u LDFLAGS`, and add
+`-DCMAKE_CXX_COMPILER="$(xcrun --find clang++)"`.
 
-From the repository root, reuse the Bash `common` array from the quickstart. Obtain `events.csv` from a complete minimum-bias run of the standalone [ROOT-free glauber-cpp generator](https://github.com/matplo/glauber-cpp), or use its bundled validation sample. The example uses its Pb–Pb sample at 5.02 TeV, validated against TGlauberMC. Set `glauber` to that sample or to a new run with the same profile and energy. The requested centrality boundaries must align with the CSV bins.
+On macOS, use a working Conda cppyy runtime if you already have one. With
+pip cppyy on a Mac using the macOS 26 SDK, select a compatible SDK for the
+Python analysis. The Python 3.15 verification used the macOS 15.4 SDK. When
+the pip wheel also reports a missing `libzstd.1.dylib`, make Conda's copy
+visible to the loader. For example, with the Conda environment active before
+activating the venv:
 
 ```bash
-runner=build-pythia8/jewel-run-events
-glauber=../glauber-cpp/validation/native-run/events.csv
+export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk
+cppyy_lib_dir=$(mktemp -d)
+ln -s "$CONDA_PREFIX/lib/libzstd.1.dylib" "$cppyy_lib_dir/libzstd.1.dylib"
+export DYLD_LIBRARY_PATH="$cppyy_lib_dir${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+```
+
+Reuse the Bash `common` array from [the matched sample](#generate-and-analyze-a-small-matched-sample).
+Run the pp and zero-interaction samples for the closure test, then generate
+the quenched sample for the medium prediction.
+
+```bash
+runner=build-raa/jewel-run-events
 "$runner" raa-pp.jsonl 3500 2600611 vacuum "${common[@]}"
 "$runner" raa-control.jsonl 3500 2600612 zero-interaction "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
-"$runner" raa-medium.jsonl 300 2600514 medium "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
 
 python tools/analyze_native_events.py raa-pp.jsonl raa-control.jsonl \
   --generator "$runner" --output raa-control-jets.json
 python tools/jet_raa.py raa-control-jets.json \
   --validate-no-quenching --output raa-closure.json
 
+"$runner" raa-medium.jsonl 300 2600514 medium "${common[@]}" --centrality 0 10 --glauber-events "$glauber"
 python tools/analyze_native_events.py raa-pp.jsonl raa-medium.jsonl \
   --generator "$runner" --output raa-medium-jets.json
 python tools/jet_raa.py raa-medium-jets.json --output raa.json
