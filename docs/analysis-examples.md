@@ -18,13 +18,29 @@ The standalone ROOT-free Glauber CSV supplies minimum-bias Pb–Pb rows. The run
 
 For 0–10% Pb–Pb the 3,659 minimum-bias rows give T_AA = 23.1472 ± 0.0573 inverse mb, with the fixed-bin Monte Carlo error. The 3,500 zero-interaction events had mean b = 3.138 ± 0.020 fm, compared with 3.140 fm expected from N_coll weighting and 3.308 fm before weighting. The pp and zero-interaction runs selected 7,388 and 7,612 jets. All seven eligible bins passed the closure gate. The largest deviation was 1.19 standard errors, and the 60–80 GeV bin gave R_AA = 1.042 ± 0.111. The [HTML validation report](glauber-raa-validation.html) adds the 3,500-attempt quenched run, which gave R_AA = 0.772 ± 0.084 in the 60–80 GeV bin.
 
-### Fresh-environment closure
+### Fresh PyPI no-quenching closure
 
-The [pip-based example](../README.md#inclusive-jet-r_aa) reproduced the Glauber-weighted closure in a fresh macOS arm64 Python 3.15.2 virtual environment. It used PyPI wheels for hepyy 0.2.35, hepyy-jewel-cpp 0.2.0.2, hepyy-glauber-cpp 0.1.0, Pythia 8.317 and FastJet 3.5.3, with hepyy-utils 0.3.0 and cppyy 3.5.0 for analysis. The JEWEL CLI was built from the checkout against the Pythia8 and LHAPDF wheels. The cppyy runtime used the macOS 15.4 SDK and Conda's zstd library.
+A fresh macOS arm64 Python 3.15.2 virtual environment installed the published
+packages with `pip install 'hepyy[hepbundle,jewel-cpp,glauber-cpp]'`. It selected
+hepyy 0.2.36, hepyy-jewel-cpp 0.2.0.3 and hepyy-glauber-cpp 0.1.0. The JEWEL
+wheel supplied `jewel-run-events` and the analysis scripts. The full example ran
+without a source checkout or CMake build. The analysis used hepyy-utils 0.3.0
+and cppyy 3.5.0 with the macOS 15.4 SDK and Conda's zstd library.
+[Runnable example](../README.md#inclusive-jet-r_aa)
 
-The installed Glauber CLI generated 36,598 inelastic events from 60,000 Pb–Pb proposals at 5.02 TeV (seed 72913). The 3,659 rows in the 0–10% class gave ⟨T_AA⟩ = 23.1472 ± 0.0573 mb⁻¹, with the fixed-bin Monte Carlo error. All 3,500 attempts in each sample were accepted. The pp and zero-interaction Pb–Pb samples selected 7,388 and 7,612 jets, respectively.
+The installed Glauber CLI generated 36,598 inelastic events from 60,000 Pb–Pb
+proposals at 5.02 TeV (seed 72913). The 3,659 rows in the 0–10% class gave
+⟨T_AA⟩ = 23.1472 ± 0.0573 mb⁻¹, with the fixed-bin Monte Carlo error. With the
+same 20–100 GeV hard-scale window and power-5 bias, both the pp and
+zero-interaction Pb–Pb samples accepted all 3,500 attempts and selected
+7,388 and 7,612 jets, respectively.
 
-All seven eligible bins passed the three-standard-error gate. The largest deviation from unity was 1.19 standard errors in 80–100 GeV. In 60–80 GeV, the control gave `R_AA = 1.042 ± 0.111`. The [HTML validation report](glauber-raa-validation.html#fresh-environment-closure) shows the corresponding per-bin results.
+The PyPI run reproduced every control bin in the earlier Glauber-weighted
+benchmark. All seven bins with at least 50 jets per sample passed the
+three-standard-error gate. The largest deviation from unity was 1.19
+standard errors in 80–100 GeV. At 60–80 GeV, `R_AA = 1.042 ± 0.111`.
+The separate quenched example accepted all 300 attempts and selected 809 jets.
+[Per-bin closure results](glauber-raa-validation.html#fresh-environment-closure)
 
 ### TGlauberMC integration
 

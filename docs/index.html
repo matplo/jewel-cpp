@@ -104,8 +104,9 @@ python -c 'import hepyy; hepyy.load("jewel_cpp"); import jewel_cpp'</code></pre>
           or the <a href="https://github.com/matplo/jewel-cpp/blob/main/examples/jewel_fastjet.py">Python script</a>.
           Both generate hadronized events and cluster anti-<i>k</i><sub>t</sub> jets.</p>
         <p>The in-process API supports vacuum, a fixed-impact-parameter medium,
-          and a zero-interaction control. Build the C++ runner to use Glauber
-          sampling, full parton records, path-length exports, or thermal subtraction.
+          and a zero-interaction control. The JEWEL wheel also includes
+          <code>jewel-run-events</code> for Glauber sampling, full parton records,
+          path-length exports and thermal subtraction.
           <a href="https://github.com/matplo/jewel-cpp#generate-jewel-events-in-python">Installation and source-build fallbacks</a>.</p>
       </div>
     </div>
@@ -217,10 +218,12 @@ python -c 'import hepyy; hepyy.load("jewel_cpp"); import jewel_cpp'</code></pre>
       </article>
       <article>
         <h3>Inclusive jet <i>R</i><sub>AA</sub></h3>
-        <p>The example normalizes pp by cross section and Pb–Pb yields by
-          the class mean nuclear overlap. All seven eligible bins passed the
-          Glauber-weighted zero-interaction closure test.</p>
-        <p><a href="glauber-raa-validation.html">Closure and quenched spectra</a> ·
+        <p>Install both runners with <code>pip install 'hepyy[hepbundle,jewel-cpp,glauber-cpp]'</code>.
+          Generate the Pb–Pb CSV, then run the Glauber-weighted closure
+          and analyze jets with FastJet. The fresh PyPI run passed all seven
+          eligible bins. The largest deviation from unity was 1.19 standard errors.</p>
+        <p><a href="glauber-raa-validation.html#pip-workflow">Pip-only workflow</a> ·
+          <a href="glauber-raa-validation.html#fresh-environment-closure">Closure and quenched spectra</a> ·
           <a href="https://github.com/matplo/glauber-cpp">ROOT-free Glauber generator</a></p>
       </article>
       <article>
