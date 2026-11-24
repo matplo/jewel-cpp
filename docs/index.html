@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A standalone C++17 JEWEL port with Pythia8, hepyy examples, and recorded validation against Fortran JEWEL 2.6.0.">
+<title>jewel-cpp | Jet quenching in C++</title>
+<style>
+  :root{color-scheme:light;--ink:#172638;--navy:#0e1c2c;--muted:#4c5c70;--accent:#0a667b;--line:#d6e0e9;--surface:#f2f6f9}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#fff;color:var(--ink);font:1rem/1.65 "Inter",system-ui,-apple-system,sans-serif}
+  a{color:var(--accent);text-underline-offset:.2em}
+  a:focus-visible{outline:3px solid #1487a0;outline-offset:4px}
+  a:hover{text-decoration-thickness:2px}
+  .wrap{width:min(1120px,calc(100% - 3rem));margin-inline:auto}
+  .masthead{background:var(--navy);color:#f5f8fc}
+  .nav{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-block:1.15rem;border-bottom:1px solid #314358}
+  .brand{font:700 1.1rem ui-monospace,monospace;letter-spacing:-.025em}
+  .nav ul{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;list-style:none;padding:0;margin:0}
+  .nav a,.masthead a{color:#abebf1}
+  .intro{padding:4rem 0 3.25rem;max-width:850px}
+  h1,h2,h3,p{margin-top:0}
+  h1{font-size:clamp(3rem,8vw,6rem);letter-spacing:-.07em;line-height:1;margin-bottom:.8rem}
+  .subtitle{font-size:clamp(1.25rem,3vw,1.8rem);line-height:1.35;max-width:34ch;margin-bottom:1.35rem}
+  .citation{border-left:3px solid #5dd6e1;padding-left:1rem;max-width:72ch;margin:.95rem 0 0}
+  .citation p{margin:0 0 .4rem}
+  main section{padding:3.25rem 0;border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(1.8rem,4.5vw,2.6rem);letter-spacing:-.045em;line-height:1.14}
+  h3{font-size:1.12rem;line-height:1.35;margin-bottom:.55rem}
+  .prose{max-width:75ch}
+  figcaption{color:var(--muted)}
+  .install{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:2rem;align-items:start}
+  pre{background:var(--navy);color:#ecf7fa;border-radius:.65rem;padding:1.2rem;line-height:1.65;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
+  code{font: .9em ui-monospace,SFMono-Regular,Consolas,monospace}
+  p code,li code{background:var(--surface);padding:.13em .32em;border-radius:.25rem}
+  figure{margin:1.65rem 0 0}
+  figure img{max-width:100%;height:auto;display:block;margin-inline:auto}
+  .framed{background:#fff;border:1px solid var(--line);border-radius:.65rem;padding:clamp(.35rem,2vw,1.15rem)}
+  figcaption{margin-top:.75rem}
+  .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:1.5rem 0;background:var(--surface);border-radius:.6rem;padding:1rem 1.2rem;gap:1rem}
+  .metrics dt{font-size:.93rem;color:var(--muted)}
+  .metrics dd{margin:0;font-weight:700;font-size:1.5rem;font-variant-numeric:tabular-nums}
+  .reports{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2rem}
+  .reports article{padding:1rem 0;border-top:1px solid var(--line)}
+  .reports p{margin-bottom:.4rem}
+  .notice{background:var(--surface);padding:1rem 1.2rem;border-left:3px solid var(--accent)}
+  footer{padding:1.25rem 0 2.25rem;color:var(--muted)}
+  @media(max-width:740px){
+    .wrap{width:min(100% - 1.5rem,1120px)}
+    .intro{padding:2.4rem 0}
+    main section{padding:2.4rem 0}
+    .install,.reports{grid-template-columns:minmax(0,1fr);gap:.8rem}
+    .metrics{padding:.8rem;gap:.55rem}
+    .metrics dd{font-size:1.15rem}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <nav class="nav" aria-label="Project">
+      <span class="brand">jewel-cpp</span>
+      <ul>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#geometry">Geometry</a></li>
+        <li><a href="#parton-hadron">Partons to hadrons</a></li>
+        <li><a href="#validation">Validation</a></li>
+        <li><a href="https://github.com/matplo/jewel-cpp">GitHub</a></li>
+      </ul>
+    </nav>
+    <div class="intro">
+      <h1>jewel-cpp</h1>
+      <p class="subtitle">An independent C++17 port of JEWEL 2.6.0 for jet-quenching studies.</p>
+      <div class="citation">
+        <p><strong>Original JEWEL paper</strong></p>
+        <p>K. Zapp, G. Ingelman, J. Rathsman, J. Stachel and U. A. Wiedemann,
+          <a href="https://doi.org/10.1140/epjc/s10052-009-0941-2">“A Monte Carlo Model for ‘Jet Quenching’”</a>,
+          <cite>Eur. Phys. J. C</cite> 60, 617–632 (2009).</p>
+        <p>Also cite the
+          <a href="https://arxiv.org/abs/1212.1599">perturbative quenching framework</a>
+          and <a href="https://arxiv.org/abs/1311.0048">JEWEL 2.0.0 directions for use</a>
+          as applicable.</p>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section id="install">
+    <h2>Run JEWEL with hepyy</h2>
+    <div class="install">
+      <div>
+        <p>Install in a Conda environment or venv with cppyy available. The wheel
+          reuses the hepbundle Pythia8, LHAPDF and FastJet libraries.</p>
+        <pre><code>pip install 'hepyy[hepbundle,jewel-cpp]'
+
+python -c 'import hepyy; hepyy.load("jewel_cpp"); import jewel_cpp'</code></pre>
+      </div>
+      <div>
+        <p>Start with the
+          <a href="https://github.com/matplo/jewel-cpp/blob/main/examples/jewel_fastjet.ipynb">FastJet notebook</a>
+          or the <a href="https://github.com/matplo/jewel-cpp/blob/main/examples/jewel_fastjet.py">Python script</a>.
+          Both generate hadronized events and cluster anti-<i>k</i><sub>t</sub> jets.</p>
+        <p>The in-process API supports vacuum, a fixed-impact-parameter medium,
+          and a zero-interaction control. Build the C++ runner to use Glauber
+          sampling, full parton records, path-length exports, or thermal subtraction.
+          <a href="https://github.com/matplo/jewel-cpp#generate-jewel-events-in-python">Installation and source-build fallbacks</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="geometry">
+    <h2>Where the jets start in Pb–Pb</h2>
+    <p class="prose">The medium example rotates each event so the reconstructed
+      leading jet points north. The optical density map comes from JEWEL’s local
+      temperature. The star marks the common hard vertex, solid ray segments
+      mark intervals with <i>T</i> &gt; 0, and the circles locate stored recoil
+      production vertices. These segments estimate the hard legs’ straight-ray
+      paths. A matched final jet inherits its leg’s estimate.</p>
+    <figure class="framed">
+      <img src="figures/jewel-glauber-event.png" width="1270" height="630"
+           alt="A jet-aligned Pb–Pb event with a dijet vertex, optical overlap, hot ray segments, recoil sites, and an incoming thermal momentum map.">
+      <figcaption>One event from the Glauber-weighted central sample. The momentum
+        panel shows stored incoming thermal references. The optical field is the
+        background model at the displayed time.</figcaption>
+    </figure>
+    <dl class="metrics">
+      <div><dt>Generator attempts</dt><dd>1,000</dd></div>
+      <div><dt>Accepted events</dt><dd>999</dd></div>
+      <div><dt>Leading jets at 75–125 GeV</dt><dd>452</dd></div>
+    </dl>
+    <p class="prose">The 0–10% Pb–Pb sample at 5.02 TeV draws impact parameters
+      from the validated Glauber table with probability proportional to
+      <i>N</i><sub>coll</sub>. The plotted averages apply the compensating
+      power-5 hard-scale weights. The length histogram uses unambiguous
+      matches. Its lengths refer to the 3D shower-start rays.</p>
+    <figure class="framed">
+      <img src="figures/jewel-glauber-cumulative.png" width="1159" height="961" loading="lazy"
+           alt="Four cumulative plots showing optical energy density, recoil production sites, incoming thermal momenta, and leading and second matched hard-leg lengths.">
+      <figcaption>Jet-aligned weighted averages for 452 selected events.
+        The effective selected sample size is 209.4.</figcaption>
+    </figure>
+    <p><a href="https://github.com/matplo/jewel-cpp/blob/main/examples/jewel_medium_geometry.ipynb">Geometry notebook</a> ·
+      <a href="jewel-glauber-1000.json">Run summary and provenance</a> ·
+      <a href="https://github.com/matplo/jewel-cpp/blob/main/docs/validation-geometry-lengths.md">Path estimator definitions</a></p>
+  </section>
+
+  <section id="parton-hadron">
+    <h2>Follow the same event through hadronization</h2>
+    <p class="prose">The full <code>jewel-run-events</code> output gives the exact string
+      inputs sent to Pythia8 and the hadrons it returns. The
+      <a href="https://github.com/matplo/jewel-cpp/blob/main/examples/jewel_parton_hadron_jets.ipynb">parton-to-hadron notebook</a>
+      clusters both records with the same anti-<i>k</i><sub>t</sub> jet definition and
+      matches the leading input jet before applying the analysis cuts.</p>
+    <p class="prose">Vacuum gives a direct view of fragmentation and decays on a common
+      input event. In medium the notebook compares raw partons with raw hadrons,
+      then shows the hadron jet response after subtracting incoming thermal
+      momenta and excluding residual thermal entries. The runner applies the
+      validated subtraction at hadron level.</p>
+    <figure class="framed">
+      <img src="figures/parton-hadron-response.png" loading="lazy"
+           alt="Scatter plots of matched hadron jet pT versus string-input jet pT for vacuum and central Pb–Pb, with raw and thermally subtracted medium hadrons.">
+      <figcaption>Same-event jet response. Each point is a matched pair from the
+        example, with raw and thermally subtracted hadron results shown for the
+        medium sample.</figcaption>
+    </figure>
+    <p><a href="paired-hadronization-findings.html">Pythia6 and Pythia8 on identical parton inputs</a> ·
+      <a href="native-subtraction-smoke.html">Thermal subtraction checks</a></p>
+  </section>
+
+  <section id="validation">
+    <h2>Validation and analysis use cases</h2>
+    <p class="prose">Pythia8 provides the hard input, optional ISR and hadronization.
+      The port implements the JEWEL cascade and expanding optical medium.
+      Component benchmarks use frozen Fortran routines. The full-generator
+      comparisons also measure differences between the Pythia6 and Pythia8
+      backends and their respective event samples.</p>
+    <div class="reports">
+      <article>
+        <h3>Numerical and event contracts</h3>
+        <p>The C++ CI workflow runs at least 54 tests. The path-length
+          differential test reproduced all 3,264 reported Fortran scalar values
+          on the validation build.</p>
+        <p><a href="https://github.com/matplo/jewel-cpp/actions/workflows/ci.yml">C++ CI</a> ·
+          <a href="https://github.com/matplo/jewel-cpp/blob/main/docs/porting-notes.md">Porting and differential tests</a></p>
+      </article>
+      <article>
+        <h3>Vacuum and medium against JEWEL 2.6.0</h3>
+        <p>The vacuum comparison uses million-jet samples. The Pb–Pb report
+          uses the corrected Fortran medium cascade and includes a scan in 10%
+          centrality bins.</p>
+        <p><a href="jewel-million-comparison.html">Vacuum comparison</a> ·
+          <a href="central-pbpb-bias5.html">Medium and centrality comparison</a></p>
+      </article>
+      <article>
+        <h3>Inclusive jet <i>R</i><sub>AA</sub></h3>
+        <p>The example normalizes pp by cross section and Pb–Pb yields by
+          the class mean nuclear overlap. All seven eligible bins passed the
+          Glauber-weighted zero-interaction closure test.</p>
+        <p><a href="glauber-raa-validation.html">Closure and quenched spectra</a> ·
+          <a href="https://github.com/matplo/glauber-cpp">ROOT-free Glauber generator</a></p>
+      </article>
+      <article>
+        <h3>Soft Drop and generator steering</h3>
+        <p>Explore medium-to-vacuum shape ratios and the thermally subtracted
+          ATLAS <i>r</i><sub>g</sub> comparison across three jet transverse-momentum intervals.
+          The steering examples cover LHAPDF sets and Pythia8 controls.</p>
+        <p><a href="glauber-soft-drop.html">Soft Drop example</a> ·
+          <a href="atlas-soft-drop-comparison.html">ATLAS comparison</a> ·
+          <a href="https://github.com/matplo/jewel-cpp/blob/main/docs/analysis-examples.md">Analysis recipes</a></p>
+      </article>
+    </div>
+    <p class="notice">The port remains experimental. Some full-generator observable
+      bins still exceed the 10% comparison target, and native MPI is restricted
+      to the audited 5.02 TeV, 20–100 GeV hard window.
+      <a href="https://github.com/matplo/jewel-cpp/blob/main/docs/completion-gates.md">Validation scope and acceptance criteria</a>.</p>
+  </section>
+</main>
+<footer class="wrap">
+  <p><a href="https://github.com/matplo/jewel-cpp">Source repository</a> ·
+    <a href="https://github.com/matplo/jewel-cpp/blob/main/NOTICE">Credits and citation guidance</a> ·
+    <a href="https://github.com/matplo/jewel-cpp/blob/main/LICENSE">GPL-2.0-or-later</a></p>
+</footer>
+</body>
+</html>

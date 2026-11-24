@@ -1,0 +1,37 @@
+{
+  "attempts": 1000,
+  "accepted": 999,
+  "leading_window_gev": [
+    75,
+    125
+  ],
+  "selected_events": 452,
+  "leading_hard_leg_matches": 419,
+  "effective_selected_events": 209.38995913328452,
+  "glauber": {
+    "source": "validation/native-run/events.csv",
+    "sampling": "ncoll-proportional",
+    "minimum_bias_events": 3659,
+    "taa_mb_inverse": 23.147216638555125,
+    "taa_fixed_bin_se_mb_inverse": 0.057332924335305006,
+    "source_url": "https://github.com/matplo/glauber-cpp/blob/8875c38d8a904fce5456bd5bed15c396b0d44916/validation/native-run/events.csv"
+  },
+  "glauber_mb_mean_b_fm": 3.307685856937731,
+  "glauber_hard_mean_b_fm": 3.1395644835282974,
+  "sampled_mean_b_fm": 3.1247608635284094,
+  "snapshot_time_fm_c": 0.6,
+  "seed": 2601001,
+  "matched_lengths": [
+    {
+      "count": 410,
+      "mean_hot_fm": 8.080793321463625
+    },
+    {
+      "count": 257,
+      "mean_hot_fm": 8.298634013449794
+    }
+  ],
+  "notebook_revision": "faed7f83b92fda5dfa5a9c4efe8e416306e232d8",
+  "glauber_revision": "8875c38d8a904fce5456bd5bed15c396b0d44916",
+  "glauber_csv_sha256": "ea9cda25f1657b9896e42a0a1abb15966fc12a375f7b56f347feb0410c20294b"
+}

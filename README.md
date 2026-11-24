@@ -2,6 +2,8 @@
 
 An experimental standalone C++17 port of JEWEL 2.6.0. Pythia8 supplies hard events, optional initial-state radiation (ISR), and hadronization. The C++ port implements the JEWEL cascade and expanding optical medium, with a native multiple-parton interaction (MPI) path under validation. This is an independent port with GPL-2.0-or-later licensing. See [NOTICE](NOTICE), [LICENSE](LICENSE), and [GUIDELINES](GUIDELINES).
 
+[Project documentation and validation reports](https://matplo.github.io/jewel-cpp/)
+
 ## Build and test
 
 Use CMake 3.18 or newer, a C++17 compiler, Python 3 and installations of Pythia8 and LHAPDF. The macOS ARM64 GitHub Actions workflow uses Pythia 8.317, LHAPDF 6.5.5 and the CT14nlo PDF set. Set the environment variables below to the installation prefixes and the directory containing your LHAPDF sets.
@@ -102,6 +104,23 @@ the hard production vertex, the estimated hot portions of both hard-parton
 rays, and recoil production sites. It also plots weighted event averages and
 the stored thermal-reference momenta. Build `jewel-run-events` and
 `jewel-medium-probe` to run it. [Path-length definitions](docs/validation-geometry-lengths.md)
+
+The Glauber-weighted example used 1,000 attempts in 0–10% Pb–Pb.
+Of 999 accepted events, 452 had a leading jet at 75–125 GeV and 419 of
+those leading jets matched a hard leg. See the
+[cumulative plots](docs/figures/jewel-glauber-cumulative.png),
+[single-event display](docs/figures/jewel-glauber-event.png), and
+[machine-readable run summary](docs/jewel-glauber-1000.json).
+
+### Compare parton and hadron jets on the same event
+
+The [parton-to-hadron notebook](examples/jewel_parton_hadron_jets.ipynb)
+clusters the exact Pythia8 string inputs and their final hadrons from one
+full `jewel-run-events` record. It matches jets before applying cuts. The
+medium example also clusters the hadrons after subtracting incoming
+thermal-reference momenta and dropping residual thermal entries. See the
+[paired response plot](docs/figures/parton-hadron-response.png) and the
+[thermal subtraction validation](docs/validation-native-subtraction.md).
 
 ## Inclusive jet R_AA
 
