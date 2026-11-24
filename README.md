@@ -118,9 +118,13 @@ The [parton-to-hadron notebook](examples/jewel_parton_hadron_jets.ipynb)
 clusters the exact Pythia8 string inputs and their final hadrons from one
 full `jewel-run-events` record. It matches jets before applying cuts. The
 medium example also clusters the hadrons after subtracting incoming
-thermal-reference momenta and dropping residual thermal entries. See the
-[paired response plot](docs/figures/parton-hadron-response.png) and the
-[thermal subtraction validation](docs/validation-native-subtraction.md).
+thermal-reference momenta and dropping residual thermal entries.
+
+The published comparison uses 1,000 accepted events each in vacuum and
+Glauber-weighted 0–10% Pb–Pb. For 644 stable Pb–Pb pairs, subtraction shifts
+the matched jet pT by −2.21 ± 0.09 GeV on average before hadron-level cuts.
+[Paired response and subtraction plots](https://matplo.github.io/jewel-cpp/#parton-hadron) ·
+[Run summary](docs/parton-hadron-1000.json).
 
 ## Inclusive jet R_AA
 

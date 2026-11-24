@@ -1,0 +1,173 @@
+{
+  "vacuum": {
+    "attempts": 1010,
+    "accepted": 1010,
+    "events_analyzed": 1000,
+    "last_attempt_analyzed": 1000,
+    "pythia_version": 8317,
+    "pairs": {
+      "Raw hadrons": {
+        "selected": 698,
+        "anchors": 707,
+        "unmatched": 0,
+        "outside_cuts": 9
+      }
+    }
+  },
+  "medium": {
+    "attempts": 1010,
+    "accepted": 1010,
+    "events_analyzed": 1000,
+    "last_attempt_analyzed": 1000,
+    "pythia_version": 8317,
+    "mean_b_fm": 3.1761092921136598,
+    "subtraction": {
+      "algorithm": "jewel260-kernel-zero-offset",
+      "radius": 0.4,
+      "put_on_shell": 0,
+      "mass_policy": "signed-invariant-mass",
+      "rng": "splitmix64-open52-v1",
+      "seed_base": 4601017,
+      "seed_stride": 100,
+      "input": "all-final-hadronized",
+      "thermal_input": "stored-centres",
+      "positive_thermal_residuals": true
+    },
+    "glauber": {
+      "sampling": "ncoll-proportional",
+      "minimum_bias_events": 3659,
+      "taa_mb_inverse": 23.147216638555125,
+      "taa_fixed_bin_se_mb_inverse": 0.057332924335305006,
+      "csv_sha256": "ea9cda25f1657b9896e42a0a1abb15966fc12a375f7b56f347feb0410c20294b",
+      "source_url": "https://github.com/matplo/glauber-cpp/blob/8875c38d8a904fce5456bd5bed15c396b0d44916/validation/native-run/events.csv"
+    },
+    "pairs": {
+      "Raw hadrons": {
+        "selected": 591,
+        "anchors": 648,
+        "unmatched": 2,
+        "outside_cuts": 55
+      },
+      "Subtracted hadrons": {
+        "selected": 571,
+        "anchors": 648,
+        "unmatched": 1,
+        "outside_cuts": 76
+      }
+    },
+    "missing_axis": 3,
+    "axes_separated": 1
+  },
+  "thermal_shift": {
+    "both_axes_matched": {
+      "count": 644,
+      "mean_gev": -2.2114065129568288,
+      "se_gev": 0.0903609182720098,
+      "median_gev": -1.8284347306705495,
+      "fraction_negative": 0.9006211180124224
+    },
+    "both_pass_hadron_cuts": {
+      "count": 570,
+      "mean_gev": -2.0888262699839464,
+      "se_gev": 0.07890719209319949,
+      "median_gev": -1.7702773129693625,
+      "fraction_negative": 0.8929824561403509
+    },
+    "raw_only_passes": 21,
+    "subtracted_only_passes": 1,
+    "neither_passes": 52,
+    "by_raw_pt": [
+      {
+        "low_gev": 0.0,
+        "high_gev": 25.0,
+        "mean_raw_pt_gev": 21.292333384407247,
+        "count": 47,
+        "mean_gev": -2.4086619767202966,
+        "se_gev": 0.2987493875483599,
+        "median_gev": -2.067178538242346,
+        "fraction_negative": 0.9574468085106383
+      },
+      {
+        "low_gev": 25.0,
+        "high_gev": 35.0,
+        "mean_raw_pt_gev": 30.65741109247575,
+        "count": 154,
+        "mean_gev": -2.2871622825171776,
+        "se_gev": 0.26031931718864165,
+        "median_gev": -1.8026609252258403,
+        "fraction_negative": 0.8831168831168831
+      },
+      {
+        "low_gev": 35.0,
+        "high_gev": 50.0,
+        "mean_raw_pt_gev": 41.34624238251016,
+        "count": 250,
+        "mean_gev": -1.9291007341134698,
+        "se_gev": 0.11098973124046818,
+        "median_gev": -1.5487382953719013,
+        "fraction_negative": 0.884
+      },
+      {
+        "low_gev": 50.0,
+        "high_gev": 65.0,
+        "mean_raw_pt_gev": 56.707644939490166,
+        "count": 126,
+        "mean_gev": -2.379821368886849,
+        "se_gev": 0.18044274467604596,
+        "median_gev": -2.017805793394743,
+        "fraction_negative": 0.9206349206349206
+      },
+      {
+        "low_gev": 65.0,
+        "high_gev": 80.0,
+        "mean_raw_pt_gev": 70.64388882808596,
+        "count": 43,
+        "mean_gev": -2.550366484362714,
+        "se_gev": 0.31028871336390346,
+        "median_gev": -2.2431752994430383,
+        "fraction_negative": 0.9069767441860465
+      },
+      {
+        "low_gev": 80.0,
+        "high_gev": 100.0,
+        "mean_raw_pt_gev": 86.97719700372414,
+        "count": 18,
+        "mean_gev": -2.7952359684049335,
+        "se_gev": 0.47199747312166607,
+        "median_gev": -2.526659931492688,
+        "fraction_negative": 0.9444444444444444
+      },
+      {
+        "low_gev": 100.0,
+        "high_gev": 118.07486289624953,
+        "mean_raw_pt_gev": 106.97790762453023,
+        "count": 6,
+        "mean_gev": -2.7671679439503905,
+        "se_gev": 1.0097709787791227,
+        "median_gev": -1.6681515665244717,
+        "fraction_negative": 1.0
+      }
+    ]
+  },
+  "configuration": {
+    "runner_source_revision": "faed7f83b92fda5dfa5a9c4efe8e416306e232d8",
+    "runner_sha256": "e5e24ebde09cd90b59f1043b086f6ef98d1fef8e7c2d182e7da4a5606fa703ef",
+    "sqrts_nn_gev": 5020,
+    "pthat_window_gev": [
+      40,
+      100
+    ],
+    "medium_centrality_percent": [
+      0,
+      10
+    ],
+    "seed": 2601017,
+    "hard_events_weighted": false,
+    "selection": "hardest full-phase-space string-input jet matched before cuts",
+    "jet_algorithm": "anti-kt",
+    "jet_radius": 0.4,
+    "jet_pt_min_gev": 25,
+    "jet_abs_eta_max": 2,
+    "axis_delta_r_max": 0.3
+  }
+}

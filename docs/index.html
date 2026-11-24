@@ -35,6 +35,7 @@
   code{font: .9em ui-monospace,SFMono-Regular,Consolas,monospace}
   p code,li code{background:var(--surface);padding:.13em .32em;border-radius:.25rem}
   figure{margin:1.65rem 0 0}
+  figure + h3{margin-top:2rem}
   figure img{max-width:100%;height:auto;display:block;margin-inline:auto}
   .framed{background:#fff;border:1px solid var(--line);border-radius:.65rem;padding:clamp(.35rem,2vw,1.15rem)}
   figcaption{margin-top:.75rem}
@@ -153,18 +154,39 @@ python -c 'import hepyy; hepyy.load("jewel_cpp"); import jewel_cpp'</code></pre>
       <a href="https://github.com/matplo/jewel-cpp/blob/main/examples/jewel_parton_hadron_jets.ipynb">parton-to-hadron notebook</a>
       clusters both records with the same anti-<i>k</i><sub>t</sub> jet definition and
       matches the leading input jet before applying the analysis cuts.</p>
-    <p class="prose">Vacuum gives a direct view of fragmentation and decays on a common
-      input event. In medium the notebook compares raw partons with raw hadrons,
-      then shows the hadron jet response after subtracting incoming thermal
-      momenta and excluding residual thermal entries. The runner applies the
-      validated subtraction at hadron level.</p>
+    <p class="prose">The comparison uses 1,000 accepted events each in vacuum
+      and 0–10% Pb–Pb at 5.02 TeV. The medium run samples impact parameters
+      in proportion to <i>N</i><sub>coll</sub> from the validated Glauber table.
+      Vacuum shows fragmentation and decay on a common input event. In
+      Pb–Pb the raw stages retain recoil contributions and the corrected
+      hadron collection subtracts incoming thermal momenta and excludes
+      residual thermal entries.</p>
     <figure class="framed">
       <img src="figures/parton-hadron-response.png" loading="lazy"
-           alt="Scatter plots of matched hadron jet pT versus string-input jet pT for vacuum and central Pb–Pb, with raw and thermally subtracted medium hadrons.">
-      <figcaption>Same-event jet response. Each point is a matched pair from the
-        example, with raw and thermally subtracted hadron results shown for the
-        medium sample.</figcaption>
+           alt="Matched hadron jet pT versus string-input jet pT for 1,000 vacuum and 1,000 central Pb–Pb events, with raw and thermally subtracted medium hadrons.">
+      <figcaption>Same-event response after jet cuts. Vacuum has 698 selected
+        pairs. Pb–Pb has 591 raw and 571 subtracted pairs.</figcaption>
     </figure>
+    <h3>How thermal subtraction shifts the matched jet momentum</h3>
+    <dl class="metrics">
+      <div><dt>Stable raw/subtracted pairs</dt><dd>644</dd></div>
+      <div><dt>Mean <i>p</i><sub>T</sub> shift</dt><dd>−2.21 ± 0.09 GeV</dd></div>
+      <div><dt>Jets with lower <i>p</i><sub>T</sub></dt><dd>90.1%</dd></div>
+    </dl>
+    <p class="prose">Both hadron jets must match the same selected parton
+      anchor and lie within Δ<i>R</i> ≤ 0.3 of each other. The mean quoted here
+      includes all stable pairs before hadron cuts. Among the 570 pairs
+      passing cuts on both sides, the mean is −2.09 ± 0.08 GeV.
+      Of the stable pairs, 21 pass only before subtraction and one passes
+      only afterward.</p>
+    <figure class="framed">
+      <img src="figures/thermal-subtraction-shift.png" loading="lazy"
+           alt="Distribution of subtracted minus raw matched jet pT, with the same shift plotted versus raw jet pT in 0–10% Pb–Pb.">
+      <figcaption>Positive values indicate an increase after subtraction.
+        The median is −1.83 GeV. Binned error bars show standard errors of
+        the paired mean.</figcaption>
+    </figure>
+    <p><a href="parton-hadron-1000.json">Run summary, pairing counts, and binned shifts</a>.</p>
     <p><a href="paired-hadronization-findings.html">Pythia6 and Pythia8 on identical parton inputs</a> ·
       <a href="native-subtraction-smoke.html">Thermal subtraction checks</a></p>
   </section>
