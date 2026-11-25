@@ -28,6 +28,7 @@ th:first-child,td:first-child{text-align:left}
 <p>The 0–10% minimum-bias class contains 3,659 Glauber rows and gives <strong>⟨T<sub>AA</sub>⟩ = 23.147 ± 0.057 mb⁻¹</strong> with a fixed-bin Monte Carlo error. Sampling impact parameter proportional to N<sub>coll</sub> gave mean b = 3.138 ± 0.020 fm in the control. The weighted expectation is 3.140 fm, compared with 3.308 fm in the minimum-bias class.</p>
 <p>At √s<sub>NN</sub> = 5.02 TeV, the pp, zero-interaction Pb–Pb and quenched Pb–Pb samples each used 3,500 hard-event attempts with a 20–100 GeV hard-scale window and power-5 bias. Both control samples accepted all attempts. Two quenched evolutions failed, retaining their generated weights in the denominator. The jet counts in the tabulated intervals were 7,388, 7,612 and 8,999. Jet finding used hepyy FastJet with anti-k<sub>t</sub> R = 0.4 and |η| &lt; 2.</p>
 <p><strong>Closure passed in all 7 eligible p<sub>T</sub> bins.</strong> The largest pull was 1.19 standard errors. At 60–80 GeV the control gave R<sub>AA</sub> = 1.042 ± 0.111. The quenched result in the same bin was 0.772 ± 0.084. The 150–250 GeV bin fell below the 50-jet threshold and is listed only in the table.</p>
+<p><a href="#fortran-glauber-raa">Jump to the matched Fortran and C++ Glauber comparison</a></p>
 <h3 id="fresh-environment-closure">Fresh PyPI no-quenching closure</h3>
 <p>In a fresh macOS arm64 Python 3.15.2 environment, the combined pip install selected
 hepyy 0.2.36, hepyy-jewel-cpp 0.2.0.3 and hepyy-glauber-cpp 0.1.0. The JEWEL
@@ -104,8 +105,7 @@ R = 0.4 and |η| &lt; 2.</p>
 <p>Each ratio divides the weighted jet yield per accepted hard-event weight
 in medium by its own vacuum result. The Glauber-weighted, cross-section-normalized
 R<sub>AA</sub> calculation above uses N<sub>coll</sub>-weighted geometry, the full
-attempt ledger and generator cross sections. A Fortran result with those inputs
-requires a dedicated sample.</p>
+attempt ledger and generator cross sections. The dedicated <a href="#fortran-glauber-raa">Glauber-weighted comparison</a> uses those inputs for both implementations.</p>
 <figure><img src="figures/jet-medium-vacuum-fortran-cpp.png"
 style="display:block;width:100%;height:auto"
 alt="Fortran and C++ medium-to-vacuum jet yield ratios with statistical uncertainties.">
@@ -115,4 +115,41 @@ slightly for readability. At 60–80 GeV, Fortran gives 0.685 ± 0.022 and
 C++ gives 0.638 ± 0.010, a difference of 1.96 standard errors.</figcaption></figure>
 <p><a href="central-pbpb-bias5.html">Interactive comparison and centrality scan</a> ·
 <a href="central-pbpb-bias5.json">Numerical results</a></p>
-</section><p><a href="glauber-soft-drop.html">Soft Drop comparison with the same geometry</a></p></body></html>
+</section>
+<section id="fortran-glauber-raa">
+<h2>Glauber-weighted Fortran and C++ jet R<sub>AA</sub></h2>
+<p>Both calculations use 3,500 hard-event attempts per sample at 5.02 TeV,
+the pp hard channel with CT14nlo/0, a 20–100 GeV hard-scale window, power-5
+bias, and 0–10% Pb–Pb. Each runner samples the same Glauber CSV in
+proportion to N<sub>coll</sub>, with independent impact-parameter draws.
+The minimum-bias class mean overlap is 23.1472 ± 0.0573 mb⁻¹.
+Both retain recoils and cluster hadrons with anti-k<sub>t</sub> R = 0.4 and
+|η| &lt; 2 using hepyy FastJet. Fortran uses Pythia6 and the medium reshuffle
+fix. C++ uses Pythia8 with native MPI and the mapped JEWEL fragmentation settings.</p>
+<p>The Fortran run uses seven independent 500-attempt shards per sample.
+It records the Pythia6 hard weight (PARI(10)) before the cascade and checks accepted event
+weights against the HepMC records. Failed evolutions retain their hard weight
+and contribute zero jets. The pp and Pb–Pb samples accepted 3,488 and
+3,463 events. The mean final Pythia6 hard cross sections (PARI(1)) were
+0.13405 and 0.13347 mb, respectively.
+Within each collision system the weighted spectrum uses the total
+hard-attempt weight and the mean generator cross section. The Pb–Pb yield
+uses the minimum-bias overlap, which cancels in the ratio.</p>
+<p>At 60–80 GeV, <strong>Fortran gives
+0.656 ± 0.073</strong> and
+<strong>C++ gives 0.772 ± 0.084</strong>. The difference is 1.03 combined standard errors.</p>
+<figure><img src="figures/jet-raa-fortran-cpp.png"
+style="display:block;width:100%;height:auto"
+alt="Glauber-weighted jet nuclear modification factor for Fortran JEWEL and jewel-cpp with statistical uncertainties.">
+<figcaption>One standard error. Fortran errors use a delete-one-shard
+jackknife with independent pp and Pb–Pb contributions, recomputing the cross section
+and weighted spectrum together. C++ errors combine event-level spectrum and
+generator cross-section errors. The plot includes bins with at least 50
+jets in each sample entering that ratio and a defined error. Markers are
+offset slightly for readability.</figcaption></figure>
+<details><summary>View bin values and counts</summary><div class="table"><table>
+<thead><tr><th>Jet pT (GeV)</th><th>Fortran Rₐₐ</th><th>Fortran pp / Pb–Pb jets</th>
+<th>C++ Rₐₐ</th><th>C++ pp / Pb–Pb jets</th></tr></thead><tbody><tr><td>10–20</td><td>1.313 ± 0.088</td><td>1594 / 4120</td><td>1.076 ± 0.068</td><td>1886 / 4139</td></tr><tr><td>20–30</td><td>0.623 ± 0.062</td><td>1157 / 1143</td><td>0.638 ± 0.057</td><td>1262 / 1284</td></tr><tr><td>30–40</td><td>0.571 ± 0.054</td><td>979 / 905</td><td>0.682 ± 0.088</td><td>985 / 902</td></tr><tr><td>40–60</td><td>0.634 ± 0.091</td><td>1505 / 1403</td><td>0.736 ± 0.098</td><td>1567 / 1430</td></tr><tr><td>60–80</td><td>0.656 ± 0.073</td><td>1127 / 952</td><td>0.772 ± 0.084</td><td>1050 / 862</td></tr><tr><td>80–100</td><td>0.804 ± 0.113</td><td>511 / 343</td><td>0.641 ± 0.081</td><td>505 / 305</td></tr><tr><td>100–150</td><td>0.605 ± 0.110</td><td>85 / 63</td><td>0.566 ± 0.106</td><td>130 / 74</td></tr><tr><td>150–250</td><td>1.834 ± 1.871</td><td>4 / 4</td><td>1.480 ± 1.268</td><td>3 / 3</td></tr></tbody></table></div></details>
+<p><a href="jewel-fortran-glauber-raa.json">Numerical results and run provenance</a></p>
+</section>
+<p><a href="glauber-soft-drop.html">Soft Drop comparison with the same geometry</a></p></body></html>

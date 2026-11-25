@@ -1,0 +1,613 @@
+{
+  "centrality_percent": [
+    0,
+    10
+  ],
+  "ecm_GeV": 5020,
+  "taa_mb_inverse": 23.147216638555125,
+  "fortran_pp": [
+    {
+      "name": "vacuum-0",
+      "attempts": 500,
+      "accepted": 498,
+      "weight_sum": 1.1324374614969452e-05,
+      "sigma_mb": 0.13311480307989043,
+      "weighted": [
+        8.066673226092856e-06,
+        2.795868041731746e-06,
+        1.315301174919141e-06,
+        3.5200059924218104e-07,
+        8.172821823743664e-08,
+        2.391672857019317e-08,
+        5.982362572177027e-09,
+        0.0
+      ],
+      "raw": [
+        234,
+        175,
+        141,
+        179,
+        161,
+        87,
+        12,
+        0
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "27c3278d4a5cd44d97f5109e1f24409769f1528920b8644b1d9539676a258bcb",
+      "ledger_sha256": "3cfced3c62c7f30eb649dfda9c500b9780a9b0d6d111328609287e2bdeb9e2eb"
+    },
+    {
+      "name": "vacuum-1",
+      "attempts": 500,
+      "accepted": 500,
+      "weight_sum": 9.503432225349021e-06,
+      "sigma_mb": 0.13546084026682134,
+      "weighted": [
+        6.622544967324018e-06,
+        3.849024356756817e-06,
+        1.2870446372386703e-06,
+        4.121596796886478e-07,
+        9.955060323191936e-08,
+        1.1697240206190123e-08,
+        1.957363449875664e-09,
+        0.0
+      ],
+      "raw": [
+        230,
+        179,
+        138,
+        216,
+        175,
+        67,
+        12,
+        0
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "56eb905da229afa9204b81c53a199eb344c19af09446e8167b0492a814bdd93b",
+      "ledger_sha256": "a816ab33b1dce6a1e5a77420a3c5e1bd94605605e4942dd92dc44f8ab71e91aa"
+    },
+    {
+      "name": "vacuum-2",
+      "attempts": 500,
+      "accepted": 499,
+      "weight_sum": 1.1711930640347744e-05,
+      "sigma_mb": 0.1348427298736635,
+      "weighted": [
+        9.909338635022092e-06,
+        4.788674876503716e-06,
+        1.6154629052018721e-06,
+        5.259324503276082e-07,
+        9.518721898693083e-08,
+        2.0807199338126294e-08,
+        6.15674747325823e-09,
+        2.9395918304142183e-10
+      ],
+      "raw": [
+        239,
+        161,
+        133,
+        218,
+        155,
+        87,
+        17,
+        2
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "99e4b4903fa440c218d0328de274423fb2030997765980a3ae5ec9af1067507d",
+      "ledger_sha256": "d4a883d76c34be66f6d59a874a1542d79dd8a78cfe51cf7e3949076fd2558231"
+    },
+    {
+      "name": "vacuum-3",
+      "attempts": 500,
+      "accepted": 495,
+      "weight_sum": 1.1582700240353207e-05,
+      "sigma_mb": 0.1343620327910519,
+      "weighted": [
+        8.675165146994445e-06,
+        3.6277778265569814e-06,
+        1.2408874237369054e-06,
+        7.401912915183174e-07,
+        1.226254565449154e-07,
+        1.111491057779586e-08,
+        2.232983038508267e-09,
+        0.0
+      ],
+      "raw": [
+        241,
+        145,
+        138,
+        202,
+        153,
+        58,
+        7,
+        0
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "9e29da3d6c4564afc76ffce254496f3e311a749b2f45f4da15b34d5e826fa108",
+      "ledger_sha256": "dfc18e311a7ca991b7cfdf5bf3cbad1e8c317613a82d1c015d36df1b6cc6e7c1"
+    },
+    {
+      "name": "vacuum-4",
+      "attempts": 500,
+      "accepted": 498,
+      "weight_sum": 9.39847417755395e-06,
+      "sigma_mb": 0.13402120687143926,
+      "weighted": [
+        6.275199946907199e-06,
+        3.432683493779964e-06,
+        1.4885458248181942e-06,
+        5.928548873019842e-07,
+        9.493865543131584e-08,
+        2.1211410638686766e-08,
+        2.2452857426600328e-09,
+        0.0
+      ],
+      "raw": [
+        234,
+        145,
+        135,
+        231,
+        172,
+        76,
+        8,
+        0
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "2a080961cb04e4d77e3652176d7a902046032aeb06ecf43cbeee55413f75be25",
+      "ledger_sha256": "90abbec76ef51f986656c70b89d32164bff579b4731892bdf17fe723fb367cb3"
+    },
+    {
+      "name": "vacuum-5",
+      "attempts": 500,
+      "accepted": 499,
+      "weight_sum": 9.665849520953202e-06,
+      "sigma_mb": 0.13479853237718004,
+      "weighted": [
+        5.711037693452686e-06,
+        4.095514601798643e-06,
+        1.1948315007633267e-06,
+        7.736707926371949e-07,
+        7.065683377183962e-08,
+        1.3009995019894465e-08,
+        3.515380223280592e-09,
+        1.0536080288253649e-10
+      ],
+      "raw": [
+        210,
+        167,
+        137,
+        246,
+        158,
+        58,
+        13,
+        1
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "a473d9ebe4bb184c0fdad150c3ea509a3655abb7e300ee2359de7a66d1f93e6a",
+      "ledger_sha256": "81aefb4191d8bbd609d827b0b0a9a72fdea9f24543d184f6bcc879dbc37dd8b8"
+    },
+    {
+      "name": "vacuum-6",
+      "attempts": 500,
+      "accepted": 499,
+      "weight_sum": 7.977100010088996e-06,
+      "sigma_mb": 0.13175989913318822,
+      "weighted": [
+        5.058113296585768e-06,
+        3.774991404493435e-06,
+        1.315223974288865e-06,
+        4.101997549095564e-07,
+        8.570320293208805e-08,
+        1.6151382570970496e-08,
+        3.763770389913024e-09,
+        1.1904273268546075e-10
+      ],
+      "raw": [
+        206,
+        185,
+        157,
+        213,
+        153,
+        78,
+        16,
+        1
+      ],
+      "mean_b_fm": null,
+      "event_sha256": "20e6e0f97f7cbac2d7b5f5f9a985205fc5fe18dd0ceb543f75bdbaffc2b121f7",
+      "ledger_sha256": "50ac0b67e97ba77add1fc04ca42aa2bd8487735f6f4b39acb7901d0a25eefdcd"
+    }
+  ],
+  "fortran_pbpb": [
+    {
+      "name": "medium-0",
+      "attempts": 500,
+      "accepted": 493,
+      "weight_sum": 9.644249838739079e-06,
+      "sigma_mb": 0.13318632897256524,
+      "weighted": [
+        8.731229161399685e-06,
+        2.863735596076289e-06,
+        8.63921198667337e-07,
+        3.542584176531827e-07,
+        5.9090691842252744e-08,
+        9.850372837965162e-09,
+        2.639363762975316e-09,
+        0.0
+      ],
+      "raw": [
+        622,
+        169,
+        125,
+        206,
+        134,
+        39,
+        8,
+        0
+      ],
+      "mean_b_fm": 3.207221918575392,
+      "event_sha256": "dbd31e70e07a02619f6a4aa4ba7cb18401a8f8a8a5089e06c9a9dbf7e2aac4f6",
+      "ledger_sha256": "eba780c15eaea30016778011719959b77b8677082c2863859bc0457f5df7edd8"
+    },
+    {
+      "name": "medium-1",
+      "attempts": 500,
+      "accepted": 496,
+      "weight_sum": 9.169206984480547e-06,
+      "sigma_mb": 0.1339385850584964,
+      "weighted": [
+        9.413936957661759e-06,
+        1.6934168946920181e-06,
+        6.16466916999885e-07,
+        3.128809900088595e-07,
+        7.268190196578068e-08,
+        1.6468061101802754e-08,
+        2.181899143624901e-09,
+        0.0
+      ],
+      "raw": [
+        615,
+        156,
+        115,
+        198,
+        147,
+        59,
+        10,
+        0
+      ],
+      "mean_b_fm": 3.129786128499004,
+      "event_sha256": "32672ce8ece35b6b323e8aee400762801c173162452412995c719595850c403b",
+      "ledger_sha256": "c97733b48b7314713df2ce30364feb2c84591d95aecb464de5661e2375c7da56"
+    },
+    {
+      "name": "medium-2",
+      "attempts": 500,
+      "accepted": 492,
+      "weight_sum": 1.0657137085748528e-05,
+      "sigma_mb": 0.1320637696761439,
+      "weighted": [
+        8.58584069813215e-06,
+        2.4657691310975427e-06,
+        8.806406019710629e-07,
+        2.9421804727723887e-07,
+        5.629143537874671e-08,
+        1.252276264390528e-08,
+        2.3240934947325514e-09,
+        3.680173692039851e-10
+      ],
+      "raw": [
+        568,
+        158,
+        123,
+        210,
+        135,
+        56,
+        13,
+        2
+      ],
+      "mean_b_fm": 3.08414291126967,
+      "event_sha256": "60736501b5624734eb0319359fa8b2db44b90ff6f4bb70be6d818b6ecd290fd0",
+      "ledger_sha256": "609bc9376a0ef2a783d660fdfa0ffdb3881f3561edba7743a64a65d518e32870"
+    },
+    {
+      "name": "medium-3",
+      "attempts": 500,
+      "accepted": 495,
+      "weight_sum": 1.0078928936874294e-05,
+      "sigma_mb": 0.13436338462509986,
+      "weighted": [
+        1.039444498129916e-05,
+        2.1144781254653946e-06,
+        5.166898671887924e-07,
+        4.5241868055260234e-07,
+        7.86098865934383e-08,
+        1.0934588985257014e-08,
+        1.5352354105876742e-09,
+        0.0
+      ],
+      "raw": [
+        565,
+        153,
+        126,
+        195,
+        149,
+        35,
+        4,
+        0
+      ],
+      "mean_b_fm": 3.105374266026598,
+      "event_sha256": "c0a7946580e9c2d7200e840e9d0f4b53a20e78f491dd60b46b46159df797f588",
+      "ledger_sha256": "92f302c6279ab56fbfe6eec6071da4731713aeaf15f694da8d5eb44c4560ef11"
+    },
+    {
+      "name": "medium-4",
+      "attempts": 500,
+      "accepted": 496,
+      "weight_sum": 1.087726345072667e-05,
+      "sigma_mb": 0.1321159185983311,
+      "weighted": [
+        9.334050195688468e-06,
+        2.1802085339229917e-06,
+        1.0192076801341715e-06,
+        2.887505138256433e-07,
+        4.985354397905735e-08,
+        1.3141377680660737e-08,
+        2.377239721243393e-09,
+        0.0
+      ],
+      "raw": [
+        561,
+        190,
+        137,
+        185,
+        130,
+        52,
+        10,
+        0
+      ],
+      "mean_b_fm": 3.1080152614754377,
+      "event_sha256": "73b8100f675feccc3b17effd4cfdcbbbae4eb63375fcb71b4692f60ae745c795",
+      "ledger_sha256": "afd9fd6ea0ed329e0762180ccda8afaea7dc969bb6bce13abadaa643d6ced1ba"
+    },
+    {
+      "name": "medium-5",
+      "attempts": 500,
+      "accepted": 497,
+      "weight_sum": 7.782653664934498e-06,
+      "sigma_mb": 0.13335106939524152,
+      "weighted": [
+        8.672712744674581e-06,
+        2.028936754803655e-06,
+        6.243184513174603e-07,
+        2.474407307244471e-07,
+        4.796552216926722e-08,
+        1.2871618624344194e-08,
+        1.3966088566223665e-09,
+        2.4458877053275346e-10
+      ],
+      "raw": [
+        627,
+        161,
+        149,
+        205,
+        128,
+        53,
+        7,
+        1
+      ],
+      "mean_b_fm": 3.151980206623396,
+      "event_sha256": "dca4fabee0a697c097811df55c967cc41856f87d0f2e86109706c02e6b984a00",
+      "ledger_sha256": "a684d55660fad9ec9592403e6ddbb2f75d824e53ef419763e7d8fdc1bf008aad"
+    },
+    {
+      "name": "medium-6",
+      "attempts": 500,
+      "accepted": 494,
+      "weight_sum": 1.0038208547905315e-05,
+      "sigma_mb": 0.13529800984253593,
+      "weighted": [
+        8.503439629477895e-06,
+        2.481038253872925e-06,
+        6.788261617539916e-07,
+        3.7597615780707405e-07,
+        4.67551086562085e-08,
+        1.551746560325564e-08,
+        2.604418109774552e-09,
+        3.0290976167204124e-10
+      ],
+      "raw": [
+        562,
+        156,
+        130,
+        204,
+        129,
+        49,
+        11,
+        1
+      ],
+      "mean_b_fm": 3.20121788929291,
+      "event_sha256": "e83bcad6c8f77e3429ee991b0327fd8b856a84a039c35ae879efb73ff84bbb11",
+      "ledger_sha256": "bfa306dc89248879e5a4a46e2e13bc964d71fd434bb167de876e79448146b06d"
+    }
+  ],
+  "bins": [
+    {
+      "low": 10,
+      "high": 20,
+      "fortran_raa": 1.3130253228834967,
+      "fortran_se": 0.08799542544266273,
+      "fortran_pp_sigma_mb_per_GeV": 0.009478420283093782,
+      "fortran_pbpb_yield_per_GeV": 0.28807650542567725,
+      "fortran_pp_jets": 1594,
+      "fortran_pbpb_jets": 4120,
+      "cpp_raa": 1.0758029785046905,
+      "cpp_se": 0.06790793736890631,
+      "cpp_pp_jets": 1886,
+      "cpp_pbpb_jets": 4139
+    },
+    {
+      "low": 20,
+      "high": 30,
+      "fortran_raa": 0.6232913300339447,
+      "fortran_se": 0.06165323566505693,
+      "fortran_pp_sigma_mb_per_GeV": 0.004966289944320525,
+      "fortran_pbpb_yield_per_GeV": 0.07165094676493236,
+      "fortran_pp_jets": 1157,
+      "fortran_pbpb_jets": 1143,
+      "cpp_raa": 0.6380757662349628,
+      "cpp_se": 0.057342826205151576,
+      "cpp_pp_jets": 1262,
+      "cpp_pbpb_jets": 1284
+    },
+    {
+      "low": 30,
+      "high": 40,
+      "fortran_raa": 0.5708720792752962,
+      "fortran_se": 0.05360804562154923,
+      "fortran_pp_sigma_mb_per_GeV": 0.001781472037766759,
+      "fortran_pbpb_yield_per_GeV": 0.023540549105360277,
+      "fortran_pp_jets": 979,
+      "fortran_pbpb_jets": 905,
+      "cpp_raa": 0.6820958776258064,
+      "cpp_se": 0.0883684498507623,
+      "cpp_pp_jets": 985,
+      "cpp_pbpb_jets": 902
+    },
+    {
+      "low": 40,
+      "high": 60,
+      "fortran_raa": 0.634324959257142,
+      "fortran_se": 0.09075141532152747,
+      "fortran_pp_sigma_mb_per_GeV": 0.0003585633705106888,
+      "fortran_pbpb_yield_per_GeV": 0.005264734784706005,
+      "fortran_pp_jets": 1505,
+      "fortran_pbpb_jets": 1403,
+      "cpp_raa": 0.7360555100228069,
+      "cpp_se": 0.09833633266361277,
+      "cpp_pp_jets": 1567,
+      "cpp_pbpb_jets": 1430
+    },
+    {
+      "low": 60,
+      "high": 80,
+      "fortran_raa": 0.656487559746447,
+      "fortran_se": 0.07320537583939737,
+      "fortran_pp_sigma_mb_per_GeV": 6.125703155773558e-05,
+      "fortran_pbpb_yield_per_GeV": 0.00093085326123079,
+      "fortran_pp_jets": 1127,
+      "fortran_pbpb_jets": 952,
+      "cpp_raa": 0.7716140991997911,
+      "cpp_se": 0.0838122632701414,
+      "cpp_pp_jets": 1050,
+      "cpp_pbpb_jets": 862
+    },
+    {
+      "low": 80,
+      "high": 100,
+      "fortran_raa": 0.8039899429004157,
+      "fortran_se": 0.11312006277461563,
+      "fortran_pp_sigma_mb_per_GeV": 1.1105252358678777e-05,
+      "fortran_pbpb_yield_per_GeV": 0.0002066701832318247,
+      "fortran_pp_jets": 511,
+      "fortran_pbpb_jets": 343,
+      "cpp_raa": 0.6405768653557884,
+      "cpp_se": 0.08050391959555177,
+      "cpp_pp_jets": 505,
+      "cpp_pbpb_jets": 305
+    },
+    {
+      "low": 100,
+      "high": 150,
+      "fortran_raa": 0.6047316443401941,
+      "fortran_se": 0.1098662293054321,
+      "fortran_pp_sigma_mb_per_GeV": 9.740200630860083e-07,
+      "fortran_pbpb_yield_per_GeV": 1.363419100601546e-05,
+      "fortran_pp_jets": 85,
+      "fortran_pbpb_jets": 63,
+      "cpp_raa": 0.5662675402627784,
+      "cpp_se": 0.10624052244356816,
+      "cpp_pp_jets": 130,
+      "cpp_pbpb_jets": 74
+    },
+    {
+      "low": 150,
+      "high": 250,
+      "fortran_raa": 1.8337018395221951,
+      "fortran_se": 1.871365220259238,
+      "fortran_pp_sigma_mb_per_GeV": 9.76440356653327e-09,
+      "fortran_pbpb_yield_per_GeV": 4.144510245984387e-07,
+      "fortran_pp_jets": 4,
+      "fortran_pbpb_jets": 4,
+      "cpp_raa": 1.4798909450783804,
+      "cpp_se": 1.2682524729975653,
+      "cpp_pp_jets": 3,
+      "cpp_pbpb_jets": 3
+    }
+  ],
+  "geometry_sha256": "ea9cda25f1657b9896e42a0a1abb15966fc12a375f7b56f347feb0410c20294b",
+  "instrumented_fortran_sha256": {
+    "core.f": "b6a3cbef1ca497a6a49051375ae4b94a9e7c0d1e36efb15028b8a67677caa827",
+    "medium.f": "a08f3bb4f87da7678b5a48f76fa6dd0c97e59e13d520b0c26eabb57a8532c482"
+  },
+  "fortran_seed_njob": {
+    "pp": [
+      27101,
+      27102,
+      27103,
+      27104,
+      27105,
+      27106,
+      27107
+    ],
+    "pbpb": [
+      27001,
+      27002,
+      27003,
+      27004,
+      27005,
+      27006,
+      27007
+    ]
+  },
+  "cpp_samples": {
+    "pp": {
+      "input_sha256": "46313d8fdb6626e29990eb3f059ad87f4aa194f313ef8eefc5f2c5eb94e9ec97",
+      "seed": 2600611,
+      "summary": {
+        "type": "summary",
+        "attempts": 3500,
+        "accepted": 3500,
+        "evolution_failures": 0,
+        "generation_failures": 0,
+        "accepted_weight": 7.241614953007093e-05,
+        "failed_weight": 0,
+        "generator_weight_sum": 7.241614953007091e-05,
+        "generator_sigma_mb": 0.13372473522839712,
+        "generator_sigma_error_mb": 0.0007355450045102411,
+        "final_records": 111005
+      }
+    },
+    "pbpb": {
+      "input_sha256": "6f6f799800a6ff1ff03396498e75e7ec2899b379d09bdce3b182ad81ebed69e7",
+      "seed": 2600514,
+      "summary": {
+        "type": "summary",
+        "attempts": 3500,
+        "accepted": 3498,
+        "evolution_failures": 2,
+        "generation_failures": 0,
+        "accepted_weight": 6.780367847901603e-05,
+        "failed_weight": 2.191641005857173e-07,
+        "generator_weight_sum": 6.802284257960183e-05,
+        "generator_sigma_mb": 0.13486859457090403,
+        "generator_sigma_error_mb": 0.0007582934177379582,
+        "final_records": 529354
+      }
+    }
+  },
+  "fortran_uncertainty": "Independent delete-one-shard jackknife by collision system, recomputing the generator cross section and weighted jet spectrum in each replicate.",
+  "cpp_uncertainty": "Event-level weighted spectrum errors. Pythia cross-section errors use independent first-order propagation with covariance neglected. The common T_AA cancels in model R_AA. Ratio errors are omitted if either sample has no jets in a bin.",
+  "fortran_cards": {
+    "params.dat": "NEVENT 500\nNJOB 27001\nLOGFILE jewel.log\nHEPMCFILE events.hepmc\nSPLITINTFILE splitint.dat\nPDFFILE pdfs.dat\nXSECFILE xsecs.dat\nMEDIUMPARAMS medium.dat\nSQRTS 5020\nPTMIN 20\nPTMAX 100\nETAMAX 2\nNF 3\nQ0 1\nLAMBDAQCD 0.2\nLAMBDAQCDPS 0.2\nPDFSET 13100\nPDFALPHAS 0.118\nPROCESS PPJJ\nISOCHANNEL PP\nMASS 208\nNPROTON 82\nWEIGHTED T\nWEXPO 5\nMPI T\nMPIFSR T\nANGORD 0\nAOFIRSTSPLIT F\nKEEPRECOILS T\nSCATRECOIL F\nHADRO T\nHADROTYPE 0\nPI0DEC T\nISRSCAT T\nSHORTHEPMC T\nCOMPRESS T\nWRITESCATCEN F\nWRITEDUMMIES F\nDOSUBTRACTION F\nPUTONSHELL 0\nXSECSCALEFAC 1\nRECSOFTCUT 0\nRECHARDCUT 0\nCOHLENGTHFAC 1\nPCOHREJ 1\nCOHSCAT T\n",
+    "medium.dat": "TAUI 0.4\nTI 0.59\nTC 0.17\nWOODSSAXON T\nCENTRMIN 0\nCENTRMAX 10\nNF 3\nN0 0.17\nD 0.54\nSIGMANN 6.199999809265137\nMDFACTOR 0.45\nMDSCALEFAC 1\n"
+  }
+}
