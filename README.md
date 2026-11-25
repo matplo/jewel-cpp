@@ -129,7 +129,7 @@ the matched jet pT by −2.21 ± 0.09 GeV on average before hadron-level cuts.
 ## Inclusive jet R_AA
 
 The [jet R_AA notebook](examples/jewel_jet_raa.ipynb) runs the same workflow
-and plots the control and quenched ratios with uncertainties.
+with 3,500 attempts per sample and plots the ratios with uncertainties.
 
 Activate a Python environment and install the JEWEL, Glauber, and hepbundle
 wheels. The event runner and analysis scripts are included in
@@ -180,7 +180,8 @@ export DYLD_LIBRARY_PATH="$cppyy_lib_dir${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH
 ```
 
 Run the pp and zero-interaction samples for the closure test, then generate
-the quenched sample for the medium prediction. Run these commands in Bash.
+a 300-attempt quenched pilot to check the output. Use 3,500 quenched attempts
+to reproduce the notebook comparison. Run these commands in Bash.
 
 ```bash
 runner=$(command -v jewel-run-events)
