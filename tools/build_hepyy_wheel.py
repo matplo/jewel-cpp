@@ -16,8 +16,8 @@ from wheel.wheelfile import WheelFile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT_VERSION = "0.2.0"
-WHEEL_VERSION = f"{PROJECT_VERSION}.3"
+PROJECT_VERSION = "0.2.1"
+WHEEL_VERSION = PROJECT_VERSION
 DIST_NAME = "hepyy-jewel-cpp"
 PAYLOAD = "hepyy_jewel_cpp"
 DEPENDENCIES = ("lhapdf", "pythia8")
@@ -62,7 +62,7 @@ def build_payload(work, prefix, deps, jobs):
 
     examples = prefix / "share/jewel-cpp/examples"
     examples.mkdir(parents=True)
-    for filename in ("jewel_fastjet.py", "jewel_fastjet.ipynb"):
+    for filename in ("jewel_fastjet.py", "jewel_fastjet.ipynb", "jewel_jet_raa.ipynb"):
         shutil.copy2(ROOT / "examples" / filename, examples / filename)
     analysis = examples.parent / "tools"
     analysis.mkdir()
@@ -103,7 +103,7 @@ def write_wheel(output, prefix, tag, deps, source_revision):
         "# hepyy-jewel-cpp\n\n"
         "Native C++ JEWEL generator for hepyy and cppyy. It reuses the hepbundle "
         "Pythia8 and LHAPDF libraries and includes the FastJet examples, the "
-        "jewel-run-events command, and the jet R_AA analysis scripts. "
+        "jewel-run-events command, and the jet R_AA notebook and analysis scripts. "
         "Load the generator with `hepyy.load(\"jewel_cpp\")`.\n"
     )
     path = output / f"{PAYLOAD}-{WHEEL_VERSION}-{tag}.whl"
