@@ -128,6 +128,9 @@ the matched jet pT by −2.21 ± 0.09 GeV on average before hadron-level cuts.
 
 ## Inclusive jet R_AA
 
+The [jet R_AA notebook](examples/jewel_jet_raa.ipynb) runs the same workflow
+and plots the control and quenched ratios with uncertainties.
+
 Activate a Python environment and install the JEWEL, Glauber, and hepbundle
 wheels. The event runner and analysis scripts are included in
 `hepyy-jewel-cpp` 0.2.0.3 or newer. The analysis also uses `hepyy-utils` and
